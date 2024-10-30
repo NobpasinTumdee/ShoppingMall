@@ -1,0 +1,38 @@
+body { 
+    margin: 0px;
+    padding: 0px;
+    background-color: rgb(20, 20, 20);
+
+}
+
+.Logincontanner {
+    position: fixed;  
+    top: 50%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);
+
+    background-color: rgb(34, 34, 34);
+    height: 500px;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgb(107, 107, 107);
+}
+
+.Logininput {
+    color: aliceblue;
+    text-align: center;
+    font-size: 34px;
+    padding: 25px;
+}
+
+.Logintextbox {
+    background-color: rgba(0, 0, 0, 0);
+    height: 100%;
+    margin: 50px 20px;
+    color: #202020;
+}
+
+.LoginButton {
+    text-align: center;
+    margin: 40px;
+}

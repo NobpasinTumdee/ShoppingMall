@@ -17,6 +17,9 @@ npm create vite@latest ชื่อ
 npm install
 npm run dev
 
+libary 
+npm i react-router-dom
 
 npm i antd
+
 npm install axios
