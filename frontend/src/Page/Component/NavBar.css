@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+.NavComponent {
+    width: 100%;
+    height: 70px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.NavComponent span {
+    flex: 1;
+    color: #6D6D6D; 
+}
+
+.SubNab1 {
+    text-align: left;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+
+    font-size: 20px;
+    font-family: 'Dongle', sans-serif;
+}
+
+.SubNab1 p {
+    margin: 0;
+    color: #6D6D6D;
+    line-height: 0.7;
+}
+
+.vertical-divider {
+    width: 1px;
+    height: 45px; /* ปรับความสูงตามต้องการ */
+    background-color: #6D6D6D; /* สีของเส้นแบ่ง */
+}
+
+
+.SubNab2 {
+    text-align: center;
+}
+
+.SubNab3 {
+    text-align: right;
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+
+    font-size: 24px;
+    font-family: 'Dongle', sans-serif;
+}
+
+.SubNab3 img{
+    box-shadow: 0 4px 5px #6D6D6D;
+}
+
+.NavComponentMenu {
+    width: 100%;
+    height: 40px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.NavComponentMenu span{
+    margin: 0 20px 0;
+    font-size: 24px;
+    font-family: 'Dongle', sans-serif;
+}
+
+.MenuHover:hover {
+    color: #E8D196;
+    cursor: pointer;
+}
