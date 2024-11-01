@@ -7,6 +7,7 @@ import (
   	"net/http"
 	"example.com/ProjectSeG13/middlewares"
 	"example.com/ProjectSeG13/controller/user"
+	"example.com/ProjectSeG13/controller/Store"
 )
 
 const PORT = "8000"
@@ -38,7 +39,7 @@ func main() {
 
 
 		//ระบบ store
-
+		router.GET("/store/:id",Store.GetStoreByFloor)
 		//ระบบ store payment
 
 

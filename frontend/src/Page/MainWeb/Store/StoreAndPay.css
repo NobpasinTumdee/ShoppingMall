@@ -72,6 +72,10 @@
     margin: 0;
     color: #6D6D6D;
 }
+.cardStore img{
+    width: 250px;
+    height: 145px;
+}
 
 .lineStore {
     width: 100%;
@@ -106,8 +110,18 @@
     color: gold;
 }
 
+.AllbuttonFloor {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
 
-
+.buttonFloor {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    background-color: #C9AF62;
+}
 
 
 

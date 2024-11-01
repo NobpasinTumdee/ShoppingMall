@@ -18,6 +18,8 @@ const requestOptions = {
   },
 
 };
+
+//============================User========================================
 //login
 async function SignIn(data: SignInInterface) {
 
@@ -42,8 +44,24 @@ async function GetUserById(id: string) {
     .catch((e) => e.response);
 
 }
+//============================Store========================================
+// get Store by Floor
+async function GetStoreByFloor(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/store/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
 
 export {
     SignIn,
     GetUserById,
+
+    GetStoreByFloor,
 }
