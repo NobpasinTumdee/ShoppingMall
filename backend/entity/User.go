@@ -14,6 +14,7 @@ type User struct {
 	FirstName     			string 		`json:"FirstName"`
 	LastName     			string 		`json:"LastName"`
 	Age     				int 		`json:"Age"`
+	Tel     				string 		`json:"Tel"`
 	Status     				string 		`json:"Status"`
 
 
@@ -23,7 +24,19 @@ type User struct {
 	
 	ServiceRequest []ServiceRequest `gorm:"foreignKey:UserID"`
 
+	HistoryStore []HistoryStore `gorm:"foreignKey:UserID"`
+	Rating []Rating `gorm:"foreignKey:UserID"`
+
+	MessageBoard []MessageBoard `gorm:"foreignKey:UserID"`
+}
 
 
-
+type MessageBoard struct {
+	gorm.Model
+	PicNews					string 		`json:"PicNews"`
+	TextHeader				string 		`json:"TextHeader"`
+	DescribtionNews			string 		`json:"DescribtionNews"`
+	
+	UserID 					uint 		`json:"UserID"`
+	User   					User 		`gorm:"foreignKey:UserID"`
 }

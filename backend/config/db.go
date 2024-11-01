@@ -26,6 +26,7 @@ func ConnectionDB() {
 func SetupDatabase() {
 	db.AutoMigrate(
 		&entity.User{}, 
+		&entity.MessageBoard{},
 
 		//ระบบจองร้าน
 		&entity.Store{}, 
@@ -33,6 +34,9 @@ func SetupDatabase() {
 		//ระบบชำระเงินจองร้าน
 		&entity.ProductType{}, 
 		&entity.PaymentStore{},
+		&entity.Membership{},
+		&entity.HistoryStore{},
+		&entity.Rating{},
 
 		//ระบบแจ้งซ่อมและอุปการณ์
 		&entity.ServiceRequest{}, 
