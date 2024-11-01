@@ -112,6 +112,22 @@
     text-align: left;
     box-shadow: 0 4px 4px #6b6b6b;
 
+    animation-duration: 0.3s;
+    animation-name: dropboxMenu;
+    animation-timing-function: ease-in-out;
+}
+
+
+@keyframes dropboxMenu{
+    0%{
+        transform: translateX(100px);
+        scale: 0;
+    }50%{
+        transform: translateX(0px);
+        scale: 1;
+    }100%{
+
+    }
 }
 .dropboxMenu a {
     text-decoration: none;

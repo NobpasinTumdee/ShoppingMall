@@ -1,0 +1,53 @@
+.FloorContaner {
+    position: fixed;
+    transform: translateY(60%);
+    right: 10px;
+
+    
+}
+
+.SubFloor {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #E8D196;
+    margin-top: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px #0000004f;
+
+    animation-duration: 0.5s;
+    animation-name: Floor;
+    animation-timing-function: ease-in-out;
+}
+
+
+.SubFloor img{
+    margin: 15px;
+    width: 30px;
+    height: 30px;
+
+    animation-duration: 3s;
+    animation-name: FloorSub;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    
+}
+
+@keyframes Floor{
+    0%{
+        transform: translateX(200px);
+    }50%{
+
+    }100%{
+        transform: translateX(0);
+    }
+}
+@keyframes FloorSub{
+    0%{
+        transform: rotate(10deg);
+    }50%{
+        transform: rotate(-10deg);
+    }100%{
+        transform: rotate(10deg);
+    }
+}

@@ -31,6 +31,7 @@ func ListUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+
 // GET /user/:id
 func GetUser(c *gin.Context) {
 	ID := c.Param("id")

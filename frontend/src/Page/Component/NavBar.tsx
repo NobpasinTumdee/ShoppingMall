@@ -66,7 +66,7 @@ export const NavBar: React.FC = () => {
                     </span>
                     <span className='SubNab2'><img style={{ width: '200px', height: '30px' }} src={LOGO} alt="LOGO" /></span>
                     <span className='SubNab3'>
-                        <span>Hello! {user?.UserName} Welcome to ICONKORAT</span>
+                        <span>Hello! {user?.UserName} Welcome to ICONKORAT🎉</span>
                         <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || UserIcon} alt="User" onClick={OpenMenu}></img>
                         {isMenuOpen && (
                             <div className='dropboxMenu'>
@@ -81,8 +81,8 @@ export const NavBar: React.FC = () => {
                 <nav className='NavComponentMenu'>
                     <div></div>
                     <div>
-                        <a href="#" ><span className='MenuHover'>NEWS</span></a>
-                        <a href="#" ><span className='MenuHover'>STORE</span></a>
+                        <a href="/Main" ><span className='MenuHover'>NEWS</span></a>
+                        <a href="/Store" ><span className='MenuHover'>STORE</span></a>
                         <a href="#" ><span className='MenuHover'>BOOK A HALL</span></a>
                         <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
                         <a href="#" ><span className='MenuHover'>CLEANING</span></a>

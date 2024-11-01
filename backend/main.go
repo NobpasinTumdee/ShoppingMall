@@ -36,6 +36,39 @@ func main() {
 		//User
 		router.GET("/user/:id", user.GetUser)
 
+
+		//ระบบ store
+
+		//ระบบ store payment
+
+
+
+
+		//ระบบ จองรถ
+
+		//ระบบ จองรถ payment
+
+
+
+
+		//ระบบ hall
+
+		//ระบบ hall payment
+
+
+
+
+		//ระบบ แจ้งซ่อม
+
+		//ระบบ เช็คอุปกรณ์ช่าง
+
+
+		
+
+		//ระบบ แม่บ้าน
+
+		//ระบบ อุปการณ์แม่บ้าน
+
 	}
 
 	r.GET("/", func(c *gin.Context) {
