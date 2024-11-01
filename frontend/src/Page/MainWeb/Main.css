@@ -15,7 +15,26 @@
     width: 319px;
     height: 347px;
     margin-left: 40px;
+
+    animation-duration: 10s;
+    animation-name: motionAd;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+
 }
+
+@keyframes motionAd{
+    0%{
+        transform: translateY(0%);
+    }25%{
+        transform: translateY(5%);
+    }75%{
+        transform: translateY(-5%);
+    }100%{
+        transform: translateY(0%);
+    }
+}
+
 
 .advertisingtext {
     font-size: 24px;
@@ -47,14 +66,40 @@
     align-items: center;
     text-align: center;
     justify-content: space-between;
+
+    animation-duration: 1s;
+    animation-name: introAd;
+    animation-timing-function: ease-in-out;
+}
+@keyframes introAd{
+    0%{
+        transform: translateY(-70px);
+    }100%{
+        transform: translateY(0px);
+    }
 }
 
 .Floor img{
     width: 60px;
     height: 60px;
     cursor: pointer;
+
+    animation-duration: 5s;
+    animation-name: LoopSize;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
 
+@keyframes LoopSize{
+    0%{
+        scale: 1;
+    }50%{
+        scale: 1.2;
+        filter: drop-shadow(0 0 20px #eed699);
+    }100%{
+        scale: 1;
+    }
+}
 .Floor h4{
     margin: 0px 0 0px;
     font-size: 36px ;
@@ -84,4 +129,73 @@
     margin-left: 150px;
     margin-right: 150px;
 
+}
+
+
+.NewInfo {
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 300px;
+    font-family: 'Dongle', sans-serif;
+}
+.SubInfo {
+    margin-top: 50px;
+    width: 100%;
+    height: 245px;
+    transition: 0.3s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    animation-duration: 3s;
+    animation-name: NewSub;
+    animation-timing-function: ease-in-out;
+    animation-timeline: view();
+    animation-range: entry 0% cover 20%;
+}
+
+@keyframes NewSub{
+    0%{
+        opacity: 0;
+        transform: translateY(100%);
+    }100%{
+        opacity: 1;
+        
+    }
+}
+.SubInfo img{
+    box-shadow: 0 8px 10px #00000070;
+}
+.SubInfo span{
+    margin-left: 40px;
+    margin-right: 100px;
+}
+.SubInfo h4{
+    margin: 0;
+    font-size: 39px;
+    line-height: 0.7;
+}
+.SubInfo p{
+    font-size: 20px;
+    color: #8A8A8A;
+}
+.SubInfo:hover {
+    color: #C9AF62;
+}
+
+
+
+
+
+
+footer{
+    background-color: #C9AF62;
+    width: 100%;
+    height: 300px;
+    margin-top: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
