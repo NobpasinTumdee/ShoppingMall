@@ -69,9 +69,15 @@
     height: 40px;
     background-color: #ffffff;
     box-shadow: 0 6px 4px #00000005;
+    
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.NavComponentMenu a {
+    text-decoration: none;
+    color: #000;
 }
 
 .NavComponentMenu span{
@@ -87,4 +93,43 @@
 .MenuHover:hover {
     color: #E8D196;
     cursor: pointer;
+}
+
+
+
+
+
+
+.dropboxMenu {
+    position: absolute;
+    right: 40px;
+    top: 70px;
+    /* transform: translateY(90px); */
+    width: 185px;
+    height: auto;
+    background-color: #1B1B1B;
+    border-radius: 10px 0 10px 10px;
+    text-align: left;
+    box-shadow: 0 4px 4px #6b6b6b;
+
+}
+.dropboxMenu a {
+    text-decoration: none;
+}
+
+.dropboxMenu p{
+    margin-left: 20px;
+    color: #ffffff;
+    line-height: 0.2;
+    font-size: 24px;
+    cursor: pointer;
+}
+.dropboxMenuP:hover {
+    color: #E8D196;
+}
+.lineMenu {
+    margin-left: 10px;
+    width: 160px;
+    background-color: #ffffff;
+    height: 1px;
 }

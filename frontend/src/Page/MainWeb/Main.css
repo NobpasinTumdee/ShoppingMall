@@ -78,7 +78,14 @@
         transform: translateY(0px);
     }
 }
-
+.subFloor {
+    transition: 0.3s ease-in-out;
+}
+.subFloor:hover {
+    background-color: #f4f4f471;
+    border-radius: 10px;
+    color: #C9AF62;
+}
 .Floor img{
     width: 60px;
     height: 60px;
