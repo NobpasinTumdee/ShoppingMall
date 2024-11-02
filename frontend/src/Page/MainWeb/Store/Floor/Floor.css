@@ -1,6 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+.FloorMap {
+    position: fixed;
+    top: 20%;
+    right: 0px;
+    background-color: #E8D196;
+    width: 200px;
+    height: 60px;
+    border-radius: 10px 0 0 10px;
+    transform: translateX(65%);
+    cursor: pointer;
+
+    animation-duration: 3s;
+    animation-name: FloorB;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    
+    transition: 0.5s ease-in-out;
+}
+@keyframes FloorB{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 40px #f5d481;
+    }100%{
+        
+    }
+}
+
+.FloorMap:hover {
+    transform: translateX(-1%);
+}
+
+.FloorMap img{
+    margin: 15px;
+    width: 30px;
+    height: 30px;
+}
+.FloorMap span{
+    margin-left: 20px;
+    position: absolute;
+    top: -10px;
+    font-size: 60px;
+    color: rgb(255, 255, 255);
+    font-family: 'Dongle', sans-serif;
+}
+
 .FloorContaner {
     position: fixed;
-    transform: translateY(60%);
+    transform: translateY(70%);
     right: 10px;
 
     
@@ -14,6 +62,7 @@
     margin-top: 20px;
     text-align: center;
     box-shadow: 0 4px 10px #0000004f;
+    transition: 0.5s ease-in-out;
 
     animation-duration: 0.5s;
     animation-name: Floor;
@@ -31,6 +80,10 @@
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
     
+}
+.SubFloor:hover {
+    width: 65px;
+    height: 65px;
 }
 
 @keyframes Floor{
@@ -50,4 +103,68 @@
     }100%{
         transform: rotate(10deg);
     }
+}
+
+
+
+.Map {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    width: 700px;
+    height: 700px;
+    background-color: #ffffff;
+    box-shadow: 0 0 40px #00000032;
+    border-radius: 10px;
+
+    animation-duration: 0.5s;
+    animation-name: Map;
+    animation-timing-function: ease-out;
+}
+@keyframes Map{
+    0%{
+        scale: 0.8;
+        transform: translate(50%, -50%);
+    }50%{
+        
+    }100%{
+        scale: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.BGMap {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.315);
+    z-index: 1001;
+
+    animation-duration: 2s;
+    animation-name: BGMap;
+    animation-timing-function: ease-in-out;
+}
+@keyframes BGMap{
+    0%{
+        opacity: 0;
+    }50%{
+        
+    }100%{
+        opacity: 1;
+    }
+}
+
+.ExitMap {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    background-color: crimson;
+    text-align: center;
+    border-radius: 100%;
+    color: #ffffff;
+    cursor: pointer;
 }

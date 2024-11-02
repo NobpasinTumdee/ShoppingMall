@@ -5,6 +5,13 @@ import './StoreAndPay.css'
 import PicNoStore from '../../../assets/icon/ForPage/Store/Store3.jpg';
 import { message } from "antd";
 
+
+import market from "../../../assets/icon/ForPage/MainIcon/Market.png"
+import Food from "../../../assets/icon/ForPage/MainIcon/FoodBar.png"
+import Decorations from "../../../assets/icon/ForPage/MainIcon/Home.png"
+import Computer from "../../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
+
+
 //API
 import {GetStoreByFloor} from '../../../services/https/index'
 import {StoreInterface} from '../../../interfaces/StoreInterface'
@@ -83,11 +90,26 @@ const Store: React.FC = () => {
             <div className='route'><a href="/Main">Home /</a>Store Directory</div>
             <div className='StoreMainContent'>
                 <h1>{isNameFloor}</h1>
+                <div className='L'><span style={{width: "40%",backgroundColor: "#ffffff"}}></span><span></span><span style={{width: "40%",backgroundColor: "#ffffff"}}></span></div>
                 <div className='AllbuttonFloor'>
-                    <span onClick={Floor1} className='buttonFloor'>Floor 1</span>
-                    <span onClick={Floor2} className='buttonFloor'>Floor 2</span>
-                    <span onClick={Floor3} className='buttonFloor'>Floor 3</span>
-                    <span onClick={Floor4} className='buttonFloor'>Floor 4</span>
+                    <span style={{width: "40%",backgroundColor: "#ffffff"}}></span>
+                    <span onClick={Floor1} className='buttonFloor'>
+                        <div><img src={market} alt="market" /></div>
+                        <div>NIGHT MARKET</div>
+                    </span>
+                    <span onClick={Floor2} className='buttonFloor'>
+                        <div><img src={Food} alt="market" /></div>
+                        <div>FOOD CENTER</div>
+                    </span>
+                    <span onClick={Floor3} className='buttonFloor'>
+                        <div><img src={Decorations} alt="market" /></div>
+                        <div>DECORATIONS</div>
+                    </span>
+                    <span onClick={Floor4} className='buttonFloor'>
+                        <div><img src={Computer} alt="market" /></div>
+                        <div>COMPUTER EQUIPMENT</div>
+                    </span>
+                    <span style={{width: "40%",backgroundColor: "#ffffff"}}></span>
                 </div>
                 <div className='ContanerStore'>
                     <span style={{width: "20%"}}></span>
