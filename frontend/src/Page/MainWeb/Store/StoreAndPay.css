@@ -98,6 +98,7 @@
     transform: translateY(40px);
     color: #ffffff;
     text-align: right;
+    cursor: pointer;
 }
 
 

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-route
 import Login from './Page/Login/Login';
 import Main from './Page/MainWeb/Main';
 import Store from './Page/MainWeb/Store/Store';
+import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 
 
 const App: React.FC = () => {
@@ -12,6 +13,8 @@ const App: React.FC = () => {
         <Route path="/" element={<Login />} />
         <Route path="/Main" element={<Main />} />
         <Route path="/Store" element={<Store />} />
+        <Route path="/Store" element={<Store />} />
+        <Route path="/SubStore" element={<SubStore />} />
       </Routes>
     </>
   );

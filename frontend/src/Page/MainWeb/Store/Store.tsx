@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { NavBar } from '../../Component/NavBar';
 import { FloorMenu } from './Floor/Floor';
 import './StoreAndPay.css'
@@ -56,29 +58,49 @@ const Store: React.FC = () => {
     const [Store, setStore] = useState<StoreInterface[]>([]);
     useEffect(() => {
         if (1) {
-          fetchUserData(String(1));
+            fetchUserData(String(1));
         } else {
-          message.error("The ID was not found in localStorage.");
-    
+            message.error("The ID was not found in localStorage.");
+            
         }
-      }, [1]);
+    }, [1]);
     
-      const fetchUserData = async (F: string) => {
+    const fetchUserData = async (F: string) => {
         try {
-          const res = await GetStoreByFloor(F);
-          if (res.status === 200 && res.data) {
-            setStore(res.data); // กำหนดให้เป็น array ที่ได้จาก API
-          } else {
-            setStore([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
-            message.error("There is no Store on this floor.");
-          }
+            const res = await GetStoreByFloor(F);
+            if (res.status === 200 && res.data) {
+                setStore(res.data); // กำหนดให้เป็น array ที่ได้จาก API
+            } else {
+                setStore([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
+                message.error("There is no Store on this floor.");
+            }
         } catch (error) {
             setStore([]); // กำหนดให้เป็น array ว่างเมื่อมี error
-          message.error("There is no Store on this floor.");
+            message.error("There is no Store on this floor.");
         }
+    };
+    //===========================================To page sub==========================================
+    const navigate = useNavigate();
+    const handleStoreClick = (SubStore: StoreInterface) => {
+        navigate('/SubStore', { 
+          state: { 
+            ID: SubStore.ID,
+            PicStore: SubStore.PicStore,
+            SubPicOne: SubStore.SubPicOne,
+            SubPicTwo: SubStore.SubPicTwo,
+            SubPicThree: SubStore.SubPicThree,
+            MembershipID: SubStore.MembershipID,
+            NameStore: SubStore.NameStore,
+            BookingDate: SubStore.BookingDate,
+            LastDay: SubStore.LastDay,
+            DescribtionStore: SubStore.DescribtionStore,
+            StatusStore: SubStore.StatusStore,
+            UserID: SubStore.UserID,
+            ProductTypeID: SubStore.ProductTypeID,
+          } 
+        });
       };
-
-
+    
     return (
         <>
             <NavBar />
@@ -120,7 +142,7 @@ const Store: React.FC = () => {
                                     <div className='rating'>{renderStars(4)}</div>
                                     <div className='lineStore'></div>
                                     <div><p>{data.DescribtionStore}</p></div>
-                                    <div className='ViewStore'>VIEW STORE  --</div>
+                                    <div className='ViewStore' onClick={() => handleStoreClick(data)}>VIEW STORE  --</div>
                                 </span>
                             ))
                         ) : (
