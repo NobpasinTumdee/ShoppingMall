@@ -50,6 +50,24 @@ export const NavBar: React.FC = () => {
           location.href = "/";
         }, 1000);
     };
+    //=====================time================================
+    const [currentTime, setCurrentTime] = useState(new Date());
+    useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrentTime(new Date());
+        }, 1000);
+    
+        return () => clearInterval(interval);
+      }, []);
+    const getFormattedDateTime = (date: Date): string => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = (date.getFullYear()).toString(); // to year พศ +543
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+      };
 
     return (
         <>
@@ -57,7 +75,7 @@ export const NavBar: React.FC = () => {
                 <nav className='NavComponent'>
                     <span className='SubNab1'>
                         <img style={{ width: '25px', height: '25px' }} src={Clock} alt="Clock" />
-                        <p>OPEN NOW <br /> 10 AM - 9 PM <br /> Now 12/05/2024 16:30</p>
+                        <p>OPEN NOW <br /> 10 AM - 9 PM <br /> Now {getFormattedDateTime(currentTime)}</p>
                         <div className='vertical-divider'></div>
 
                         <img style={{ width: '25px', height: '25px' }} src={Address} alt="Address" />

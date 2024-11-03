@@ -155,8 +155,13 @@
     /* background-color: #C9AF62; */
     transition: 0.5s;
 }
-.buttonFloor:hover {
+
+.buttonFloor.active {
     background-color: #C9AF62;
+    border-radius: 10px;
+}
+.buttonFloor:hover {
+    background-color: #e8d1965a;
     border-radius: 10px;
 }
 .buttonFloor img{

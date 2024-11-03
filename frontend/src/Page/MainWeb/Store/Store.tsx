@@ -37,21 +37,18 @@ const Store: React.FC = () => {
     };
 
     const [isNameFloor, setNameFloor] = useState("NIGHT MARKET");
+    const [isFloor1, setFloor1] = useState(0);const [isFloor2, setFloor2] = useState(0);const [isFloor3, setFloor3] = useState(0);const [isFloor4, setFloor4] = useState(0);
     const Floor1 = () => {
-        fetchUserData(String(1));
-        setNameFloor("NIGHT MARKET")
+        fetchUserData(String(1));setFloor1(1);setFloor2(0);setFloor3(0);setFloor4(0);setNameFloor("NIGHT MARKET")
     };
     const Floor2 = () => {
-        fetchUserData(String(2));
-        setNameFloor("FOOD CENTER")
+        fetchUserData(String(2));setFloor1(0);setFloor2(1);setFloor3(0);setFloor4(0);setNameFloor("FOOD CENTER")
     };
     const Floor3 = () => {
-        fetchUserData(String(3));
-        setNameFloor("DECORATIONS")
+        fetchUserData(String(3));setFloor1(0);setFloor2(0);setFloor3(1);setFloor4(0);setNameFloor("DECORATIONS")
     };
     const Floor4 = () => {
-        fetchUserData(String(4));
-        setNameFloor("COMPUTER EQUIPMENT")
+        fetchUserData(String(4));setFloor1(0);setFloor2(0);setFloor3(0);setFloor4(1);setNameFloor("COMPUTER EQUIPMENT")
     };
 
 
@@ -93,19 +90,19 @@ const Store: React.FC = () => {
                 <div className='L'><span style={{width: "40%",backgroundColor: "#ffffff"}}></span><span></span><span style={{width: "40%",backgroundColor: "#ffffff"}}></span></div>
                 <div className='AllbuttonFloor'>
                     <span style={{width: "40%",backgroundColor: "#ffffff"}}></span>
-                    <span onClick={Floor1} className='buttonFloor'>
+                    <span onClick={Floor1} className={`buttonFloor ${isFloor1 ? "active" : ""}`}>
                         <div><img src={market} alt="market" /></div>
                         <div>NIGHT MARKET</div>
                     </span>
-                    <span onClick={Floor2} className='buttonFloor'>
+                    <span onClick={Floor2} className={`buttonFloor ${isFloor2 ? "active" : ""}`}>
                         <div><img src={Food} alt="market" /></div>
                         <div>FOOD CENTER</div>
                     </span>
-                    <span onClick={Floor3} className='buttonFloor'>
+                    <span onClick={Floor3} className={`buttonFloor ${isFloor3 ? "active" : ""}`}>
                         <div><img src={Decorations} alt="market" /></div>
                         <div>DECORATIONS</div>
                     </span>
-                    <span onClick={Floor4} className='buttonFloor'>
+                    <span onClick={Floor4} className={`buttonFloor ${isFloor4 ? "active" : ""}`}>
                         <div><img src={Computer} alt="market" /></div>
                         <div>COMPUTER EQUIPMENT</div>
                     </span>
