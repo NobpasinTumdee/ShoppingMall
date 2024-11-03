@@ -88,8 +88,9 @@ export const NavBar: React.FC = () => {
                         <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || UserIcon} alt="User" onClick={OpenMenu}></img>
                         {isMenuOpen && (
                             <div className='dropboxMenu'>
-                                <a href="#" ><p className='dropboxMenuP'>Edit Your Profile</p></a>
-                                <a href="#" ><p className='dropboxMenuP'>Job Application</p></a>
+                                <a href="" ><p className='dropboxMenuP'>Edit Your Profile</p></a>
+                                <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
+                                <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
                                 <div className='lineMenu'></div>
                                 <p className='dropboxMenuP' onClick={Logout}>Log Out</p>
                             </div>
