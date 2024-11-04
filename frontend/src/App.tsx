@@ -4,6 +4,7 @@ import Login from './Page/Login/Login';
 import Main from './Page/MainWeb/Main';
 import Store from './Page/MainWeb/Store/Store';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
+import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
 
 
 const App: React.FC = () => {
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Route path="/Store" element={<Store />} />
         <Route path="/Store" element={<Store />} />
         <Route path="/SubStore" element={<SubStore />} />
+        <Route path="/BookStore" element={<BookStore />} />
       </Routes>
     </>
   );

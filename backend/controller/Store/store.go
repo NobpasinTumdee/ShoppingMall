@@ -30,3 +30,32 @@ func GetStoreByFloor(c *gin.Context) {
 
 	c.JSON(http.StatusOK, Stores)
 }
+
+// PUT update Store by id 
+func UpdateStoreByid(c *gin.Context) {
+	var Store entity.Store
+	StoreID := c.Param("id")
+	db := config.DB()
+ 
+	result := db.First(&Store, StoreID)
+ 
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Id Store not found"})
+		return
+	}
+ 
+ 
+	if err := c.ShouldBindJSON(&Store); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		return
+	}
+ 
+ 
+	result = db.Save(&Store)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		return
+	}
+ 
+	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+}

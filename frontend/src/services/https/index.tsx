@@ -1,4 +1,5 @@
 import {SignInInterface} from "../../interfaces/SignIn";
+import {StoreInterface} from "../../interfaces/StoreInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -57,6 +58,18 @@ async function GetStoreByFloor(id: string) {
     .catch((e) => e.response);
 
 }
+// update Store
+async function UpdateStoreByid(id: string, data: StoreInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/store/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 
 export {
@@ -64,4 +77,5 @@ export {
     GetUserById,
 
     GetStoreByFloor,
+    UpdateStoreByid,
 }

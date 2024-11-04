@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './SubStore.css';
 import { useLocation } from 'react-router-dom';
 import {message} from 'antd'
+import { useNavigate } from 'react-router-dom';
 
 import { NavBar } from '../../../../Page/Component/NavBar';
 import Pic from "../../../../assets/icon/ForPage/MainIcon/Userpic.jpg"
+import PicFloor from "../../../../assets/icon/ForPage/Store/Reserve.png"
 
 //API
 import { UsersInterface } from "../../../../interfaces/UsersInterface";
@@ -46,6 +48,28 @@ const SubStore: React.FC = () => {
 
     const formattedBookingDate = bookingDateObj.toLocaleDateString();
     const formattedLastDay = lastDayObj.toLocaleDateString();
+
+    //===========================================To page sub==========================================
+    const navigate = useNavigate();
+    const handleStoreClick = () => {
+        navigate('/BookStore', { 
+          state: { 
+            ID: ID,
+            PicStore: PicStore,
+            SubPicOne: SubPicOne,
+            SubPicTwo: SubPicTwo,
+            SubPicThree: SubPicThree,
+            MembershipID: MembershipID,
+            NameStore: NameStore,
+            BookingDate: BookingDate,
+            LastDay: LastDay,
+            DescribtionStore: DescribtionStore,
+            StatusStore: StatusStore,
+            UserID: UserID,
+            ProductTypeID: ProductTypeID,
+          } 
+        });
+      };
 
     //=================================================================================================
 
@@ -96,6 +120,7 @@ const SubStore: React.FC = () => {
                 <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>
                 {NameStore}
             </div>
+            <div className='BookingBtn' onClick={() => handleStoreClick()}><p>Booking</p><span><img src={PicFloor} alt="PicFloor" /></span></div>
             <div>
                 <div className='picStore'><img src={PicStore} alt="PicStore" /><span>The store is on floor F{ProductTypeID}.</span></div>
                 <img className='ProfileUserStore' src={user?.Profile || Pic} alt="Profile" />
@@ -117,8 +142,8 @@ const SubStore: React.FC = () => {
                     
                     <div className='RatingandFeedback'>
                     {testdata.length > 0 ? (
-                        testdata.map((data) => (
-                            <div className='cardFeedbackbox' key={data.id}>
+                        testdata.map((data ,index) => (
+                            <div className='cardFeedbackbox' key={index}>
                             <div className='cardFeedback'>
                                 <img src={Pic} alt="Pic" />
                                 <span>Name</span>

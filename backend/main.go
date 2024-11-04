@@ -40,6 +40,7 @@ func main() {
 
 		//ระบบ store
 		router.GET("/store/:id",Store.GetStoreByFloor)
+		router.PUT("/store/:id",Store.UpdateStoreByid)
 		//ระบบ store payment
 
 
