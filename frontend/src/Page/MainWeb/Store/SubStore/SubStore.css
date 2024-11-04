@@ -189,6 +189,8 @@
     color: #C9AF62;
 }
 .Package {
+    font-size: 64px;
+    font-family: 'Dongle', sans-serif;
     display: flex;
     align-items: center;
     text-align: center;
@@ -196,11 +198,47 @@
     margin-left: 200px;
     margin-right: 200px;
 }
+.Package p {
+    margin: 40px;
+    font-size: 34px;
+    text-align: left;
+    line-height: 10px;
+}
 .Package span{
-    border-radius: 10px;
+    border-radius: 20px;
 
     width: 350px;
-    height: 450px;
+    height: auto;
     border: 3px solid #947827;
     backdrop-filter: blur(60px);
+    box-shadow: 0 4px 3px #cccccc;
+
+    animation-duration: 0.8s;
+    animation-name: Package;
+    animation-timing-function: ease-in-out;
+}
+@keyframes Package{
+    0%{
+        transform: translateY(50%);
+        opacity: 0;
+    }100%{
+        transform: translateY(0%);
+    }
+}
+.Packagespan{
+    scale: 1;
+    transition: 0.5s;
+}
+.Packagespan:hover{
+    scale: 1.05;
+    background-color: #C9AF62;
+    color: #ffffff;
+}
+.PromotionBtn{
+    font-size: 34px;
+    color: #ffffff;
+    background-color: #C9AF62;
+    border-radius: 0 0 18px 18px;
+    transition: 0.8s ease-in-out;
+    cursor: pointer;
 }

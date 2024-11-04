@@ -69,7 +69,7 @@ func SetupDatabase() {
 	Membership := []entity.Membership{
 		{PackageName: "Week" ,Day: 7,Pwa: 350,Pea: 700,RentalFee: 1050},
 		{PackageName: "Mount" ,Day: 30,Pwa: 1500,Pea: 3000,RentalFee: 3600},
-		{PackageName: "Week" ,Day: 365,Pwa: 18250,Pea: 35600,RentalFee: 36500},
+		{PackageName: "Year" ,Day: 365,Pwa: 18250,Pea: 35600,RentalFee: 36500},
 
 	}
 	for _, pkg := range Membership {
