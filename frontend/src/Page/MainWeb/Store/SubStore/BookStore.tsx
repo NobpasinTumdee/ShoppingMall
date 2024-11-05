@@ -6,7 +6,7 @@ import {UpdateStoreByid , BackUpStore} from '../../../../services/https/index';
 import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/StoreInterface';
 
 
-import { message , Form , Input, Button, Space, Upload} from "antd";
+import { message} from "antd";
 
 
 const BookStore: React.FC = () => {
@@ -14,17 +14,17 @@ const BookStore: React.FC = () => {
     const location = useLocation();
     const {
         ID,
-        PicStore,
-        SubPicOne,
-        SubPicTwo,
-        SubPicThree,
-        MembershipID,
+        //PicStore,
+        //SubPicOne,
+        //SubPicTwo,
+        //SubPicThree,
+        //MembershipID,
         NameStore,
         BookingDate,
         LastDay,
-        DescribtionStore,
-        StatusStore,
-        UserID,
+        //DescribtionStore,
+        //StatusStore,
+        //UserID,
         ProductTypeID
     } = location.state as {
         ID: number;
@@ -51,24 +51,35 @@ const BookStore: React.FC = () => {
     const closepopup = () => {
         setPopup(false)
     };
-    const UpdateAndBackup = async (newMembershipID: number) => {
-        UpdateStoreByidd(newMembershipID);
-        BackupStoreF(newMembershipID);
+    const [Package, setPackage] = useState(0);
+    const savePackage = async (newMembershipID: number) => {
+        setPackage(newMembershipID);
+        setTimeout(() => {
+            setPopup1(true)
+        }, 2000);
+    };
+    const [isPopup1, setPopup1] = useState(false);
+    const closepopup1 = () => {
+        setPopup1(false)
+    };
+    const UpdateAndBackup = async (formData: any) => {
+        UpdateStoreByidd(formData);
+        BackupStoreF(formData);
     };
     const [messageApi, contextHolder] = message.useMessage();
     //================================= update ==========================
-    const UpdateStoreByidd = async (newMembershipID: number) => {
+    const UpdateStoreByidd = async (formData: any) => {
         const values: StoreInterface = {
             ID,
-            PicStore,
-            SubPicOne,
-            SubPicTwo,
-            SubPicThree,
-            MembershipID: newMembershipID, // อัพเดท MembershipID
-            NameStore,
+            PicStore: String(formData.picStore),
+            SubPicOne: String(formData.subPicOne),
+            SubPicTwo: String(formData.subPicTwo),
+            SubPicThree: String(formData.subPicThree),
+            MembershipID: Package,
+            NameStore: formData.nameStore,
             BookingDate,
             LastDay,
-            DescribtionStore,
+            DescribtionStore: formData.description,
             StatusStore: 'WaitingForApproval',
             UserID: Number(userIdstr),
             ProductTypeID
@@ -97,17 +108,17 @@ const BookStore: React.FC = () => {
         }
     };
     //============================== backup ============================
-    const BackupStoreF = async (newMembershipID: number) => {
+    const BackupStoreF = async (formData: any) => {
         const values: BackupStoreInterface = {
-            PicStoreBackup: PicStore,
-            PicOneBackup: SubPicOne,
-            PicTwoBackup: SubPicTwo,
-            PicThreeBackup: SubPicThree,
-            MembershipBackup: newMembershipID, 
-            NameBackup: NameStore,
+            PicStoreBackup: String(formData.picStore),
+            PicOneBackup: String(formData.subPicOne),
+            PicTwoBackup: String(formData.subPicTwo),
+            PicThreeBackup: String(formData.subPicThree),
+            MembershipBackup: Package, 
+            NameBackup: formData.nameStore,
             BookingBackup: BookingDate,
             LastDayBackup: LastDay,
-            DescribtionStoreB: DescribtionStore,
+            DescribtionStoreB: formData.nameStore,
             UserIDB: Number(userIdstr),
             ProductTypeIDB: ProductTypeID,
             StoreID:ID,
@@ -136,10 +147,35 @@ const BookStore: React.FC = () => {
         }
     };
     //========================================all input============================
-    const [form] = Form.useForm();
-    const onFinish = async (values: any) => {
-        console.log('Received values:', values);
-    }
+    const [formData, setFormData] = useState({
+        nameStore: '',
+        picStore: null,
+        subPicOne: null,     // ภาพย่อยที่ 1
+        subPicTwo: null,     // ภาพย่อยที่ 2
+        subPicThree: null,   // ภาพย่อยที่ 3
+        description: '',
+    });
+
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleFileChange = (e: any) => {
+        const { name, files } = e.target;
+
+        // เก็บไฟล์แต่ละไฟล์แยกกัน
+        if (files.length > 0) {
+            setFormData({ ...formData, [name]: files[0] }); 
+        }
+    };
+    
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        console.log('Form data submitted:', formData);
+        UpdateAndBackup(formData);
+    };
 
     
 
@@ -189,72 +225,55 @@ const BookStore: React.FC = () => {
                 </>
             }
 
-
-            <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
+            {isPopup1 && <>
+            <div onClick={closepopup1} style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '16px' }}>
             <div className="BookinfoPopup">
                 <h2>Book a store</h2>
-                <div >
-                    <Form
-                        form={form}
-                        layout="vertical"
-                        onFinish={onFinish}
-                    >
-                        <Space>
-                        <div>
-                            <Form.Item
-                                name="Name_Store"
-                                label="Name Store"
-                                rules={[{ required: true, message: 'Please enter the store name' }]}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item
-                                name="Pic_Store"
-                                label="Shop image"
-                                valuePropName="fileList"
-                            >
-                                <Upload>
-                                    Upload image
-                                </Upload>
-                            </Form.Item>
-                            <Form.Item label="Preview Store">
-                                <Space>
-                                    <Upload>
-                                        Upload image
-                                    </Upload>
-                                    <Upload>
-                                        Upload image
-                                    </Upload>
-                                    <Upload>
-                                        Upload image
-                                    </Upload>
-                                </Space>
-                            </Form.Item>
-                        </div>
-                        <div >
-                            <Form.Item
-                                name="Describ_tionStore"
-                                label="Description"
-                                rules={[{ required: false, message: 'Please enter a description' }]}
-                            >
+                    <div className="insideinfopopup">
+                            <div className="left-section">
+                                <label htmlFor="nameStore">Name Store</label>
+                                <input
+                                    type="text"
+                                    id="nameStore"
+                                    name="nameStore"
+                                    value={formData.nameStore}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                
+                                <label htmlFor="picStore">Shop Image</label>
+                                <input
+                                    type="file"
+                                    id="picStore"
+                                    name="picStore"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
 
-                                <Input.TextArea rows={10} cols={100}/>
-                            </Form.Item>
-                        </div>
-                        </Space>
-                        <Form.Item>
-                            <Space size={[8, 16]} wrap>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                            >
-                                Confirm
-                            </Button>
-                            </Space>
-                        </Form.Item>
-                    </Form>
-                </div>
+                                <label>Preview Store</label>
+                                <div className="preview-images">
+                                    <input type="file" id="subPicOne" name="subPicOne" accept="image/*" onChange={handleFileChange} />
+                                    <input type="file" id="subPicTwo" name="subPicTwo" accept="image/*" onChange={handleFileChange} />
+                                    <input type="file" id="subPicThree" name="subPicThree" accept="image/*" onChange={handleFileChange} />
+                                </div>
+                            </div>
+                            <div className="right-section">
+                                <label htmlFor="description">Description</label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows={10}
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                    </div>
+                    <button type="submit">Confirm</button>
             </div>
+            </form>
+            </>}
+
 
 
 
@@ -269,9 +288,9 @@ const BookStore: React.FC = () => {
 
             <h1 className='H1'>Book A Sales Stall</h1>
             <div className='Package'>
-                <span className='Packagespan' ><div>Week</div><p>7 Days</p><p>- PWA 350 Bath</p><p>- PEA  700 Bath</p><p>- Rent  150/day Bath</p><div className='PromotionBtn'onClick={() => UpdateAndBackup(1)}>Use this promotion</div></span>
-                <span className='Packagespan' ><div>Mount</div><p>30 Days</p><p>- PWA 1500 Bath</p><p>- PEA  3000 Bath</p><p>- Rent  120/day Bath</p><div className='PromotionBtn'onClick={() => UpdateAndBackup(2)}>Use this promotion</div></span>
-                <span className='Packagespan' ><div>Year</div><p>365 Days</p><p>- PWA 18,250 Bath</p><p>- PEA  35,600 Bath</p><p>- Rent  100/day Bath</p><div className='PromotionBtn'onClick={() => UpdateAndBackup(3)}>Use this promotion</div></span>
+                <span className='Packagespan' ><div>Week</div><p>7 Days</p><p>- PWA 350 Bath</p><p>- PEA  700 Bath</p><p>- Rent  150/day Bath</p><div className='PromotionBtn'onClick={() => savePackage(1)}>Use this promotion</div></span>
+                <span className='Packagespan' ><div>Mount</div><p>30 Days</p><p>- PWA 1500 Bath</p><p>- PEA  3000 Bath</p><p>- Rent  120/day Bath</p><div className='PromotionBtn'onClick={() => savePackage(2)}>Use this promotion</div></span>
+                <span className='Packagespan' ><div>Year</div><p>365 Days</p><p>- PWA 18,250 Bath</p><p>- PEA  35,600 Bath</p><p>- Rent  100/day Bath</p><div className='PromotionBtn'onClick={() => savePackage(3)}>Use this promotion</div></span>
             </div>
             
         </>
