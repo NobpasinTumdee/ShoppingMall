@@ -1,5 +1,5 @@
 import {SignInInterface} from "../../interfaces/SignIn";
-import {StoreInterface} from "../../interfaces/StoreInterface";
+import {StoreInterface,BackupStoreInterface} from "../../interfaces/StoreInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -70,6 +70,19 @@ async function UpdateStoreByid(id: string, data: StoreInterface) {
     .catch((e) => e.response);
 
 }
+// backUp
+async function BackUpStore(data: BackupStoreInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/backup`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
 
 
 export {
@@ -78,4 +91,5 @@ export {
 
     GetStoreByFloor,
     UpdateStoreByid,
+    BackUpStore,
 }

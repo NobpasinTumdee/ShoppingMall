@@ -59,3 +59,45 @@ func UpdateStoreByid(c *gin.Context) {
  
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
+
+// POST backupStore
+func CreateBackUpStore(c *gin.Context) {
+	var Store entity.BackupStore
+
+	if err := c.ShouldBindJSON(&Store); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.BackupStore{
+		PicStoreBackup:        Store.PicStoreBackup,
+
+		PicOneBackup:        Store.PicOneBackup,
+		PicTwoBackup:        Store.PicTwoBackup,
+		PicThreeBackup:        Store.PicThreeBackup,
+
+		MembershipBackup:        Store.MembershipBackup,
+		
+		NameBackup:        Store.NameBackup,
+		BookingBackup:        Store.BookingBackup,
+		LastDayBackup:        Store.LastDayBackup,
+		DescribtionStoreB:        Store.DescribtionStoreB,
+		
+		UserIDB:        Store.UserIDB,
+		
+		ProductTypeIDB:        Store.ProductTypeIDB,
+		
+		StoreID:        Store.StoreID,
+		
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Backup success", "data": u})
+}

@@ -14,3 +14,19 @@ export interface StoreInterface {
     ProductTypeID?:     number ;
 
 }
+
+export interface BackupStoreInterface{
+    ID?:                number
+    PicStoreBackup?:    String ;
+    PicOneBackup?:      String ;
+    PicTwoBackup?:      String ;
+    PicThreeBackup?:    String ;
+    MembershipBackup?:  number ;
+    NameBackup?:        String ;
+    BookingBackup?:     Date ;
+    LastDayBackup?:     Date ;
+    DescribtionStoreB?: String ;
+    UserIDB?:           number ;
+    ProductTypeIDB?:    number ;
+    StoreID?:           number ;
+}

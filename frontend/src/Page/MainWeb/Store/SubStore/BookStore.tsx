@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { NavBar } from '../../../../Page/Component/NavBar';
 import { useLocation } from 'react-router-dom';
 import './SubStore.css'
-import {UpdateStoreByid} from '../../../../services/https/index';
-import { StoreInterface } from '../../../../interfaces/StoreInterface';
-import { message } from "antd";
-import { useNavigate } from "react-router-dom";
+import {UpdateStoreByid , BackUpStore} from '../../../../services/https/index';
+import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/StoreInterface';
+
+
+import { message , Form , Input, Button, Space, Upload} from "antd";
 
 
 const BookStore: React.FC = () => {
@@ -50,8 +51,12 @@ const BookStore: React.FC = () => {
     const closepopup = () => {
         setPopup(false)
     };
+    const UpdateAndBackup = async (newMembershipID: number) => {
+        UpdateStoreByidd(newMembershipID);
+        BackupStoreF(newMembershipID);
+    };
     const [messageApi, contextHolder] = message.useMessage();
-    const navigate = useNavigate();
+    //================================= update ==========================
     const UpdateStoreByidd = async (newMembershipID: number) => {
         const values: StoreInterface = {
             ID,
@@ -64,7 +69,7 @@ const BookStore: React.FC = () => {
             BookingDate,
             LastDay,
             DescribtionStore,
-            StatusStore,
+            StatusStore: 'WaitingForApproval',
             UserID: Number(userIdstr),
             ProductTypeID
         };
@@ -91,24 +96,64 @@ const BookStore: React.FC = () => {
             });
         }
     };
-    return (
+    //============================== backup ============================
+    const BackupStoreF = async (newMembershipID: number) => {
+        const values: BackupStoreInterface = {
+            PicStoreBackup: PicStore,
+            PicOneBackup: SubPicOne,
+            PicTwoBackup: SubPicTwo,
+            PicThreeBackup: SubPicThree,
+            MembershipBackup: newMembershipID, 
+            NameBackup: NameStore,
+            BookingBackup: BookingDate,
+            LastDayBackup: LastDay,
+            DescribtionStoreB: DescribtionStore,
+            UserIDB: Number(userIdstr),
+            ProductTypeIDB: ProductTypeID,
+            StoreID:ID,
+        };
+        try {
+            const res = await BackUpStore(values);
+            if (res.status === 201) {
+                messageApi.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                setTimeout(() => {
+                    //navigate("/Store"); // นำทางกลับไปที่หน้า Store
+                }, 2000);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "การอัพเดทไม่สำเร็จ",
+            });
+        }
+    };
+    //========================================all input============================
+    const [form] = Form.useForm();
+    const onFinish = async (values: any) => {
+        console.log('Received values:', values);
+    }
 
+    
+
+    return (
         <>
             {contextHolder}
-            <NavBar />
-            <div style={{ height: '110px' }}></div>
-            <div className='route'>
-                <a href="/Main">Home /</a>
-                <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>
-                {NameStore}
-            </div>
             {isPopup && 
                 <>
                     <div style={{backgroundColor: 'rgba(0, 0, 0, 0.315)',width: '100%',height:'100%',position: 'fixed',zIndex: '1005'}}></div>
                     <div className='Conditions '>
                         <h2>Terms and Conditions for Retail Space Rental in the Mall</h2>
                         <p> 1. Purpose of Rental <br />
-                                The retail space rental is intended solely for the purpose of selling goods or services. The tenant agrees to use the rented space accordingly and shall not engage in any illegal activities or activities that may disrupt public order.<br />
+                                - The retail space rental is intended solely for the purpose of selling goods or services.<br />
+                                - The tenant agrees to use the rented space accordingly and shall not engage in any illegal activities or activities that may disrupt public order.<br />
                             2. Rental Payment and Security Deposit<br />  
                                 - The tenant must pay the rental fee as specified in the contract and by the agreed-upon schedule.<br />  
                                 - A security deposit will be held as collateral for any potential damages to the mall's property. The deposit will be returned at the end of the lease term if no damages are incurred. <br />
@@ -143,11 +188,90 @@ const BookStore: React.FC = () => {
                     </div>
                 </>
             }
+
+
+            <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
+            <div className="BookinfoPopup">
+                <h2>Book a store</h2>
+                <div >
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={onFinish}
+                    >
+                        <Space>
+                        <div>
+                            <Form.Item
+                                name="Name_Store"
+                                label="Name Store"
+                                rules={[{ required: true, message: 'Please enter the store name' }]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                name="Pic_Store"
+                                label="Shop image"
+                                valuePropName="fileList"
+                            >
+                                <Upload>
+                                    Upload image
+                                </Upload>
+                            </Form.Item>
+                            <Form.Item label="Preview Store">
+                                <Space>
+                                    <Upload>
+                                        Upload image
+                                    </Upload>
+                                    <Upload>
+                                        Upload image
+                                    </Upload>
+                                    <Upload>
+                                        Upload image
+                                    </Upload>
+                                </Space>
+                            </Form.Item>
+                        </div>
+                        <div >
+                            <Form.Item
+                                name="Describ_tionStore"
+                                label="Description"
+                                rules={[{ required: false, message: 'Please enter a description' }]}
+                            >
+
+                                <Input.TextArea rows={10} cols={100}/>
+                            </Form.Item>
+                        </div>
+                        </Space>
+                        <Form.Item>
+                            <Space size={[8, 16]} wrap>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                            >
+                                Confirm
+                            </Button>
+                            </Space>
+                        </Form.Item>
+                    </Form>
+                </div>
+            </div>
+
+
+
+
+            <NavBar />
+            <div style={{ height: '110px' }}></div>
+            <div className='route'>
+                <a href="/Main">Home /</a>
+                <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>
+                {NameStore}
+            </div>
+
             <h1 className='H1'>Book A Sales Stall</h1>
             <div className='Package'>
-                <span className='Packagespan' ><div>Week</div><p>7 Days</p><p>- PWA 350 Bath</p><p>- PEA  700 Bath</p><p>- Rent  150/day Bath</p><div className='PromotionBtn'onClick={() => UpdateStoreByidd(1)}>Use this promotion</div></span>
-                <span className='Packagespan' ><div>Mount</div><p>30 Days</p><p>- PWA 1500 Bath</p><p>- PEA  3000 Bath</p><p>- Rent  120/day Bath</p><div className='PromotionBtn'onClick={() => UpdateStoreByidd(2)}>Use this promotion</div></span>
-                <span className='Packagespan' ><div>Year</div><p>365 Days</p><p>- PWA 18,250 Bath</p><p>- PEA  35,600 Bath</p><p>- Rent  100/day Bath</p><div className='PromotionBtn'onClick={() => UpdateStoreByidd(3)}>Use this promotion</div></span>
+                <span className='Packagespan' ><div>Week</div><p>7 Days</p><p>- PWA 350 Bath</p><p>- PEA  700 Bath</p><p>- Rent  150/day Bath</p><div className='PromotionBtn'onClick={() => UpdateAndBackup(1)}>Use this promotion</div></span>
+                <span className='Packagespan' ><div>Mount</div><p>30 Days</p><p>- PWA 1500 Bath</p><p>- PEA  3000 Bath</p><p>- Rent  120/day Bath</p><div className='PromotionBtn'onClick={() => UpdateAndBackup(2)}>Use this promotion</div></span>
+                <span className='Packagespan' ><div>Year</div><p>365 Days</p><p>- PWA 18,250 Bath</p><p>- PEA  35,600 Bath</p><p>- Rent  100/day Bath</p><div className='PromotionBtn'onClick={() => UpdateAndBackup(3)}>Use this promotion</div></span>
             </div>
             
         </>

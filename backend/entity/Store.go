@@ -32,6 +32,7 @@ type Store struct {
 
 	HistoryStore 		[]HistoryStore 	`gorm:"foreignKey:StoreID"`
 	Rating 				[]Rating 		`gorm:"foreignKey:StoreID"`
+	BackupStore 		[]BackupStore 	`gorm:"foreignKey:StoreID"`
 }
 
 
@@ -70,4 +71,28 @@ type Rating struct {
 	
 	UserID 				uint 		`json:"UserID"`
 	User   				User 		`gorm:"foreignKey:UserID"`
+}
+
+
+type BackupStore struct {
+	gorm.Model
+	PicStoreBackup  		string 		`json:"PicStoreBackup"`
+
+	PicOneBackup  			string 		`json:"PicOneBackup"`
+	PicTwoBackup   			string 		`json:"PicTwoBackup"`
+	PicThreeBackup  		string 		`json:"PicThreeBackup"`
+
+	MembershipBackup 		uint 		`json:"MembershipBackup"`
+	
+	NameBackup  			string 		`json:"NameBackup"`
+	BookingBackup  			time.Time 	`json:"BookingBackup "`
+	LastDayBackup  			time.Time 	`json:"LastDayBackup"`
+	DescribtionStoreB  		string 		`json:"DescribtionStoreB"`
+
+	UserIDB 				int 		`json:"UserIDB"`
+
+	ProductTypeIDB 			int 		`json:"ProductTypeIDB"`
+
+	StoreID 				uint 		`json:"StoreID"`
+	Store   				Store 		`gorm:"foreignKey:StoreID"`
 }
