@@ -19,7 +19,7 @@ func ConnectionDB() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	fmt.Println("connected database")
+	//fmt.Println("connected database")
 	db = database
 }
 
