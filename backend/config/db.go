@@ -32,6 +32,7 @@ func SetupDatabase() {
 		&entity.Store{}, 
 		&entity.Receipt{}, 
 		&entity.BackupStore{}, 
+
 		//ระบบชำระเงินจองร้าน
 		&entity.ProductType{}, 
 		&entity.PaymentStore{},
@@ -43,6 +44,13 @@ func SetupDatabase() {
 		&entity.ServiceRequest{}, 
 		&entity.HistoryEquipment{}, 
 		&entity.Equipment{}, 
+
+		//ระบบจองHall
+		&entity.Hall{},
+		&entity.BookingHall{},
+		&entity.Facilities{},
+		&entity.FacilityList{},
+		&entity.PaymentHall{},
 	)
 	
 	//User
