@@ -102,13 +102,18 @@
 .ViewStore {
     width: 250px;
     height: 20px;
-    background-color: #C9AF62;
+    background-color: #9462c9;
     transform: translateY(40px);
     color: #ffffff;
     text-align: right;
     cursor: pointer;
 }
-
+.ViewStore.active {
+    background-color: #C9AF62;
+}
+.ViewStore.inactive {
+    background-color: #6265c9;
+}
 
 
 

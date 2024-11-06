@@ -100,7 +100,13 @@ const Store: React.FC = () => {
           } 
         });
       };
-    
+    //===========================================Check status========================================
+    const [StatusCheck , setStatusCheck] = useState('');
+    const CheckStatus = async (Status: any) => {
+        setStatusCheck(Status)
+        
+    };
+
     return (
         <>
             <FloorMenu />
@@ -134,7 +140,7 @@ const Store: React.FC = () => {
                     <span style={{width: "100%"}} className='Store'>
                         {Store.length > 0 ? (
                             Store.map((data) => (
-                                <span key={data.ID} className='cardStore'>
+                                <span key={data.ID} className='cardStore' onClick={() => handleStoreClick(data)}>
                                     <div>
                                         <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
                                         <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
@@ -143,7 +149,7 @@ const Store: React.FC = () => {
                                         <div className='lineStore'></div>
                                         <div className='DescribtionStore'>{data.DescribtionStore}</div>
                                     </div>
-                                    <div className='ViewStore' onClick={() => handleStoreClick(data)}>VIEW STORE  --</div>
+                                    <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : ""}`} >{data.StatusStore}  --</div>
                                 </span>
                             ))
                         ) : (
