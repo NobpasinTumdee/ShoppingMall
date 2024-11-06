@@ -68,14 +68,26 @@ export const NavBar: React.FC = () => {
         const seconds = date.getSeconds().toString().padStart(2, '0');
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
       };
-
+    //====================is open? ============================
+    useEffect(() => {
+        const hours = currentTime.getHours();
+        if (hours >= 10 && hours <= 21) {
+            //setOpen(true);
+            settextOpen('OPEN NOW');
+        } else {
+            //setOpen(false);
+            settextOpen('NOT OPEN NOW');
+        }
+    }, [currentTime]);
+    //const [isOpen, setOpen] = useState(false);
+    const [istextOpen, settextOpen] = useState('NOT OPEN NOW');
     return (
         <>
             <nav className='positionNav'>
                 <nav className='NavComponent'>
                     <span className='SubNab1'>
-                        <img style={{ width: '25px', height: '25px' }} src={Clock} alt="Clock" />
-                        <p>OPEN NOW <br /> 10 AM - 9 PM <br /> Now {getFormattedDateTime(currentTime)}</p>
+                        <img style={{ width: '25px', height: '25px' }} className='Clock' src={Clock} alt="Clock" />
+                        <p>{istextOpen} <br /> 10 AM - 9 PM <br /> Now {getFormattedDateTime(currentTime)}</p>
                         <div className='vertical-divider'></div>
 
                         <img style={{ width: '25px', height: '25px' }} src={Address} alt="Address" />
@@ -100,8 +112,8 @@ export const NavBar: React.FC = () => {
                 <nav className='NavComponentMenu'>
                     <div></div>
                     <div>
-                        <a href="/Main" ><span className='MenuHover'>NEWS</span></a>
-                        <a href="/Store" ><span className='MenuHover'>STORE</span></a>
+                        <a href="/Main" ><span className={`MenuHover ${location.pathname === "/Main" ? "active" : ""}`}>NEWS</span></a>
+                        <a href="/Store" ><span className={`MenuHover ${location.pathname === "/Store" ? "active" : ""}`}>STORE</span></a>
                         <a href="#" ><span className='MenuHover'>BOOK A HALL</span></a>
                         <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
                         <a href="#" ><span className='MenuHover'>CLEANING</span></a>

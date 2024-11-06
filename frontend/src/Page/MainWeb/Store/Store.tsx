@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { NavBar } from '../../Component/NavBar';
+//import { NavBar } from '../../Component/NavBar';
 import { FloorMenu } from './Floor/Floor';
 import './StoreAndPay.css'
 import PicNoStore from '../../../assets/icon/ForPage/Store/Store3.jpg';
@@ -103,7 +103,6 @@ const Store: React.FC = () => {
     
     return (
         <>
-            <NavBar />
             <FloorMenu />
             <div style={{height: '110px'}}></div>
             <div className='route'><a href="/Main">Home /</a>Store Directory</div>

@@ -31,6 +31,23 @@
     font-size: 20px;
     font-family: 'Dongle', sans-serif;
 }
+.SubNab1 img{
+    animation-duration: 3s;
+    animation-name: SubNab1;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes SubNab1{
+    0%{
+        transform: translateY(0);
+    }25%{
+        transform: translateY(-2px);
+    }75%{
+        transform: translateY(2px);
+    }100%{
+        transform: translateY(0);
+    }
+}
 
 .SubNab1 p {
     margin: 0;
@@ -89,6 +106,9 @@
 
 .MenuHover {
     transition: 0.4s ease-in-out;
+}
+.MenuHover.active {
+    color: #C9AF62;
 }
 
 .MenuHover:hover {

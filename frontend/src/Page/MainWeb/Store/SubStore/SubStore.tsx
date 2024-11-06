@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import {message} from 'antd'
 import { useNavigate } from 'react-router-dom';
 
-import { NavBar } from '../../../../Page/Component/NavBar';
+//import { NavBar } from '../../../../Page/Component/NavBar';
 import Pic from "../../../../assets/icon/ForPage/MainIcon/Userpic.jpg"
 import PicFloor from "../../../../assets/icon/ForPage/Store/Reserve.png"
 import PicNoStore from '../../../../assets/icon/ForPage/Store/Store3.jpg';
@@ -113,7 +113,6 @@ const SubStore: React.FC = () => {
     ]
     return (
         <>
-            <NavBar />
             <div style={{ height: '110px' }}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>

@@ -5,15 +5,17 @@ import Main from './Page/MainWeb/Main';
 import Store from './Page/MainWeb/Store/Store';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
-
+import { NavBar } from './Page/Component/NavBar';
 
 const App: React.FC = () => {
+  const location = useLocation();
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore"].includes(location.pathname);
   return (
     <>
+      {Navbar && <NavBar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/Main" element={<Main />} />
-        <Route path="/Store" element={<Store />} />
         <Route path="/Store" element={<Store />} />
         <Route path="/SubStore" element={<SubStore />} />
         <Route path="/BookStore" element={<BookStore />} />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavBar } from '../../../../Page/Component/NavBar';
+//import { NavBar } from '../../../../Page/Component/NavBar';
 import { useLocation } from 'react-router-dom';
 import './SubStore.css'
 import {UpdateStoreByid , BackUpStore} from '../../../../services/https/index';
@@ -315,8 +315,7 @@ const BookStore: React.FC = () => {
                 </>
             }
 
-
-            <NavBar />
+ 
             <div style={{ height: '110px' }}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>
