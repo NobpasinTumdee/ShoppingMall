@@ -43,6 +43,13 @@ func SetupDatabase() {
 		&entity.ServiceRequest{}, 
 		&entity.HistoryEquipment{}, 
 		&entity.Equipment{}, 
+
+		//ระบบจองHall
+		&entity.Hall{},
+		&entity.BookingHall{},
+		&entity.Facilities{},
+		&entity.FacilityList{},
+		&entity.PaymentHall{},
 	)
 	
 	//User

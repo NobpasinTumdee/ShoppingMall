@@ -28,6 +28,8 @@ type User struct {
 	Rating []Rating `gorm:"foreignKey:UserID"`
 
 	MessageBoard []MessageBoard `gorm:"foreignKey:UserID"`
+
+	BookingHall []BookingHall	`gorm:"foreignKey:UserID"`
 }
 
 
