@@ -96,7 +96,7 @@ export const NavBar: React.FC = () => {
                             </div>
                         )}
                     </span>
-                </nav>
+                </nav> 
                 <nav className='NavComponentMenu'>
                     <div></div>
                     <div>
