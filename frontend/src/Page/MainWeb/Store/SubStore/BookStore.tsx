@@ -7,9 +7,8 @@ import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/Sto
 
 
 import { message,Upload} from "antd";
-import type { GetProp, UploadFile, UploadProps } from "antd";
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import type {  UploadFile, UploadProps } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 const BookStore: React.FC = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -18,18 +17,19 @@ const BookStore: React.FC = () => {
     };
     const onPreview = async (file: UploadFile) => {
         let src = file.url as string;
-        if (!src) {
-          src = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file.originFileObj as FileType);
-            reader.onload = () => resolve(reader.result as string);
-          });
+        if (!src && file.originFileObj) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as File);
+                reader.onload = () => resolve(reader.result as string);
+            });
         }
         const image = new Image();
         image.src = src;
         const imgWindow = window.open(src);
         imgWindow?.document.write(image.outerHTML);
     };
+    
 
     const userIdstr = localStorage.getItem("id");
     const location = useLocation();
@@ -62,32 +62,44 @@ const BookStore: React.FC = () => {
         UserID: number;
         ProductTypeID: number;
     };
-    const bookingDateObj = new Date(BookingDate);
-    const lastDayObj = new Date(LastDay);
+    //const bookingDateObj = new Date(BookingDate);
+    //const lastDayObj = new Date(LastDay);
 
-    const formattedBookingDate = bookingDateObj.toLocaleDateString();
-    const formattedLastDay = lastDayObj.toLocaleDateString();
+    //const formattedBookingDate = bookingDateObj.toLocaleDateString();
+    //const formattedLastDay = lastDayObj.toLocaleDateString();
 
-    const [isPopup, setPopup] = useState(false);
-    const closepopup = () => {
+    const [isPopup, setPopup] = useState(false);//popup Conditions
+    const closepopupConditions = () => {
+        setPopup(false)
+    };
+    const GotopopupinfoStore = () => {
         setPopup(false)
         setPopup1(true)
     };
-    const [Package, setPackage] = useState(0);
+    const [Package, setPackage] = useState(0);//package
     const savePackage = async (newMembershipID: number) => {
         setPackage(newMembershipID);
         setTimeout(() => {
             setPopup(true)
         }, 100);
     };
-    const [isPopup1, setPopup1] = useState(false);
+    const [isPopup1, setPopup1] = useState(false);//popup infostore
     const closepopup1 = () => {
         setPopup1(false)
     };
     const UpdateAndBackup = async (formData: any) => {
         UpdateStoreByidd(formData);
         BackupStoreF(formData);
+        SuccessPopup();
+        setPopup1(false)
     };
+    const [Success,SetSuccess] = useState(false);//Popup Success
+    const SuccessPopup = () => {
+        SetSuccess(true);
+        setTimeout(() => {
+            SetSuccess(false);
+        }, 5000);
+    }
     const [messageApi, contextHolder] = message.useMessage();
     //================================= update ==========================
     const UpdateStoreByidd = async (formData: any) => {
@@ -182,26 +194,26 @@ const BookStore: React.FC = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-
-    const handleFileChange = (e: any) => {
-        const { name, files } = e.target;
-
-        // เก็บไฟล์แต่ละไฟล์แยกกัน
-        if (files.length > 0) {
-            setFormData({ ...formData, [name]: files[0] }); 
-        }
-    };
     
-
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
-        formData.picStore = String(fileList[0]?.thumbUrl || '');
-        formData.subPicOne = String(fileList[1]?.thumbUrl || '');
-        formData.subPicTwo = String(fileList[2]?.thumbUrl || '');
-        formData.subPicThree = String(fileList[3]?.thumbUrl || '');
+        formData.picStore = await getImageURL(fileList[0]?.originFileObj);
+        formData.subPicOne = await getImageURL(fileList[1]?.originFileObj);
+        formData.subPicTwo = await getImageURL(fileList[2]?.originFileObj);
+        formData.subPicThree = await getImageURL(fileList[3]?.originFileObj);
         console.log('Form data submitted:', formData);
         UpdateAndBackup(formData);
     };
+
+    const getImageURL = async (file?: File): Promise<string> => {
+        if (!file) return '';
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+        });
+    };
+    
 
     
 
@@ -210,7 +222,7 @@ const BookStore: React.FC = () => {
             {contextHolder}
             {isPopup && 
                 <>
-                    <div style={{backgroundColor: 'rgba(0, 0, 0, 0.315)',width: '100%',height:'100%',position: 'fixed',zIndex: '1005'}}></div>
+                    <div onClick={closepopupConditions} style={{backgroundColor: 'rgba(0, 0, 0, 0.315)',width: '100%',height:'100%',position: 'fixed',zIndex: '1005'}}></div>
                     <div className='Conditions '>
                         <h2>Terms and Conditions for Retail Space Rental in the Mall</h2>
                         <p> 1. Purpose of Rental <br />
@@ -246,7 +258,7 @@ const BookStore: React.FC = () => {
                             9. Acceptance of Terms and Conditions  <br />
                                 The tenant agrees to accept and adhere to all terms and conditions outlined in this agreement, which serves as a legal contract between the tenant and the mall management.<br />
                                 In the event of any disputes or uncertainties, both parties agree to seek mediation or negotiation before pursuing legal action.<br /></p>
-                    <div className='Accept' onClick={closepopup}>Accept all terms</div>
+                    <div className='Accept' onClick={GotopopupinfoStore}>Accept all terms</div>
                     </div>
                 </>
             }
@@ -268,6 +280,7 @@ const BookStore: React.FC = () => {
                                     required
                                 />
                                 <label htmlFor="picStore">Preview Store</label>
+                                <p style={{fontSize: '20px',margin: '0px'}}>You can upload up to 4 sample images of your store.</p>
                                 <Upload fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
                                     maxCount={4} multiple={false} listType="picture-card" >
                                     <div><PlusOutlined /><div style={{ marginTop: 8 }}>อัพโหลด</div></div>
@@ -292,9 +305,15 @@ const BookStore: React.FC = () => {
             </div>
             </form>
             </>}
-
-
-
+            {Success && 
+                <>
+                    <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
+                        <div className='success'>
+                            <h1>🎉SUCCESS🎉</h1>
+                            Thank you for your reservation. We have successfully received your information, and we will review it shortly.
+                        </div>
+                </>
+            }
 
 
             <NavBar />

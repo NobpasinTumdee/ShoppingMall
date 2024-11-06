@@ -84,6 +84,7 @@
 .cardStore img{
     width: 250px;
     height: 145px;
+    object-fit: cover;
 }
 
 .lineStore {
