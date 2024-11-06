@@ -59,6 +59,7 @@
     box-shadow: 0 4px 10px #00000052;
     background-color: rgb(255, 255, 255);
     font-family: 'Dongle';
+    cursor: pointer;
 
     animation-duration: 0.5s;
     animation-name: cardStore;

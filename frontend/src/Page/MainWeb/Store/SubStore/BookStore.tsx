@@ -94,6 +94,9 @@ const BookStore: React.FC = () => {
         setPopup1(false)
     };
     const [Success,SetSuccess] = useState(false);//Popup Success
+    const closeSuccess = () => {
+        SetSuccess(false)
+    }
     const SuccessPopup = () => {
         SetSuccess(true);
         setTimeout(() => {
@@ -307,7 +310,7 @@ const BookStore: React.FC = () => {
             </>}
             {Success && 
                 <>
-                    <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
+                    <div onClick={closeSuccess} style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
                         <div className='success'>
                             <h1>🎉SUCCESS🎉</h1>
                             Thank you for your reservation. We have successfully received your information, and we will review it shortly.

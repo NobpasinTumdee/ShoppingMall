@@ -100,12 +100,6 @@ const Store: React.FC = () => {
           } 
         });
       };
-    //===========================================Check status========================================
-    const [StatusCheck , setStatusCheck] = useState('');
-    const CheckStatus = async (Status: any) => {
-        setStatusCheck(Status)
-        
-    };
 
     return (
         <>
