@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { message } from "antd";
-import LOGO from "../../assets/icon/ICONIC.jpg";
+import LOGO from "../../assets/icon/highLogo.jpg";
 import Clock from "../../assets/icon/ForPage/MainIcon/Clock.png";
 import Address from "../../assets/icon/ForPage/MainIcon/Address.png";
 import UserIcon from "../../assets/icon/ForPage/MainIcon/UserProfile.jpg"

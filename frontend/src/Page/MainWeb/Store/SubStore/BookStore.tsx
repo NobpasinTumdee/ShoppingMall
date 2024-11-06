@@ -56,7 +56,7 @@ const BookStore: React.FC = () => {
         setPackage(newMembershipID);
         setTimeout(() => {
             setPopup1(true)
-        }, 2000);
+        }, 100);
     };
     const [isPopup1, setPopup1] = useState(false);
     const closepopup1 = () => {
@@ -149,10 +149,10 @@ const BookStore: React.FC = () => {
     //========================================all input============================
     const [formData, setFormData] = useState({
         nameStore: '',
-        picStore: null,
-        subPicOne: null,     // ภาพย่อยที่ 1
-        subPicTwo: null,     // ภาพย่อยที่ 2
-        subPicThree: null,   // ภาพย่อยที่ 3
+        picStore: '',
+        subPicOne: '',     // ภาพย่อยที่ 1
+        subPicTwo: '',     // ภาพย่อยที่ 2
+        subPicThree: '',   // ภาพย่อยที่ 3
         description: '',
     });
 
