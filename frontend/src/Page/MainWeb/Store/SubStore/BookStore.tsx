@@ -6,10 +6,31 @@ import {UpdateStoreByid , BackUpStore} from '../../../../services/https/index';
 import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/StoreInterface';
 
 
-import { message} from "antd";
-
+import { message,Upload} from "antd";
+import type { GetProp, UploadFile, UploadProps } from "antd";
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 const BookStore: React.FC = () => {
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src) {
+          src = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file.originFileObj as FileType);
+            reader.onload = () => resolve(reader.result as string);
+          });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+
     const userIdstr = localStorage.getItem("id");
     const location = useLocation();
     const {
@@ -47,15 +68,16 @@ const BookStore: React.FC = () => {
     const formattedBookingDate = bookingDateObj.toLocaleDateString();
     const formattedLastDay = lastDayObj.toLocaleDateString();
 
-    const [isPopup, setPopup] = useState(true);
+    const [isPopup, setPopup] = useState(false);
     const closepopup = () => {
         setPopup(false)
+        setPopup1(true)
     };
     const [Package, setPackage] = useState(0);
     const savePackage = async (newMembershipID: number) => {
         setPackage(newMembershipID);
         setTimeout(() => {
-            setPopup1(true)
+            setPopup(true)
         }, 100);
     };
     const [isPopup1, setPopup1] = useState(false);
@@ -173,6 +195,10 @@ const BookStore: React.FC = () => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
+        formData.picStore = String(fileList[0]?.thumbUrl || '');
+        formData.subPicOne = String(fileList[1]?.thumbUrl || '');
+        formData.subPicTwo = String(fileList[2]?.thumbUrl || '');
+        formData.subPicThree = String(fileList[3]?.thumbUrl || '');
         console.log('Form data submitted:', formData);
         UpdateAndBackup(formData);
     };
@@ -241,22 +267,12 @@ const BookStore: React.FC = () => {
                                     onChange={handleChange}
                                     required
                                 />
+                                <label htmlFor="picStore">Preview Store</label>
+                                <Upload fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
+                                    maxCount={4} multiple={false} listType="picture-card" >
+                                    <div><PlusOutlined /><div style={{ marginTop: 8 }}>อัพโหลด</div></div>
+                                </Upload>
                                 
-                                <label htmlFor="picStore">Shop Image</label>
-                                <input
-                                    type="file"
-                                    id="picStore"
-                                    name="picStore"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                />
-
-                                <label>Preview Store</label>
-                                <div className="preview-images">
-                                    <input type="file" id="subPicOne" name="subPicOne" accept="image/*" onChange={handleFileChange} />
-                                    <input type="file" id="subPicTwo" name="subPicTwo" accept="image/*" onChange={handleFileChange} />
-                                    <input type="file" id="subPicThree" name="subPicThree" accept="image/*" onChange={handleFileChange} />
-                                </div>
                             </div>
                             <div className="right-section">
                                 <label htmlFor="description">Description</label>
@@ -269,7 +285,10 @@ const BookStore: React.FC = () => {
                                 />
                             </div>
                     </div>
-                    <button type="submit">Confirm</button>
+                    <div className='submitbtn'>
+                        <div></div>
+                        <button type="submit">Confirm</button>
+                    </div>
             </div>
             </form>
             </>}

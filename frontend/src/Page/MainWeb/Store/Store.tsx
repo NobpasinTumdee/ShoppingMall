@@ -136,12 +136,14 @@ const Store: React.FC = () => {
                         {Store.length > 0 ? (
                             Store.map((data) => (
                                 <span key={data.ID} className='cardStore'>
-                                    <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
-                                    <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
-                                    <div className='lineStore'></div>
-                                    <div className='rating'>{renderStars(4)}</div>
-                                    <div className='lineStore'></div>
-                                    <div><p>{data.DescribtionStore}</p></div>
+                                    <div>
+                                        <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
+                                        <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
+                                        <div className='lineStore'></div>
+                                        <div className='rating'>{renderStars(4)}</div>
+                                        <div className='lineStore'></div>
+                                        <div className='DescribtionStore'>{data.DescribtionStore}</div>
+                                    </div>
                                     <div className='ViewStore' onClick={() => handleStoreClick(data)}>VIEW STORE  --</div>
                                 </span>
                             ))

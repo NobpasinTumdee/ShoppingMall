@@ -329,10 +329,9 @@
     width: 45%;
 }
 
-
-.preview-images input {
-    margin-bottom: 10px;
-    
+.submitbtn {
+    display: flex;
+    justify-content: space-between;
 }
 
 .right-section {
