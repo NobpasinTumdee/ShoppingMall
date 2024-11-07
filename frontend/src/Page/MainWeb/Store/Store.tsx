@@ -134,7 +134,7 @@ const Store: React.FC = () => {
                     <span style={{width: "100%"}} className='Store'>
                         {Store.length > 0 ? (
                             Store.map((data) => (
-                                <span key={data.ID} className='cardStore' onClick={() => handleStoreClick(data)}>
+                                <span key={data.ID} className={`cardStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : ""}`} onClick={() => handleStoreClick(data)}>
                                     <div>
                                         <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
                                         <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>

@@ -31,7 +31,7 @@
     font-size: 20px;
     font-family: 'Dongle', sans-serif;
 }
-.SubNab1 img{
+.Loclation{
     animation-duration: 3s;
     animation-name: SubNab1;
     animation-timing-function: ease-in-out;
@@ -46,6 +46,19 @@
         transform: translateY(2px);
     }100%{
         transform: translateY(0);
+    }
+}
+.Clock {
+    animation-duration: 3s;
+    animation-name: Clock;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes Clock{
+    0%{
+        rotate: -360deg;
+    }100%{
+        rotate: 0;
     }
 }
 

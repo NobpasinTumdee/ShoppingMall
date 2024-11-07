@@ -55,7 +55,7 @@
 .cardStore {
     width: 250px;
     height: 320px;
-    border: 1px solid #C9AF62;
+    border: 1px solid #9462c9;
     box-shadow: 0 4px 10px #00000052;
     background-color: rgb(255, 255, 255);
     font-family: 'Dongle';
@@ -75,6 +75,10 @@
         scale: 1;
     }
 }
+.cardStore.active {
+    border: 1px solid #C9AF62;}
+.cardStore.inactive {
+    border: 1px solid #6265c9;}
 
 .cardStore p{
     padding-left: 20px; 

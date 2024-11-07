@@ -90,7 +90,7 @@ export const NavBar: React.FC = () => {
                         <p>{istextOpen} <br /> 10 AM - 9 PM <br /> Now {getFormattedDateTime(currentTime)}</p>
                         <div className='vertical-divider'></div>
 
-                        <img style={{ width: '25px', height: '25px' }} src={Address} alt="Address" />
+                        <img style={{ width: '25px', height: '25px' }} className='Loclation' src={Address} alt="Address" />
                         <p>111, University Road, Suranaree<br /> Subdistrict, Mueang Nakhon Ratchasima<br />District, Nakhon Ratchasima 30000</p>
                         <div className='vertical-divider'></div>
                     </span>
