@@ -103,6 +103,7 @@ export const NavBar: React.FC = () => {
                                 <a href="" ><p className='dropboxMenuP'>Edit Your Profile</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
+                                <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>
                                 <div className='lineMenu'></div>
                                 <p className='dropboxMenuP' onClick={Logout}>Log Out</p>
                             </div>

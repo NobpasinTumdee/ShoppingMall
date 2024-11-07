@@ -82,12 +82,26 @@ async function BackUpStore(data: BackupStoreInterface) {
     .catch((e) => e.response);
 
 }
+//============================Admin========================================
+// get Store WaitingForApproval
+async function GetStoreWaiting(status: string) {
 
+  return await axios
+
+    .get(`${apiUrl}/storeWaiting/${status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 
 export {
     SignIn,
     GetUserById,
+
+    GetStoreWaiting,
 
     GetStoreByFloor,
     UpdateStoreByid,

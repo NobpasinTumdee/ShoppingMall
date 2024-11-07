@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
-
+*{
+    scrollbar-width: none;
+}
 .AdvertisingMain  {
     width: 100%;
     height: 355px;
@@ -211,10 +213,20 @@ footer{
 .H1Management {
     margin: 10px;
     text-align: center;
-    font-size: 64px;
+    font-size: 74px;
+    font-weight: 200;
     font-family: 'Dongle', sans-serif;
     text-shadow: 0 4px 4px #00000047;
     color: #62501A;
+}
+.SubH1{
+    text-align: center;
+    margin: 0;
+    transform: translateY(-50%);
+    font-size: 34px;
+    font-family: 'Dongle', sans-serif;
+    text-shadow: 0 4px 4px #00000017;
+    color: #C9AF62;
 }
 .PManagement {
     text-align: center;
@@ -330,7 +342,7 @@ footer{
     background-color: #ffffff;
     border-right: 10px solid #C9AF62;
     border-radius: 10px;
-    box-shadow: 0 0 20px #00000047;
+    box-shadow: 0 0 20px #0000002c;
     width: 1000px;
     height: 150px;
     display: flex;
@@ -345,23 +357,28 @@ footer{
 .Storewaiting img{
     margin-left: 3px;
     margin-right: 10px;
-    border-radius: 8px 0 0 8px;
+    border-radius: 8px;
 }
 .info{
-    transform: translateY(-30%);
+    transform: translateY(-40%);
     line-height: 15px;
+    height: 80px;
+}
+.textinfo{
+    width: 550px;
 }
 .Storewaitinginfo img{
     width: 250px;
     height: 145px;
 }
 .Storewaitinginfo p{
-    font-size: 16px;
+    font-size: 20px;
     font-family: 'Dongle', sans-serif;
     font-weight: 100;
+    color: #62501A;
 }
 .StorewaitingBtn{
-    margin-right: 20px;
+    margin-right: 25px;
 }
 
 .route {
@@ -374,4 +391,16 @@ footer{
     font-size: 20px;
     font-family: 'Dongle', sans-serif;
     color: #C9AF62;
+}
+.selection{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.AllSeletion{
+    position: fixed;
+    left: 20px;
 }

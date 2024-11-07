@@ -1,32 +1,130 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Main.css';
 import picEx from '../../../assets/icon/ForPage/Store/Store3.jpg';
 import Ap from '../../../assets/icon/ForPage/Admin/Approval.png';
 import del from '../../../assets/icon/ForPage/Admin/DoNotDisturb.png';
+
+import Wait from '../../../assets/icon/ForPage/Admin/Wait.png';
+import NoOwn from '../../../assets/icon/ForPage/Admin/NoOwn.png';
+import Own from '../../../assets/icon/ForPage/Admin/Own.png';
+
+import { message} from "antd";
+
+import {GetStoreWaiting , UpdateStoreByid} from '../../../services/https/index';
+import {StoreInterface} from '../../../interfaces/StoreInterface'
 const AdminStore: React.FC = () => {
-    const testdata = [
-        {id: 1},{id: 2},{id: 3},{id: 4},{id: 5}
-    ]
+    const [Store, setStore] = useState<StoreInterface[]>([]);
+    useEffect(() => {
+            fetchUserData('WaitingForApproval');
+    }, []);
+    const fetchUserData = async (F: string) => {
+        try {
+            const res = await GetStoreWaiting(F);
+            if (res.status === 200 && res.data) {
+                setStore(res.data); // กำหนดให้เป็น array ที่ได้จาก API
+            } else {
+                setStore([]);
+            }
+        } catch (error) {
+            setStore([]); // กำหนดให้เป็น array ว่างเมื่อมี error
+        }
+    };
+    const [S, setS] = useState('WaitingForApproval');
+    const selection = async (status: number) => {
+        if (status == 1) {
+            fetchUserData('WaitingForApproval');
+            setS('WaitingForApproval');
+        }else if(status ==2){
+            fetchUserData('This store is available for reservation.');
+            setS('This store is available for reservation.');
+        }else{
+            fetchUserData('This store is already taken.');
+            setS('This store is already taken.');
+        }
+    };
+
+    //================================= update approve ==========================
+    const [messageApi, contextHolder] = message.useMessage();
+    const approve = async (approval: StoreInterface) => {
+        const values = { ...approval, StatusStore: 'This store is already taken.' };
+        try {
+            const res = await UpdateStoreByid(String(values.ID), values);
+            if (res.status === 200) {
+                // อัปเดต state เพื่อลบประวัติจากหน้าจอทันที
+                setStore((prev) => prev.filter(item => item.ID !== values.ID));
+                messageApi.open({
+                    type: "success",
+                    content: 'Approve Success!',
+                });
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "การอัพเดทไม่สำเร็จ",
+            });
+        }
+    };
+    //================================= update Not approve ==========================
+    const NotApprove = async (approval: StoreInterface) => {
+        const values = { ...approval, StatusStore: 'This store is available for reservation.' };
+        try {
+            const res = await UpdateStoreByid(String(values.ID), values);
+            if (res.status === 200) {
+                // อัปเดต state เพื่อลบประวัติจากหน้าจอทันที
+                setStore((prev) => prev.filter(item => item.ID !== values.ID));
+                messageApi.open({
+                    type: "success",
+                    content: 'Approve Success!',
+                });
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "การอัพเดทไม่สำเร็จ",
+            });
+        }
+    };
     return (
         <>
+            {contextHolder}
             <div style={{ height: '110px' }}></div>
             <div className='route'><a href="/Admin">Management /</a>Store Management</div>
             <h1 className='H1Management'>Store Management</h1>
+            <p className='SubH1'>{S}</p>
+            <div className='AllSeletion'>
+                <p style={{backgroundColor: '#6265C9'}} onClick={() => selection(1)} className='selection'><img src={Wait} alt="Wait" /></p>
+                <p style={{backgroundColor: '#9462C9'}} onClick={() => selection(2)} className='selection'><img src={NoOwn} alt="NoOwn" /></p>
+                <p style={{backgroundColor: '#C9AF62'}} onClick={() => selection(3)} className='selection'><img src={Own} alt="Own" /></p>
+            </div>
             <div className='Storewaitingforapproval'>
-            {testdata.length > 0 ? (
-                testdata.map((data) => (
+            {Store.length > 0 ? (
+                Store.map((data) => (
                     <>
-                        <div className='Storewaiting' key={data.id}>
+                        <div className='Storewaiting' key={data.ID}>
                             <span className='Storewaitinginfo'>
-                                <img src={picEx} alt="picEx" />
-                                <div>
-                                    <p style={{ fontSize: '34px', margin: 0 }}>Name Store</p>
-                                    <p className='info'> ratione vel optio expedita! Modi, sed sint nesciunt ex sit harum porro quae voluptatum inventore ipsa odio amet qui quas ut nam animi, accusamus impedit asperiores, fugiat error! Laudantium eligendi incidunt, eum possimus sapiente numquam minima sed officiis repellat similique. Doloribus aliquid pariatur saepe ea consequatur, fugiat dolor possimus esse. Adipisci molestiae ea dolore quis deserunt vel illo fuga incidunt blanditiis. Esse, minima tempora corporis repellendus iste voluptas hic voluptatum ratione vitae quod placeat ex odit. Enim sit atque sunt cumque blanditiis! Ipsam, voluptatibus.</p>
+                                <img src={data.PicStore || picEx} alt="picEx" />
+                                <div className='textinfo'>
+                                    <p style={{ fontSize: '34px', marginTop: '30px' ,fontWeight: '600'}}>{data.NameStore} F{data.ProductTypeID}</p>
+                                    <p className='info'>{data.DescribtionStore}</p>
                                 </div>
                             </span>
                             <span className='StorewaitingBtn'>
-                                <img style={{width: '40px' , cursor: 'pointer'}} src={Ap} alt="Ap" />
-                                <img style={{width: '40px' , cursor: 'pointer'}} src={del} alt="del" />
+                                {S !== 'This store is available for reservation.' && (
+                                    <>
+                                        <img style={{width: '40px' , cursor: 'pointer'}} src={Ap} alt="Ap" onClick={() => approve(data)} />
+                                        <img style={{width: '40px', cursor: 'pointer'}} src={del} alt="del" onClick={() => NotApprove(data)} />
+                                    </>
+                                )}
                             </span>
                         </div>
                     </>

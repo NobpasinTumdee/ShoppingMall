@@ -36,7 +36,8 @@ func main() {
 
 		//User
 		router.GET("/user/:id", user.GetUser)
-
+		//Admin
+		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 
 		//ระบบ store
 		router.GET("/store/:id",Store.GetStoreByFloor)

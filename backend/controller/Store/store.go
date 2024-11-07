@@ -101,3 +101,25 @@ func CreateBackUpStore(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Backup success", "data": u})
 }
+
+//GET ListStore WaitingForApproval
+func GetStoreWaiting(c *gin.Context) {
+	StatusStore := c.Param("status")
+	var Stores []entity.Store
+
+	db := config.DB()
+
+
+
+	results := db.Where("status_store = ?", StatusStore).Find(&Stores)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Stores)
+}
