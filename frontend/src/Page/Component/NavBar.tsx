@@ -96,7 +96,7 @@ export const NavBar: React.FC = () => {
                     </span>
                     <span className='SubNab2'><img style={{ width: '200px', height: '30px' }} src={LOGO} alt="LOGO" /></span>
                     <span className='SubNab3'>
-                        <span>Hello! {user?.UserName} Welcome to ICONKORAT🎉</span>
+                        <span>Hello! {user?.UserName} Welcome to ICONIC🎉</span>
                         <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || UserIcon} alt="User" onClick={OpenMenu}></img>
                         {isMenuOpen && (
                             <div className='dropboxMenu'>
