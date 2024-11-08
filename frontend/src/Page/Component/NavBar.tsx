@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { message } from "antd";
 import LOGO from "../../assets/icon/highLogo.jpg";
+import LOGOSQ from "../../assets/icon/LOGOS.png";
 import Clock from "../../assets/icon/ForPage/MainIcon/Clock.png";
 import Address from "../../assets/icon/ForPage/MainIcon/Address.png";
 import UserIcon from "../../assets/icon/ForPage/MainIcon/UserProfile.jpg"
@@ -17,7 +18,7 @@ export const NavBar: React.FC = () => {
         if (userIdstr) {
             fetchUserData(userIdstr);
         } else {
-            message.error("หากท่านเป็นสมาชิกโปรด อย่าลืมที่จะ login");
+            
         }
     }, [userIdstr]);
 
@@ -28,7 +29,7 @@ export const NavBar: React.FC = () => {
                 setUser(res.data);
                 //message.success("พบข้อมูลUser");
             } else {
-                message.error("หากท่านเป็นสมาชิกโปรด อย่าลืมที่จะ login");
+                
             }
         } catch (error) {
             console.error("Error fetching user data:", error); // Debug
@@ -124,4 +125,54 @@ export const NavBar: React.FC = () => {
             </nav>
         </>
     );
+};
+
+
+
+export const IntroWeb: React.FC = () => {
+    const [user, setUser] = useState<UsersInterface | null>(null); // State to store user data
+    const userIdstr = localStorage.getItem("id");
+    useEffect(() => {
+        if (userIdstr) {
+            fetchUserData(userIdstr);
+        } else {
+            
+        }
+    }, [userIdstr]);
+
+    const fetchUserData = async (userIdstr: string ) => {
+        try {
+            const res = await GetUserById(userIdstr);
+            if (res.status === 200) {
+                setUser(res.data);
+                //message.success("พบข้อมูลUser");
+            } else {
+                
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+        }
+    };
+
+    const [intro, setIntro] = useState(true);
+    useEffect(() => {
+        setTimeout(() => {
+            setIntro(false)
+        }, 10000);
+    }, []);
+    return (
+
+        <>
+            {intro && 
+                <div className='introMainWeb'>
+                    <img src={LOGOSQ} alt="LOGOSQ" />
+                    <h1>Hello! {user?.UserName}</h1>
+                    <h2>WELCOME TO ICONIC</h2>
+                </div>
+            }
+        </>
+
+    );
+
 };

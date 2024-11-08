@@ -184,3 +184,86 @@
     background-color: #ffffff;
     height: 1px;
 }
+
+
+/*============================================================= intro ============================================================*/
+.introMainWeb {
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    /* background-color: #1d1d1d; */
+    background-color: #ffffff;
+    z-index: 2000;
+}
+
+.introMainWeb img{
+    width: 1000px;
+    opacity: 0;
+    visibility: hidden;
+
+    animation-duration: 2.5s;
+    animation-name: introMainWeb1;
+    animation-timing-function: ease-in-out;
+
+}
+@keyframes introMainWeb1{
+    0%{
+        visibility: visible;
+        opacity: 0;
+    }50%{
+        opacity: 1;
+    }100%{
+        opacity: 0;
+    }
+}
+.introMainWeb h1{
+    font-size: 90px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-350%);
+    color: #C9AF62;
+    text-shadow: 0 0 10px #C9AF62;
+    visibility: hidden;
+    opacity: 0;
+
+    animation-delay: 3s;
+    animation-duration: 3s;
+    animation-name: introMainWeb2;
+    animation-timing-function: ease-in-out;
+}
+@keyframes introMainWeb2{
+    0%{
+        visibility: visible;
+        opacity: 0;
+    }50%{
+        opacity: 1;
+    }100%{
+        opacity: 0;
+    }
+}
+.introMainWeb h2{
+    font-size: 90px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-510%);
+    color: #C9AF62;
+    text-shadow: 0 0 10px #C9AF62;
+    visibility: hidden;
+    opacity: 0;
+
+    animation-delay: 6.5s;
+    animation-duration: 3s;
+    animation-name: introMainWeb3;
+    animation-timing-function: ease-in-out;
+}
+@keyframes introMainWeb3{
+    0%{
+        visibility: visible;
+        opacity: 0;
+    }50%{
+        opacity: 1;
+    }100%{
+        opacity: 0;
+    }
+}

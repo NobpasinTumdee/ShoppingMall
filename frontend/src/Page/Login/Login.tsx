@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css'
 import { Form, Input ,message} from 'antd';
 import {SignInInterface} from "../../interfaces/SignIn";
 import { SignIn } from '../../services/https';
+
+import {IntroWeb} from '../Component/NavBar';
 const Login: React.FC = () => {
     const onFinish = async (values: SignInInterface) => {
         let res = await SignIn(values);
@@ -14,15 +16,25 @@ const Login: React.FC = () => {
             localStorage.setItem("id", res.data.id);
 
             message.success("Login successful");
-            location.href = "/Main";
+            introToMain();
             
         } else {
             message.error(res.data.error);
         }
         
     };
+    const [intro, setIntro] = useState(false);
+    const introToMain = async () => {
+        setIntro(true);
+        setTimeout(() => {
+            location.href = "/Main";
+        }, 9000);
+    };
     return(
         <>
+            {intro && 
+                <IntroWeb />
+            }
             <div className='Logincontanner'>
                 <div className='Logininput'>
                     Login

@@ -141,7 +141,7 @@ const Store: React.FC = () => {
                                         <div className='lineStore'></div>
                                         <div className='rating'>{renderStars(4)}</div>
                                         <div className='lineStore'></div>
-                                        <div className='DescribtionStore'>{data.DescribtionStore}</div>
+                                        <div className='DescribtionStore'>{String(data.BookingDate)}<br />{String(data.LastDay)}</div>
                                     </div>
                                     <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : ""}`} >{data.StatusStore}  --</div>
                                 </span>
