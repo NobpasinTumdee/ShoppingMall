@@ -134,8 +134,8 @@ const Store: React.FC = () => {
                     <span style={{width: "100%"}} className='Store'>
                         {Store.length > 0 ? (
                             Store.map((data) => (
-                                <span key={data.ID} className={`cardStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : ""}`} onClick={() => handleStoreClick(data)}>
-                                    <div>
+                                <span key={data.ID} className={`cardStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
+                                    <div onClick={() => handleStoreClick(data)}>
                                         <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
                                         <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
                                         <div className='lineStore'></div>
@@ -143,7 +143,7 @@ const Store: React.FC = () => {
                                         <div className='lineStore'></div>
                                         <div className='DescribtionStore'>{String(data.BookingDate)}<br />{String(data.LastDay)}</div>
                                     </div>
-                                    <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : ""}`} >{data.StatusStore}  --</div>
+                                    <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.StatusStore}  --</div>
                                 </span>
                             ))
                         ) : (

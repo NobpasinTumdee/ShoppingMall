@@ -55,7 +55,7 @@
 .cardStore {
     width: 250px;
     height: 320px;
-    border: 1px solid #9462c9;
+    border: 1px solid #484848;
     box-shadow: 0 4px 10px #00000052;
     background-color: rgb(255, 255, 255);
     font-family: 'Dongle';
@@ -78,7 +78,11 @@
 .cardStore.active {
     border: 1px solid #C9AF62;}
 .cardStore.inactive {
+    pointer-events: none;
     border: 1px solid #6265c9;}
+.cardStore.WaitingPayment {
+    pointer-events: none;
+    border: 1px solid #186e13;}
 
 .cardStore p{
     padding-left: 20px; 
@@ -107,7 +111,7 @@
 .ViewStore {
     width: 250px;
     height: 20px;
-    background-color: #9462c9;
+    background-color: #484848;
     transform: translateY(40px);
     color: #ffffff;
     text-align: right;
@@ -118,6 +122,9 @@
 }
 .ViewStore.inactive {
     background-color: #6265c9;
+}
+.ViewStore.WaitingPayment {
+    background-color: #186e13;
 }
 
 

@@ -155,7 +155,7 @@ const BookStore: React.FC = () => {
             NameBackup: formData.nameStore,
             BookingBackup: BookingDate,
             LastDayBackup: LastDay,
-            DescribtionStoreB: formData.nameStore,
+            DescribtionStoreB: formData.description,
             UserIDB: Number(userIdstr),
             ProductTypeIDB: ProductTypeID,
             StoreID:ID,

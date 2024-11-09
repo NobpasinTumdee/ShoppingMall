@@ -111,6 +111,15 @@ const SubStore: React.FC = () => {
          {id: 4,Rating: 5},{id: 5,Rating: 2},{id: 1,Rating: 4},{id: 2,Rating: 5},
          {id: 3,Rating: 3},{id: 4,Rating: 4},{id: 5,Rating: 2},{id: 5,Rating: 4},
     ]
+    //=========================ตรวจสอบStatusStore============================================
+    const [statusCanbook,setStatus] = useState(false);
+    useEffect(() => {
+        if (StatusStore == 'This store is available for reservation.') {
+            setStatus(true);
+        }else{
+            setStatus(false);
+        }
+    }, [UserID]);
     return (
         <>
             <div style={{ height: '110px' }}></div>
@@ -119,7 +128,9 @@ const SubStore: React.FC = () => {
                 <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>
                 {NameStore}
             </div>
-            <div className='BookingBtn' onClick={() => handleStoreClick()}><p>Booking</p><span><img src={PicFloor} alt="PicFloor" /></span></div>
+            {statusCanbook && 
+                <div className='BookingBtn' onClick={() => handleStoreClick()}><p>Booking</p><span><img src={PicFloor} alt="PicFloor" /></span></div>
+            }
             <div>
                 <div className='picStore'><img src={PicStore ||  PicNoStore} alt="PicStore" /><span>The store is on floor F{ProductTypeID}.</span></div>
                 <img className='ProfileUserStore' src={user?.Profile || Pic} alt="Profile" />

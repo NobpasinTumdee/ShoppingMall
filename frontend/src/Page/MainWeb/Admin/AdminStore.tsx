@@ -37,6 +37,9 @@ const AdminStore: React.FC = () => {
         }else if(status ==2){
             fetchUserData('This store is available for reservation.');
             setS('This store is available for reservation.');
+        }else if(status ==3){
+            fetchUserData('Waiting for Payment.');
+            setS('Waiting for Payment.');
         }else{
             fetchUserData('This store is already taken.');
             setS('This store is already taken.');
@@ -46,7 +49,7 @@ const AdminStore: React.FC = () => {
     //================================= update approve ==========================
     const [messageApi, contextHolder] = message.useMessage();
     const approve = async (approval: StoreInterface) => {
-        const values = { ...approval, StatusStore: 'This store is already taken.' };
+        const values = { ...approval, StatusStore: 'Waiting for Payment.' };
         try {
             const res = await UpdateStoreByid(String(values.ID), values);
             if (res.status === 200) {
@@ -71,7 +74,21 @@ const AdminStore: React.FC = () => {
     };
     //================================= update Not approve ==========================
     const NotApprove = async (approval: StoreInterface) => {
-        const values = { ...approval, StatusStore: 'This store is available for reservation.' };
+        const values: StoreInterface = {
+            ID: approval.ID,
+            PicStore: '',
+            SubPicOne: '',
+            SubPicTwo: '',
+            SubPicThree: '',
+            MembershipID: 0,
+            NameStore: 'The shop has no owner.',
+            BookingDate: new Date('2024-01-01'),
+            LastDay: new Date('2024-01-01'),
+            DescribtionStore: '',
+            StatusStore: 'This store is available for reservation.',
+            UserID: 0,
+            ProductTypeID: approval.ProductTypeID
+        };
         try {
             const res = await UpdateStoreByid(String(values.ID), values);
             if (res.status === 200) {
@@ -103,8 +120,9 @@ const AdminStore: React.FC = () => {
             <p className='SubH1'>{S}</p>
             <div className='AllSeletion'>
                 <p style={{backgroundColor: '#6265C9'}} onClick={() => selection(1)} className='selection'><img src={Wait} alt="Wait" /></p>
-                <p style={{backgroundColor: '#9462C9'}} onClick={() => selection(2)} className='selection'><img src={NoOwn} alt="NoOwn" /></p>
-                <p style={{backgroundColor: '#C9AF62'}} onClick={() => selection(3)} className='selection'><img src={Own} alt="Own" /></p>
+                <p style={{backgroundColor: '#484848'}} onClick={() => selection(2)} className='selection'><img src={NoOwn} alt="NoOwn" /></p>
+                <p style={{backgroundColor: '#C9AF62'}} onClick={() => selection(4)} className='selection'><img src={Own} alt="Own" /></p>
+                <p style={{backgroundColor: '#0bd700'}} onClick={() => selection(3)} className='selection'><img src={Own} alt="Own" /></p>
             </div>
             <div className='Storewaitingforapproval'>
             {Store.length > 0 ? (
@@ -119,7 +137,7 @@ const AdminStore: React.FC = () => {
                                 </div>
                             </span>
                             <span className='StorewaitingBtn'>
-                                {S !== 'This store is available for reservation.' && (
+                                {(S !== 'This store is available for reservation.' && S !== 'Waiting for Payment.') && (
                                     <>
                                         <img style={{width: '40px' , cursor: 'pointer'}} src={Ap} alt="Ap" onClick={() => approve(data)} />
                                         <img style={{width: '40px', cursor: 'pointer'}} src={del} alt="del" onClick={() => NotApprove(data)} />

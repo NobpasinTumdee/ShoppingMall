@@ -20,8 +20,8 @@ body {
     transform: translate(-50%, -50%);
 
     background-color: rgb(34, 34, 34);
-    height: 700px;
-    width: 1230px;
+    height: 600px;
+    width: 1000px;
     border-radius: 10px;
     box-shadow: 0 0 20px #0000005c;
     font-size: 40px;
@@ -34,7 +34,7 @@ body {
 .LoginLeft{
     background-color: #1d1d1d;
     width: 40%;
-    height: 700px;
+    height: 600px;
     border-radius: 10px 0 0 10px;
     color: #E8D196;
     text-align: right;
@@ -74,7 +74,7 @@ body {
     background-color: #E8D196;
     border-radius: 0 20px 20px 0;
     box-shadow: 0 0 15px #E8D196; 
-    transform: translateY(400px);
+    transform: translateY(300px);
     text-align: center;
     font-size: 35px;
     color: #000;
@@ -107,7 +107,7 @@ body {
 .Loginrigth{
     background-color: #ffffff;
     width: 60%;
-    height: 700px;
+    height: 600px;
     border-radius: 0 10px 10px 0;
 }
 .formLogin{
