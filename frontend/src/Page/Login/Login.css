@@ -1,8 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
 body { 
     margin: 0px;
     padding: 0px;
     background-color: rgb(255, 255, 255);
 
+}
+.backgroud{
+    position: fixed;
+    width: 600px;
+    height: 100%;
+    background-color: #131313;
 }
 
 .Logincontanner {
@@ -12,27 +20,144 @@ body {
     transform: translate(-50%, -50%);
 
     background-color: rgb(34, 34, 34);
-    height: 500px;
-    width: 400px;
+    height: 700px;
+    width: 1230px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgb(107, 107, 107);
+    box-shadow: 0 0 20px #0000005c;
+    font-size: 40px;
+    font-family: 'Dongle', sans-serif;
 }
+.Loginsub{
+    display: flex;
+    justify-content: space-between;
+}
+.LoginLeft{
+    background-color: #1d1d1d;
+    width: 40%;
+    height: 700px;
+    border-radius: 10px 0 0 10px;
+    color: #E8D196;
+    text-align: right;
+    padding-right: 30px;
+}
+.LoginLeft img{
+    position: fixed;
+    transform: translate(-90px, -45px);
 
-.Logininput {
-    color: aliceblue;
+    animation-duration: 3s;
+    animation-name: LoginLeft;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes LoginLeft{
+    0%{
+        transform: translate(-90px, -45px);
+    }50%{
+        transform: translate(-90px, -50px);
+    }100%{
+        transform: translate(-90px, -45px);
+    }
+}
+.LoginLeft p:first-child{
+    font-weight: 800;
+    font-size: 90px;
+    line-height: 0px;
+}
+.LoginLeft p:nth-child(2){
+    font-size: 24px;
+    line-height: 0px;
+    transform: translateY(-50px);
+}
+.gotocarpark{
+    width: 200px;
+    height: 50px;
+    background-color: #E8D196;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 0 0 15px #E8D196; 
+    transform: translateY(400px);
     text-align: center;
-    font-size: 34px;
-    padding: 25px;
+    font-size: 35px;
+    color: #000;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+
+    animation-duration: 3s;
+    animation-name: gotocarpark;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+.gotocarpark:hover{
+    color: #ffffff;
+}
+@keyframes gotocarpark{
+    0%{
+        box-shadow: 0 0 15px #E8D196; 
+    }50%{
+        box-shadow: 0 0 0px #E8D196; 
+    }100%{
+        box-shadow: 0 0 15px #E8D196; 
+    }
 }
 
-.Logintextbox {
-    background-color: rgba(0, 0, 0, 0);
-    height: 100%;
-    margin: 50px 20px;
-    color: #202020;
+
+
+
+
+
+.Loginrigth{
+    background-color: #ffffff;
+    width: 60%;
+    height: 700px;
+    border-radius: 0 10px 10px 0;
+}
+.formLogin{
+    margin: 160px 100px;
+}
+.formLogin:first-child{
+    font-weight: 800;
+    font-size: 80px;
+    transform: translateY(-20%);
+}
+.formLogin p{
+    font-size: 25px;
+    font-family: 'Dongle', sans-serif;
+    margin: 0;
 }
 
 .LoginButton {
-    text-align: center;
-    margin: 40px;
+    text-align: right;
+}
+.LoginButton button{
+    width: 150px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #292929;
+    color: #ffffff;
+}
+.LoginButton img{
+    position: relative;
+    right: -10px;
+    top: 2px;
+    align-items: center;
+
+    animation-duration: 1.5s;
+    animation-name: LoginButton;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes LoginButton{
+    0%{
+        transform: translateX(0px);
+    }50%{
+        transform: translateX(5px);
+    }100%{
+        transform: translateX(0px);
+    }
+}
+
+.iconuser{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    transform: translateX(-40px);
 }

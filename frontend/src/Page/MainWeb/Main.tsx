@@ -1,6 +1,5 @@
 import React from 'react';
 //import { NavBar } from '../Component/NavBar';
-import { IntroWeb } from '../Component/NavBar';
 import Product from "../../assets/icon/ForPage/MainIcon/Product.png";
 
 //Floor
