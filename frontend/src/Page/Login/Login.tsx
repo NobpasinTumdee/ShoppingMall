@@ -69,7 +69,7 @@ const Login: React.FC = () => {
                                 
                                 <Input.Password placeholder="password" />
                             </Form.Item>
-                            <a href="/" >FORGOT PASSWORD</a>
+                            <a style={{color: '#C9AF62' ,fontWeight: '400'}} href="/" >FORGOT PASSWORD</a>
                             <div className="LoginButton">
                             <Form.Item>
                                 <button>
