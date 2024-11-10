@@ -77,8 +77,16 @@ const BookStore: React.FC = () => {
         setPopup1(true)
     };
     const [Package, setPackage] = useState(0);//package
+    const [datePackage , setDatePackage] = useState(0);
     const savePackage = async (newMembershipID: number) => {
         setPackage(newMembershipID);
+        if (newMembershipID == 1) {
+            setDatePackage(7);
+        }else if (newMembershipID == 2) {
+            setDatePackage(30);
+        }else if (newMembershipID == 3) {
+            setDatePackage(365);
+        }
         setTimeout(() => {
             setPopup(true)
         }, 100);
@@ -104,6 +112,10 @@ const BookStore: React.FC = () => {
         }, 5000);
     }
     const [messageApi, contextHolder] = message.useMessage();
+    //================================= set date ========================
+    const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const Last = new Date(Booking); // คัดลอกค่า BookingDate
+    Last.setDate(Last.getDate() + datePackage); // เพิ่ม วันให้กับ LastDay
     //================================= update ==========================
     const UpdateStoreByidd = async (formData: any) => {
         const values: StoreInterface = {
@@ -114,8 +126,8 @@ const BookStore: React.FC = () => {
             SubPicThree: String(formData.subPicThree),
             MembershipID: Package,
             NameStore: formData.nameStore,
-            BookingDate,
-            LastDay,
+            BookingDate:Booking,
+            LastDay:Last,
             DescribtionStore: formData.description,
             StatusStore: 'WaitingForApproval',
             UserID: Number(userIdstr),

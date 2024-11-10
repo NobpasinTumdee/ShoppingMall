@@ -139,7 +139,9 @@ const AdminStore: React.FC = () => {
                             <span className='StorewaitingBtn'>
                                 {(S !== 'This store is available for reservation.' && S !== 'Waiting for Payment.') && (
                                     <>
-                                        <img style={{width: '40px' , cursor: 'pointer'}} src={Ap} alt="Ap" onClick={() => approve(data)} />
+                                        {S !== 'This store is already taken.' && 
+                                            <img style={{width: '40px' , cursor: 'pointer'}} src={Ap} alt="Ap" onClick={() => approve(data)} />
+                                        }
                                         <img style={{width: '40px', cursor: 'pointer'}} src={del} alt="del" onClick={() => NotApprove(data)} />
                                     </>
                                 )}
