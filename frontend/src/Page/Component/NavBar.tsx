@@ -102,7 +102,7 @@ export const NavBar: React.FC = () => {
                     <div>
                         <a href="/Main" ><span className='MenuHover'>NEWS</span></a>
                         <a href="/Store" ><span className='MenuHover'>STORE</span></a>
-                        <a href="#" ><span className='MenuHover'>BOOK A HALL</span></a>
+                        <a href="/Hall" ><span className='MenuHover'>BOOK A HALL</span></a>
                         <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
                         <a href="#" ><span className='MenuHover'>CLEANING</span></a>
                     </div>
