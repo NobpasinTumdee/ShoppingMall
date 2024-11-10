@@ -34,10 +34,14 @@ const Login: React.FC = () => {
             location.href = "/Main";
         }, 9000);
     };
+    const close = async () => {
+        setIntro(false);
+        location.href = "/Main";
+    }
     return(
         <>
             {intro && 
-                <IntroWeb />
+                <div onClick={close}><IntroWeb /></div>
             }
             <div className='backgroud'></div>
             <div className='Logincontanner'>

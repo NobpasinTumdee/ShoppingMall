@@ -267,3 +267,29 @@
         opacity: 0;
     }
 }
+
+.introMainWeb p{
+    position: fixed;
+    top: 90%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-size: 30px;
+    font-family: 'Dongle', sans-serif;
+    visibility: hidden;
+
+    animation-duration: 2s;
+    animation-name: introMainWeb4;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes introMainWeb4{
+    0%{
+        visibility: visible;
+        opacity: 0;
+    }50%{
+        opacity: 1;
+    }100%{
+        opacity: 0;
+    }
+}

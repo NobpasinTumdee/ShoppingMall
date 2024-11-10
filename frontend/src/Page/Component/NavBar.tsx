@@ -169,6 +169,7 @@ export const IntroWeb: React.FC = () => {
                     <img src={LOGOSQ} alt="LOGOSQ" />
                     <h1>Hello! {user?.UserName}</h1>
                     <h2>WELCOME TO ICONIC</h2>
+                    <p>Press anywhere to skip</p>
                 </div>
             }
         </>

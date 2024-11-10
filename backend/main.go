@@ -29,6 +29,7 @@ func main() {
     r.PUT("/ResetPasswordUser", user.ResetPasswordUser) //Sign in == login 
 
 	r.GET("/user" , user.ListUsers)
+	r.GET("/store/:id",Store.GetStoreByFloor)
 	router := r.Group("")
 	{
 		router.Use(middlewares.Authorizes())
@@ -40,7 +41,6 @@ func main() {
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 
 		//ระบบ store
-		router.GET("/store/:id",Store.GetStoreByFloor)
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
 		//ระบบ store payment
