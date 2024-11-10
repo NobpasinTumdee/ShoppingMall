@@ -230,6 +230,17 @@ footer{
     font-family: 'Dongle', sans-serif;
     text-shadow: 0 4px 4px #00000017;
     color: #C9AF62;
+
+    animation: SubH1 5s ease-in-out infinite;
+}
+@keyframes SubH1{
+    0%{
+        scale: 1;
+    }50%{
+        scale: 1.1;
+    }100%{
+        scale: 1;
+    }
 }
 .PManagement {
     text-align: center;
@@ -292,11 +303,12 @@ footer{
     align-items: center;
     justify-content: center;
     background-color: #FFFCF2;
-    border: 5px solid #62501A;
+    border: 2px solid #62501A;
     border-radius: 10px;
     text-align: center;
     color: #C9AF62;
     box-shadow: 0 4px 4px #00000047;
+    cursor: pointer;
 
     animation: ManagementSpan 1s ease-in-out; /* เพิ่มระยะเวลาและใช้ easing ที่สมูทขึ้น */
 }
@@ -351,6 +363,25 @@ footer{
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+
+    animation: Storewaiting 1s ease-in-out ;
+}
+@keyframes Storewaiting{
+    0%{
+        transform: translateY(550px);
+        opacity: 0;
+    }100%{
+        transform: translateY(0px);
+    }
+}
+.Storewaiting.Waiting{
+    border-right: 10px solid #6265C9;
+}
+.Storewaiting.WaitOwn{
+    border-right: 10px solid #484848;
+}
+.Storewaiting.Payment{
+    border-right: 10px solid #09a401;
 }
 
 .Storewaiting span{
@@ -406,4 +437,69 @@ footer{
 .AllSeletion{
     position: fixed;
     left: 20px;
+    cursor: pointer;
+
+    animation: AllSeletion 0.5s ease-in-out ;
+}
+@keyframes AllSeletion{
+    0%{
+        transform: translateX(-100px);
+        opacity: 0;
+    }100%{
+        transform: translateX(0px);
+    }
+}
+.AllSeletion P:nth-child(1){
+    animation: AllSeletion1 2s ease-in-out infinite;
+}
+@keyframes AllSeletion1{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #6265C9;
+        scale: 0.9;
+        rotate: 180deg;
+    }100%{
+        rotate: 360deg;
+    }
+}
+.AllSeletion P:nth-child(2){
+    animation: AllSeletion2 2.2s ease-in-out infinite;
+}
+@keyframes AllSeletion2{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #484848;
+        scale: 0.9;
+    }100%{
+        
+    }
+}
+.AllSeletion P:nth-child(3){
+    animation: AllSeletion3 2.4s ease-in-out infinite;
+}
+@keyframes AllSeletion3{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #C9AF62;
+        scale: 0.9;
+    }100%{
+        
+    }
+}
+.AllSeletion P:nth-child(4){
+    animation: AllSeletion4 2.6s ease-in-out infinite;
+}
+@keyframes AllSeletion4{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #0bd700;
+        scale: 0.9;
+        rotate: 10deg;
+    }100%{
+        
+    }
 }

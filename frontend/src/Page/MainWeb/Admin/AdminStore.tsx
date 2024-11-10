@@ -83,7 +83,7 @@ const AdminStore: React.FC = () => {
             MembershipID: 0,
             NameStore: 'The shop has no owner.',
             BookingDate: new Date('2024-01-01'),
-            LastDay: new Date('2024-01-01'),
+            LastDay: new Date('2030-01-01'),
             DescribtionStore: '',
             StatusStore: 'This store is available for reservation.',
             UserID: 0,
@@ -128,7 +128,7 @@ const AdminStore: React.FC = () => {
             {Store.length > 0 ? (
                 Store.map((data) => (
                     <>
-                        <div className='Storewaiting' key={data.ID}>
+                        <div className={`Storewaiting ${data.StatusStore === "This store is available for reservation." ? "WaitOwn" : data.StatusStore === "WaitingForApproval" ? "Waiting" : data.StatusStore === "Waiting for Payment." ? "Payment" : ""}`} key={data.ID} >
                             <span className='Storewaitinginfo'>
                                 <img src={data.PicStore || picEx} alt="picEx" />
                                 <div className='textinfo'>

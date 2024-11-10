@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Admin: React.FC = () => {
     const navigate = useNavigate();
-    const handleClick = () => {
+    const handleClickToStore = () => {
         navigate('/AdminStore');
     };
 
@@ -23,15 +23,15 @@ const Admin: React.FC = () => {
                 <p className='ManageMainPage'><img src={Home} alt="Home" />Manage Main Page</p>
             </div>
             <div className='Management'>
-                <span className='ManagementSpan' onClick={handleClick}>
+                <span className='ManagementSpan' >
                     <img src={Hall} alt="Hall" />
                     <span>Manage Hall</span>
                 </span>
-                <span className='ManagementSpan' onClick={handleClick}>
+                <span className='ManagementSpan' onClick={handleClickToStore}>
                     <img src={Store} alt="Store" />
                     <span>Manage Store</span>
                 </span>
-                <span className='ManagementSpan' onClick={handleClick}>
+                <span className='ManagementSpan' >
                     <img src={Job} alt="Job" />
                     <span>Manage Job</span>
                 </span>
