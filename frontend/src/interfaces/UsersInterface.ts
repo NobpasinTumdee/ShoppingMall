@@ -8,5 +8,6 @@ export interface UsersInterface {
 	FirstName?: 		string;
 	LastName?: 			string;
 	Age?: 		number;
+	Tel?: 			string ;
 	Status?: 			string ;
 }

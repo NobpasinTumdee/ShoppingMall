@@ -293,3 +293,160 @@
         opacity: 0;
     }
 }
+
+/*========================================================= profile ============================================*/
+.back {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: #00000016;
+    z-index: 1001;
+    backdrop-filter: blur(2px);
+    animation: back 1s ease-in-out ;
+}
+@keyframes back{0%{opacity: 0;}}
+.ProfileContaner{
+    position: fixed;
+    text-align: center;
+    top: 100px;
+    right: 20px;
+    width: 500px;
+    height: 700px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #00000063;
+    z-index: 1010;
+    animation: ProfileContaner 0.5s ease-in-out  ;
+}
+@keyframes ProfileContaner{
+    0%{
+        top: 100px;
+        right: -500px;
+    }80%{
+        top: 100px;
+        right: 50px;
+    }100%{
+        top: 100px;
+        right: 20px;
+    }
+}
+.ProfileContaner div:nth-child(1) img{
+    width: 100%;
+    height: 250px;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 5px 10px #00000067;
+}
+.ProfileContaner div:nth-child(2) img{
+    width: 250px;
+    height: 250px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background-color: #eeeeee;
+    border: 5px solid #ffffff;
+    box-shadow: 0 0 10px #00000067;
+    animation: ProfileContaner2 5s ease-in-out infinite ;
+}
+@keyframes ProfileContaner2{
+    0%{
+        transform: translateY(-50%);
+    }50%{
+        transform: translateY(-48%);
+    }100%{
+        transform: translateY(-50%);
+    }
+}
+.ProfileContaner div:nth-child(3){
+    text-align: center;
+    background-color: #ffe8af;
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+    border-radius: 20px;
+    position: absolute;
+    top: 330px;
+    right: 120px;
+    box-shadow: 0 5px 10px #00000067;
+    text-shadow: 0 5px 10px #00000067;
+    animation: ProfileContaner3 3s ease-in-out infinite ;
+}
+@keyframes ProfileContaner3{
+    0%{
+        
+    }25%{
+        rotate: 10deg;
+    }75%{
+        rotate: -10deg;
+    }100%{
+        
+    }
+}
+.ProfileContaner div:nth-child(4){
+    font-size: 80px;
+    font-weight: bold;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-130%);
+    text-shadow: 0 5px 5px #0000004b;
+    color: #543F00;
+}
+.ProfileContaner div:nth-child(5){
+    font-size: 30px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-400%);
+    color: #543F00;
+}
+.ProfileContaner div:nth-child(6){
+    font-size: 30px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-400%);
+    color: #543F00;
+}
+.ProfileContaner div:nth-child(7){
+    font-size: 30px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-400%);
+    color: #543F00;
+}
+.ProfileContaner div:nth-child(8){
+    font-size: 30px;
+    font-family: 'Dongle', sans-serif;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: #543f006b;
+    cursor: pointer;
+    animation: ProfileContaner8 3s ease-in-out infinite ;
+}
+@keyframes ProfileContaner8{
+    0%{
+        
+    }40%{
+        right: 10px;
+    }50%{
+        right: 15px;
+    }60%{
+        right: 10px;
+    }100%{
+        
+    }
+}
+.ProfileContaner div:nth-child(9){
+    font-size: 30px;
+    font-family: 'Dongle', sans-serif;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-shadow: 0 0 10px #0000008b;
+    cursor: pointer;
+    animation: ProfileContaner9 3s ease-in-out infinite ;
+}
+@keyframes ProfileContaner9{
+    0%{
+        
+    }25%{
+        rotate: 10deg;
+    }75%{
+        rotate: -10deg;
+    }100%{
+        
+    }
+}

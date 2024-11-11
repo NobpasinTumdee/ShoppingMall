@@ -4,7 +4,9 @@ import LOGO from "../../assets/icon/highLogo.jpg";
 import LOGOSQ from "../../assets/icon/LOGOS.png";
 import Clock from "../../assets/icon/ForPage/MainIcon/Clock.png";
 import Address from "../../assets/icon/ForPage/MainIcon/Address.png";
-import UserIcon from "../../assets/icon/ForPage/MainIcon/UserProfile.jpg"
+//import UserIcon from "../../assets/icon/ForPage/MainIcon/UserProfile.jpg"
+import Hutao from "../../assets/icon/ForPage/MainIcon/HuTaopic.jpg"
+import background from "../../assets/icon/ForPage/Store/Store3.jpg"
 import './NavBar.css';
 
 //API
@@ -82,8 +84,29 @@ export const NavBar: React.FC = () => {
     }, [currentTime]);
     //const [isOpen, setOpen] = useState(false);
     const [istextOpen, settextOpen] = useState('NOT OPEN NOW');
+    //====================profile==============================
+    const [isProfile, setProfile] = useState(false);
+    const OpenProfile = () => {
+        setProfile(!isProfile);
+    };
     return (
         <>
+            {isProfile && 
+                <>
+                    <div className='back' onClick={OpenProfile}></div>
+                    <div className='ProfileContaner'>
+                        <div><img src={user?.ProfileBackground || background} alt="ProfileBackground" /></div>
+                        <div><img src={user?.Profile || Hutao} alt="Profile" /></div>
+                        <div>{user?.Status}</div>
+                        <div>{user?.UserName}</div>
+                        <div>Gmail : {user?.Email}</div>
+                        <div>Name : {user?.FirstName}{user?.LastName}</div>
+                        <div>Age : {user?.Age} Tel : {user?.Tel || 'No Phone Number'}</div>
+                        <div onClick={OpenProfile}>back to main ▶</div>
+                        <div>🛠️</div>
+                    </div>
+                </>
+            }
             <nav className='positionNav'>
                 <nav className='NavComponent'>
                     <span className='SubNab1'>
@@ -98,10 +121,10 @@ export const NavBar: React.FC = () => {
                     <span className='SubNab2'><img style={{ width: '200px', height: '30px' }} src={LOGO} alt="LOGO" /></span>
                     <span className='SubNab3'>
                         <span>Hello! {user?.UserName} Welcome to ICONIC🎉</span>
-                        <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || UserIcon} alt="User" onClick={OpenMenu}></img>
+                        <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || Hutao} alt="User" onClick={OpenMenu}></img>
                         {isMenuOpen && (
                             <div className='dropboxMenu'>
-                                <a href="" ><p className='dropboxMenuP'>Edit Your Profile</p></a>
+                                <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
                                 <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>
