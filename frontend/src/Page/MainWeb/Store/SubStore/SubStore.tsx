@@ -122,6 +122,7 @@ const SubStore: React.FC = () => {
     }, [UserID]);
     return (
         <>
+            <div style={{height: '110px',zIndex: '0'}}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>
                 <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>

@@ -122,8 +122,8 @@ export const NavBar: React.FC = () => {
                     </div>
                     <div></div>
                 </nav>
+            
             </nav>
-            <div style={{height: '110px'}}></div>
         </>
     );
 };

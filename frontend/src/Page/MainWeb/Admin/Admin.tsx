@@ -16,6 +16,7 @@ const Admin: React.FC = () => {
 
     return(
         <>
+            <div style={{height: '110px',zIndex: '0'}}></div>
             <h1 className='H1Management'>Welcome to Management</h1>
             <p className='PManagement'>What do you want to do?</p>
             <div className='Mainpage'>

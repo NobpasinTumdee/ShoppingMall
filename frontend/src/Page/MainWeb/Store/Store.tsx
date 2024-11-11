@@ -142,6 +142,7 @@ const Store: React.FC = () => {
     return (
         <>
             <FloorMenu />
+            <div style={{height: '110px',zIndex: '0'}}></div>
             <div className='route'><a href="/Main">Home /</a>Store Directory</div>
             <div className='StoreMainContent'>
                 <h1>{isNameFloor}</h1>

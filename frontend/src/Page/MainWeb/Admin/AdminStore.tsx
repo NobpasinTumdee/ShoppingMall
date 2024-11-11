@@ -120,6 +120,7 @@ const AdminStore: React.FC = () => {
     };
     return (
         <>
+            <div style={{height: '110px',zIndex: '0'}}></div>
             {contextHolder}
             <div className='route'><a href="/Admin">Management /</a>Store Management</div>
             <h1 className='H1Management'>Store Management</h1>
