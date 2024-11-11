@@ -1,8 +1,16 @@
 package entity
+<<<<<<< HEAD
+=======
+
+>>>>>>> Hall
 import (
 	"time"
 	"gorm.io/gorm"
 )
+<<<<<<< HEAD
+=======
+
+>>>>>>> Hall
 type Hall struct {
 	gorm.Model
 	HallName		string		`json:"HallName"`
@@ -12,20 +20,37 @@ type Hall struct {
 	ImageHall		string		`json:"ImageHall"`
 	Description		string		`json:"Description"`
 	PricePerHour	int			`json:"PricePerHour"`
+<<<<<<< HEAD
 	BookingHall []BookingHall	`gorm:"foreignKey:HallID"`
 	Facilities	[]Facilities	`gorm:"foreignKey:HallID"`
+=======
+
+	BookingHall []BookingHall	`gorm:"foreignKey:HallID"`
+	Facilities	[]Facilities	`gorm:"foreignKey:HallID"`
+
+>>>>>>> Hall
 }
 type FacilityList struct{
 	gorm.Model
 	FacilityName	string		`json:"FacilityName"`
 	Description		string		`json:"Descrption"`
+<<<<<<< HEAD
+=======
+
+>>>>>>> Hall
 	Facilities	[]Facilities	`gorm:"foreignKey:FacilityListID"`
 }
 type Facilities struct {
 	gorm.Model
 	HallID			uint		`json:"HallID"`
 	FacilityListID	uint		`json:"FacilityListID"`
+<<<<<<< HEAD
 	Quantity		int			`json:"Quantity"`
+=======
+
+	Quantity		int			`json:"Quantity"`
+
+>>>>>>> Hall
 }
 type BookingHall struct {
 	gorm.Model
@@ -40,11 +65,23 @@ type BookingHall struct {
 	CustomerPhone	string		`json:"CustomerPhone"`
 	CustomerAddress	string		`json:"CustomerAddress"`
 	CancelDate		time.Time	`json:"CancelDate"`
+<<<<<<< HEAD
 	PaymentHall []PaymentHall	`gorm:"foreignKey:BookingHallID"`
 }
 type PaymentHall struct {
 	gorm.Model
 	BookingHallID	uint		`json:"BookingHallID"`
+=======
+
+	PaymentHall []PaymentHall	`gorm:"foreignKey:BookingHallID"`
+
+}
+
+type PaymentHall struct {
+	gorm.Model
+	BookingHallID	uint		`json:"BookingHallID"`
+
+>>>>>>> Hall
 	Amount			int			`json:"Amount"`
 	PaymentDate		time.Time	`json:"PaymentDate"`
 	PaymentMethod	string		`json:"PaymentMethod"`
