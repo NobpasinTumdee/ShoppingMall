@@ -450,3 +450,44 @@
         
     }
 }
+/*==================================================card=============================================*/
+.CardMember{
+    position: fixed;
+    z-index: 1010;
+}
+.Platinum img{
+    width: 400px;
+    position: fixed;
+    bottom: 60px;
+    left: 20px;
+    filter: drop-shadow(0 0 10px #889699);
+    animation: CardMember 3s ease-in-out  ;
+}
+.Gold img{
+    width: 400px;
+    position: fixed;
+    bottom: 60px;
+    left: 20px;
+    filter: drop-shadow(0 0 10px #ffe75e);
+    animation: CardMember 3s ease-in-out  ;
+}
+.Dimond img{
+    width: 400px;
+    position: fixed;
+    bottom: 60px;
+    left: 20px;
+    filter: drop-shadow(0 0 10px #0B3D6E);
+    animation: CardMember 3s ease-in-out  ;
+}
+@keyframes CardMember{
+    0%{
+        bottom: 60px;
+        left: -500px;
+    }80%{
+        bottom: 60px;
+        left: 20px;
+    }100%{
+        bottom: 60px;
+        left: 20px;
+    }
+}

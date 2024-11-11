@@ -6,6 +6,9 @@ import Clock from "../../assets/icon/ForPage/MainIcon/Clock.png";
 import Address from "../../assets/icon/ForPage/MainIcon/Address.png";
 //import UserIcon from "../../assets/icon/ForPage/MainIcon/UserProfile.jpg"
 import Hutao from "../../assets/icon/ForPage/MainIcon/HuTaopic.jpg"
+import card1 from "../../assets/icon/ForPage/MainIcon/cardp.png"
+import card2 from "../../assets/icon/ForPage/MainIcon/cardg.png"
+import card3 from "../../assets/icon/ForPage/MainIcon/cardd.png"
 import background from "../../assets/icon/ForPage/Store/Store3.jpg"
 import './NavBar.css';
 
@@ -86,8 +89,19 @@ export const NavBar: React.FC = () => {
     const [istextOpen, settextOpen] = useState('NOT OPEN NOW');
     //====================profile==============================
     const [isProfile, setProfile] = useState(false);
+    const [card ,setcard] = useState(0);
     const OpenProfile = () => {
         setProfile(!isProfile);
+        if (user?.Status == 'Admin') {
+            setcard(3);
+        }else if (user?.Status == 'Employee'){
+            setcard(2);
+        }else{
+            setcard(1);
+        }
+    };
+    const closeCard = () => {
+        setcard(0);
     };
     return (
         <>
@@ -104,6 +118,17 @@ export const NavBar: React.FC = () => {
                         <div>Age : {user?.Age} Tel : {user?.Tel || 'No Phone Number'}</div>
                         <div onClick={OpenProfile}>back to main ▶</div>
                         <div>🛠️</div>
+                    </div>
+                    <div className='CardMember'>
+                        {card === 1 &&
+                            <div className='Platinum' onClick={closeCard}><img src={card1} alt="ProfileBackground" /></div>
+                        }
+                        {card === 2 &&
+                            <div className='Gold' onClick={closeCard}><img src={card2} alt="ProfileBackground" /></div>
+                        }
+                        {card === 3 &&
+                            <div className='Dimond' onClick={closeCard}><img src={card3} alt="ProfileBackground" /></div>
+                        }
                     </div>
                 </>
             }
