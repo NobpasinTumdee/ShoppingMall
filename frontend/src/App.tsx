@@ -7,12 +7,9 @@ import AdminStore from './Page/MainWeb/Admin/AdminStore';
 import Store from './Page/MainWeb/Store/Store';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
-<<<<<<< HEAD
 import { NavBar } from './Page/Component/NavBar';
-=======
 import Hall from './Page/MainWeb/Hall/HallBookingPage';
 
->>>>>>> Hall
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -29,7 +26,7 @@ const App: React.FC = () => {
         <Route path="/SubStore" element={<SubStore />} />
         <Route path="/BookStore" element={<BookStore />} /> 
         <Route path="/Hall" element={<Hall />} />
-        <Route path="/selectHall" element={<selectHall />} />
+        
       </Routes>
     </>
   );
