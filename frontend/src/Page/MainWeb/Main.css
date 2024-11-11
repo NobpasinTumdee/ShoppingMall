@@ -393,13 +393,22 @@ footer{
     margin-right: 10px;
     border-radius: 8px;
 }
-.info{
-    transform: translateY(-40%);
-    line-height: 15px;
-    height: 80px;
-}
+
 .textinfo{
     width: 550px;
+    transform: translateY(10%);
+}
+.textinfo p:nth-child(1){
+    transform: translateY(-30%);
+}
+.textinfo p:nth-child(2){
+    overflow-y: scroll;
+    transform: translateY(-100%);
+    line-height: 15px;
+    height: 50px;
+}
+.textinfo p:nth-child(3){
+    transform: translateY(-200%);
 }
 .Storewaitinginfo img{
     width: 250px;

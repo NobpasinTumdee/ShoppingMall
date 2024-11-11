@@ -12,12 +12,17 @@ import { message} from "antd";
 
 import {GetStoreWaiting , UpdateStoreByid} from '../../../services/https/index';
 import {StoreInterface} from '../../../interfaces/StoreInterface'
+
+
+
+
 const AdminStore: React.FC = () => {
+    //============================ข้อมูลร้านค้า==========================
     const [Store, setStore] = useState<StoreInterface[]>([]);
     useEffect(() => {
-            fetchUserData('WaitingForApproval');
+            fetchStoreData('WaitingForApproval');
     }, []);
-    const fetchUserData = async (F: string) => {
+    const fetchStoreData = async (F: string) => {
         try {
             const res = await GetStoreWaiting(F);
             if (res.status === 200 && res.data) {
@@ -32,19 +37,21 @@ const AdminStore: React.FC = () => {
     const [S, setS] = useState('WaitingForApproval');
     const selection = async (status: number) => {
         if (status == 1) {
-            fetchUserData('WaitingForApproval');
+            fetchStoreData('WaitingForApproval');
             setS('WaitingForApproval');
         }else if(status ==2){
-            fetchUserData('This store is available for reservation.');
+            fetchStoreData('This store is available for reservation.');
             setS('This store is available for reservation.');
         }else if(status ==3){
-            fetchUserData('Waiting for Payment.');
+            fetchStoreData('Waiting for Payment.');
             setS('Waiting for Payment.');
         }else{
-            fetchUserData('This store is already taken.');
+            fetchStoreData('This store is already taken.');
             setS('This store is already taken.');
         }
     };
+    //================================= คำเตือน ==================================
+
 
     //================================= update approve ==========================
     const [messageApi, contextHolder] = message.useMessage();
@@ -95,8 +102,8 @@ const AdminStore: React.FC = () => {
                 // อัปเดต state เพื่อลบประวัติจากหน้าจอทันที
                 setStore((prev) => prev.filter(item => item.ID !== values.ID));
                 messageApi.open({
-                    type: "success",
-                    content: 'Approve Success!',
+                    type: "info",
+                    content: 'Not Approve!',
                 });
             } else {
                 messageApi.open({
@@ -114,7 +121,6 @@ const AdminStore: React.FC = () => {
     return (
         <>
             {contextHolder}
-            <div style={{ height: '110px' }}></div>
             <div className='route'><a href="/Admin">Management /</a>Store Management</div>
             <h1 className='H1Management'>Store Management</h1>
             <p className='SubH1'>{S}</p>
@@ -133,7 +139,8 @@ const AdminStore: React.FC = () => {
                                 <img src={data.PicStore || picEx} alt="picEx" />
                                 <div className='textinfo'>
                                     <p style={{ fontSize: '34px', marginTop: '30px' ,fontWeight: '600'}}>{data.NameStore} F{data.ProductTypeID}</p>
-                                    <p className='info'>{data.DescribtionStore}</p>
+                                    <p>{data.DescribtionStore}</p>
+                                    <p>{data.BookingDate ? new Date(data.BookingDate).toLocaleDateString() : 'No Date'}</p>
                                 </div>
                             </span>
                             <span className='StorewaitingBtn'>

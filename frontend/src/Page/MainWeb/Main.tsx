@@ -41,7 +41,6 @@ const Main: React.FC = () => {
     return(
         <>
             
-            <div style={{height: '110px'}}></div>
             <div className='AdvertisingMain'>
                 <span><img src={Product} alt="Product" /></span>
                 <span className='advertisingtext'>

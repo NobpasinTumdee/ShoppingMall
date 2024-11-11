@@ -13,7 +13,7 @@ import Hall from './Page/MainWeb/Hall/HallBookingPage';
 
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}

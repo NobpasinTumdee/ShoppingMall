@@ -9,7 +9,7 @@ import {
 
 import './HallBookingPage.css';
 
-const { Header, Sider, Content } = Layout;
+const { /*Header,*/ Sider, Content } = Layout;
 const { Option } = Select;
 
 const HallBookingPage: React.FC = () => {
@@ -28,12 +28,12 @@ const HallBookingPage: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      {/* Header */}
+    <Layout style={{ minHeight: '750px' }}>
+      {/* Header 
       <Header style={{ background: '#001529', color: '#fff', textAlign: 'center', fontSize: '18px' }}>
         Hall Booking System
       </Header>
-
+      */}
       <Layout>
         {/* Sidebar */}
         <Sider width={250} theme="dark">
@@ -54,7 +54,7 @@ const HallBookingPage: React.FC = () => {
         </Sider>
 
         {/* Main Content */}
-        <Layout style={{ padding: '24px' }}>
+        <Layout style={{ padding: '10px' }}>
           <Content style={{ padding: 24, margin: 0, background: '#fff' }}>
             <h2>จองห้องประชุม</h2>
             <Form
@@ -93,7 +93,7 @@ const HallBookingPage: React.FC = () => {
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                <Button type="primary" htmlType="submit" style={{ width: '100%' ,backgroundColor: "#E8D196" ,color: '#000'}}>
                   จองห้องประชุม
                 </Button>
               </Form.Item>

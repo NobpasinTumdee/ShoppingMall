@@ -331,7 +331,6 @@ const BookStore: React.FC = () => {
             }
 
  
-            <div style={{ height: '110px' }}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>
                 <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>
