@@ -37,6 +37,7 @@ func main() {
 
 		//User
 		router.GET("/user/:id", user.GetUser)
+		router.POST("/addStore",user.AddStoreUser)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 

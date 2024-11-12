@@ -1,5 +1,6 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface} from "../../interfaces/StoreInterface";
+import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -39,6 +40,18 @@ async function GetUserById(id: string) {
   return await axios
 
     .get(`${apiUrl}/user/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Add Store
+async function AddStore(data: InfoUserStoreInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/addStore`, data, requestOptions)
 
     .then((res) => res)
 
@@ -100,6 +113,7 @@ async function GetStoreWaiting(status: string) {
 export {
     SignIn,
     GetUserById,
+    AddStore,
 
     GetStoreWaiting,
 

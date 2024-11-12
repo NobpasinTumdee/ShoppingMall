@@ -30,6 +30,8 @@ export interface BackupStoreInterface{
     UserID?:            number ;
     StoreID?:           number ;
 }
+
+
 export interface InfoUserStoreInterface{
     ID?:                number ;
     UserNameStore?:     String ;

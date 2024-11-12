@@ -17,8 +17,8 @@ import './NavBar.css';
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById , UpdateStoreByid} from '../../services/https';
-import { StoreInterface } from '../../interfaces/StoreInterface';
+import { GetUserById , AddStore} from '../../services/https';
+import { InfoUserStoreInterface } from '../../interfaces/StoreInterface';
 
 
 
@@ -112,35 +112,26 @@ export const NavBar: React.FC = () => {
     //=========================================Add Store==============================
     const [messageApi, contextHolder] = message.useMessage();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-    const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
-    const Last = new Date(Booking); // คัดลอกค่า BookingDate
-    Last.setDate(Last.getDate() + 7); // เพิ่ม วันให้กับ LastDay
     const UpdateStoreByidd = async (formData: any) => {
-        const values: StoreInterface = {
-            ID: 1,
-            PicStore: String(formData.picStore),
-            SubPicOne: String(formData.subPicOne),
-            SubPicTwo: String(formData.subPicTwo),
-            SubPicThree: String(formData.subPicThree),
-            MembershipID: 1,
-            NameStore: formData.nameStore,
-            BookingDate:Booking,
-            LastDay:Last,
-            DescribtionStore: formData.description,
-            StatusStore: 'WaitingForApproval',
+        const values: InfoUserStoreInterface = {
+            UserNameStore: formData.nameStore,
+            UserPicStore: String(formData.picStore),
+            UserSubPicOne: String(formData.subPicOne),
+            UserSubPicTwo: String(formData.subPicTwo),
+            UserSubPicThree: String(formData.subPicThree),
+            UserDescribStore: formData.description,
             UserID: Number(userIdstr),
-            ProductTypeID: 1
         };
         try {
-            const res = await UpdateStoreByid(String(1), values);
-            if (res.status === 200) {
+            const res = await AddStore(values);
+            if (res.status === 201) {
                 messageApi.open({
                     type: "success",
                     content: res.data.message,
                 });
                 setTimeout(() => {
-                    //navigate("/Store"); // นำทางกลับไปที่หน้า Store
-                }, 2000);
+                    setAddstore(false)
+                }, 500);
             } else {
                 messageApi.open({
                     type: "error",
@@ -150,7 +141,7 @@ export const NavBar: React.FC = () => {
         } catch (error) {
             messageApi.open({
                 type: "error",
-                content: "การอัพเดทไม่สำเร็จ",
+                content: "Can't Add your store",
             });
         }
     };

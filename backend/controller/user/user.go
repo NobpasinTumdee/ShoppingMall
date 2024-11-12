@@ -53,3 +53,34 @@ func GetUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 }
+
+
+// create POST StoreUser by iduser
+func AddStoreUser(c *gin.Context) {
+	var UserStore entity.InfoUserStore
+
+	if err := c.ShouldBindJSON(&UserStore); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.InfoUserStore{
+		UserNameStore: UserStore.UserNameStore,
+		UserPicStore: UserStore.UserPicStore,
+		UserSubPicOne: UserStore.UserSubPicOne,
+		UserSubPicTwo: UserStore.UserSubPicTwo,
+		UserSubPicThree: UserStore.UserSubPicThree,
+		UserDescribStore: UserStore.UserDescribStore,
+		UserID: UserStore.UserID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Backup success", "data": u})
+}
