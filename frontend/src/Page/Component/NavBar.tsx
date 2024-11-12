@@ -17,7 +17,7 @@ import './NavBar.css';
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById , AddStore} from '../../services/https';
+import { GetUserById , AddStore ,UserStoreByid} from '../../services/https';
 import { InfoUserStoreInterface } from '../../interfaces/StoreInterface';
 
 
@@ -28,6 +28,7 @@ export const NavBar: React.FC = () => {
     useEffect(() => {
         if (userIdstr) {
             fetchUserData(userIdstr);
+            fetchUserStoreData(userIdstr);
         } else {
             
         }
@@ -39,8 +40,26 @@ export const NavBar: React.FC = () => {
             if (res.status === 200) {
                 setUser(res.data);
                 //message.success("พบข้อมูลUser");
-            } else {
-                
+            }else {
+                message.error("error");
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error); // Debug
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+        }
+    };
+    //=====================listStore===========================
+    const [Storeu, setStoree] = useState<InfoUserStoreInterface[]>([]);
+    const fetchUserStoreData = async (userIdstr: string ) => {
+        try {
+            const res = await UserStoreByid(userIdstr);
+            if (res.status === 200) {
+                setStoree(res.data);
+                console.log(res.data); 
+
+            }else {
+                setStoree([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
+                message.error("There is no Store on this floor.");
             }
         } catch (error) {
             console.error("Error fetching user data:", error); // Debug
@@ -112,6 +131,37 @@ export const NavBar: React.FC = () => {
     //=========================================Add Store==============================
     const [messageApi, contextHolder] = message.useMessage();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const getImageURL = async (file?: File): Promise<string> => {
+        if (!file) return '';
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+        });
+    };
+
+    const UpdateAndBackup = async (formData: any) => {
+        UpdateStoreByidd(formData);
+    };
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src && file.originFileObj) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as File);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+    const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+    
+
     const UpdateStoreByidd = async (formData: any) => {
         const values: InfoUserStoreInterface = {
             UserNameStore: formData.nameStore,
@@ -169,35 +219,7 @@ export const NavBar: React.FC = () => {
         UpdateAndBackup(formData);
     };
 
-    const getImageURL = async (file?: File): Promise<string> => {
-        if (!file) return '';
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-        });
-    };
-
-    const UpdateAndBackup = async (formData: any) => {
-        UpdateStoreByidd(formData);
-    };
-    const onPreview = async (file: UploadFile) => {
-        let src = file.url as string;
-        if (!src && file.originFileObj) {
-            src = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file.originFileObj as File);
-                reader.onload = () => resolve(reader.result as string);
-            });
-        }
-        const image = new Image();
-        image.src = src;
-        const imgWindow = window.open(src);
-        imgWindow?.document.write(image.outerHTML);
-    };
-    const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
-    };
+    
     //===============================popup add store============================================
     const [isAddstore, setAddstore] = useState(false);
     const OpenAddStore = () => {
@@ -205,6 +227,14 @@ export const NavBar: React.FC = () => {
     };
     const closeAddStore = () => {
         setAddstore(false)
+    };
+    //===============================Popup your store==========================================
+    const [isUserStore, setUserStore] = useState(false);
+    const OpenUserStore = () => {
+        setUserStore(!isUserStore)
+    };
+    const closeUserStore = () => {
+        setUserStore(false)
     };
     return (
         <>
@@ -222,7 +252,7 @@ export const NavBar: React.FC = () => {
                         <div>Age : {user?.Age} Tel : {user?.Tel || 'No Phone Number'}</div>
                         <div onClick={OpenProfile}>back to main ▶</div>
                         <div>🛠️</div>
-                        <div>your store</div>
+                        <div onClick={OpenUserStore}>your store</div>
                         <div onClick={OpenAddStore}>Create your store</div>
                     </div>
                     <div className='CardMember'>
@@ -268,6 +298,27 @@ export const NavBar: React.FC = () => {
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    }
+
+                    {isUserStore && 
+                        <div className='UserStoreSelect'>
+                            <h1>Your Store</h1>
+                            <div className='E' onClick={closeUserStore}></div>
+                            <div className='cardStoreUser'>
+                                {Storeu.length > 0 ? (
+                                    Storeu.map((data) => 
+                                        <div className='CardInfoUser' key={data.ID}>
+                                            <img src={data.UserPicStore || background} alt="background" />
+                                            <div className='N'>{data.UserNameStore}</div>
+                                        </div>
+                                    )
+                                ) : (
+                                    <>
+                                        You have no store!!!
+                                    </>
+                                )}
+                            </div>
                         </div>
                     }
                 </>

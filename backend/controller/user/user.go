@@ -84,3 +84,45 @@ func AddStoreUser(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Backup success", "data": u})
 }
+
+// GET /userstore
+func ListUserstore(c *gin.Context) {
+
+	var userStore []entity.InfoUserStore
+
+	// Get the database connection
+	db := config.DB()
+
+	// Query the user table for basic user data
+	results := db.Select("id, user_name_store, user_sub_pic_one, user_sub_pic_two , user_sub_pic_three , user_describ_store , user_id").Find(&userStore)
+
+	// Check for errors in the query
+	if results.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+		return
+	}
+
+	// Return the results as JSON
+	c.JSON(http.StatusOK, userStore)
+}
+
+
+// GET /userstore/:id
+func GetUserstoreByid(c *gin.Context) {
+	ID := c.Param("id")
+	var user []entity.InfoUserStore
+
+	db := config.DB()
+
+	results := db.Where("user_id = ?", ID).Find(&user)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}

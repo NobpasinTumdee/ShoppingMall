@@ -17,15 +17,15 @@ export interface StoreInterface {
 
 export interface BackupStoreInterface{
     ID?:                number ;
-    PicStoreBackup?:    String ;
-    PicOneBackup?:      String ;
-    PicTwoBackup?:      String ;
-    PicThreeBackup?:    String ;
+    PicStoreBackup?:    string ;
+    PicOneBackup?:      string ;
+    PicTwoBackup?:      string ;
+    PicThreeBackup?:    string ;
     MembershipBackup?:  number ;
-    NameBackup?:        String ;
+    NameBackup?:        string ;
     BookingBackup?:     Date ;
     LastDayBackup?:     Date ;
-    DescribtionStoreB?: String ;
+    DescribtionStoreB?: string ;
     ProductTypeIDB?:    number ;
     UserID?:            number ;
     StoreID?:           number ;
@@ -34,11 +34,11 @@ export interface BackupStoreInterface{
 
 export interface InfoUserStoreInterface{
     ID?:                number ;
-    UserNameStore?:     String ;
-    UserPicStore?:      String ;
-    UserSubPicOne?:     String ;
-    UserSubPicTwo?:     String ;
-    UserSubPicThree?:   String ;
-    UserDescribStore?:  String ;
+    UserNameStore?:     string ;
+    UserPicStore?:      string ;
+    UserSubPicOne?:     string ;
+    UserSubPicTwo?:     string ;
+    UserSubPicThree?:   string ;
+    UserDescribStore?:  string ;
     UserID?:            number ;
 }

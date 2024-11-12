@@ -38,6 +38,8 @@ func main() {
 		//User
 		router.GET("/user/:id", user.GetUser)
 		router.POST("/addStore",user.AddStoreUser)
+		router.GET("/userstore", user.ListUserstore)
+		router.GET("/userstore/:id", user.GetUserstoreByid)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 

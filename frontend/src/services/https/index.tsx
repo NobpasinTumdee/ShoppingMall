@@ -58,6 +58,18 @@ async function AddStore(data: InfoUserStoreInterface) {
     .catch((e) => e.response);
 
 }
+// get UserStore by id
+async function UserStoreByid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/userstore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -114,6 +126,7 @@ export {
     SignIn,
     GetUserById,
     AddStore,
+    UserStoreByid,
 
     GetStoreWaiting,
 
