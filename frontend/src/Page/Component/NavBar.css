@@ -308,7 +308,7 @@
 .ProfileContaner{
     position: fixed;
     text-align: center;
-    top: 100px;
+    top: 10%;
     right: 20px;
     width: 500px;
     height: 700px;
@@ -320,13 +320,13 @@
 }
 @keyframes ProfileContaner{
     0%{
-        top: 100px;
+        top: 10%;
         right: -500px;
     }80%{
-        top: 100px;
+        top: 10%;
         right: 50px;
     }100%{
-        top: 100px;
+        top: 10%;
         right: 20px;
     }
 }

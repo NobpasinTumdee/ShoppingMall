@@ -152,7 +152,9 @@ export const NavBar: React.FC = () => {
                                 <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
-                                <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>
+                                {user?.Status === 'Admin' && 
+                                    <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>
+                                }
                                 <div className='lineMenu'></div>
                                 <p className='dropboxMenuP' onClick={Logout}>Log Out</p>
                             </div>
@@ -164,7 +166,9 @@ export const NavBar: React.FC = () => {
                     <div>
                         <a href="/Main" ><span className={`MenuHover ${location.pathname === "/Main" ? "active" : ""}`}>NEWS</span></a>
                         <a href="/Store" ><span className={`MenuHover ${location.pathname === "/Store" ? "active" : ""}`}>STORE</span></a>
-                        <a href="/Hall" ><span className={`MenuHover ${location.pathname === "/Hall" ? "active" : ""}`}>BOOK A HALL</span></a>
+                        {user?.Status === 'Admin' && 
+                            <a href="/Hall" ><span className={`MenuHover ${location.pathname === "/Hall" ? "active" : ""}`}>BOOK A HALL</span></a>
+                        }
                         <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
                         <a href="#" ><span className='MenuHover'>CLEANING</span></a>
                     </div>
