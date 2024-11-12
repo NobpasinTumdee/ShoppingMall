@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { message } from "antd";
+import { message , Upload} from "antd";
+import type {  UploadFile, UploadProps } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 import LOGO from "../../assets/icon/highLogo.jpg";
 import LOGOSQ from "../../assets/icon/LOGOS.png";
 import Clock from "../../assets/icon/ForPage/MainIcon/Clock.png";
@@ -14,7 +17,10 @@ import './NavBar.css';
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById } from '../../services/https';
+import { GetUserById , UpdateStoreByid} from '../../services/https';
+import { StoreInterface } from '../../interfaces/StoreInterface';
+
+
 
 export const NavBar: React.FC = () => {
     const [user, setUser] = useState<UsersInterface | null>(null); // State to store user data
@@ -103,8 +109,115 @@ export const NavBar: React.FC = () => {
     const closeCard = () => {
         setcard(0);
     };
+    //=========================================Add Store==============================
+    const [messageApi, contextHolder] = message.useMessage();
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const Last = new Date(Booking); // คัดลอกค่า BookingDate
+    Last.setDate(Last.getDate() + 7); // เพิ่ม วันให้กับ LastDay
+    const UpdateStoreByidd = async (formData: any) => {
+        const values: StoreInterface = {
+            ID: 1,
+            PicStore: String(formData.picStore),
+            SubPicOne: String(formData.subPicOne),
+            SubPicTwo: String(formData.subPicTwo),
+            SubPicThree: String(formData.subPicThree),
+            MembershipID: 1,
+            NameStore: formData.nameStore,
+            BookingDate:Booking,
+            LastDay:Last,
+            DescribtionStore: formData.description,
+            StatusStore: 'WaitingForApproval',
+            UserID: Number(userIdstr),
+            ProductTypeID: 1
+        };
+        try {
+            const res = await UpdateStoreByid(String(1), values);
+            if (res.status === 200) {
+                messageApi.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                setTimeout(() => {
+                    //navigate("/Store"); // นำทางกลับไปที่หน้า Store
+                }, 2000);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "การอัพเดทไม่สำเร็จ",
+            });
+        }
+    };
+    const [formData, setFormData] = useState({
+        nameStore: '',
+        picStore: '',
+        subPicOne: '',     // ภาพย่อยที่ 1
+        subPicTwo: '',     // ภาพย่อยที่ 2
+        subPicThree: '',   // ภาพย่อยที่ 3
+        description: '',
+    });
+
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+    
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        formData.picStore = await getImageURL(fileList[0]?.originFileObj);
+        formData.subPicOne = await getImageURL(fileList[1]?.originFileObj);
+        formData.subPicTwo = await getImageURL(fileList[2]?.originFileObj);
+        formData.subPicThree = await getImageURL(fileList[3]?.originFileObj);
+        console.log('Form data submitted:', formData);
+        UpdateAndBackup(formData);
+    };
+
+    const getImageURL = async (file?: File): Promise<string> => {
+        if (!file) return '';
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+        });
+    };
+
+    const UpdateAndBackup = async (formData: any) => {
+        UpdateStoreByidd(formData);
+    };
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src && file.originFileObj) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as File);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+    const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+    //===============================popup add store============================================
+    const [isAddstore, setAddstore] = useState(false);
+    const OpenAddStore = () => {
+        setAddstore(!isAddstore)
+    };
+    const closeAddStore = () => {
+        setAddstore(false)
+    };
     return (
         <>
+            {contextHolder}
             {isProfile && 
                 <>
                     <div className='back' onClick={OpenProfile}></div>
@@ -118,6 +231,8 @@ export const NavBar: React.FC = () => {
                         <div>Age : {user?.Age} Tel : {user?.Tel || 'No Phone Number'}</div>
                         <div onClick={OpenProfile}>back to main ▶</div>
                         <div>🛠️</div>
+                        <div>your store</div>
+                        <div onClick={OpenAddStore}>Create your store</div>
                     </div>
                     <div className='CardMember'>
                         {card === 1 &&
@@ -130,6 +245,40 @@ export const NavBar: React.FC = () => {
                             <div className='Dimond' onClick={closeCard}><img src={card3} alt="ProfileBackground" /></div>
                         }
                     </div>
+                    {isAddstore && 
+                        <div className='CreateStore'>
+                            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '16px' }}>
+                                <div className="BookinfoPopup">
+                                    <div className='Exit' onClick={closeAddStore}></div>
+                                    <h2>Add Your Store</h2>
+                                    <div className="insideinfopopup">
+                                            <div className="left-section">
+                                                <label htmlFor="nameStore">Name Store</label>
+                                                <input type="text" id="nameStore" name="nameStore" value={formData.nameStore} onChange={handleChange} required />
+                                                <label htmlFor="picStore">Preview Store</label>
+                                                <p style={{fontSize: '20px',margin: '0px'}}>You can upload up to 4 sample images of your store.</p>
+                                                <Upload fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
+                                                    maxCount={4} multiple={false} listType="picture-card" >
+                                                    <div><PlusOutlined /><div style={{ marginTop: 8 }}>อัพโหลด</div></div>
+                                                </Upload>
+                                                
+                                            </div>
+                                            <div className="right-section">
+                                                <label htmlFor="description">Description</label>
+                                                <textarea id="description" name="description" rows={10} value={formData.description} onChange={handleChange} />
+                                            </div>
+                                    </div>
+                                    <div  className='bottonn' ><hr />
+                                        Your shop information will be stored here. If you wish to reserve a shop on a particular day, you can use the information from this section as needed.
+                                    </div>
+                                    <div className='submitbtn'>
+                                        <div></div>
+                                        <button type="submit" >Confirm</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
                 </>
             }
             <nav className='positionNav'>
