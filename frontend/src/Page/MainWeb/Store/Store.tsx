@@ -182,7 +182,7 @@ const Store: React.FC = () => {
                                                 <div className='lineStore'></div>
                                                 <div className='rating'>{renderStars(4)}</div>
                                                 <div className='lineStore'></div>
-                                                <div className='DescribtionStore'>{String(data.BookingDate)}<br />{String(data.LastDay)}</div>
+                                                <div className='DescribtionStore'>{data.BookingDate ? new Date(data.BookingDate).toLocaleDateString() : 'No Date'}<br />{data.LastDay ? new Date(data.LastDay).toLocaleDateString() : 'No Date'}</div>
                                             </div>
                                             <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.StatusStore}  --</div>
                                         </span>

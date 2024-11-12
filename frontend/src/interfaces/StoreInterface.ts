@@ -1,5 +1,5 @@
 export interface StoreInterface {
-    ID?: number;
+    ID?:                number;
     PicStore?:  		string ;
     SubPicOne?:  		string ;
     SubPicTwo?:  		string ;
@@ -16,7 +16,7 @@ export interface StoreInterface {
 }
 
 export interface BackupStoreInterface{
-    ID?:                number
+    ID?:                number ;
     PicStoreBackup?:    String ;
     PicOneBackup?:      String ;
     PicTwoBackup?:      String ;
@@ -26,7 +26,7 @@ export interface BackupStoreInterface{
     BookingBackup?:     Date ;
     LastDayBackup?:     Date ;
     DescribtionStoreB?: String ;
-    UserIDB?:           number ;
     ProductTypeIDB?:    number ;
+    UserID?:            number ;
     StoreID?:           number ;
 }

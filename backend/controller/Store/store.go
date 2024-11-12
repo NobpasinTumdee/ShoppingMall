@@ -85,7 +85,7 @@ func CreateBackUpStore(c *gin.Context) {
 		LastDayBackup:        Store.LastDayBackup,
 		DescribtionStoreB:        Store.DescribtionStoreB,
 		
-		UserIDB:        Store.UserIDB,
+		UserID:        Store.UserID,
 		
 		ProductTypeIDB:        Store.ProductTypeIDB,
 		
