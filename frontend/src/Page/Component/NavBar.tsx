@@ -310,6 +310,7 @@ export const NavBar: React.FC = () => {
                                         <div className='CardInfoUser' key={data.ID}>
                                             <img src={data.UserPicStore || background} alt="background" />
                                             <div className='N'>{data.UserNameStore}</div>
+                                            <div className='D'>{data.UserDescribStore}</div>
                                         </div>
                                     )
                                 ) : (

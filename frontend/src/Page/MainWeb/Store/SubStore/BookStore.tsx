@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 //import { NavBar } from '../../../../Page/Component/NavBar';
 import { useLocation } from 'react-router-dom';
 import './SubStore.css'
-import {UpdateStoreByid , BackUpStore} from '../../../../services/https/index';
+import {UpdateStoreByid , BackUpStore , UserStoreByid} from '../../../../services/https/index';
 import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/StoreInterface';
+import { InfoUserStoreInterface } from '../../../../interfaces/StoreInterface';
 
-
+import Store3 from '../../../../assets/icon/ForPage/Store/Store3.jpg';
 import { message,Upload} from "antd";
 import type {  UploadFile, UploadProps } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -31,7 +32,6 @@ const BookStore: React.FC = () => {
     };
     
 
-    const userIdstr = localStorage.getItem("id");
     const location = useLocation();
     const {
         ID,
@@ -67,14 +67,91 @@ const BookStore: React.FC = () => {
 
     //const formattedBookingDate = bookingDateObj.toLocaleDateString();
     //const formattedLastDay = lastDayObj.toLocaleDateString();
+    //=================================select store================================
+    const userIdstr = localStorage.getItem("id");
+    const [isSelectStore, setSelectStore] = useState(false);
+    const closeSelectStore = () => {
+        setSelectStore(false)
+    };
+    useEffect(() => {
+        if (userIdstr) {
+            fetchUserStoreData(userIdstr);
+        } else {
+            
+        }
+    }, [userIdstr]);
+    //=====================listStore===========================
+    const [Storeu, setStoree] = useState<InfoUserStoreInterface[]>([]);
+    const fetchUserStoreData = async (userIdstr: string ) => {
+        try {
+            const res = await UserStoreByid(userIdstr);
+            if (res.status === 200) {
+                setStoree(res.data);
+                console.log(res.data); 
 
+            }else {
+                setStoree([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
+                message.error("There is no Store on this floor.");
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error); // Debug
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+        }
+    };
+    const BookingDate = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const LastDate = new Date(BookingDate); // คัดลอกค่า BookingDate
+    LastDate.setDate(LastDate.getDate() + 10); // เพิ่ม วันให้กับ LastDate 10 สำหรับรออนุมัติ
+
+    const SelectUserStore = async (SelectStore: InfoUserStoreInterface) => {
+        const values: StoreInterface = {
+            ID,
+            PicStore: String(SelectStore.UserPicStore),
+            SubPicOne: String(SelectStore.UserSubPicOne),
+            SubPicTwo: String(SelectStore.UserSubPicTwo),
+            SubPicThree: String(SelectStore.UserSubPicThree),
+            MembershipID: Package,
+            NameStore: SelectStore.UserNameStore,
+            BookingDate:BookingDate,
+            LastDay:LastDate,
+            DescribtionStore: SelectStore.UserDescribStore,
+            StatusStore: 'WaitingForApproval',
+            UserID: Number(userIdstr),
+            ProductTypeID
+        };
+        try {
+            const res = await UpdateStoreByid(String(ID), values);
+            if (res.status === 200) {
+                messageApi.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                closepopup1();
+                setTimeout(() => {
+                    SuccessPopup();
+                }, 500);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "การจองไม่สำเร็จ",
+            });
+        }
+    };
+
+    //=============================================================================
     const [isPopup, setPopup] = useState(false);//popup Conditions
     const closepopupConditions = () => {
-        setPopup(false)
+        setPopup(false);
     };
     const GotopopupinfoStore = () => {
         setPopup(false)
         setPopup1(true)
+        setSelectStore(true)
     };
     const [Package, setPackage] = useState(0);//package
     const [datePackage , setDatePackage] = useState(0);
@@ -93,7 +170,8 @@ const BookStore: React.FC = () => {
     };
     const [isPopup1, setPopup1] = useState(false);//popup infostore
     const closepopup1 = () => {
-        setPopup1(false)
+        setPopup1(false);
+        closeSelectStore();
     };
     const UpdateAndBackup = async (formData: any) => {
         UpdateStoreByidd(formData);
@@ -274,6 +352,31 @@ const BookStore: React.FC = () => {
                                 The tenant agrees to accept and adhere to all terms and conditions outlined in this agreement, which serves as a legal contract between the tenant and the mall management.<br />
                                 In the event of any disputes or uncertainties, both parties agree to seek mediation or negotiation before pursuing legal action.<br /></p>
                     <div className='Accept' onClick={GotopopupinfoStore}>Accept all terms</div>
+                    </div>
+                </>
+            }
+
+            {isSelectStore &&
+                <>
+                    <div className='SelectStore'>
+                        <h1>Select Your Store</h1>
+                        <div className='contentSelectStore'>
+                        {Storeu.length > 0 ? (
+                            Storeu.map((data) => 
+                                <>
+                                    <div className='cardUserStoreSelect' key={data.ID} onClick={() => SelectUserStore(data)}>
+                                        <img src={data.UserPicStore || Store3} alt="Store3" />
+                                        <p className='cardUserStoreSelectName'>{data.UserNameStore || 'No Name!!!'}</p>
+                                        <p className='cardUserStoreSelectinfo'>{data.UserDescribStore || 'No info!!!'}</p>
+                                    </div>
+                                </>
+                            )) : (
+                                <>
+                                    <div className='NoStore' onClick={closeSelectStore}>You don't have any store information yet. <br />Go to the data entry page</div>
+                                </>
+                            )}
+                        </div>
+                        <div className='ExitSelectStore' onClick={closepopup1}></div>
                     </div>
                 </>
             }
