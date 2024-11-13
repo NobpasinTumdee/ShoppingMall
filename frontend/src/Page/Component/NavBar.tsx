@@ -116,7 +116,7 @@ export const NavBar: React.FC = () => {
     const [isProfile, setProfile] = useState(false);
     const [card ,setcard] = useState(0);
     const OpenProfile = () => {
-        setProfile(!isProfile);
+        setProfile(true);
         if (user?.Status == 'Admin') {
             setcard(3);
         }else if (user?.Status == 'Employee'){
@@ -124,6 +124,10 @@ export const NavBar: React.FC = () => {
         }else{
             setcard(1);
         }
+    };
+    const CloseProfile = () => {
+        setProfile(false);
+        closeCard();
     };
     const closeCard = () => {
         setcard(0);
@@ -239,10 +243,10 @@ export const NavBar: React.FC = () => {
     return (
         <>
             {contextHolder}
-            {isProfile && 
+            
                 <>
-                    <div className='back' onClick={OpenProfile}></div>
-                    <div className='ProfileContaner'>
+                    <div className={`back ${isProfile ? 'fade-in' : 'fade-out'}`} onClick={CloseProfile} ></div>
+                    <div className={`ProfileContaner ${isProfile ? 'fade-in' : 'fade-out'}`}>
                         <div><img src={user?.ProfileBackground || background} alt="ProfileBackground" /></div>
                         <div><img src={user?.Profile || Hutao} alt="Profile" /></div>
                         <div>{user?.Status}</div>
@@ -250,24 +254,19 @@ export const NavBar: React.FC = () => {
                         <div>Gmail : {user?.Email}</div>
                         <div>Name : {user?.FirstName}{user?.LastName}</div>
                         <div>Age : {user?.Age} Tel : {user?.Tel || 'No Phone Number'}</div>
-                        <div onClick={OpenProfile}>back to main ▶</div>
+                        <div onClick={CloseProfile}>back to main ▶</div>
                         <div>🛠️</div>
                         <div onClick={OpenUserStore}>your store</div>
                         <div onClick={OpenAddStore}>Create your store</div>
                     </div>
+
                     <div className='CardMember'>
-                        {card === 1 &&
-                            <div className='Platinum' onClick={closeCard}><img src={card1} alt="ProfileBackground" /></div>
-                        }
-                        {card === 2 &&
-                            <div className='Gold' onClick={closeCard}><img src={card2} alt="ProfileBackground" /></div>
-                        }
-                        {card === 3 &&
-                            <div className='Dimond' onClick={closeCard}><img src={card3} alt="ProfileBackground" /></div>
-                        }
+                        <div className={`Platinum ${card === 1 ? 'fade-in' : 'fade-out'}`} onClick={closeCard}><img src={card1} alt="ProfileBackground" /></div>
+                        <div className={`Gold ${card === 2 ? 'fade-in' : 'fade-out'}`} onClick={closeCard}><img src={card2} alt="ProfileBackground" /></div>
+                        <div className={`Dimond ${card === 3 ? 'fade-in' : 'fade-out'}`} onClick={closeCard}><img src={card3} alt="ProfileBackground" /></div>
                     </div>
-                    {isAddstore && 
-                        <div className='CreateStore'>
+                    
+                        <div className={`CreateStore ${isAddstore ? 'fade-in' : 'fade-out'}`}>
                             <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '16px' }}>
                                 <div className="BookinfoPopup">
                                     <div className='Exit' onClick={closeAddStore}></div>
@@ -299,7 +298,7 @@ export const NavBar: React.FC = () => {
                                 </div>
                             </form>
                         </div>
-                    }
+                    
 
                     {isUserStore && 
                         <div className='UserStoreSelect'>
@@ -322,7 +321,7 @@ export const NavBar: React.FC = () => {
                         </div>
                     }
                 </>
-            }
+            
             <nav className='positionNav'>
                 <nav className='NavComponent'>
                     <span className='SubNab1'>
@@ -338,8 +337,8 @@ export const NavBar: React.FC = () => {
                     <span className='SubNab3'>
                         <span>Hello! {user?.UserName} Welcome to ICONIC🎉</span>
                         <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || Hutao} alt="User" onClick={OpenMenu}></img>
-                        {isMenuOpen && (
-                            <div className='dropboxMenu'>
+                        
+                            <div className={`dropboxMenu ${isMenuOpen ? 'fade-in' : 'fade-out'}`}>
                                 <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
@@ -349,7 +348,7 @@ export const NavBar: React.FC = () => {
                                 <div className='lineMenu'></div>
                                 <p className='dropboxMenuP' onClick={Logout}>Log Out</p>
                             </div>
-                        )}
+                        
                     </span>
                 </nav> 
                 <nav className='NavComponentMenu'>

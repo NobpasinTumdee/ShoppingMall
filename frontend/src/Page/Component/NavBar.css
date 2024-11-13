@@ -146,16 +146,32 @@
     text-align: left;
     box-shadow: 0 4px 4px #6b6b6b;
     z-index: 1002;
-
-    animation-duration: 0.3s;
-    animation-name: dropboxMenu;
-    animation-timing-function: ease-in-out;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    visibility: hidden;
 }
-
+.dropboxMenu.fade-in {
+    animation: dropboxMenu 0.3s ease-in-out forwards;
+    visibility: visible;
+}
+.dropboxMenu.fade-out {
+    animation: dropboxMenuOut 0.3s ease-in-out reverse forwards;
+    visibility: hidden;
+}
 
 @keyframes dropboxMenu{
     0%{
         transform: translateX(100px);
+        scale: 0;
+    }50%{
+        transform: translateX(0px);
+        scale: 1;
+    }100%{
+
+    }
+}
+@keyframes dropboxMenuOut{
+    0%{
+        transform: translateX(1000px);
         scale: 0;
     }50%{
         transform: translateX(0px);
@@ -303,8 +319,19 @@
     z-index: 1001;
     backdrop-filter: blur(2px);
     animation: back 1s ease-in-out ;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.back.fade-in{
+    opacity: 1;
+    visibility: visible;
+}
+.back.fade-out{
+    opacity: 0;
+    visibility: hidden;
 }
 @keyframes back{0%{opacity: 0;}}
+
+
 .ProfileContaner{
     position: fixed;
     text-align: center;
@@ -316,7 +343,17 @@
     border-radius: 15px;
     box-shadow: 0 0 15px #00000063;
     z-index: 1010;
-    animation: ProfileContaner 0.5s ease-in-out  ;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.ProfileContaner.fade-in{
+    animation: ProfileContaner 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+
+.ProfileContaner.fade-out{
+    animation: ProfileContanerOut 0.5s ease-in-out  reverse forwards;
+    visibility: hidden;
 }
 @keyframes ProfileContaner{
     0%{
@@ -330,6 +367,23 @@
         right: 20px;
     }
 }
+@keyframes ProfileContanerOut{
+    0%{
+        top: 10%;
+        right: -500px;
+    }80%{
+        top: 10%;
+        right: 50px;
+    }100%{
+        top: 10%;
+        right: 20px;
+    }
+}
+
+
+
+
+
 .ProfileContaner div:nth-child(1) img{
     width: 100%;
     height: 250px;
@@ -488,7 +542,16 @@
     bottom: 60px;
     left: 20px;
     filter: drop-shadow(0 0 10px #889699);
-    animation: CardMember 3s ease-in-out  ;
+    transition: opacity 0.3s ease, visibility 1s ease;
+    visibility: hidden;
+}
+.Platinum.fade-in img{
+    animation: CardMember 3s ease-in-out forwards;
+    visibility: visible;
+}
+.Platinum.fade-out img{
+    animation: CardMemberOut 1s ease-in-out reverse forwards;
+    visibility: hidden;
 }
 .Gold img{
     width: 400px;
@@ -496,7 +559,16 @@
     bottom: 60px;
     left: 20px;
     filter: drop-shadow(0 0 10px #ffe75e);
-    animation: CardMember 3s ease-in-out  ;
+    transition: opacity 0.3s ease, visibility 1s ease;
+    visibility: hidden;
+}
+.Gold.fade-in img{
+    animation: CardMember 3s ease-in-out forwards;
+    visibility: visible;
+}
+.Gold.fade-out img{
+    animation: CardMemberOut 1s ease-in-out reverse forwards;
+    visibility: hidden;
 }
 .Dimond img{
     width: 400px;
@@ -504,9 +576,30 @@
     bottom: 60px;
     left: 20px;
     filter: drop-shadow(0 0 10px #0B3D6E);
-    animation: CardMember 3s ease-in-out  ;
+    transition: opacity 0.3s ease, visibility 1s ease;
+    visibility: hidden;
+}
+.Dimond.fade-in img{
+    animation: CardMember 3s ease-in-out forwards;
+    visibility: visible;
+}
+.Dimond.fade-out img{
+    animation: CardMemberOut 1s ease-in-out reverse forwards;
+    visibility: hidden;
 }
 @keyframes CardMember{
+    0%{
+        bottom: 60px;
+        left: -500px;
+    }80%{
+        bottom: 60px;
+        left: 20px;
+    }100%{
+        bottom: 60px;
+        left: 20px;
+    }
+}
+@keyframes CardMemberOut{
     0%{
         bottom: 60px;
         left: -500px;
@@ -522,7 +615,19 @@
 .CreateStore{
     z-index: 1015;
     position: fixed;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+.CreateStore.fade-in{
+    opacity: 1;
+    visibility: visible;
+}
+.CreateStore.fade-out{
+    opacity: 0;
+    visibility: hidden;
+}
+
+
 .Exit {
     position: absolute;
     top: 10px;
