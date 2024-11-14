@@ -17,7 +17,7 @@ import './NavBar.css';
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID} from '../../services/https';
+import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID , UpdateUserByid} from '../../services/https';
 import { InfoUserStoreInterface } from '../../interfaces/StoreInterface';
 
 
@@ -39,6 +39,15 @@ export const NavBar: React.FC = () => {
             const res = await GetUserById(userIdstr);
             if (res.status === 200) {
                 setUser(res.data);
+                setFormUser({
+                    Email: res.data.Email,
+                    Profile: res.data.Profile,
+                    ProfileBackground: res.data.ProfileBackground,
+                    FirstName: res.data.FirstName,
+                    LastName: res.data.LastName,
+                    Tel: res.data.Tel,
+                    Age: res.data.Age,
+                });
                 //message.success("พบข้อมูลUser");
             }else {
                 message.error("error");
@@ -128,9 +137,86 @@ export const NavBar: React.FC = () => {
     const CloseProfile = () => {
         setProfile(false);
         closeCard();
+        setEditProfile(false);
     };
     const closeCard = () => {
         setcard(0);
+    };
+    //=========================================Edit profile===========================
+    const [isEditProfile, setEditProfile] = useState(false);
+    const OpenEditProfile = () => {
+        setEditProfile(!isEditProfile)
+    };
+    const [formUser, setFormUser] = useState({
+        Email: "",
+        Profile: "",
+        ProfileBackground: "",
+        FirstName: "",
+        LastName: "",
+        Tel: "",
+        Age: 0,
+    });
+    
+    const [fileListProfile, setFileListProfile] = useState<UploadFile[]>([]);
+    const [fileListBackground, setFileListBackground] = useState<UploadFile[]>([]);
+
+    const getImageURLEDIT = async (file?: File): Promise<string> => {
+        if (!file) return '';
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+        });
+    };
+
+    const onPreviewEDIT = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src && file.originFileObj) {
+            src = await getImageURLEDIT(file.originFileObj);
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+
+    const handleChangeEditUser = (e : any) => {
+        const { name, value } = e.target;
+        setFormUser({ ...formUser, [name]: name === "Age" ? Number(value) : value });
+    };
+
+    const onChangeProfile: UploadProps['onChange'] = ({ fileList }) => {
+        setFileListProfile(fileList);
+        // Update Profile image URL in formUser
+        if (fileList.length > 0 && fileList[0].originFileObj) {
+            getImageURLEDIT(fileList[0].originFileObj).then((url) => {
+                setFormUser({ ...formUser, Profile: url });
+            });
+        }
+    };
+
+    const onChangeBackground: UploadProps['onChange'] = ({ fileList }) => {
+        setFileListBackground(fileList);
+        // Update Background image URL in formUser
+        if (fileList.length > 0 && fileList[0].originFileObj) {
+            getImageURLEDIT(fileList[0].originFileObj).then((url) => {
+                setFormUser({ ...formUser, ProfileBackground: url });
+            });
+        }
+    };
+
+    const handleSubmitEdit = async (e : any) => {
+        e.preventDefault();
+        try {
+            const res = await UpdateUserByid(String(userIdstr), formUser);
+            if (res.status === 200) {
+                message.success(res.data.message);
+            } else {
+                message.error(res.data.error);
+            }
+        } catch (error) {
+            message.error("การอัพเดทข้อมูลไม่สำเร็จ");
+        }
     };
     //=========================================Add Store==============================
     const [messageApi, contextHolder] = message.useMessage();
@@ -275,9 +361,63 @@ export const NavBar: React.FC = () => {
                         <div>Name : {user?.FirstName}{user?.LastName}</div>
                         <div>Age : {user?.Age} Tel : {user?.Tel || 'No Phone Number'}</div>
                         <div onClick={CloseProfile}>back to main ▶</div>
-                        <div>🛠️</div>
+                        <div onClick={OpenEditProfile}>🛠️</div>
                         <div onClick={OpenUserStore}>your store</div>
                         <div onClick={OpenAddStore}>Create your store</div>
+                    </div>
+
+                    <div className={`EditProfileContaner ${isEditProfile ? 'fade-in' : 'fade-out'}`}>
+                        <div className='EditContaner'>
+                            <h1 style={{textAlign: "center"}}>Edit Your Profile</h1>
+                            <form onSubmit={handleSubmitEdit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div className='uploadEdit'>
+                                    <Upload
+                                        fileList={fileListProfile}
+                                        onChange={onChangeProfile}
+                                        onPreview={onPreview}
+                                        beforeUpload={() => false}
+                                        maxCount={1}
+                                        listType="picture-card"
+                                    >
+                                        <div>
+                                            <PlusOutlined />
+                                            <div style={{ marginTop: 8 }}>Profile</div>
+                                        </div>
+                                    </Upload>
+
+                                    <Upload
+                                        fileList={fileListBackground}
+                                        onChange={onChangeBackground}
+                                        onPreview={onPreviewEDIT}
+                                        beforeUpload={() => false}
+                                        maxCount={1}
+                                        listType="picture-card"
+                                    >
+                                        <div>
+                                            <PlusOutlined />
+                                            <div style={{ marginTop: 8 }}>Background</div>
+                                        </div>
+                                    </Upload><div></div>
+                                </div>
+                                <label>Email</label>
+                                <input type="email" name="Email" value={formUser.Email} onChange={handleChangeEditUser} required />
+
+                                <label>First Name</label>
+                                <input type="text" name="FirstName" value={formUser.FirstName} onChange={handleChangeEditUser} required />
+
+                                <label>Last Name</label>
+                                <input type="text" name="LastName" value={formUser.LastName} onChange={handleChangeEditUser} required />
+
+                                <label>Tel</label>
+                                <input type="tel" name="Tel" value={formUser.Tel} onChange={handleChangeEditUser} />
+
+                                <label>Age</label>
+                                <input type="text" name="Age" value={formUser.Age} onChange={handleChangeEditUser} />
+
+                                <button type="submit" className='Editsubmit'>Save Changes</button>
+                            </form>
+                            <div onClick={OpenEditProfile} className='EditBtn'>🛠️</div>
+                        </div>
                     </div>
 
                     <div className='CardMember'>

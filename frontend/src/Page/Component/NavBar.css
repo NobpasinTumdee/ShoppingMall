@@ -526,7 +526,7 @@
     bottom: 0;
     width: 100%;
     color: #ffffff;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 15px 15px;
     background-color: #5e4702;
     text-align: center;
     cursor: pointer;
@@ -805,4 +805,80 @@ textarea {
 }
 @keyframes bin{
     0%{ rotate: 0deg; opacity: 0;}20%{opacity: 1; rotate: 30deg; }40%{ rotate: -30deg; }60%{  rotate: 30deg; }80%{ rotate: -30deg; }
+}
+
+
+/*=============================================================Edit profile=============================*/
+.EditProfileContaner{
+    position: fixed;
+    text-align: left;
+    top: 10%;
+    right: 20px;
+    width: 500px;
+    height: 700px;
+    backdrop-filter: blur(45px);
+    border-radius: 15px;
+    z-index: 1010;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.EditProfileContaner input{
+    border-radius: 20px;
+    padding: 5px;
+    border: 2px solid #432c01;
+
+}
+
+.EditProfileContaner.fade-in{
+    animation: EditProfileContaner 0.3s ease-in-out forwards;
+    visibility: visible;
+}
+
+.EditProfileContaner.fade-out{
+    animation: EditProfileContanerOut 0.3s ease-in-out  reverse forwards;
+    visibility: hidden;
+}
+@keyframes EditProfileContaner{
+    0%{
+        opacity: 0;
+        scale: 0.3;
+    }
+}
+@keyframes EditProfileContanerOut{
+    0%{
+        opacity: 0;
+        scale: 0.3;
+    }
+}
+.EditContaner{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 450px;
+    height: 650px;
+    padding: 10px;
+    border-radius: 10px;
+    backdrop-filter: blur(45px);
+    background-color: #ffffffb7;
+}
+.EditBtn {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    text-shadow: 3px 5px 2px #969696;
+}
+.uploadEdit {
+    display: flex;
+    justify-content: space-between;
+}
+.Editsubmit{
+    margin: 40px 100px;
+    border: 2px solid #432c01;
+    border-radius: 20px;
+    padding: 0px;
+    background-color: #E8D196;
+    font-family: 'Dongle', sans-serif;
+    font-size: 30px;
 }

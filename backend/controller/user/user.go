@@ -31,6 +31,35 @@ func ListUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+// PUT update User by id 
+func UpdateUserByid(c *gin.Context) {
+	var User entity.User
+	UserID := c.Param("id")
+	db := config.DB()
+ 
+	result := db.First(&User, UserID)
+ 
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Id Store not found"})
+		return
+	}
+ 
+ 
+	if err := c.ShouldBindJSON(&User); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		return
+	}
+ 
+ 
+	result = db.Save(&User)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		return
+	}
+ 
+	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+}
+
 
 // GET /user/:id
 func GetUser(c *gin.Context) {

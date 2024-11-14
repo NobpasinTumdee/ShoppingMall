@@ -37,6 +37,7 @@ func main() {
 
 		//User
 		router.GET("/user/:id", user.GetUser)
+		router.PUT("/user/:id",user.UpdateUserByid)
 		router.POST("/addStore",user.AddStoreUser)
 		router.GET("/userstore", user.ListUserstore)
 		router.GET("/userstore/:id", user.GetUserstoreByid)

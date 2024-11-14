@@ -1,6 +1,7 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
+import { UsersInterface } from "../../interfaces/UsersInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -40,6 +41,18 @@ async function GetUserById(id: string) {
   return await axios
 
     .get(`${apiUrl}/user/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// update User
+async function UpdateUserByid(id: string, data: UsersInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/user/${id}`, data, requestOptions)
 
     .then((res) => res)
 
@@ -137,6 +150,7 @@ async function GetStoreWaiting(status: string) {
 export {
     SignIn,
     GetUserById,
+    UpdateUserByid,
     AddStore,
     UserStoreByid,
     DeleteUserStoreByID,
