@@ -40,6 +40,7 @@ func main() {
 		router.POST("/addStore",user.AddStoreUser)
 		router.GET("/userstore", user.ListUserstore)
 		router.GET("/userstore/:id", user.GetUserstoreByid)
+		router.DELETE("/DeleteUserStore/:id", user.DeleteUserStore)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 

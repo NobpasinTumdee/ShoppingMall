@@ -70,6 +70,18 @@ async function UserStoreByid(id: string) {
     .catch((e) => e.response);
 
 }
+//Delete userstore
+async function DeleteUserStoreByID(id: string) {
+  return await axios
+    .delete(`${apiUrl}/DeleteUserStore/${id}`, requestOptions)
+    .then((res) => {
+      // if (res) {
+      //   window.location.reload(); // reload หลังจากลบเสร็จ
+      // }
+      return res;
+    })
+    .catch((e) => e.response);
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -127,6 +139,7 @@ export {
     GetUserById,
     AddStore,
     UserStoreByid,
+    DeleteUserStoreByID,
 
     GetStoreWaiting,
 

@@ -126,3 +126,17 @@ func GetUserstoreByid(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 }
+
+
+// DELETE /DeleteUserStore/:id
+func DeleteUserStore(c *gin.Context) {
+
+	id := c.Param("id")
+	db := config.DB()
+	if tx := db.Exec("DELETE FROM info_User_stores WHERE id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
+}

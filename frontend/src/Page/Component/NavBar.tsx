@@ -17,7 +17,7 @@ import './NavBar.css';
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById , AddStore ,UserStoreByid} from '../../services/https';
+import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID} from '../../services/https';
 import { InfoUserStoreInterface } from '../../interfaces/StoreInterface';
 
 
@@ -240,6 +240,26 @@ export const NavBar: React.FC = () => {
     const closeUserStore = () => {
         setUserStore(false)
     };
+    //===============================Delete your store========================================
+    const handleDelete = async (id: number | undefined) => {
+        if (id) {
+          try {
+            const res = await DeleteUserStoreByID(String(id));
+            if (res.status === 200) {
+              // อัปเดต state เพื่อลบประวัติจากหน้าจอทันที
+              setStoree((prevStoree) => prevStoree.filter(item => item.ID !== id));
+    
+              message.success("🗑️ deleted.");
+            } else {
+              message.error("Unable to delete 🥹");
+            }
+          } catch (error) {
+            message.error("An error occurred while deleting 😭");
+          }
+        } else {
+          message.error("The ID is invalid.🫥");
+        }
+      };
     return (
         <>
             {contextHolder}
@@ -311,6 +331,7 @@ export const NavBar: React.FC = () => {
                                             <img src={data.UserPicStore || background} alt="background" />
                                             <div className='N'>{data.UserNameStore}</div>
                                             <div className='D'>{data.UserDescribStore}</div>
+                                            <div className='bin' onClick={() => handleDelete(data.ID)}>🗑️</div>
                                         </div>
                                     )
                                 ) : (
