@@ -1,7 +1,7 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
-import { UsersInterface } from "../../interfaces/UsersInterface";
+import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -107,6 +107,18 @@ async function GetMessageById(id: string) {
     .catch((e) => e.response);
 
 }
+// Create message
+async function AddMessage(data: MessageBoardInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Message`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -167,6 +179,7 @@ export {
     UserStoreByid,
     DeleteUserStoreByID,
     GetMessageById,
+    AddMessage,
 
     GetStoreWaiting,
 

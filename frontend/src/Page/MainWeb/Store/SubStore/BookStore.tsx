@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 //import { NavBar } from '../../../../Page/Component/NavBar';
 import { useLocation } from 'react-router-dom';
 import './SubStore.css'
-import {UpdateStoreByid , BackUpStore , UserStoreByid} from '../../../../services/https/index';
+import {UpdateStoreByid , BackUpStore , UserStoreByid , AddMessage} from '../../../../services/https/index';
 import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/StoreInterface';
 import { InfoUserStoreInterface } from '../../../../interfaces/StoreInterface';
+import { MessageBoardInterface } from '../../../../interfaces/UsersInterface';
 
 import Store3 from '../../../../assets/icon/ForPage/Store/Store3.jpg';
 import { message,Upload} from "antd";
@@ -118,6 +119,12 @@ const BookStore: React.FC = () => {
             UserID: Number(userIdstr),
             ProductTypeID
         };
+        const valuesMessage: MessageBoardInterface = { 
+            PicNews: 'https://cdn-icons-png.flaticon.com/512/4942/4942676.png',
+            TextHeader: 'Store reservations' , 
+            DescribtionNews: 'The system has now sent your booking information to the database. Please wait until the administrator verifies your information. and can check the movement at your message box',
+            UserID: SelectStore.UserID
+        };
         try {
             const res = await UpdateStoreByid(String(ID), values);
             if (res.status === 200) {
@@ -141,6 +148,28 @@ const BookStore: React.FC = () => {
                 content: "การจองไม่สำเร็จ",
             });
         }
+        try {
+            const res = await AddMessage(valuesMessage);
+            if (res.status === 201) {
+                setTimeout(() => {
+                    messageApi.open({
+                        type: "info",
+                        content: 'You have a new Message !!',
+                    });
+                }, 3000);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
+            });
+        }
+
     };
 
     //=============================================================================
@@ -154,15 +183,15 @@ const BookStore: React.FC = () => {
         setSelectStore(true)
     };
     const [Package, setPackage] = useState(0);//package
-    const [datePackage , setDatePackage] = useState(0);
+    //const [datePackage , setDatePackage] = useState(0);
     const savePackage = async (newMembershipID: number) => {
         setPackage(newMembershipID);
         if (newMembershipID == 1) {
-            setDatePackage(7);
+            //setDatePackage(7);
         }else if (newMembershipID == 2) {
-            setDatePackage(30);
+            //setDatePackage(30);
         }else if (newMembershipID == 3) {
-            setDatePackage(365);
+            //setDatePackage(365);
         }
         setTimeout(() => {
             setPopup(true)
@@ -193,7 +222,7 @@ const BookStore: React.FC = () => {
     //================================= set date ========================
     const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
     const Last = new Date(Booking); // คัดลอกค่า BookingDate
-    Last.setDate(Last.getDate() + datePackage); // เพิ่ม วันให้กับ LastDay
+    Last.setDate(Last.getDate() + 10); // เพิ่ม วันให้กับ LastDay
     //================================= update ==========================
     const UpdateStoreByidd = async (formData: any) => {
         const values: StoreInterface = {
@@ -210,6 +239,12 @@ const BookStore: React.FC = () => {
             StatusStore: 'WaitingForApproval',
             UserID: Number(userIdstr),
             ProductTypeID
+        };
+        const valuesMessage: MessageBoardInterface = { 
+            PicNews: 'https://cdn-icons-png.flaticon.com/512/4942/4942676.png',
+            TextHeader: 'Store reservations' , 
+            DescribtionNews: 'The system has now sent your booking information to the database. Please wait until the administrator verifies your information. and can check the movement at your message box',
+            UserID: Number(userIdstr)
         };
         try {
             const res = await UpdateStoreByid(String(ID), values);
@@ -233,6 +268,27 @@ const BookStore: React.FC = () => {
                 content: "การอัพเดทไม่สำเร็จ",
             });
         }
+        try {
+            const res = await AddMessage(valuesMessage);
+            if (res.status === 201) {
+                setTimeout(() => {
+                    messageApi.open({
+                        type: "info",
+                        content: 'You have a new Message !!',
+                    });
+                }, 3000);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
+            });
+        }
     };
     //============================== backup ============================
     const BackupStoreF = async (formData: any) => {
@@ -243,7 +299,7 @@ const BookStore: React.FC = () => {
             PicThreeBackup: String(formData.subPicThree),
             MembershipBackup: Package, 
             NameBackup: formData.nameStore,
-            BookingBackup: Last,
+            BookingBackup: Booking,
             LastDayBackup: Last,
             DescribtionStoreB: formData.description,
             UserID: Number(userIdstr),

@@ -14,6 +14,7 @@ const Inbox: React.FC = () => {
 
     //https://cdn-icons-png.flaticon.com/512/4272/4272841.png
     //https://www.shutterstock.com/image-vector/no-upload-sign-allowed-icon-600nw-2417466507.jpg
+    //https://cdn-icons-png.flaticon.com/512/4942/4942676.png
     const [isInbox, setInbox] = useState(false);
     const OpenInbox = () => {
         setInbox(!isInbox);
@@ -26,9 +27,9 @@ const Inbox: React.FC = () => {
     const OpenPayment = () => {
         setPayment(!isPayment);
     };
-    const closePayment = () => {
-        setPayment(false)
-    };
+    // const closePayment = () => {
+    //     setPayment(false)
+    // };
 
     //================================Messeage====================================
     const userIdstr = localStorage.getItem("id");

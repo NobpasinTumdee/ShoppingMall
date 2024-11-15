@@ -10,8 +10,9 @@ import Own from '../../../assets/icon/ForPage/Admin/Own.png';
 
 import { message} from "antd";
 
-import {GetStoreWaiting , UpdateStoreByid} from '../../../services/https/index';
-import {StoreInterface} from '../../../interfaces/StoreInterface'
+import {GetStoreWaiting , UpdateStoreByid , AddMessage} from '../../../services/https/index';
+import {StoreInterface } from '../../../interfaces/StoreInterface'
+import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 
 
 
@@ -57,6 +58,12 @@ const AdminStore: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const approve = async (approval: StoreInterface) => {
         const values = { ...approval, StatusStore: 'Waiting for Payment.' };
+        const valuesMessage: MessageBoardInterface = { 
+            PicNews: 'https://cdn-icons-png.flaticon.com/512/4272/4272841.png',
+            TextHeader: 'Waiting for Payment.' , 
+            DescribtionNews: 'Your shop reservation has been approved by the administrator and you can You can proceed by making the next payment within 3 days.',
+            UserID: approval.UserID
+        };
         try {
             const res = await UpdateStoreByid(String(values.ID), values);
             if (res.status === 200) {
@@ -78,6 +85,25 @@ const AdminStore: React.FC = () => {
                 content: "การอัพเดทไม่สำเร็จ",
             });
         }
+        try {
+            const res = await AddMessage(valuesMessage);
+            if (res.status === 201) {
+                messageApi.open({
+                    type: "success",
+                    content: 'Send Message Success!',
+                });
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
+            });
+        }
     };
     //================================= update Not approve ==========================
     const NotApprove = async (approval: StoreInterface) => {
@@ -95,6 +121,12 @@ const AdminStore: React.FC = () => {
             StatusStore: 'This store is available for reservation.',
             UserID: 0,
             ProductTypeID: approval.ProductTypeID
+        };
+        const valuesMessage: MessageBoardInterface = { 
+            PicNews: 'https://www.shutterstock.com/image-vector/no-upload-sign-allowed-icon-600nw-2417466507.jpg',
+            TextHeader: 'The booking was not approved.' , 
+            DescribtionNews: 'Your store reservation was not approved by a moderator because the content of your store may not be appropriate. We therefore request permission to disapprove your booking.',
+            UserID: approval.UserID
         };
         try {
             const res = await UpdateStoreByid(String(values.ID), values);
@@ -115,6 +147,25 @@ const AdminStore: React.FC = () => {
             messageApi.open({
                 type: "error",
                 content: "การอัพเดทไม่สำเร็จ",
+            });
+        }
+        try {
+            const res = await AddMessage(valuesMessage);
+            if (res.status === 201) {
+                messageApi.open({
+                    type: "info",
+                    content: 'Send Message Success!',
+                });
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
             });
         }
     };

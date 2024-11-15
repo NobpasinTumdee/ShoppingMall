@@ -191,3 +191,30 @@ func GetMessage(c *gin.Context) {
 
 	c.JSON(http.StatusOK, MessageBoard)
 }
+
+// POST MessageBoard
+func CreateMessageBoard(c *gin.Context) {
+	var Message entity.MessageBoard
+
+	if err := c.ShouldBindJSON(&Message); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.MessageBoard{	
+		PicNews:        	Message.PicNews,
+		TextHeader:        	Message.TextHeader,
+		DescribtionNews:    Message.DescribtionNews,
+		UserID:        		Message.UserID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "MessageBoard success", "data": u})
+}
