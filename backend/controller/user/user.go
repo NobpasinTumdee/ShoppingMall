@@ -169,3 +169,25 @@ func DeleteUserStore(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
 
 }
+
+// GET /Message/:id
+func GetMessage(c *gin.Context) {
+	ID := c.Param("id")
+	var MessageBoard []entity.MessageBoard
+
+	db := config.DB()
+
+
+	// Query the user by ID
+	results := db.Where("user_id = ?", ID).Find(&MessageBoard)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "MessageBoard not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, MessageBoard)
+}

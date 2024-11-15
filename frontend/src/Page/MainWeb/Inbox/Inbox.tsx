@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Inbox.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import iconInbox from '../../../assets/icon/ForPage/Messenger/InBox.png';
 import OnlinePayment from '../../../assets/icon/ForPage/Messenger/OnlinePayment.png';
+import { GetMessageById } from '../../../services/https';
+import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 
 const Inbox: React.FC = () => {
-    const navigate = useNavigate();
-    const handleStoreClick = () => {
-        navigate('/Inbox');
-    };
+    //const navigate = useNavigate();
+    // const handleStoreClick = () => {
+    //     navigate('/Inbox');
+    // };
+
+    //https://cdn-icons-png.flaticon.com/512/4272/4272841.png
+    //https://www.shutterstock.com/image-vector/no-upload-sign-allowed-icon-600nw-2417466507.jpg
     const [isInbox, setInbox] = useState(false);
     const OpenInbox = () => {
         setInbox(!isInbox);
@@ -25,6 +30,27 @@ const Inbox: React.FC = () => {
         setPayment(false)
     };
 
+    //================================Messeage====================================
+    const userIdstr = localStorage.getItem("id");
+    const [Messeage, setMesseage] = useState<MessageBoardInterface[]>([]);
+    useEffect(() => {
+        if (1) {
+            fetchMesseage(userIdstr);
+        }
+    }, [1]);
+    
+    const fetchMesseage = async (userIdstr : any) => {
+        try {
+            const res = await GetMessageById(userIdstr);
+            if (res.status === 200 && res.data) {
+                setMesseage(res.data);
+            } else {
+                setMesseage([]); 
+            }
+        } catch (error) {
+            setMesseage([]);
+        }
+    };
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -44,18 +70,29 @@ const Inbox: React.FC = () => {
             <div className={`Inbox ${isInbox ? 'fade-in' : 'fade-out'}`}>
                 <p className='Messages'>Messages</p>
                 <div className='AllMessagesbox'>
-
-                    <div className='Messagesbox'>
-                        <img src={iconInbox} alt="iconInbox" />
-                        <div className='Messagesboxtext'>
-                            <p>test</p>
-                            <div className='MessagesboxtextINFO'>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem neque minus harum esse error et voluptatum quibusdam, sapiente earum quia autem! Velit natus dicta iusto perspiciatis quasi eligendi dolorem expedita nesciunt. Minima officia voluptatibus exercitationem reprehenderit suscipit, accusamus officiis. Fugit debitis inventore eius natus voluptatum aliquid, adipisci repellendus eos repellat!</p>
-                            </div>
-                        </div>
-                    </div>
+                    {Messeage.length > 0 ? (
+                        Messeage.map((data) => (
+                            <>
+                                <div className='Messagesbox' key={data.ID}>
+                                    <img src={data.PicNews || iconInbox} alt="iconInbox" />
+                                    <div className='Messagesboxtext'>
+                                        <p>{data.TextHeader}</p>
+                                        <div className='MessagesboxtextINFO'>
+                                            <p>{data.DescribtionNews}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        ))
+                    ) : (
+                        <>
+                            <h1 style={{margin: '20px'}}>No Messeage. . .</h1>
+                        </>
+                    )}
+                    
                     
                 </div>
+                <p style={{position: "absolute",right: '0px',marginRight: '20px',cursor: 'pointer'}} onClick={closeInbox}>close</p>
             </div>
             <div className={`Paymentbar ${isPayment ? 'fade-in' : 'fade-out'}`}>
                 Payment

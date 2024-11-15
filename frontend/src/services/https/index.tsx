@@ -95,6 +95,18 @@ async function DeleteUserStoreByID(id: string) {
     })
     .catch((e) => e.response);
 }
+// get Message by id
+async function GetMessageById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Message/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -154,6 +166,7 @@ export {
     AddStore,
     UserStoreByid,
     DeleteUserStoreByID,
+    GetMessageById,
 
     GetStoreWaiting,
 

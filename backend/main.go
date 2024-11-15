@@ -42,6 +42,7 @@ func main() {
 		router.GET("/userstore", user.ListUserstore)
 		router.GET("/userstore/:id", user.GetUserstoreByid)
 		router.DELETE("/DeleteUserStore/:id", user.DeleteUserStore)
+		router.GET("/Message/:id", user.GetMessage)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 

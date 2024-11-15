@@ -11,3 +11,10 @@ export interface UsersInterface {
 	Tel?: 			string ;
 	Status?: 			string ;
 }
+export interface MessageBoardInterface {
+    ID?: 				number;
+	PicNews?: 			string;
+	TextHeader?: 		string;
+	DescribtionNews?: 	string;
+	UserID?:			number;
+}
