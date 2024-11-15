@@ -51,7 +51,8 @@ func main() {
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
 		//ระบบ store payment
-
+		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
+		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)
 
 
 
