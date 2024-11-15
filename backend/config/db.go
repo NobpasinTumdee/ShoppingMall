@@ -178,8 +178,42 @@ func SetupDatabase() {
 
 
 	}
+
 	for _, pkg := range Store {
-		db.FirstOrCreate(&pkg,entity.Store{NameStore: pkg.NameStore})
+	db.FirstOrCreate(&pkg,entity.Store{NameStore: pkg.NameStore})
 	}
+
+	Hall := []entity.Hall{
+		{
+			HallName:     "ห้องประชุมใหญ่ A",
+			Capacity:     100,
+			Location:     "ชั้น 2 อาคาร A",
+			IsAvailable:  true,
+			ImageHall:    "https://example.com/images/hallA.jpg",
+			Description:  "ห้องประชุมขนาดใหญ่ สามารถรองรับได้ถึง 100 คน พร้อมอุปกรณ์ครบครัน",
+			PricePerHour: 2000,
+		},
+		{
+			HallName:     "ห้องประชุมกลาง B",
+			Capacity:     50,
+			Location:     "ชั้น 1 อาคาร B",
+			IsAvailable:  true,
+			ImageHall:    "https://example.com/images/hallB.jpg",
+			Description:  "ห้องประชุมขนาดกลาง รองรับได้ถึง 50 คน เหมาะสำหรับการประชุมกลุ่มเล็ก",
+			PricePerHour: 1500,
+		},
+		{
+			HallName:     "ห้องประชุมเล็ก C",
+			Capacity:     20,
+			Location:     "ชั้น 1 อาคาร C",
+			IsAvailable:  false,
+			ImageHall:    "https://example.com/images/hallC.jpg",
+			Description:  "ห้องประชุมขนาดเล็ก รองรับได้ถึง 20 คน บรรยากาศเงียบสงบ",
+			PricePerHour: 1000,
+		},
+	}
+	for _, pkg := range Hall {
+	db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
+	}	
 
 }
