@@ -3,11 +3,14 @@ package main
 import (
 	"example.com/ProjectSeG13/config"
 	"github.com/gin-gonic/gin"
+
 	//"example.com/ProjectSeG13/controller"
-  	"net/http"
-	"example.com/ProjectSeG13/middlewares"
-	"example.com/ProjectSeG13/controller/user"
+	"net/http"
+
+	"example.com/ProjectSeG13/controller/Hall"
 	"example.com/ProjectSeG13/controller/Store"
+	"example.com/ProjectSeG13/controller/user"
+	"example.com/ProjectSeG13/middlewares"
 )
 
 const PORT = "8000"
@@ -55,7 +58,8 @@ func main() {
 
 
 		//ระบบ hall
-
+		router.GET("/hall",Hall.ListHall)
+		router.GET("/hall/:id",Hall.GetHall)
 		//ระบบ hall payment
 
 

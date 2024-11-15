@@ -5,7 +5,7 @@ import Main from './Page/MainWeb/Main';
 import Store from './Page/MainWeb/Store/Store';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
-import Hall from './Page/MainWeb/Hall/HallBookingPage';
+import Hall from './Page/MainWeb/Hall/SelectHall/SelectHall';
 
 
 const App: React.FC = () => {
@@ -19,7 +19,6 @@ const App: React.FC = () => {
         <Route path="/SubStore" element={<SubStore />} />
         <Route path="/BookStore" element={<BookStore />} /> 
         <Route path="/Hall" element={<Hall />} />
-        <Route path="/selectHall" element={<selectHall />} />
       </Routes>
     </>
   );
