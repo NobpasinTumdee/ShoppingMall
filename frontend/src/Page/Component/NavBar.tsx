@@ -12,8 +12,11 @@ import Hutao from "../../assets/icon/ForPage/MainIcon/HuTaopic.jpg"
 import card1 from "../../assets/icon/ForPage/MainIcon/cardp.png"
 import card2 from "../../assets/icon/ForPage/MainIcon/cardg.png"
 import card3 from "../../assets/icon/ForPage/MainIcon/cardd.png"
+import box from "../../assets/icon/ForPage/MainIcon/GmailLogin.png"
 import background from "../../assets/icon/ForPage/Store/Store3.jpg"
 import './NavBar.css';
+import { useNavigate } from 'react-router-dom';
+
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
@@ -89,6 +92,11 @@ export const NavBar: React.FC = () => {
         setTimeout(() => {
           location.href = "/";
         }, 1000);
+    };
+    //=====================inbox=======================
+    const navigate = useNavigate();
+    const GotoInbox = () => {
+        navigate('/Inbox');
     };
     //=====================time================================
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -497,8 +505,9 @@ export const NavBar: React.FC = () => {
                     </span>
                     <span className='SubNab2'><img style={{ width: '200px', height: '30px' }} src={LOGO} alt="LOGO" /></span>
                     <span className='SubNab3'>
-                        <span>Hello! {user?.UserName} Welcome to ICONIC🎉</span>
-                        <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} src={user?.Profile || Hutao} alt="User" onClick={OpenMenu}></img>
+                        <span className='welcome'>Hello! {user?.UserName} Welcome to ICONIC🎉</span>
+                        <img className='box' src={box} alt="box" onClick={GotoInbox} />
+                        <img style={{ width: '45px', height: '45px', borderRadius: '50px', cursor: 'pointer' }} className='profileButton' src={user?.Profile || Hutao} alt="User" onClick={OpenMenu}></img>
                         
                             <div className={`dropboxMenu ${isMenuOpen ? 'fade-in' : 'fade-out'}`}>
                                 <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>

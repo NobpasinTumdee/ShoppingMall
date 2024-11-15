@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+.MandP h1{
+    font-size: 60px;
+    font-family: 'Dongle', sans-serif;
+    text-align: center;
+    color: #6D6D6D;
+    animation: MandP 1s ease-in-out;
+}
+@keyframes MandP{
+    0%{
+        opacity: 0;
+    }
+}
+.twoicon{
+    margin: 0 33%;
+    display: flex;
+    justify-content: space-between;
+    animation: twoicon 0.8s ease-in-out;
+}
+@keyframes twoicon{
+    0%{
+        transform: translateY(100%);
+        opacity: 0;
+        scale: 0.5;
+    }
+}
+.twoicon h1{ 
+    text-align: center;
+    font-size: 40px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-50%);
+    color: #6D6D6D;
+}
+.boxMandP{
+    transition: 0.8s;
+    padding: 10px 30px;
+}
+.boxMandP:hover{
+    background-color: #eeeeee;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #a8a8a8;
+}
+
+.Inbox{
+    width: 450px;
+    height: 750px;
+    position: fixed;
+    left: 0;
+    top: 115px;
+    background-color: #ffffff;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 10px #a8a8a8;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 1s ease;
+}
+.Inbox.fade-in{
+    animation: Inboxin 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+.Inbox.fade-out{
+    animation: Inboxout 0.5s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes Inboxin{
+    0%{
+        left: -500px;
+        top: 115px;
+    }80%{
+        left: 0px;
+        top: 115px;
+    }100%{
+        left: 0px;
+        top: 115px;
+    }
+}
+@keyframes Inboxout{
+    0%{
+        left: -500px;
+        top: 115px;
+    }80%{
+        left: 0px;
+        top: 115px;
+    }100%{
+        left: 0px;
+        top: 115px;
+    }
+}
+
+.Messages{
+    font-size: 30px;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-left: 20px;
+    
+}
+.AllMessagesbox {
+    overflow-y: scroll;
+    height: 600px;
+}
+.Messagesbox{
+    border-top:1px solid #c3c3c3 ;
+    border-bottom:1px solid #c3c3c3 ;
+    margin-left: 20px;
+    width: 400px;
+    height: 80px;
+    display: flex;
+    justify-content:flex-start;
+}
+.Messagesbox img{
+    width: 80px;
+    height: 80px;
+}
+
+.Messagesboxtext p:nth-child(1){
+    font-size: 20px;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    transform: translateY(-50%);
+}
+.MessagesboxtextINFO {
+    width: 90%;
+    height: 40px;
+    overflow-y: scroll;
+    transform: translateY(-80%);
+}
+.MessagesboxtextINFO p:nth-child(1){
+    font-size: 12px;
+    font-weight: 400;
+    font-family: 'Courier New', Courier, monospace;
+    transform: translateY(-5%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Paymentbar{
+    width: 450px;
+    height: 750px;
+    position: fixed;
+    right: 0px;
+    top: 115px;
+    background-color: #ffffff;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 0 10px #a8a8a8;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 1s ease;
+}
+.Paymentbar.fade-in{
+    animation: Paymentbarin 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+.Paymentbar.fade-out{
+    animation: Paymentbarout 0.5s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes Paymentbarin{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
+@keyframes Paymentbarout{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
