@@ -66,4 +66,6 @@ type TaxUser struct {
 
 	UserID 					uint 		`json:"UserID"`
 	User   					User 		`gorm:"foreignKey:UserID"`
+
+	Receipt 				[]Receipt 	`gorm:"foreignKey:UserTaxID"`
 }

@@ -210,3 +210,76 @@
         top: 115px;
     }
 }
+
+.Paymentbox{
+    margin: 20px 5%;
+    width: 90%;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #6D6D6D;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.Paymentbox img{
+    height: 90px;
+    margin-right: 20px;
+    animation: Paymentbox 5s ease-in-out infinite reverse;
+}
+@keyframes Paymentbox{
+    0%{
+        transform: translateY(-5%);
+    }50%{
+        transform: translateY(5%);
+    }100%{
+        transform: translateY(-5%);
+    }
+}
+
+.PaymentStorebar{
+    width: 450px;
+    height: 750px;
+    position: fixed;
+    right: 0px;
+    top: 115px;
+    background-color: #ffffff;
+    border-radius: 10px 0 0 10px;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 1s ease;
+}
+.PaymentStorebar.fade-in{
+    animation: PaymentStorebarin 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+.PaymentStorebar.fade-out{
+    animation: PaymentStorebarout 0.5s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes PaymentStorebarin{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
+@keyframes PaymentStorebarout{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}

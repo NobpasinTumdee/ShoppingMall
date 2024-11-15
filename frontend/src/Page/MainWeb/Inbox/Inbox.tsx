@@ -18,6 +18,7 @@ const Inbox: React.FC = () => {
     const [isInbox, setInbox] = useState(false);
     const OpenInbox = () => {
         setInbox(!isInbox);
+        setPaymentStore(false);
     };
     const closeInbox = () => {
         setInbox(false)
@@ -26,6 +27,11 @@ const Inbox: React.FC = () => {
     const [isPayment, setPayment] = useState(false);
     const OpenPayment = () => {
         setPayment(!isPayment);
+        setPaymentStore(false);
+    };
+    const [isPaymentStore, setPaymentStore] = useState(false);
+    const OpenPaymentStore = () => {
+        setPaymentStore(!isPaymentStore);
     };
     // const closePayment = () => {
     //     setPayment(false)
@@ -72,7 +78,7 @@ const Inbox: React.FC = () => {
                 <p className='Messages'>Messages</p>
                 <div className='AllMessagesbox'>
                     {Messeage.length > 0 ? (
-                        Messeage.map((data) => (
+                        Messeage.sort((a, b) => (b.ID || 0) - (a.ID || 0)).map((data) => (
                             <>
                                 <div className='Messagesbox' key={data.ID}>
                                     <img src={data.PicNews || iconInbox} alt="iconInbox" />
@@ -96,9 +102,17 @@ const Inbox: React.FC = () => {
                 <p style={{position: "absolute",right: '0px',marginRight: '20px',cursor: 'pointer'}} onClick={closeInbox}>close</p>
             </div>
             <div className={`Paymentbar ${isPayment ? 'fade-in' : 'fade-out'}`}>
-                Payment
+                <p className='Messages'>Payment</p>
+                <div className='Paymentbox' onClick={OpenPaymentStore}><img src={OnlinePayment} />Booking Store Payment</div>
+                <div className='Paymentbox'><img src="https://thumbs.dreamstime.com/b/city-hall-building-line-icon-city-hall-building-line-icon-outline-vector-sign-linear-style-pictogram-isolated-white-capitol-108563106.jpg" />Hall Payment</div>
+                <div className='Paymentbox'><img src="https://st5.depositphotos.com/1432405/66271/v/450/depositphotos_662718742-stock-illustration-car-parking-place-icon-outline.jpg" />Car Parking Payment</div>
             </div>
 
+            <div className={`PaymentStorebar ${isPaymentStore ? 'fade-in' : 'fade-out'}`}>
+                <p className='Messages'>Booking Store Payment</p>
+
+                <p style={{position: "absolute",right: '0px',marginRight: '20px',cursor: 'pointer',bottom: '0px'}} onClick={OpenPaymentStore}>close</p>
+            </div>
         </>
 
     );

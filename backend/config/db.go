@@ -39,6 +39,7 @@ func SetupDatabase() {
 		&entity.PaymentStore{},
 		&entity.Membership{},
 		&entity.Rating{},
+		&entity.PaymentMethodStore{},
 
 		//ระบบแจ้งซ่อมและอุปการณ์
 		&entity.ServiceRequest{}, 
