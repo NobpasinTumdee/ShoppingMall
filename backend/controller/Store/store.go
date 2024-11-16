@@ -142,3 +142,24 @@ func GetStoreWaiting(c *gin.Context) {
 
 	c.JSON(http.StatusOK, Stores)
 }
+
+// GET /Membership/:id
+func GetMembership(c *gin.Context) {
+	ID := c.Param("id")
+	var Membership entity.Membership
+
+	db := config.DB()
+
+
+	results := db.Where("id = ?", ID).First(&Membership)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Membership)
+}

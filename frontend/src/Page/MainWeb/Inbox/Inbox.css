@@ -243,6 +243,7 @@
 .PaymentStorebar{
     width: 450px;
     height: 750px;
+    overflow-y: scroll;
     position: fixed;
     right: 0px;
     top: 115px;
@@ -296,9 +297,16 @@
     align-items: center;
     font-size: 24px;
     font-weight: 700;
-    border-right: 10px solid #0d9e00;
     cursor: pointer;
     transition: 0.2s;
+}
+.paymentgroup.notPaid{
+    border-right: 10px solid #0b3b94;
+}
+.paymentgroup.paid{
+    border-right: 10px solid #0d9e00;
+    pointer-events: none;
+    opacity: 0.4;
 }
 .paymentgroup:hover{
     background-color: #10a502;

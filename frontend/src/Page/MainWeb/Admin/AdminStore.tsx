@@ -54,10 +54,14 @@ const AdminStore: React.FC = () => {
     //================================= คำเตือน ==================================
 
 
+    //================================= set date ========================
+    const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const Last = new Date(Booking); // คัดลอกค่า BookingDate
+    Last.setDate(Last.getDate() + 3); // เพิ่ม วันให้กับ LastDay
     //================================= update approve ==========================
     const [messageApi, contextHolder] = message.useMessage();
     const approve = async (approval: StoreInterface) => {
-        const values = { ...approval, StatusStore: 'Waiting for Payment.' };
+        const values = { ...approval, StatusStore: 'Waiting for Payment.', BookingDate:Booking , LastDay:Last };
         const valuesMessage: MessageBoardInterface = { 
             PicNews: 'https://cdn-icons-png.flaticon.com/512/4272/4272841.png',
             TextHeader: 'Waiting for Payment.' , 

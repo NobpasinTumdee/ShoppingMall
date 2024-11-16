@@ -146,10 +146,15 @@ const Inbox: React.FC = () => {
                 <p className='Messages'>Booking Store Payment</p>
                 {Payment.length > 0 ? (
                     Payment.map((data) => (
-                        <div key={data.ID} className='paymentgroup' onClick={() => GotoPaymentPageClick(data)}>
+                        <div key={data.ID} className={`paymentgroup ${data.StatusPaymentStore !== "paid" ? 'notPaid' : 'paid'}`} onClick={() => GotoPaymentPageClick(data)}>
                             <img src={CardPayment} alt="CardPayment" />
                             <div key={data.Store?.ID} className='Paymentinfo'>
-                                <p>Waiting Payment</p>
+                                {data.StatusPaymentStore === "paid" &&
+                                    <p>Payment successful</p>
+                                }
+                                {data.StatusPaymentStore !== "paid" &&
+                                    <p>Waiting Payment</p>
+                                }
                                 <p>Store Name: {data.Store?.NameStore}<br />
                                 Package: {data.Store?.Membership?.PackageName} <br />
                                 Total Price: {data.Store?.Membership?.RentalFee} Bath</p>

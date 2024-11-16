@@ -168,6 +168,18 @@ async function BackUpStore(data: BackupStoreInterface) {
     .catch((e) => e.response);
 
 }
+// get Membership by id
+async function GetMembershipByid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Membership/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================payment store========================================
 // get payment by userid Preload
 async function GetPaymentByuseridPreload(id: string) {
@@ -282,6 +294,7 @@ export {
     UpdateStoreByid,
     BackUpStore,
     GetStoreById,
+    GetMembershipByid,
 
     GetPaymentByuseridPreload,//payment store
     GetPaymentByuserid,

@@ -5,8 +5,8 @@ import {message} from 'antd'
 
 import './StoreAndPay.css'
 
-import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById} from '../../../services/https';
-import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface } from '../../../interfaces/StoreInterface';
+import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid} from '../../../services/https';
+import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface} from '../../../interfaces/StoreInterface';
 
 import PWA from '../../../assets/icon/ForPage/StorePayment/PWA.jpg'
 import PEA from '../../../assets/icon/ForPage/StorePayment/PEA.jpg'
@@ -19,6 +19,7 @@ const StorePayment: React.FC = () => {
     //const userIdstr = localStorage.getItem("id");
     const [Payment, setPayment] = useState<PaymentInterface | null>(null);
     const [Store, setStore] = useState<StoreInterface | null>(null);
+    const [Members, setMembers] = useState<MembershipInterface | null>(null);
     const { 
         ID
     } = location.state as { 
@@ -46,6 +47,11 @@ const StorePayment: React.FC = () => {
             fetchStore(String(Payment?.StoreID))
         }
     }, [Payment]);
+    useEffect(() => {
+        if (Store) {
+            fetchMember(String(Store.MembershipID))
+        }
+    }, [Store]);
     const fetchStore = async (ID: string ) => {//Store
         try {
             const res = await GetStoreById(ID);
@@ -54,6 +60,16 @@ const StorePayment: React.FC = () => {
             }
         } catch (error) {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลStore");
+        }
+    };
+    const fetchMember = async (ID: string ) => {//Members
+        try {
+            const res = await GetMembershipByid(ID);
+            if (res.status === 200) {
+                setMembers(res.data);
+            }
+        } catch (error) {
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลMembers");
         }
     };
     const [PaymentMethod, setPaymentMethod] = useState<PaymentMethodStoreInterface[]>([]);
@@ -82,6 +98,10 @@ const StorePayment: React.FC = () => {
         const RentalFee = Number(Payment?.Store?.Membership?.RentalFee || 0);
         setTotal(Pwa + Pea + RentalFee);
     }, [Payment]);
+    //================================= set date ========================
+    const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const Last = new Date(Booking); // คัดลอกค่า BookingDate
+    Last.setDate(Last.getDate() + Number(Members?.Day)); // เพิ่ม วันให้กับ LastDay
 
     //=========================================paynow================================================
     const paid = async (Data: any) => {
@@ -114,7 +134,7 @@ const StorePayment: React.FC = () => {
     };
     //=========================================updateStore================================================
     const updateStore = async (approval: any) => {
-        const values = { ...approval, StatusStore: 'This store is already taken.' };
+        const values = { ...approval, StatusStore: 'This store is already taken.' , BookingDate:Booking , LastDay:Last };
         try {
             const res = await UpdateStoreByid(String(Payment?.StoreID), values);
             if (res.status === 200) {
@@ -192,7 +212,7 @@ const StorePayment: React.FC = () => {
                         {PaymentMethod.map((data) => (
                             <div className='PaymentPaymentMethod' key={data.ID} onClick={() => SelectPaymentMethod(data)}><img src={data.MethodPic} alt="" />{data.MethodName}</div>
                         ))}
-                        <p>Your Selection : {selectMethodName} {selectMethod} {Store?.MembershipID}</p>
+                        <p>Your Selection : {selectMethodName} {selectMethod} {Store?.MembershipID} {Members?.Day} {String(Last)}</p>
                         <div className='PayNow' onClick={() => paid(Payment)}>Pay Now!</div>
                     </div>
                 </div>
