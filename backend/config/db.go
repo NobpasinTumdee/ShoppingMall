@@ -88,6 +88,16 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Membership{PackageName: pkg.PackageName})
 	}
 
+	//PaymentMethodStore
+	PaymentMethod := []entity.PaymentMethodStore{
+		{MethodName: "Mastercard",MethodPic: "https://cdn-icons-png.flaticon.com/512/105/105615.png"},
+		{MethodName: "Promptpay",MethodPic: "https://static-00.iconduck.com/assets.00/qr-scan-icon-512x512-9bsp061y.png"},
+
+	}
+	for _, pkg := range PaymentMethod {
+		db.FirstOrCreate(&pkg,entity.PaymentMethodStore{MethodName: pkg.MethodName})
+	}
+
 
 
 	//Store

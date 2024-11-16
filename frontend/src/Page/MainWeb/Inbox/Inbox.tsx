@@ -115,17 +115,15 @@ const Inbox: React.FC = () => {
                 <div className='AllMessagesbox'>
                     {Messeage.length > 0 ? (
                         Messeage.sort((a, b) => (b.ID || 0) - (a.ID || 0)).map((data) => (
-                            <>
-                                <div className='Messagesbox' key={data.ID}>
-                                    <img src={data.PicNews || iconInbox} alt="iconInbox" />
-                                    <div className='Messagesboxtext'>
-                                        <p>{data.TextHeader}</p>
-                                        <div className='MessagesboxtextINFO'>
-                                            <p>{data.DescribtionNews}</p>
-                                        </div>
+                            <div className='Messagesbox' key={data.ID}>
+                                <img src={data.PicNews || iconInbox} alt="iconInbox" />
+                                <div className='Messagesboxtext'>
+                                    <p>{data.TextHeader}</p>
+                                    <div className='MessagesboxtextINFO'>
+                                        <p>{data.DescribtionNews}</p>
                                     </div>
                                 </div>
-                            </>
+                            </div>
                         ))
                     ) : (
                         <>
@@ -148,17 +146,15 @@ const Inbox: React.FC = () => {
                 <p className='Messages'>Booking Store Payment</p>
                 {Payment.length > 0 ? (
                     Payment.map((data) => (
-                        <>
-                            <div key={data.ID} className='paymentgroup' onClick={() => GotoPaymentPageClick(data)}>
-                                <img src={CardPayment} alt="CardPayment" />
-                                <div key={data.Store?.ID} className='Paymentinfo'>
-                                    <p>Waiting Payment</p>
-                                    <p>Store Name: {data.Store?.NameStore}<br />
-                                    Package: {data.Store?.Membership?.PackageName} <br />
-                                    Total Price: {data.Store?.Membership?.RentalFee} Bath</p>
-                                </div>
+                        <div key={data.ID} className='paymentgroup' onClick={() => GotoPaymentPageClick(data)}>
+                            <img src={CardPayment} alt="CardPayment" />
+                            <div key={data.Store?.ID} className='Paymentinfo'>
+                                <p>Waiting Payment</p>
+                                <p>Store Name: {data.Store?.NameStore}<br />
+                                Package: {data.Store?.Membership?.PackageName} <br />
+                                Total Price: {data.Store?.Membership?.RentalFee} Bath</p>
                             </div>
-                        </>
+                        </div>
                     ))
                 ) : (
                     <>

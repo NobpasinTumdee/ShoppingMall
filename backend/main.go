@@ -33,8 +33,8 @@ func main() {
 	router := r.Group("")
 	{
 		router.Use(middlewares.Authorizes())
-
-
+		
+		
 		//User
 		router.GET("/user/:id", user.GetUser)
 		router.PUT("/user/:id",user.UpdateUserByid)
@@ -50,12 +50,14 @@ func main() {
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
+		router.GET("/storeid/:id",Store.GetStoreByid)
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
+		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)
 		router.GET("/Payment/:id", Store.GetPaymentStoreWithFKByID)
 		router.GET("/PaymentInfo/:id", Store.GetPaymentStoreByPayID)
 		router.POST("/CreatePayment",Store.CreatePayment)
-		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)
+		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)//ยังไม่ได้ใช้
 		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)
 
 

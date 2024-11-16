@@ -65,3 +65,10 @@ export interface PaymentInterface{
     User?: UsersInterface;
     Store?: StoreInterface;
 }
+
+
+export interface PaymentMethodStoreInterface{
+    ID?:                    number ;
+    MethodName?:            string ;
+    MethodPic?:             string ;
+}

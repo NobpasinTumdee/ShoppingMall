@@ -30,6 +30,25 @@ func GetStoreByFloor(c *gin.Context) {
 
 	c.JSON(http.StatusOK, Stores)
 }
+//GET ListStore by id
+func GetStoreByid(c *gin.Context) {
+	ID := c.Param("id")
+	var Stores entity.Store
+
+	db := config.DB()
+
+	results := db.Where("id = ?", ID).Find(&Stores)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Stores)
+}
 
 // PUT update Store by id 
 func UpdateStoreByid(c *gin.Context) {

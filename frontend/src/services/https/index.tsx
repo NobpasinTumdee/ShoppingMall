@@ -132,6 +132,18 @@ async function GetStoreByFloor(id: string) {
     .catch((e) => e.response);
 
 }
+// get Store by id
+async function GetStoreById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/storeid/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 // update Store
 async function UpdateStoreByid(id: string, data: StoreInterface) {
 
@@ -217,7 +229,18 @@ async function UpdatePaymentStatus(id: string, data: PaymentInterface) {
     .catch((e) => e.response);
 
 }
+// get PaymentMethod
+async function GetPaymentMethod() {
 
+  return await axios
+
+    .get(`${apiUrl}/PaymentMethod`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 
 
@@ -258,10 +281,12 @@ export {
     GetStoreByFloor,//store
     UpdateStoreByid,
     BackUpStore,
+    GetStoreById,
 
     GetPaymentByuseridPreload,//payment store
     GetPaymentByuserid,
     GetPaymentid,
     AddPayment,
     UpdatePaymentStatus,
+    GetPaymentMethod,
 }

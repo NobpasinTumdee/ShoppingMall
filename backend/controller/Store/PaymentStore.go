@@ -162,3 +162,23 @@ func UpdatePaymentStatusByID(c *gin.Context) {
 
     c.JSON(http.StatusOK, gin.H{"message": "PaymentStore status updated to 'paid'", "paymentStore": paymentStore})
 }
+
+
+// GET /PaymentMethodStore
+func ListPaymentMethodStore(c *gin.Context) {
+
+	var PM []entity.PaymentMethodStore
+
+	db := config.DB()
+
+	results := db.Select("id, method_name , method_pic").Find(&PM)
+
+	// Check for errors in the query
+	if results.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+		return
+	}
+
+	// Return the results as JSON
+	c.JSON(http.StatusOK, PM)
+}

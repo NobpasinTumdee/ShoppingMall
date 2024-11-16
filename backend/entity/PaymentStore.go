@@ -24,6 +24,7 @@ type PaymentStore struct {
 type PaymentMethodStore struct {
 	gorm.Model
 	MethodName 			string 		`json:"MethodName"`
+	MethodPic 			string 		`json:"MethodPic"`
 
 	PaymentStore 		[]PaymentStore 	`gorm:"foreignKey:PayMethodStoreID"`
 }
