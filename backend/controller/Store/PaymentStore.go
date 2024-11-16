@@ -30,6 +30,33 @@ func GetPaymentStoreByid(c *gin.Context) {
 	c.JSON(http.StatusOK, PaymentStore)
 }
 
+// POST Payment
+func CreatePayment(c *gin.Context) {
+	var payment entity.PaymentStore
+
+	if err := c.ShouldBindJSON(&payment); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.PaymentStore{
+		StatusPaymentStore:        "wait",
+		PayMethodStoreID:        0,
+		UserID:        payment.UserID,
+		StoreID:        payment.StoreID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "post payment success", "data": u})
+}
+
 // PUT update PaymentStore by id 
 func UpdatePaymentByid(c *gin.Context) {
 	var PaymentStore entity.PaymentStore
@@ -57,4 +84,27 @@ func UpdatePaymentByid(c *gin.Context) {
 	}
  
 	c.JSON(http.StatusOK, gin.H{"message": "PaymentStore successful"})
+}
+
+// PUT update PaymentStore status to 'paid' by id
+func UpdatePaymentStatusByID(c *gin.Context) {
+    var paymentStore entity.PaymentStore
+    ID := c.Param("id") // รับ id จาก URL
+    db := config.DB()
+
+    // ค้นหา PaymentStore ตาม ID
+    result := db.First(&paymentStore, ID)
+    if result.Error != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "PaymentStore ID not found"})
+        return
+    }
+
+    // อัปเดตเฉพาะ StatusPaymentStore เป็น 'paid'
+    paymentStore.StatusPaymentStore = "paid"
+    if err := db.Save(&paymentStore).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to update PaymentStore status"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "PaymentStore status updated to 'paid'", "paymentStore": paymentStore})
 }

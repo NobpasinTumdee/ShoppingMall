@@ -42,3 +42,13 @@ export interface InfoUserStoreInterface{
     UserDescribStore?:  string ;
     UserID?:            number ;
 }
+
+
+
+export interface PaymentInterface{
+    ID?:                    number ;
+    StatusPaymentStore?:    string ;
+    UserID?:                number ;
+    StoreID?:               number ;
+    PayMethodStoreID?:      number ;
+}

@@ -46,13 +46,15 @@ func main() {
 		router.POST("/Message", user.CreateMessageBoard)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
-
+		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
+		router.POST("/CreatePayment",Store.CreatePayment)
 		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)
+		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)
 
 
 

@@ -1,5 +1,5 @@
 import {SignInInterface} from "../../interfaces/SignIn";
-import {StoreInterface,BackupStoreInterface} from "../../interfaces/StoreInterface";
+import {StoreInterface,BackupStoreInterface,PaymentInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
 
@@ -156,6 +156,54 @@ async function BackUpStore(data: BackupStoreInterface) {
     .catch((e) => e.response);
 
 }
+//============================payment store========================================
+// get payment by userid
+async function GetPaymentByuserid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/PaymentStore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create AddPayment
+async function AddPayment(data: PaymentInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/CreatePayment`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// update Payment Status
+async function UpdatePaymentStatus(id: string, data: PaymentInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/PaymentStatus/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
+
+
+
+
+
+
+
+
+
+
 //============================Admin========================================
 // get Store WaitingForApproval
 async function GetStoreWaiting(status: string) {
@@ -172,7 +220,7 @@ async function GetStoreWaiting(status: string) {
 
 
 export {
-    SignIn,
+    SignIn,//user
     GetUserById,
     UpdateUserByid,
     AddStore,
@@ -181,9 +229,13 @@ export {
     GetMessageById,
     AddMessage,
 
-    GetStoreWaiting,
+    GetStoreWaiting,//admin
 
-    GetStoreByFloor,
+    GetStoreByFloor,//store
     UpdateStoreByid,
     BackUpStore,
+
+    GetPaymentByuserid,//payment store
+    AddPayment,
+    UpdatePaymentStatus,
 }

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './Inbox.css';
 //import { useNavigate } from 'react-router-dom';
 import iconInbox from '../../../assets/icon/ForPage/Messenger/InBox.png';
+import CardPayment from '../../../assets/icon/ForPage/StorePayment/CardPayment.png';
 import OnlinePayment from '../../../assets/icon/ForPage/Messenger/OnlinePayment.png';
-import { GetMessageById } from '../../../services/https';
+import { GetMessageById , GetPaymentByuserid} from '../../../services/https';
 import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
+import { PaymentInterface } from '../../../interfaces/StoreInterface';
 
 const Inbox: React.FC = () => {
     //const navigate = useNavigate();
@@ -56,6 +58,26 @@ const Inbox: React.FC = () => {
             }
         } catch (error) {
             setMesseage([]);
+        }
+    };
+    //================================getpayment====================================
+    const [Payment, setPaymentData] = useState<PaymentInterface[]>([]);
+    useEffect(() => {
+        if (1) {
+            fetchPayment(userIdstr);
+        }
+    }, [1]);
+    
+    const fetchPayment = async (userIdstr : any) => {
+        try {
+            const res = await GetPaymentByuserid(userIdstr);
+            if (res.status === 200 && res.data) {
+                setPaymentData(res.data);
+            } else {
+                setPaymentData([]); 
+            }
+        } catch (error) {
+            setPaymentData([]);
         }
     };
     return(
@@ -110,6 +132,20 @@ const Inbox: React.FC = () => {
 
             <div className={`PaymentStorebar ${isPaymentStore ? 'fade-in' : 'fade-out'}`}>
                 <p className='Messages'>Booking Store Payment</p>
+                {Payment.length > 0 ? (
+                    Payment.map((data) => (
+                        <>
+                            <div key={data.ID} className='paymentgroup'>
+                                <img src={CardPayment} alt="CardPayment" />
+                                <p>Waiting Payment</p>
+                            </div>
+                        </>
+                    ))
+                ) : (
+                    <>
+                        <div>No payment</div>
+                    </>
+                )}
 
                 <p style={{position: "absolute",right: '0px',marginRight: '20px',cursor: 'pointer',bottom: '0px'}} onClick={OpenPaymentStore}>close</p>
             </div>
