@@ -10,8 +10,8 @@ import Own from '../../../assets/icon/ForPage/Admin/Own.png';
 
 import { message} from "antd";
 
-import {GetStoreWaiting , UpdateStoreByid , AddMessage} from '../../../services/https/index';
-import {StoreInterface } from '../../../interfaces/StoreInterface'
+import {GetStoreWaiting , UpdateStoreByid , AddMessage , AddPayment} from '../../../services/https/index';
+import {StoreInterface , PaymentInterface} from '../../../interfaces/StoreInterface'
 import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 
 
@@ -64,6 +64,10 @@ const AdminStore: React.FC = () => {
             DescribtionNews: 'Your shop reservation has been approved by the administrator and you can You can proceed by making the next payment within 3 days.',
             UserID: approval.UserID
         };
+        const valuesPayment: PaymentInterface = { 
+            UserID: approval.UserID,
+            StoreID: approval.ID
+        };
         try {
             const res = await UpdateStoreByid(String(values.ID), values);
             if (res.status === 200) {
@@ -91,6 +95,25 @@ const AdminStore: React.FC = () => {
                 messageApi.open({
                     type: "success",
                     content: 'Send Message Success!',
+                });
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
+            });
+        }
+        try {
+            const res = await AddPayment(valuesPayment);
+            if (res.status === 201) {
+                messageApi.open({
+                    type: "success",
+                    content: 'Create Payment Success!',
                 });
             } else {
                 messageApi.open({
