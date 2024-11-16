@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Inbox.css';
+import { useNavigate } from 'react-router-dom';
+
 //import { useNavigate } from 'react-router-dom';
 import iconInbox from '../../../assets/icon/ForPage/Messenger/InBox.png';
 import CardPayment from '../../../assets/icon/ForPage/StorePayment/CardPayment.png';
@@ -80,6 +82,18 @@ const Inbox: React.FC = () => {
             setPaymentData([]);
         }
     };
+    //================================Go to payment page====================================
+    const navigate = useNavigate();
+
+    const GotoPaymentPageClick = (Payment: PaymentInterface) => {
+
+        navigate('/StorePayment', { 
+            state: { 
+                ID: Payment.ID,
+            } 
+        });
+    };
+
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -135,7 +149,7 @@ const Inbox: React.FC = () => {
                 {Payment.length > 0 ? (
                     Payment.map((data) => (
                         <>
-                            <div key={data.ID} className='paymentgroup'>
+                            <div key={data.ID} className='paymentgroup' onClick={() => GotoPaymentPageClick(data)}>
                                 <img src={CardPayment} alt="CardPayment" />
                                 <div key={data.Store?.ID} className='Paymentinfo'>
                                     <p>Waiting Payment</p>

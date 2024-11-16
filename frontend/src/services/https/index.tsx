@@ -169,12 +169,24 @@ async function GetPaymentByuseridPreload(id: string) {
     .catch((e) => e.response);
 
 }
-// get payment by userid
+// get payment by userid ไม่ใช้เด้อจ้าา
 async function GetPaymentByuserid(id: string) {
 
   return await axios
 
     .get(`${apiUrl}/PaymentStore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get payment by id payment
+async function GetPaymentid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/PaymentInfo/${id}`, requestOptions)
 
     .then((res) => res)
 
@@ -249,6 +261,7 @@ export {
 
     GetPaymentByuseridPreload,//payment store
     GetPaymentByuserid,
+    GetPaymentid,
     AddPayment,
     UpdatePaymentStatus,
 }

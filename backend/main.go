@@ -53,6 +53,7 @@ func main() {
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
 		router.GET("/Payment/:id", Store.GetPaymentStoreWithFKByID)
+		router.GET("/PaymentInfo/:id", Store.GetPaymentStoreByPayID)
 		router.POST("/CreatePayment",Store.CreatePayment)
 		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)
 		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)

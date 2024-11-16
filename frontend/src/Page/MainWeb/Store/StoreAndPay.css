@@ -202,11 +202,68 @@
 /*====================================================================================================================================*/
 
 
+.PaymentContanerBox {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+}
 
+.PaymentContanerBoxSub{
+    display: flex;
+    justify-content: space-between;
+}
+.PaymentContanerBoxSub div:nth-child(1){
+    width: 60%;
+}
+.PaymentContanerBoxSub div:nth-child(2){
+    width: 40%;
+}
+.listPay{
+    width: 70%;
+    padding-left: 50px;
+    padding-right: 20px;
+}
+.listPay img{
+    width: 120px;
+    box-shadow: 0 4px 4px #acacac;
+}
+.PWA {
+    display: flex;
+    justify-content:flex-start;
+    margin: 15px 0;
+    animation: PWA 0.5s ease-in-out;
+}
+@keyframes PWA {
+    0%{
+        transform: translateX(-150%);
+        scale: 0;
+        opacity: 0;
+    }
+}
+.total {
+    display: flex;
+    justify-content:space-between;
+}
+.total p:nth-child(1){
+    width: 60%;
+}
+.total p:nth-child(2){
+    width: 40%;
+    font-weight: 700;
+}
 
-
-
-
+.listPayR{
+    width: 30%;
+    background-color: #F6F6F6;
+    box-shadow: 0 0 5px #acacac;
+    height: 680px;
+    border-radius: 10px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+.listPayRSub{
+    margin: 20px;
+}
 
 
 
