@@ -30,6 +30,34 @@ func GetPaymentStoreByid(c *gin.Context) {
 	c.JSON(http.StatusOK, PaymentStore)
 }
 
+// GET ListPaymentStore by userid with FK data
+func GetPaymentStoreWithFKByID(c *gin.Context) {
+    ID := c.Param("id")
+    var paymentStores []entity.PaymentStore
+
+    db := config.DB()
+
+    results := db.Preload("Store").
+        Preload("PaymentMethodStore").
+        Preload("User").
+        Preload("Store.Membership"). 
+        Preload("Store.ProductType"). 
+        Where("user_id = ?", ID).
+        Find(&paymentStores)
+
+    if results.Error != nil {
+        if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+            c.JSON(http.StatusNotFound, gin.H{"error": "PaymentStore not found"})
+        } else {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+        }
+        return
+    }
+
+    c.JSON(http.StatusOK, paymentStores)
+}
+
+
 // POST Payment
 func CreatePayment(c *gin.Context) {
 	var payment entity.PaymentStore

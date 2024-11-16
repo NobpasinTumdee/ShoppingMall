@@ -1,3 +1,4 @@
+import { UsersInterface } from "./UsersInterface";
 export interface StoreInterface {
     ID?:                number;
     PicStore?:  		string ;
@@ -13,6 +14,15 @@ export interface StoreInterface {
     UserID?:            number ;
     ProductTypeID?:     number ;
 
+    Membership?: MembershipInterface;
+}
+export interface MembershipInterface {
+    ID?:                number;
+    PackageName?:  		string ;
+    Day?:               number;
+    Pwa?:               number;
+    Pea?:               number;
+    RentalFee?:         number;
 }
 
 export interface BackupStoreInterface{
@@ -51,4 +61,7 @@ export interface PaymentInterface{
     UserID?:                number ;
     StoreID?:               number ;
     PayMethodStoreID?:      number ;
+
+    User?: UsersInterface;
+    Store?: StoreInterface;
 }

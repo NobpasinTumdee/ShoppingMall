@@ -4,7 +4,7 @@ import './Inbox.css';
 import iconInbox from '../../../assets/icon/ForPage/Messenger/InBox.png';
 import CardPayment from '../../../assets/icon/ForPage/StorePayment/CardPayment.png';
 import OnlinePayment from '../../../assets/icon/ForPage/Messenger/OnlinePayment.png';
-import { GetMessageById , GetPaymentByuserid} from '../../../services/https';
+import { GetMessageById , GetPaymentByuseridPreload} from '../../../services/https';
 import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 import { PaymentInterface } from '../../../interfaces/StoreInterface';
 
@@ -70,7 +70,7 @@ const Inbox: React.FC = () => {
     
     const fetchPayment = async (userIdstr : any) => {
         try {
-            const res = await GetPaymentByuserid(userIdstr);
+            const res = await GetPaymentByuseridPreload(userIdstr);
             if (res.status === 200 && res.data) {
                 setPaymentData(res.data);
             } else {
@@ -137,7 +137,12 @@ const Inbox: React.FC = () => {
                         <>
                             <div key={data.ID} className='paymentgroup'>
                                 <img src={CardPayment} alt="CardPayment" />
-                                <p>Waiting Payment</p>
+                                <div key={data.Store?.ID} className='Paymentinfo'>
+                                    <p>Waiting Payment</p>
+                                    <p>Store Name: {data.Store?.NameStore}<br />
+                                    Package: {data.Store?.Membership?.PackageName} <br />
+                                    Total Price: {data.Store?.Membership?.RentalFee} Bath</p>
+                                </div>
                             </div>
                         </>
                     ))

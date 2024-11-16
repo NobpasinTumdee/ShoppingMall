@@ -157,6 +157,18 @@ async function BackUpStore(data: BackupStoreInterface) {
 
 }
 //============================payment store========================================
+// get payment by userid Preload
+async function GetPaymentByuseridPreload(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Payment/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 // get payment by userid
 async function GetPaymentByuserid(id: string) {
 
@@ -235,7 +247,8 @@ export {
     UpdateStoreByid,
     BackUpStore,
 
-    GetPaymentByuserid,//payment store
+    GetPaymentByuseridPreload,//payment store
+    GetPaymentByuserid,
     AddPayment,
     UpdatePaymentStatus,
 }
