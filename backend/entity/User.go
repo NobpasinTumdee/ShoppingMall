@@ -30,6 +30,10 @@ type User struct {
 	MessageBoard []MessageBoard `gorm:"foreignKey:UserID"`
 
 	BookingHall []BookingHall	`gorm:"foreignKey:UserID"`
+
+	CleaningRecords []CleaningRecord	`gorm:"foreignKey:UserID"` //บันทึกการทำความสะอาด
+
+	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
 }
 
 

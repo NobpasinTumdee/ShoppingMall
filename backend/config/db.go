@@ -50,6 +50,18 @@ func SetupDatabase() {
 		&entity.Facilities{},
 		&entity.FacilityList{},
 		&entity.PaymentHall{},
+
+		//ระบบบันทึกการทำความสะอาดของแม่บ้าน
+		&entity.Area{},
+		&entity.Schedule{},
+		&entity.CleaningRecord{},
+
+		//ตารางอุปกรณ์ส่วนกลาง
+		&entity.Inventory{},
+		&entity.CategoryInventory{},
+
+		//ระบบเบิกอุปกรณ์การทำความสะอาด
+		&entity.InventoryRequest{},
 	)
 	
 	//User
