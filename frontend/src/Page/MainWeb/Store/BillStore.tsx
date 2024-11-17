@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { GetBillByPayidPreload } from '../../../services/https';
 import { ReceiptInterface } from '../../../interfaces/StoreInterface';
 import {message} from 'antd'
+import { useNavigate } from 'react-router-dom';
 
 import Logo from '../../../assets/icon/LOGOS.png';
 const BillStore: React.FC = () => {
@@ -23,6 +24,10 @@ const BillStore: React.FC = () => {
         } catch (error) {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลPayment");
         }
+    };
+    const navigate = useNavigate();
+    const Return = () => {
+        navigate('/Inbox');
     };
     //=======================================total=========================================
     const [Total, setTotal] = useState(0);
@@ -91,6 +96,7 @@ const BillStore: React.FC = () => {
             ) : (
                 <div className='Slip'>กำลังโหลดข้อมูล...</div>
             )}
+            <div className='backtopayment' onClick={() => Return()}>◀ Return to Inbox</div>
         </>
     );
 };
