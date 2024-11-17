@@ -182,3 +182,63 @@ func ListPaymentMethodStore(c *gin.Context) {
 	// Return the results as JSON
 	c.JSON(http.StatusOK, PM)
 }
+
+
+
+//bin=============================================================================================================================
+// GET ListReceiptByID by userid with FK data
+func ListReceiptByID(c *gin.Context) {
+    ID := c.Param("id")
+    var Receipt []entity.Receipt
+
+    db := config.DB()
+
+    results := db.
+        Preload("PaymentStore").
+        Preload("PaymentStore.PaymentMethodStore").
+        Preload("PaymentStore.User").
+        Preload("PaymentStore.Store").
+        Preload("PaymentStore.Store.Membership").
+        Preload("PaymentStore.Store.ProductType").
+        Preload("TaxUser").
+        Where("payment_store_id = ?", ID).
+        Find(&Receipt)
+
+    if results.Error != nil {
+        if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+            c.JSON(http.StatusNotFound, gin.H{"error": "bin not found"})
+        } else {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+        }
+        return
+    }
+
+    c.JSON(http.StatusOK, Receipt)
+}
+
+// POST bill
+func CreateReceipt(c *gin.Context) {
+	var Receipt entity.Receipt
+
+	if err := c.ShouldBindJSON(&Receipt); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.Receipt{
+		DateReceipt:        	Receipt.DateReceipt,
+		DescribtionBill:        Receipt.DescribtionBill,
+		PaymentStoreID:        	Receipt.PaymentStoreID,
+		UserTaxID:        		Receipt.UserTaxID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "post bill success", "data": u})
+}

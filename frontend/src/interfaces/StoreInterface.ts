@@ -64,6 +64,7 @@ export interface PaymentInterface{
 
     User?: UsersInterface;
     Store?: StoreInterface;
+    PaymentMethodStore?: PaymentMethodStoreInterface;
 }
 
 
@@ -71,4 +72,26 @@ export interface PaymentMethodStoreInterface{
     ID?:                    number ;
     MethodName?:            string ;
     MethodPic?:             string ;
+}
+
+
+export interface ReceiptInterface{
+    ID?:                    number ;
+    DateReceipt?:           string ;
+    DescribtionBill?:       string ;
+    PaymentStoreID?:        number ;
+    UserTaxID?:             number ;
+
+    PaymentStore?: PaymentInterface;
+    TaxUser?: TaxUserInterface;
+}
+
+export interface TaxUserInterface{
+    ID?:                     number ;
+    CompanyName?:            string ;
+    Residencee?:             string ;
+    IdentificationNumber?:   number ;
+    UserID?:                 number ;
+
+    User?: UsersInterface;
 }

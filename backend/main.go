@@ -60,6 +60,8 @@ func main() {
 		router.POST("/CreatePayment",Store.CreatePayment)
 		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)//ยังไม่ได้ใช้
 		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)
+		router.GET("/Receipt/:id", Store.ListReceiptByID)
+		router.POST("/Receipt",Store.CreateReceipt)
 
 
 

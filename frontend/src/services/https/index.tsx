@@ -253,7 +253,19 @@ async function GetPaymentMethod() {
     .catch((e) => e.response);
 
 }
+//============================bill========================================
+// get bill by paymentid Preload
+async function GetBillByPayidPreload(id: string) {
 
+  return await axios
+
+    .get(`${apiUrl}/Receipt/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 
 
@@ -302,4 +314,5 @@ export {
     AddPayment,
     UpdatePaymentStatus,
     GetPaymentMethod,
+    GetBillByPayidPreload,//bill
 }

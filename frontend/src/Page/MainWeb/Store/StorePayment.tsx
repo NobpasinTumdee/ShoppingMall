@@ -20,11 +20,7 @@ const StorePayment: React.FC = () => {
     const [Payment, setPayment] = useState<PaymentInterface | null>(null);
     const [Store, setStore] = useState<StoreInterface | null>(null);
     const [Members, setMembers] = useState<MembershipInterface | null>(null);
-    const { 
-        ID
-    } = location.state as { 
-        ID: number;
-    };
+    const { ID } = location.state as { ID: number; };
     useEffect(() => {
         if (1) {
             fetchPayment(String(ID));
@@ -36,7 +32,6 @@ const StorePayment: React.FC = () => {
             const res = await GetPaymentid(ID);
             if (res.status === 200) {
                 setPayment(res.data);
-                
             }
         } catch (error) {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลPayment");
@@ -102,7 +97,6 @@ const StorePayment: React.FC = () => {
     const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
     const Last = new Date(Booking); // คัดลอกค่า BookingDate
     Last.setDate(Last.getDate() + Number(Members?.Day)); // เพิ่ม วันให้กับ LastDay
-
     //=========================================paynow================================================
     const paid = async (Data: any) => {
         const values = {
