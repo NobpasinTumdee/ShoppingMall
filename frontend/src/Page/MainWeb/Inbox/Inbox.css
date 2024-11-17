@@ -305,12 +305,12 @@
 }
 .paymentgroup.paid{
     border-right: 10px solid #0d9e00;
-    pointer-events: none;
-    opacity: 0.4;
+    /* pointer-events: none; */
+    opacity: 1;
 }
 .paymentgroup:hover{
-    background-color: #10a502;
-    color: #fff;
+    background-color: #fdf0cf;
+    color: #4e3a03;
 }
 .paymentgroup img{
     width: 50px;

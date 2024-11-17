@@ -189,7 +189,7 @@ func ListPaymentMethodStore(c *gin.Context) {
 // GET ListReceiptByID by userid with FK data
 func ListReceiptByID(c *gin.Context) {
     ID := c.Param("id")
-    var Receipt []entity.Receipt
+    var Receipt entity.Receipt
 
     db := config.DB()
 

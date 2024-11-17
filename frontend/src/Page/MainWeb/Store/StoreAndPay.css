@@ -296,3 +296,65 @@
     border-radius: 10px;
     cursor: pointer;
 }
+/*===============================================================Bill==================================================*/
+.RE{
+    width: 100%;
+    text-align: center;
+    color: #C9AF62;
+}
+.Slip{
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    width: 500px;
+    height: 600px;
+    box-shadow: 0 0 5px #00000052;
+    border-radius: 5px;
+    padding: 20px;
+
+    animation: Slip 0.8s ease-in-out ;
+}
+@keyframes Slip {
+    0%{
+        top: 160%;
+        opacity: 0;
+    }
+}
+.Slip img{
+    width: 150px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.Adress{
+    transform: translateY(-20px);
+}
+.Adress2{
+    transform: translateY(-40px);
+}
+.P1{
+    font-weight: 900;
+    transform: translateY(20px);
+}
+.listpayment1{
+    line-height: 0px;
+    transform: translateY(-40px);
+}
+.Sublist {
+    line-height: 0px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.TotalAll{
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50px);
+    font-size: 24px;
+}
+.bottoninfo{
+    font-size: 10px;
+    position: absolute;
+    bottom: 10px;
+}

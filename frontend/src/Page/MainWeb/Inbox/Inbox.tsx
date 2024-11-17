@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import iconInbox from '../../../assets/icon/ForPage/Messenger/InBox.png';
 import CardPayment from '../../../assets/icon/ForPage/StorePayment/CardPayment.png';
 import OnlinePayment from '../../../assets/icon/ForPage/Messenger/OnlinePayment.png';
+import Bill from '../../../assets/icon/ForPage/StorePayment/Bill.png';
 import { GetMessageById , GetPaymentByuseridPreload} from '../../../services/https';
 import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 import { PaymentInterface } from '../../../interfaces/StoreInterface';
@@ -146,7 +147,7 @@ const Inbox: React.FC = () => {
                 <p className='Messages'>Booking Store Payment</p>
                 {Payment.length > 0 ? (
                     Payment.map((data) => (
-                        <div key={data.ID} className={`paymentgroup ${data.StatusPaymentStore !== "paid" ? 'notPaid' : 'paid'}`} onClick={() => GotoPaymentPageClick(data)}>
+                        <div key={data.ID} className={`paymentgroup ${data.StatusPaymentStore !== "paid" ? 'notPaid' : 'paid'}`} onClick={() => GotoPaymentPageClick(data)} >
                             <img src={CardPayment} alt="CardPayment" />
                             <div key={data.Store?.ID} className='Paymentinfo'>
                                 {data.StatusPaymentStore === "paid" &&
@@ -155,10 +156,13 @@ const Inbox: React.FC = () => {
                                 {data.StatusPaymentStore !== "paid" &&
                                     <p>Waiting Payment</p>
                                 }
-                                <p>Store Name: {data.Store?.NameStore}<br />
+                                <p >Store Name: {data.Store?.NameStore}<br />
                                 Package: {data.Store?.Membership?.PackageName} <br />
                                 Total Price: {data.Store?.Membership?.RentalFee} Bath</p>
                             </div>
+                            {data.StatusPaymentStore === "paid" &&
+                                <img src={Bill} alt="Bill" />
+                            }
                         </div>
                     ))
                 ) : (

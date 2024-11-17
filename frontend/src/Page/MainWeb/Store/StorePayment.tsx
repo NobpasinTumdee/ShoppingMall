@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import {message} from 'antd'
+import { useNavigate } from 'react-router-dom';
 
 import './StoreAndPay.css'
 
@@ -149,6 +150,16 @@ const StorePayment: React.FC = () => {
             });
         }
     };
+    //======================================================bill==================================================
+    const navigate = useNavigate();
+    const GotoBillPageClick = (Payment: PaymentInterface) => {
+
+        navigate('/BillStore', { 
+            state: { 
+                ID: Payment.ID,
+            } 
+        });
+    };
 
     return(
         <>
@@ -207,7 +218,13 @@ const StorePayment: React.FC = () => {
                             <div className='PaymentPaymentMethod' key={data.ID} onClick={() => SelectPaymentMethod(data)}><img src={data.MethodPic} alt="" />{data.MethodName}</div>
                         ))}
                         <p>Your Selection : {selectMethodName} {selectMethod} {Store?.MembershipID} {Members?.Day} {String(Last)}</p>
-                        <div className='PayNow' onClick={() => paid(Payment)}>Pay Now!</div>
+
+                        {Payment?.StatusPaymentStore !== 'paid' && 
+                            <div className='PayNow' onClick={() => paid(Payment)}>Pay Now!</div>
+                        }
+                        {Payment?.StatusPaymentStore === 'paid' && 
+                            <div className='PayNow' style={{backgroundColor: '#0d9e00', opacity: "1"}} onClick={() => GotoBillPageClick(Payment)} >Paid Get bill</div>
+                        }
                     </div>
                 </div>
             </div>

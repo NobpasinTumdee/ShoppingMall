@@ -9,13 +9,14 @@ import StorePayment from './Page/MainWeb/Store/StorePayment';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
 import Inbox from './Page/MainWeb/Inbox/Inbox';
+import BillStore from './Page/MainWeb/Store/BillStore';
 import { NavBar } from './Page/Component/NavBar';
 import Hall from './Page/MainWeb/Hall/HallBookingPage';
 
 
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -29,6 +30,7 @@ const App: React.FC = () => {
         <Route path="/SubStore" element={<SubStore />} />
         <Route path="/BookStore" element={<BookStore />} /> 
         <Route path="/Inbox" element={<Inbox />} /> 
+        <Route path="/BillStore" element={<BillStore />} /> 
         <Route path="/Hall" element={<Hall />} />
         
       </Routes>
