@@ -33,6 +33,10 @@ type User struct {
 
 	InfoUserStore []InfoUserStore	`gorm:"foreignKey:UserID"`
 	TaxUser []TaxUser	`gorm:"foreignKey:UserID"`
+
+	CleaningRecords []CleaningRecord	`gorm:"foreignKey:UserID"` //บันทึกการทำความสะอาด
+
+	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
 }
 
 
