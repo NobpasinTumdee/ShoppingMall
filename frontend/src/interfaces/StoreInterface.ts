@@ -77,7 +77,7 @@ export interface PaymentMethodStoreInterface{
 
 export interface ReceiptInterface{
     ID?:                    number ;
-    DateReceipt?:           string ;
+    DateReceipt?:           Date ;
     DescribtionBill?:       string ;
     PaymentStoreID?:        number ;
     UserTaxID?:             number ;

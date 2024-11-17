@@ -84,6 +84,10 @@ const BillStore: React.FC = () => {
                         </div>
                         <hr />
                     </div>
+                    <div className='PaymentMethod'>
+                        <p></p>
+                        <p>PaymentMethod : {Bill.PaymentStore?.PaymentMethodStore?.MethodName || "Bro I have No your Payment Method WTF."}</p>
+                    </div>
                     <div className='TotalAll'>
                         <p></p>
                         <p>Total : {Total}฿</p>

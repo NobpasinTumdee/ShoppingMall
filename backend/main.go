@@ -58,8 +58,8 @@ func main() {
 		router.GET("/Payment/:id", Store.GetPaymentStoreWithFKByID)
 		router.GET("/PaymentInfo/:id", Store.GetPaymentStoreByPayID)
 		router.POST("/CreatePayment",Store.CreatePayment)
-		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)//ยังไม่ได้ใช้
-		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)
+		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)
+		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)//ยังไม่ได้ใช้ เพราะมันแค่เปลี่ยน status
 		router.GET("/Receipt/:id", Store.ListReceiptByID)
 		router.POST("/Receipt",Store.CreateReceipt)
 

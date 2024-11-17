@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 import './StoreAndPay.css'
 
-import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid} from '../../../services/https';
-import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface} from '../../../interfaces/StoreInterface';
+import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid , CreateBill} from '../../../services/https';
+import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface , ReceiptInterface} from '../../../interfaces/StoreInterface';
 
 import PWA from '../../../assets/icon/ForPage/StorePayment/PWA.jpg'
 import PEA from '../../../assets/icon/ForPage/StorePayment/PEA.jpg'
@@ -103,6 +103,9 @@ const StorePayment: React.FC = () => {
         const values = {
             ...Data , PayMethodStoreID: selectMethod  ,StatusPaymentStore: "paid" 
         };
+        const valuesBill: ReceiptInterface = { 
+            DateReceipt: Booking , DescribtionBill: String(Store?.NameStore) , PaymentStoreID: Payment?.ID , UserTaxID: 0
+        };
         try {
             const res = await UpdatePaymentStatus(String(ID),values);
             if (res.status === 200) {
@@ -124,6 +127,32 @@ const StorePayment: React.FC = () => {
             message.open({
                 type: "error",
                 content: "การชำระเงินไม่สำเร็จ",
+            });
+        }
+        try {
+            const res = await CreateBill(valuesBill);
+            if (res.status === 201) {
+                message.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                setTimeout(() => {
+                    if (Payment) {
+                        GotoBillPageClick(Payment);
+                    } else {
+                        message.error("Payment ไม่สามารถเป็น null ได้");
+                    }
+                }, 2000);
+            } else {
+                message.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            message.open({
+                type: "error",
+                content: "สร้างใบเสร็จไม่สำเร็จ",
             });
         }
     };

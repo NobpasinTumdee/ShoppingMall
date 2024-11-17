@@ -1,5 +1,5 @@
 import {SignInInterface} from "../../interfaces/SignIn";
-import {StoreInterface,BackupStoreInterface,PaymentInterface} from "../../interfaces/StoreInterface";
+import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
 
@@ -229,12 +229,12 @@ async function AddPayment(data: PaymentInterface) {
     .catch((e) => e.response);
 
 }
-// update Payment Status
+// update Payment Status ตอนนี้มันคือ put ที่ไม่ได้แก้แค่ status
 async function UpdatePaymentStatus(id: string, data: PaymentInterface) {
 
   return await axios
 
-    .put(`${apiUrl}/PaymentStatus/${id}`, data, requestOptions)
+    .put(`${apiUrl}/PaymentStore/${id}`, data, requestOptions)
 
     .then((res) => res)
 
@@ -260,6 +260,18 @@ async function GetBillByPayidPreload(id: string) {
   return await axios
 
     .get(`${apiUrl}/Receipt/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create bill
+async function CreateBill(data: ReceiptInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Receipt`, data, requestOptions)
 
     .then((res) => res)
 
@@ -315,4 +327,5 @@ export {
     UpdatePaymentStatus,
     GetPaymentMethod,
     GetBillByPayidPreload,//bill
+    CreateBill,
 }
