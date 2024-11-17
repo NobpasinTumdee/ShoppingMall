@@ -33,6 +33,8 @@ type Store struct {
 	HistoryStore 		[]HistoryStore 	`gorm:"foreignKey:StoreID"`
 	Rating 				[]Rating 		`gorm:"foreignKey:StoreID"`
 	BackupStore 		[]BackupStore 	`gorm:"foreignKey:StoreID"`
+
+	ParkingCard 		[]ParkingCard `gorm:"foreignKey:StoreID"`
 }
 
 
@@ -43,6 +45,7 @@ type Membership struct {
 	Pwa					int 		`json:"Pwa"`
 	Pea					int 		`json:"Pea"`
 	RentalFee			int 		`json:"RentalFee"`
+	ParkingCardCount	int 		`json:"ParkingCardCount"`
 
 	Store 				[]Store 	`gorm:"foreignKey:MembershipID"`
 }
