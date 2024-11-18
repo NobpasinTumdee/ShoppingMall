@@ -218,3 +218,81 @@ func CreateMessageBoard(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "MessageBoard success", "data": u})
 }
+
+//==============================tax====================================
+// POST tax
+func CreateTax(c *gin.Context) {
+	var TaxUser entity.TaxUser
+
+	if err := c.ShouldBindJSON(&TaxUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.TaxUser{
+		CompanyName: TaxUser.CompanyName,
+		Residencee: TaxUser.Residencee,
+		IdentificationNumber: TaxUser.IdentificationNumber,
+		UserID: TaxUser.UserID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Save your tax success", "data": u})
+}
+
+// GET /Tax/:id
+func GetTaxUser(c *gin.Context) {
+	ID := c.Param("id")
+	var TaxUser entity.TaxUser
+
+	db := config.DB()
+
+
+	results := db.Preload("User").Where("user_id = ?", ID).First(&TaxUser)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, TaxUser)
+}
+
+// PUT update TaxUser by id 
+func UpdateTaxUserByid(c *gin.Context) {
+	var TaxUser entity.TaxUser
+	TaxID := c.Param("id")
+	db := config.DB()
+ 
+	result := db.First(&TaxUser, TaxID)
+ 
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Id TaxUser not found"})
+		return
+	}
+ 
+ 
+	if err := c.ShouldBindJSON(&TaxUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		return
+	}
+ 
+ 
+	result = db.Save(&TaxUser)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		return
+	}
+ 
+	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+}

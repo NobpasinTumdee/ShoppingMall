@@ -44,6 +44,9 @@ func main() {
 		router.DELETE("/DeleteUserStore/:id", user.DeleteUserStore)
 		router.GET("/Message/:id", user.GetMessage)
 		router.POST("/Message", user.CreateMessageBoard)
+		router.POST("/CreateTax",user.CreateTax)
+		router.GET("/Tax/:id", user.GetTaxUser)
+		router.PUT("/Tax/:id",user.UpdateTaxUserByid)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 		
@@ -62,6 +65,7 @@ func main() {
 		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)//ยังไม่ได้ใช้ เพราะมันแค่เปลี่ยน status
 		router.GET("/Receipt/:id", Store.ListReceiptByID)
 		router.POST("/Receipt",Store.CreateReceipt)
+		
 
 
 

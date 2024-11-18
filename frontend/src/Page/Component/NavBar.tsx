@@ -14,14 +14,15 @@ import card2 from "../../assets/icon/ForPage/MainIcon/cardg.png"
 import card3 from "../../assets/icon/ForPage/MainIcon/cardd.png"
 import box from "../../assets/icon/ForPage/MainIcon/GmailLogin.png"
 import background from "../../assets/icon/ForPage/Store/Store3.jpg"
+import commpany from "../../assets/icon/ForPage/MainIcon/BusinessBuilding.png";
 import './NavBar.css';
 import { useNavigate } from 'react-router-dom';
 
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID , UpdateUserByid} from '../../services/https';
-import { InfoUserStoreInterface } from '../../interfaces/StoreInterface';
+import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID , UpdateUserByid , GetTaxById , UpdateTaxByid} from '../../services/https';
+import { InfoUserStoreInterface , TaxUserInterface} from '../../interfaces/StoreInterface';
 
 
 
@@ -32,6 +33,7 @@ export const NavBar: React.FC = () => {
         if (userIdstr) {
             fetchUserData(userIdstr);
             fetchUserStoreData(userIdstr);
+            fetchUserTax(userIdstr);
         } else {
             
         }
@@ -340,9 +342,7 @@ export const NavBar: React.FC = () => {
           try {
             const res = await DeleteUserStoreByID(String(id));
             if (res.status === 200) {
-              // อัปเดต state เพื่อลบประวัติจากหน้าจอทันที
               setStoree((prevStoree) => prevStoree.filter(item => item.ID !== id));
-    
               message.success("🗑️ deleted.");
             } else {
               message.error("Unable to delete 🥹");
@@ -354,6 +354,76 @@ export const NavBar: React.FC = () => {
           message.error("The ID is invalid.🫥");
         }
       };
+    //=========================================Tax===========================
+    const [Tax, setTax] = useState<TaxUserInterface | null>(null);
+    const [formTax, setformTax] = useState({
+        CompanyName: '',
+        Residencee: '',
+        IdentificationNumber: '',
+        UserID: ''
+    });
+    const handleChangeTax = (e: any) => {
+        const { name, value } = e.target;
+        setformTax({ ...formTax, [name]: name === "IdentificationNumber" ? Number(value) : value });
+    };
+    const fetchUserTax = async (userIdstr: string ) => {
+        try {
+            const res = await GetTaxById(userIdstr);
+            if (res.status === 200) {
+                setTax(res.data);
+                console.log(res.data); 
+                setformTax({
+                    CompanyName: res.data.CompanyName,
+                    Residencee: res.data.Residencee,
+                    IdentificationNumber: res.data.IdentificationNumber,
+                    UserID: res.data.UserID
+                })
+
+            }else {
+                message.error("There is no Store on this floor.");
+            }
+        } catch (error) {
+            console.error("Error fetching user Tax data:", error); // Debug
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUserTax");
+        }
+    };
+    //create
+
+    //update
+    const handleSubmitUpdatetax = async (e: any) => {
+        e.preventDefault();
+        UpdateTax(formTax);
+    };
+    const UpdateTax = async (formTax: any) => {
+        const values: TaxUserInterface = {
+            CompanyName: formTax.CompanyName,
+            Residencee: formTax.Residencee,
+            IdentificationNumber: formTax.IdentificationNumber,
+            UserID: formTax.UserID
+        };
+        try {
+            const res = await UpdateTaxByid(String(Tax?.ID),values);
+            if (res.status === 200) {
+                messageApi.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                setTimeout(() => {
+                    //setAddstore(false)
+                }, 500);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "Can't Add your store",
+            });
+        }
+    };
     return (
         <>
             {contextHolder}
@@ -372,6 +442,30 @@ export const NavBar: React.FC = () => {
                         <div onClick={OpenEditProfile}>🛠️</div>
                         <div onClick={OpenUserStore}>your store</div>
                         <div onClick={OpenAddStore}>Create your store</div>
+                        <div onClick={OpenUserStore}>info tax</div>
+                    </div>
+
+                    <div className='TaxContaner'>
+                        <div className='TaxContannersub'>
+                            <h1 style={{textAlign: 'center'}}>Tax info</h1>
+                            {Tax &&
+                                <div style={{display:'flex',justifyContent: 'flex-start' ,backgroundColor: '#fff' ,margin: '20px',padding: '10px',borderRadius: '10px' , boxShadow: '0 0 20px #0001'}}>
+                                    <img src={commpany} alt="commpany" /><div> Company: {Tax.CompanyName} <br />Residecnee: {Tax.Residencee} <br />ID: {Tax.IdentificationNumber}</div>
+                                </div>
+                            }
+                            <div >
+                                <form onSubmit={handleSubmitUpdatetax}>
+                                    <label>Company Name</label><br />
+                                    <input type="text" name="CompanyName" value={formTax.CompanyName} onChange={handleChangeTax} required /><br />
+                                    <label>Identification Number</label><br />
+                                    <input type="Number" name="IdentificationNumber" value={formTax.IdentificationNumber} onChange={handleChangeTax} required /><br />
+                                    <label>Residencee</label><br />
+                                    <textarea name="Residencee" value={formTax.Residencee} onChange={handleChangeTax} required />
+
+                                    <button type="submit" className='Editsubmit'>Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={`EditProfileContaner ${isEditProfile ? 'fade-in' : 'fade-out'}`}>
@@ -490,6 +584,8 @@ export const NavBar: React.FC = () => {
                             </div>
                         </div>
                     }
+
+                    
                 </>
             
             <nav className='positionNav'>

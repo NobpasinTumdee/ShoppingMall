@@ -1,5 +1,5 @@
 import {SignInInterface} from "../../interfaces/SignIn";
-import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface} from "../../interfaces/StoreInterface";
+import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
 
@@ -113,6 +113,42 @@ async function AddMessage(data: MessageBoardInterface) {
   return await axios
 
     .post(`${apiUrl}/Message`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Tax by id
+async function GetTaxById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Tax/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create Tax
+async function AddTax(data: TaxUserInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/CreateTax`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// update Tax
+async function UpdateTaxByid(id: string, data: TaxUserInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Tax/${id}`, data, requestOptions)
 
     .then((res) => res)
 
@@ -311,6 +347,9 @@ export {
     DeleteUserStoreByID,
     GetMessageById,
     AddMessage,
+    GetTaxById,
+    AddTax,
+    UpdateTaxByid,
 
     GetStoreWaiting,//admin
 
