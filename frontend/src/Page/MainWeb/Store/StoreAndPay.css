@@ -296,6 +296,11 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+.PayNow.NoMethod {
+    opacity: 0.5;
+    pointer-events: none;
+}
 /*===============================================================Bill==================================================*/
 .RE{
     width: 100%;
@@ -370,4 +375,17 @@
     transform: translateY(-50px);
     font-size: 16px;
 
+}
+
+/* ==========================================================print======================================================= */
+.Print{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #C9AF62;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #C9AF62;
+    color: #fff;
 }

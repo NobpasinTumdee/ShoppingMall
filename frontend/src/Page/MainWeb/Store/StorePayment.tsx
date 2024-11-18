@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 import './StoreAndPay.css'
 
-import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid , CreateBill} from '../../../services/https';
-import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface , ReceiptInterface} from '../../../interfaces/StoreInterface';
+import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid , CreateBill , GetTaxById} from '../../../services/https';
+import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface , ReceiptInterface , TaxUserInterface} from '../../../interfaces/StoreInterface';
 
 import PWA from '../../../assets/icon/ForPage/StorePayment/PWA.jpg'
 import PEA from '../../../assets/icon/ForPage/StorePayment/PEA.jpg'
@@ -17,7 +17,7 @@ import storeicon from '../../../assets/icon/ForPage/StorePayment/storeicon.jpg'
 
 const StorePayment: React.FC = () => {
     const location = useLocation();
-    //const userIdstr = localStorage.getItem("id");
+    const userIdstr = localStorage.getItem("id");
     const [Payment, setPayment] = useState<PaymentInterface | null>(null);
     const [Store, setStore] = useState<StoreInterface | null>(null);
     const [Members, setMembers] = useState<MembershipInterface | null>(null);
@@ -104,7 +104,7 @@ const StorePayment: React.FC = () => {
             ...Data , PayMethodStoreID: selectMethod  ,StatusPaymentStore: "paid" 
         };
         const valuesBill: ReceiptInterface = { 
-            DateReceipt: Booking , DescribtionBill: String(Store?.NameStore) , PaymentStoreID: Payment?.ID , UserTaxID: 0
+            DateReceipt: Booking , DescribtionBill: String(Store?.NameStore) , PaymentStoreID: Payment?.ID , UserTaxID: TaxHld
         };
         try {
             const res = await UpdatePaymentStatus(String(ID),values);
@@ -189,6 +189,34 @@ const StorePayment: React.FC = () => {
             } 
         });
     };
+    //==========================================================tax==================================================
+    const [checked, setChecked] = useState(false);
+    const [Tax, setTax] = useState<TaxUserInterface | null>(null);
+    const [TaxHld, setTaxHld] = useState(0);
+    useEffect(() => {
+        if (userIdstr) {
+            fetchTax(userIdstr);
+        }
+    }, [userIdstr]);
+    const fetchTax = async (ID: string ) => {//Payment
+        try {
+            const res = await GetTaxById(ID);
+            if (res.status === 200) {
+                setTax(res.data);
+            }
+        } catch (error) {
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลTax");
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(e.target.checked);
+        if (checked == true) {
+            setTaxHld(0);
+        }else if (checked == false){
+            setTaxHld(Number(Tax?.ID));
+        }
+    };
 
     return(
         <>
@@ -246,10 +274,20 @@ const StorePayment: React.FC = () => {
                         {PaymentMethod.map((data) => (
                             <div className='PaymentPaymentMethod' key={data.ID} onClick={() => SelectPaymentMethod(data)}><img src={data.MethodPic} alt="" />{data.MethodName}</div>
                         ))}
-                        <p>Your Selection : {selectMethodName} {selectMethod} {Store?.MembershipID} {Members?.Day} {String(Last)}</p>
-
+                        <p>Your Selection : {selectMethodName} </p>
+                        <hr />
+                        <div>
+                        <label>
+                            <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={handleChange}
+                            />
+                            Receive a tax invoice
+                        </label>
+                        </div>
                         {Payment?.StatusPaymentStore !== 'paid' && 
-                            <div className='PayNow' onClick={() => paid(Payment)}>Pay Now!</div>
+                            <div className={`PayNow ${selectMethod ? 'Method' : 'NoMethod'}`} onClick={() => paid(Payment)}>Pay Now!</div>
                         }
                         {Payment?.StatusPaymentStore === 'paid' && 
                             <div className='PayNow' style={{backgroundColor: '#0d9e00', opacity: "1"}} onClick={() => GotoBillPageClick(Payment)} >Paid Get bill</div>
