@@ -935,3 +935,48 @@ textarea {
     width: 100%;
     min-height: 50px;
 }
+.TaxContannersub img{
+    width: 160px;
+}
+.Taxsubmit{
+    padding: 0px 20px;
+    font-family: 'Dongle', sans-serif;
+    font-size: 20px;
+    background-color: #C9AF62;
+    border-color: #ffffff;
+}
+.TaxContaner.fade-in{
+    visibility: visible;
+    opacity: 1;
+    animation: TaxContanerin 0.2s ease-in forwards;
+}
+.TaxContaner.fade-out{
+    visibility: hidden;
+    opacity: 0;
+    animation: TaxContanerout 0.2s ease-in-out reverse forwards;
+}
+@keyframes TaxContanerin {
+    0%{
+        scale: 0.4;
+    }
+}
+@keyframes TaxContanerout {
+    0%{
+        scale: 0.4;
+    }
+}
+.closeTax{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    background-color: brown;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 5px 5px #00000048;
+}
