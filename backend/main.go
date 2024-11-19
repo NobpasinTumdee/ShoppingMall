@@ -32,21 +32,44 @@ func main() {
     r.PUT("/ResetPasswordUser", user.ResetPasswordUser) //Sign in == login 
 
 	r.GET("/user" , user.ListUsers)
+	r.GET("/store/:id",Store.GetStoreByFloor)
+	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
 	{
 		router.Use(middlewares.Authorizes())
-
-
+		
+		
 		//User
 		router.GET("/user/:id", user.GetUser)
-
-
+		router.PUT("/user/:id",user.UpdateUserByid)
+		router.POST("/addStore",user.AddStoreUser)
+		router.GET("/userstore", user.ListUserstore)
+		router.GET("/userstore/:id", user.GetUserstoreByid)
+		router.DELETE("/DeleteUserStore/:id", user.DeleteUserStore)
+		router.GET("/Message/:id", user.GetMessage)
+		router.POST("/Message", user.CreateMessageBoard)
+		router.POST("/CreateTax",user.CreateTax)
+		router.GET("/Tax/:id", user.GetTaxUser)
+		router.PUT("/Tax/:id",user.UpdateTaxUserByid)
+		//Admin
+		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
+		
 		//ระบบ store
-		router.GET("/store/:id",Store.GetStoreByFloor)
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
+		router.GET("/storeid/:id",Store.GetStoreByid)
+		router.GET("/Membership/:id",Store.GetMembership)
 		//ระบบ store payment
-
+		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
+		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)
+		router.GET("/Payment/:id", Store.GetPaymentStoreWithFKByID)
+		router.GET("/PaymentInfo/:id", Store.GetPaymentStoreByPayID)
+		router.POST("/CreatePayment",Store.CreatePayment)
+		router.PUT("/PaymentStore/:id",Store.UpdatePaymentByid)
+		router.PUT("/PaymentStatus/:id",Store.UpdatePaymentStatusByID)//ยังไม่ได้ใช้ เพราะมันแค่เปลี่ยน status
+		router.GET("/Receipt/:id", Store.ListReceiptByID)
+		router.POST("/Receipt",Store.CreateReceipt)
+		
 
 
 

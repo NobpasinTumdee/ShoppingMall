@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css'
 import { Form, Input ,message} from 'antd';
 import {SignInInterface} from "../../interfaces/SignIn";
 import { SignIn } from '../../services/https';
+import Arrow from '../../assets/icon/ForPage/LoginIcon/Arrow.png';
+import User from '../../assets/icon/ForPage/LoginIcon/User.png';
+import Lock from '../../assets/icon/ForPage/LoginIcon/Lock.png';
+import LOGOS from '../../assets/icon/LOGOS.png';
+
+import {IntroWeb} from '../Component/NavBar';
 const Login: React.FC = () => {
     const onFinish = async (values: SignInInterface) => {
         let res = await SignIn(values);
@@ -14,52 +20,71 @@ const Login: React.FC = () => {
             localStorage.setItem("id", res.data.id);
 
             message.success("Login successful");
-            location.href = "/Main";
+            introToMain();
             
         } else {
             message.error(res.data.error);
         }
         
     };
+    const [intro, setIntro] = useState(false);
+    const introToMain = async () => {
+        setIntro(true);
+        setTimeout(() => {
+            location.href = "/Main";
+        }, 9000);
+    };
+    const close = async () => {
+        setIntro(false);
+        location.href = "/Main";
+    }
     return(
         <>
+            {intro && 
+                <div onClick={close}><IntroWeb /></div>
+            }
+            <div className='backgroud'></div>
             <div className='Logincontanner'>
-                <div className='Logininput'>
-                    Login
-                </div>
-                <div className='Logintextbox'>
-                    <Form
-                        name="login"
-                        onFinish={onFinish}
-                        requiredMark={false}
-                    >
-                        <div style={{color: '#ffffff'}}>UserName</div>
-                        <Form.Item
-                            name="username"
-                            rules={[{ required: true, message: 'Please input your username!' }]}
+                <div className='Loginsub'>
+                <span className='LoginLeft'><p><img style={{width: '100px'}} src={LOGOS} alt="LOGOS" />ICONIC</p><p>Relaxing Your Mind From Madness Your Mind From</p><div className='gotocarpark'>Go to Car Parking</div></span>
+                <span className='Loginrigth'>
+                    <div className='formLogin'>
+                        <div style={{color: '#1d1d1d'}}>Login</div>
+                        <Form
+                            name="login"
+                            onFinish={onFinish}
+                            requiredMark={false}
                         >
-                            <Input placeholder="username" />
-                        </Form.Item>
-                        <div style={{color: '#ffffff'}}>Password</div>
-                        <Form.Item
-                            name="password"
-                            rules={[{ required: true, message: 'Please input your password!' }]}
-                        >
-                            <Input.Password placeholder="password" />
-                        </Form.Item>
-                        <a href="/" >FORGOT PASSWORD</a>
-                        <div className="LoginButton">
-                        <Form.Item>
-                            <button style={{
-                                borderRadius: '20px',
-                                padding: '10px',
-                                width: '100px',
-                            }}>
-                                LOGIN
-                            </button>
-                        </Form.Item>
-                        </div>
-                    </Form>
+                            <p style={{color: '#1d1d1d'}}>UserName</p>
+                            <img className='iconuser' src={User} alt="User" />
+                            <Form.Item
+                                name="username"
+                                rules={[{ required: true, message: 'Please input your username!' }]}
+                            >
+                                
+                                <Input placeholder="username" />
+                            </Form.Item>
+                            <p style={{color: '#1d1d1d'}}>Password</p>
+                            <img className='iconuser' src={Lock} alt="Lock" />
+                            <Form.Item
+                                name="password"
+                                rules={[{ required: true, message: 'Please input your password!' }]}
+                            >
+                                
+                                <Input.Password placeholder="password" />
+                            </Form.Item>
+                            <a style={{color: '#C9AF62' ,fontWeight: '400'}} href="/" >FORGOT PASSWORD</a>
+                            <div className="LoginButton">
+                            <Form.Item>
+                                <button>
+                                    LOGIN
+                                    <img src={Arrow} alt="Arrow" />
+                                </button>
+                            </Form.Item>
+                            </div>
+                        </Form>
+                    </div>
+                </span>
                 </div>
             </div>
         </>

@@ -55,10 +55,11 @@
 .cardStore {
     width: 250px;
     height: 320px;
-    border: 1px solid #C9AF62;
+    border: 1px solid #484848;
     box-shadow: 0 4px 10px #00000052;
     background-color: rgb(255, 255, 255);
     font-family: 'Dongle';
+    cursor: pointer;
 
     animation-duration: 0.5s;
     animation-name: cardStore;
@@ -74,6 +75,14 @@
         scale: 1;
     }
 }
+.cardStore.active {
+    border: 1px solid #C9AF62;}
+.cardStore.inactive {
+    pointer-events: none;
+    border: 1px solid #6265c9;}
+.cardStore.WaitingPayment {
+    pointer-events: none;
+    border: 1px solid #186e13;}
 
 .cardStore p{
     padding-left: 20px; 
@@ -84,6 +93,8 @@
 .cardStore img{
     width: 250px;
     height: 145px;
+    object-fit: cover;
+    box-shadow: 0 5px 10px #4848481c;
 }
 
 .lineStore {
@@ -91,16 +102,31 @@
     height: 1px;
     background-color: #DADADA;
 }
+.DescribtionStore {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
+    height: 30px;
+    font-size: 14px;
+}
 .ViewStore {
     width: 250px;
     height: 20px;
-    background-color: #C9AF62;
+    background-color: #484848;
     transform: translateY(40px);
     color: #ffffff;
     text-align: right;
     cursor: pointer;
 }
-
+.ViewStore.active {
+    background-color: #C9AF62;
+}
+.ViewStore.inactive {
+    background-color: #6265c9;
+}
+.ViewStore.WaitingPayment {
+    background-color: #186e13;
+}
 
 
 
@@ -176,13 +202,190 @@
 /*====================================================================================================================================*/
 
 
+.PaymentContanerBox {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+}
+
+.PaymentContanerBoxSub{
+    display: flex;
+    justify-content: space-between;
+}
+.PaymentContanerBoxSub div:nth-child(1){
+    width: 60%;
+}
+.PaymentContanerBoxSub div:nth-child(2){
+    width: 40%;
+}
+.listPay{
+    width: 70%;
+    padding-left: 50px;
+    padding-right: 20px;
+}
+.listPay img{
+    width: 120px;
+    box-shadow: 0 4px 4px #acacac;
+}
+.PWA {
+    display: flex;
+    justify-content:flex-start;
+    margin: 15px 0;
+    animation: PWA 0.5s ease-in-out;
+}
+@keyframes PWA {
+    0%{
+        transform: translateX(-150%);
+        scale: 0;
+        opacity: 0;
+    }
+}
+.total {
+    display: flex;
+    justify-content:space-between;
+    font-size: 30px;
+}
+.total p:nth-child(1){
+    width: 60%;
+}
+.total p:nth-child(2){
+    width: 40%;
+    font-weight: 700;
+}
+
+.listPayR{
+    width: 30%;
+    background-color: #F6F6F6;
+    box-shadow: 0 0 5px #acacac;
+    height: 680px;
+    border-radius: 10px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+.listPayRSub{
+    margin: 20px;
+}
 
 
 
+.PaymentPaymentMethod {
+    width: 100%;
+    height: 40px;
+    background-color: #e6e6e6;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.PaymentPaymentMethod img{
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+}
+.PayNow {
+    position: absolute;
+    text-align: center;
+    bottom: 40px;
+    width: 26%;
+    height: 30px;
+    background-color: #C9AF62;
+    font-size: 30px;
+    padding:10px 0 ;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+}
 
+.PayNow.NoMethod {
+    opacity: 0.5;
+    pointer-events: none;
+}
+/*===============================================================Bill==================================================*/
+.RE{
+    width: 100%;
+    text-align: center;
+    color: #C9AF62;
+}
+.Slip{
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    width: 500px;
+    height: 600px;
+    box-shadow: 0 0 5px #00000052;
+    border-radius: 5px;
+    padding: 20px;
 
+    animation: Slip 0.8s ease-in-out ;
+}
+@keyframes Slip {
+    0%{
+        top: 160%;
+        opacity: 0;
+    }
+}
+.Slip img{
+    width: 150px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.Adress{
+    transform: translateY(-20px);
+}
+.Adress2{
+    transform: translateY(-40px);
+}
+.P1{
+    font-weight: 900;
+    transform: translateY(20px);
+}
+.listpayment1{
+    line-height: 0px;
+    transform: translateY(-40px);
+}
+.Sublist {
+    line-height: 0px;
+    text-align: left;
+    font-size: 14px;
+}
 
+.TotalAll{
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-80px);
+    font-size: 24px;
+}
+.bottoninfo{
+    font-size: 10px;
+    position: absolute;
+    bottom: 10px;
+}
+.backtopayment{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+.PaymentMethod {
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50px);
+    font-size: 16px;
 
+}
 
-
-
+/* ==========================================================print======================================================= */
+.Print{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #C9AF62;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #C9AF62;
+    color: #fff;
+}

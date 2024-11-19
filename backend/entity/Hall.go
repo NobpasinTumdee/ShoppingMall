@@ -14,9 +14,9 @@ type Hall struct {
 	ImageHall		string		`json:"ImageHall"`
 	Description		string		`json:"Description"`
 	PricePerHour	int			`json:"PricePerHour"`
-
 	BookingHall []BookingHall	`gorm:"foreignKey:HallID"`
 	Facilities	[]Facilities	`gorm:"foreignKey:HallID"`
+
 
 }
 type FacilityList struct{
@@ -30,9 +30,7 @@ type Facilities struct {
 	gorm.Model
 	HallID			uint		`json:"HallID"`
 	FacilityListID	uint		`json:"FacilityListID"`
-
 	Quantity		int			`json:"Quantity"`
-
 }
 type BookingHall struct {
 	gorm.Model
@@ -47,10 +45,9 @@ type BookingHall struct {
 	CustomerPhone	string		`json:"CustomerPhone"`
 	CustomerAddress	string		`json:"CustomerAddress"`
 	CancelDate		time.Time	`json:"CancelDate"`
-
 	PaymentHall []PaymentHall	`gorm:"foreignKey:BookingHallID"`
-
 }
+
 
 type PaymentHall struct {
 	gorm.Model

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { NavBar } from '../../Component/NavBar';
+//import { NavBar } from '../../Component/NavBar';
 import { FloorMenu } from './Floor/Floor';
 import './StoreAndPay.css'
 import PicNoStore from '../../../assets/icon/ForPage/Store/Store3.jpg';
@@ -17,6 +17,9 @@ import Computer from "../../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 //API
 import {GetStoreByFloor} from '../../../services/https/index'
 import {StoreInterface} from '../../../interfaces/StoreInterface'
+
+import {UpdateStoreByid} from '../../../services/https/index';
+
 
 const Store: React.FC = () => {
     // const testdata = [
@@ -100,12 +103,46 @@ const Store: React.FC = () => {
           } 
         });
       };
-    
+    //============================================เช็ควันหมดอายุ==================================
+    const currentDate = new Date(); // เวลาในปัจจุบัน
+    const CheckExpiration = (data : any) => {
+        if (currentDate > new Date(data.LastDay)) {
+            UpdateStoreByidd(data.ID);
+            return "Expired";
+        }
+        return data.StatusStore;
+    };
+    //================================= update ==========================
+    const UpdateStoreByidd = async (formData: any) => {
+        const values: StoreInterface = {
+            ID: formData,
+            PicStore: '',
+            SubPicOne: '',
+            SubPicTwo: '',
+            SubPicThree: '',
+            MembershipID: 0,
+            NameStore: 'The shop has no owner.',
+            BookingDate: new Date(),
+            LastDay:new Date('2030-01-01'),
+            DescribtionStore: '',
+            StatusStore: 'This store is available for reservation.',
+            UserID: 0,
+        };
+        try {
+            const res = await UpdateStoreByid(String(formData), values);
+            if (res.status === 200) {
+                setTimeout(() => {
+                    //navigate("/Store"); // นำทางกลับไปที่หน้า Store
+                }, 2000);
+            }
+        } catch (error) {
+            
+        }
+    };
     return (
         <>
-            <NavBar />
             <FloorMenu />
-            <div style={{height: '110px'}}></div>
+            <div style={{height: '110px',zIndex: '0'}}></div>
             <div className='route'><a href="/Main">Home /</a>Store Directory</div>
             <div className='StoreMainContent'>
                 <h1>{isNameFloor}</h1>
@@ -134,17 +171,25 @@ const Store: React.FC = () => {
                     <span style={{width: "20%"}}></span>
                     <span style={{width: "100%"}} className='Store'>
                         {Store.length > 0 ? (
-                            Store.map((data) => (
-                                <span key={data.ID} className='cardStore'>
-                                    <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
-                                    <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
-                                    <div className='lineStore'></div>
-                                    <div className='rating'>{renderStars(4)}</div>
-                                    <div className='lineStore'></div>
-                                    <div><p>{data.DescribtionStore}</p></div>
-                                    <div className='ViewStore' onClick={() => handleStoreClick(data)}>VIEW STORE  --</div>
-                                </span>
-                            ))
+                            Store.map((data) => {
+                                const status = CheckExpiration(data);
+                                if (status !== 'Expired') {
+                                    return (
+                                        <span key={data.ID} className={`cardStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
+                                            <div onClick={() => handleStoreClick(data)}>
+                                                <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
+                                                <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
+                                                <div className='lineStore'></div>
+                                                <div className='rating'>{renderStars(4)}</div>
+                                                <div className='lineStore'></div>
+                                                <div className='DescribtionStore'>{data.BookingDate ? new Date(data.BookingDate).toLocaleDateString() : 'No Date'}<br />{data.LastDay ? new Date(data.LastDay).toLocaleDateString() : 'No Date'}</div>
+                                            </div>
+                                            <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.StatusStore}  --</div>
+                                        </span>
+                                    );
+                                }
+                                return null
+                            })
                         ) : (
                             <h1 style={{textAlign: 'center'}}>No Store On This Floor.</h1>
                         )}

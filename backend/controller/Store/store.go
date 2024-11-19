@@ -30,6 +30,25 @@ func GetStoreByFloor(c *gin.Context) {
 
 	c.JSON(http.StatusOK, Stores)
 }
+//GET ListStore by id
+func GetStoreByid(c *gin.Context) {
+	ID := c.Param("id")
+	var Stores entity.Store
+
+	db := config.DB()
+
+	results := db.Where("id = ?", ID).Find(&Stores)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Stores)
+}
 
 // PUT update Store by id 
 func UpdateStoreByid(c *gin.Context) {
@@ -85,7 +104,7 @@ func CreateBackUpStore(c *gin.Context) {
 		LastDayBackup:        Store.LastDayBackup,
 		DescribtionStoreB:        Store.DescribtionStoreB,
 		
-		UserIDB:        Store.UserIDB,
+		UserID:        Store.UserID,
 		
 		ProductTypeIDB:        Store.ProductTypeIDB,
 		
@@ -100,4 +119,47 @@ func CreateBackUpStore(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Backup success", "data": u})
+}
+
+//GET ListStore WaitingForApproval
+func GetStoreWaiting(c *gin.Context) {
+	StatusStore := c.Param("status")
+	var Stores []entity.Store
+
+	db := config.DB()
+
+
+
+	results := db.Where("status_store = ?", StatusStore).Find(&Stores)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Stores)
+}
+
+// GET /Membership/:id
+func GetMembership(c *gin.Context) {
+	ID := c.Param("id")
+	var Membership entity.Membership
+
+	db := config.DB()
+
+
+	results := db.Where("id = ?", ID).First(&Membership)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Membership)
 }

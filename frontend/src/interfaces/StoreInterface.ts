@@ -1,5 +1,6 @@
+import { UsersInterface } from "./UsersInterface";
 export interface StoreInterface {
-    ID?: number;
+    ID?:                number;
     PicStore?:  		string ;
     SubPicOne?:  		string ;
     SubPicTwo?:  		string ;
@@ -13,20 +14,84 @@ export interface StoreInterface {
     UserID?:            number ;
     ProductTypeID?:     number ;
 
+    Membership?: MembershipInterface;
+}
+export interface MembershipInterface {
+    ID?:                number;
+    PackageName?:  		string ;
+    Day?:               number;
+    Pwa?:               number;
+    Pea?:               number;
+    RentalFee?:         number;
 }
 
 export interface BackupStoreInterface{
-    ID?:                number
-    PicStoreBackup?:    String ;
-    PicOneBackup?:      String ;
-    PicTwoBackup?:      String ;
-    PicThreeBackup?:    String ;
+    ID?:                number ;
+    PicStoreBackup?:    string ;
+    PicOneBackup?:      string ;
+    PicTwoBackup?:      string ;
+    PicThreeBackup?:    string ;
     MembershipBackup?:  number ;
-    NameBackup?:        String ;
+    NameBackup?:        string ;
     BookingBackup?:     Date ;
     LastDayBackup?:     Date ;
-    DescribtionStoreB?: String ;
-    UserIDB?:           number ;
+    DescribtionStoreB?: string ;
     ProductTypeIDB?:    number ;
+    UserID?:            number ;
     StoreID?:           number ;
+}
+
+
+export interface InfoUserStoreInterface{
+    ID?:                number ;
+    UserNameStore?:     string ;
+    UserPicStore?:      string ;
+    UserSubPicOne?:     string ;
+    UserSubPicTwo?:     string ;
+    UserSubPicThree?:   string ;
+    UserDescribStore?:  string ;
+    UserID?:            number ;
+}
+
+
+
+export interface PaymentInterface{
+    ID?:                    number ;
+    StatusPaymentStore?:    string ;
+    UserID?:                number ;
+    StoreID?:               number ;
+    PayMethodStoreID?:      number ;
+
+    User?: UsersInterface;
+    Store?: StoreInterface;
+    PaymentMethodStore?: PaymentMethodStoreInterface;
+}
+
+
+export interface PaymentMethodStoreInterface{
+    ID?:                    number ;
+    MethodName?:            string ;
+    MethodPic?:             string ;
+}
+
+
+export interface ReceiptInterface{
+    ID?:                    number ;
+    DateReceipt?:           Date ;
+    DescribtionBill?:       string ;
+    PaymentStoreID?:        number ;
+    UserTaxID?:             number ;
+
+    PaymentStore?: PaymentInterface;
+    TaxUser?: TaxUserInterface;
+}
+
+export interface TaxUserInterface{
+    ID?:                     number ;
+    CompanyName?:            string ;
+    Residencee?:             string ;
+    IdentificationNumber?:   number ;
+    UserID?:                 number ;
+
+    User?: UsersInterface;
 }

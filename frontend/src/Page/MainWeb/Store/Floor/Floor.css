@@ -172,12 +172,12 @@
     right: 10px;
     width: 20px;
     height: 20px;
-    background-color: crimson;
+    background-color: #C9AF62;
     text-align: center;
     border-radius: 100%;
     color: #ffffff;
     cursor: pointer;
-    box-shadow: 0 0 4px crimson;
+    box-shadow: 0 0 4px #C9AF62;
     font-family: 'Dongle', sans-serif;
     font-size: 14px;
 }

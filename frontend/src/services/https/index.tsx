@@ -1,5 +1,7 @@
 import {SignInInterface} from "../../interfaces/SignIn";
-import {StoreInterface,BackupStoreInterface} from "../../interfaces/StoreInterface";
+import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
+import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
+import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -45,6 +47,114 @@ async function GetUserById(id: string) {
     .catch((e) => e.response);
 
 }
+// update User
+async function UpdateUserByid(id: string, data: UsersInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/user/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Add Store
+async function AddStore(data: InfoUserStoreInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/addStore`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get UserStore by id
+async function UserStoreByid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/userstore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete userstore
+async function DeleteUserStoreByID(id: string) {
+  return await axios
+    .delete(`${apiUrl}/DeleteUserStore/${id}`, requestOptions)
+    .then((res) => {
+      // if (res) {
+      //   window.location.reload(); // reload หลังจากลบเสร็จ
+      // }
+      return res;
+    })
+    .catch((e) => e.response);
+}
+// get Message by id
+async function GetMessageById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Message/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create message
+async function AddMessage(data: MessageBoardInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Message`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Tax by id
+async function GetTaxById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Tax/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create Tax
+async function AddTax(data: TaxUserInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/CreateTax`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// update Tax
+async function UpdateTaxByid(id: string, data: TaxUserInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Tax/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -52,6 +162,18 @@ async function GetStoreByFloor(id: string) {
   return await axios
 
     .get(`${apiUrl}/store/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Store by id
+async function GetStoreById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/storeid/${id}`, requestOptions)
 
     .then((res) => res)
 
@@ -82,14 +204,167 @@ async function BackUpStore(data: BackupStoreInterface) {
     .catch((e) => e.response);
 
 }
+// get Membership by id
+async function GetMembershipByid(id: string) {
 
+  return await axios
+
+    .get(`${apiUrl}/Membership/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//============================payment store========================================
+// get payment by userid Preload
+async function GetPaymentByuseridPreload(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Payment/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get payment by userid ไม่ใช้เด้อจ้าา
+async function GetPaymentByuserid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/PaymentStore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get payment by id payment
+async function GetPaymentid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/PaymentInfo/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create AddPayment
+async function AddPayment(data: PaymentInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/CreatePayment`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// update Payment Status ตอนนี้มันคือ put ที่ไม่ได้แก้แค่ status
+async function UpdatePaymentStatus(id: string, data: PaymentInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/PaymentStore/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get PaymentMethod
+async function GetPaymentMethod() {
+
+  return await axios
+
+    .get(`${apiUrl}/PaymentMethod`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//============================bill========================================
+// get bill by paymentid Preload
+async function GetBillByPayidPreload(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Receipt/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create bill
+async function CreateBill(data: ReceiptInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Receipt`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
+
+
+
+
+
+
+
+
+//============================Admin========================================
+// get Store WaitingForApproval
+async function GetStoreWaiting(status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/storeWaiting/${status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 
 export {
-    SignIn,
+    SignIn,//user
     GetUserById,
+    UpdateUserByid,
+    AddStore,
+    UserStoreByid,
+    DeleteUserStoreByID,
+    GetMessageById,
+    AddMessage,
+    GetTaxById,
+    AddTax,
+    UpdateTaxByid,
 
-    GetStoreByFloor,
+    GetStoreWaiting,//admin
+
+    GetStoreByFloor,//store
     UpdateStoreByid,
     BackUpStore,
+    GetStoreById,
+    GetMembershipByid,
+
+    GetPaymentByuseridPreload,//payment store
+    GetPaymentByuserid,
+    GetPaymentid,
+    AddPayment,
+    UpdatePaymentStatus,
+    GetPaymentMethod,
+    GetBillByPayidPreload,//bill
+    CreateBill,
 }
