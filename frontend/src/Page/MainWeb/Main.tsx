@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 //import { NavBar } from '../Component/NavBar';
 import Product from "../../assets/icon/ForPage/MainIcon/Product.png";
+import Product1 from "../../assets/icon/ForPage/MainIcon/Product/PD1.png";
+import Product2 from "../../assets/icon/ForPage/MainIcon/Product/PD2.png";
+import Product3 from "../../assets/icon/ForPage/MainIcon/Product/PD3.png";
+import Product4 from "../../assets/icon/ForPage/MainIcon/Product/PD4.png";
 
 //Floor
 import market from "../../assets/icon/ForPage/MainIcon/Market.png"
@@ -17,6 +21,21 @@ import './Main.css';
 import { GetStoreByFloor } from '../../services/https';
 import { StoreInterface } from '../../interfaces/StoreInterface';
 const Main: React.FC = () => {
+    const images = [Product1, Product2, Product3, Product4, Product];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [fade, setFade] = useState(true); 
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setFade(false); 
+            setTimeout(() => {
+                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+                setFade(true); 
+            }, 500); 
+        }, 8000); 
+
+        return () => clearInterval(interval);
+    }, []);
 
     const testdata = [
         {
@@ -81,7 +100,7 @@ const Main: React.FC = () => {
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
             <div className='AdvertisingMain'>
-                <span><img src={Product} alt="Product" /></span>
+                <img src={images[currentImageIndex]} alt="Product" className={`fade ${fade ? 'visible' : 'hidden'}`}  />
                 <span className='advertisingtext'>
                     <h1>Product advertising</h1>
                     loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 

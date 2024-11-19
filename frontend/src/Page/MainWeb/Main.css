@@ -32,9 +32,9 @@
     0%{
         transform: translateY(0%);
     }25%{
-        transform: translateY(5%);
+        transform: translateY(2%);
     }75%{
-        transform: translateY(-5%);
+        transform: translateY(-2%);
     }100%{
         transform: translateY(0%);
     }
@@ -52,6 +52,23 @@
     margin: 100px 0 10px ;
 }
 
+.fade {
+    width: 319px;
+    height: 347px;
+    margin-left: 40px;
+
+    /* การเปลี่ยนแปลงสมูท */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.fade.visible {
+    opacity: 1;
+}
+
+.fade.hidden {
+    opacity: 0;
+}
 
 
 
