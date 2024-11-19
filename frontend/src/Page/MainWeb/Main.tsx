@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 //import { NavBar } from '../Component/NavBar';
 import Product from "../../assets/icon/ForPage/MainIcon/Product.png";
 
@@ -7,11 +7,15 @@ import market from "../../assets/icon/ForPage/MainIcon/Market.png"
 import Food from "../../assets/icon/ForPage/MainIcon/FoodBar.png"
 import Decorations from "../../assets/icon/ForPage/MainIcon/Home.png"
 import Computer from "../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
+import st from "../../assets/icon/ForPage/Store/Store3.jpg"
 
 //New
 import Newtest from "../../assets/icon/ForPage/MainIcon/TestNew.png"
 //import axios from 'axios';
 import './Main.css';
+
+import { GetStoreByFloor } from '../../services/https';
+import { StoreInterface } from '../../interfaces/StoreInterface';
 const Main: React.FC = () => {
 
     const testdata = [
@@ -52,6 +56,26 @@ const Main: React.FC = () => {
     //       alert('Failed to send email');
     //     }
     //   };
+    const [Store, setStore] = useState<StoreInterface[]>([]);
+    useEffect(() => {
+        if (1) {
+            fetchStore('1');
+        } else {
+            
+        }
+    }, [1]);
+
+    const fetchStore = async (id: string ) => {
+        try {
+            const res = await GetStoreByFloor(id);
+            if (res.status === 200) {
+                setStore(res.data);
+            }else {
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
       
     return(
         <>
@@ -91,6 +115,21 @@ const Main: React.FC = () => {
                 </span>
             </div>
 
+            <div className='NEWS'>
+                <span></span>
+                <p>STORE</p>
+                <span></span>
+            </div>
+            <div className='Store1'> 
+                <div ><img src={Store[1]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[2]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[3]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[4]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[5]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[6]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[7]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[8]?.PicStore||st} alt="" /></div>
+            </div>
             <div className='NEWS'>
                 <span></span>
                 <p>NEWS</p>

@@ -243,7 +243,7 @@
 .PaymentStorebar{
     width: 450px;
     height: 750px;
-    overflow-y: scroll;
+    
     position: fixed;
     right: 0px;
     top: 115px;
@@ -284,7 +284,10 @@
         top: 115px;
     }
 }
-
+.PG{
+    overflow-y: scroll;
+    height: 600px;
+}
 .paymentgroup{
     margin: 20px 5%;
     width: 90%;

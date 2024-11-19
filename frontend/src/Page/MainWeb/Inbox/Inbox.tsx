@@ -145,6 +145,7 @@ const Inbox: React.FC = () => {
 
             <div className={`PaymentStorebar ${isPaymentStore ? 'fade-in' : 'fade-out'}`}>
                 <p className='Messages'>Booking Store Payment</p>
+                <div className='PG'>
                 {Payment.length > 0 ? (
                     Payment.map((data) => (
                         <div key={data.ID} className={`paymentgroup ${data.StatusPaymentStore !== "paid" ? 'notPaid' : 'paid'}`} onClick={() => GotoPaymentPageClick(data)} >
@@ -170,6 +171,7 @@ const Inbox: React.FC = () => {
                         <div>No payment</div>
                     </>
                 )}
+                </div>
 
                 <p style={{position: "absolute",right: '0px',marginRight: '20px',cursor: 'pointer',bottom: '0px'}} onClick={OpenPaymentStore}>close</p>
             </div>
