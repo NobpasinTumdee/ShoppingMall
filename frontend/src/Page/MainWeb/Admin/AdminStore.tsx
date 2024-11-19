@@ -68,7 +68,16 @@ const AdminStore: React.FC = () => {
             DescribtionNews: 'Your shop reservation has been approved by the administrator and you can You can proceed by making the next payment within 3 days.',
             UserID: approval.UserID
         };
+        const LastDate = new Date(Booking); // วันจริงตามแพ็คเกจ
+        LastDate.setDate(LastDate.getDate() + Number(approval.Membership?.Day)); 
         const valuesPayment: PaymentInterface = { 
+            PayStoreName: approval.NameStore,
+            PayStorePackage: approval.Membership?.PackageName,
+            PayStorePwa: approval.Membership?.Pwa,
+            PayStorePea: approval.Membership?.Pea,
+            PayStoreRental: approval.Membership?.RentalFee,
+            PayStoreBook: Booking,
+            PayStoreLast: LastDate,
             UserID: approval.UserID,
             StoreID: approval.ID
         };

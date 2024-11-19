@@ -487,7 +487,7 @@ export const NavBar: React.FC = () => {
                                     <h1 style={{textAlign: 'center'}}>Tax info</h1>
                                     {Tax &&
                                         <div style={{display:'flex',justifyContent: 'flex-start' ,backgroundColor: '#fff' ,margin: '20px',padding: '10px',borderRadius: '10px' , boxShadow: '0 0 20px #0001'}}>
-                                            <img src={commpany} alt="commpany" /><div style={{overflowY: 'scroll',height: '60px'}}>Company: {Tax.CompanyName} <br />Residecnee: {Tax.Residencee} <br />ID: {Tax.IdentificationNumber}</div>
+                                            <img src={commpany} alt="commpany" style={{width: '80px'}} /><div style={{overflowY: 'scroll',height: '60px'}}>Company: {Tax.CompanyName} <br />Residecnee: {Tax.Residencee} <br />ID: {Tax.IdentificationNumber}</div>
                                         </div>
                                     }
                                     <div >

@@ -58,6 +58,14 @@ export interface InfoUserStoreInterface{
 export interface PaymentInterface{
     ID?:                    number ;
     StatusPaymentStore?:    string ;
+    PayStoreName?:          string ;
+    PayStorePackage?:       string ;
+    PayStorePwa?:           number ;
+    PayStorePea?:           number ;
+    PayStoreRental?:        number ;
+    PayStoreBook?:          Date ;
+    PayStoreLast?:          Date ;
+
     UserID?:                number ;
     StoreID?:               number ;
     PayMethodStoreID?:      number ;

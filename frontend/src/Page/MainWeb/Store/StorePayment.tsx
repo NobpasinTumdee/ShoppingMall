@@ -89,9 +89,9 @@ const StorePayment: React.FC = () => {
     const [Total, setTotal] = useState(0);
 
     useEffect(() => {
-        const Pwa = Number(Payment?.Store?.Membership?.Pwa || 0);
-        const Pea = Number(Payment?.Store?.Membership?.Pea || 0);
-        const RentalFee = Number(Payment?.Store?.Membership?.RentalFee || 0);
+        const Pwa = Number(Payment?.PayStorePwa || 0);
+        const Pea = Number(Payment?.PayStorePea || 0);
+        const RentalFee = Number(Payment?.PayStoreRental || 0);
         setTotal(Pwa + Pea + RentalFee);
     }, [Payment]);
     //================================= set date ========================
@@ -164,7 +164,7 @@ const StorePayment: React.FC = () => {
             if (res.status === 200) {
                 message.open({
                     type: "success",
-                    content: 'Approve Success!',
+                    content: 'Payment Success!',
                 });
             } else {
                 message.open({
@@ -229,7 +229,7 @@ const StorePayment: React.FC = () => {
             {/* <div>{Payment?.ID}{Payment?.PayMethodStoreID}{Payment?.StatusPaymentStore}</div> */}
             <div className='PaymentContanerBox'>
                 <div className='listPay'>
-                    <h1>Total amount to be paid  "{Payment?.Store?.NameStore}"</h1>
+                    <h1>Total amount to be paid  "{Payment?.PayStoreName}"</h1>
                     <div className='PaymentContanerBoxSub'>
                         <div>Section</div>
                         <div>Price</div>
@@ -238,31 +238,31 @@ const StorePayment: React.FC = () => {
                     <div className='PWA'>
                         <img src={PWA} alt="PWA" />
                         <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Provincial Waterworks Authority #{Payment?.Store?.Membership?.PackageName}</p>
-                            <p>Booking Date : {String(Payment?.Store?.BookingDate)}</p>
-                            <p>Last Day : {String(Payment?.Store?.LastDay)}</p>
+                            <p style={{fontWeight: '900'}}>Provincial Waterworks Authority #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
+                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
                         </div>
-                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.Store?.Membership?.Pwa} Bath</div>
+                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStorePwa} Bath</div>
                     </div>
 
                     <div className='PWA'>
                         <img src={PEA} alt="PEA" />
                         <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Provincial ELECTRICITY Authority #{Payment?.Store?.Membership?.PackageName}</p>
-                            <p>Booking Date : {String(Payment?.Store?.BookingDate)}</p>
-                            <p>Last Day : {String(Payment?.Store?.LastDay)}</p>
+                            <p style={{fontWeight: '900'}}>Provincial ELECTRICITY Authority #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
+                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
                         </div>
-                        <div style={{marginLeft: '18%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.Store?.Membership?.Pea} Bath</div>
+                        <div style={{marginLeft: '18%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStorePea} Bath</div>
                     </div>
 
                     <div className='PWA'>
                         <img src={storeicon} alt="storeicon" />
                         <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Rental Fee #{Payment?.Store?.Membership?.PackageName}</p>
-                            <p>Booking Date : {String(Payment?.Store?.BookingDate)}</p>
-                            <p>Last Day : {String(Payment?.Store?.LastDay)}</p>
+                            <p style={{fontWeight: '900'}}>Rental Fee #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
+                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
                         </div>
-                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.Store?.Membership?.RentalFee} Bath</div>
+                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStoreRental} Bath</div>
                     </div>
                     <hr />
                     <div className='total'><p></p><p>Total : {Total} Bath <hr /></p></div>

@@ -34,9 +34,9 @@ const BillStore: React.FC = () => {
     const [Total, setTotal] = useState(0);
 
     useEffect(() => {
-        const Pwa = Number(Bill?.PaymentStore?.Store?.Membership?.Pwa || 0);
-        const Pea = Number(Bill?.PaymentStore?.Store?.Membership?.Pea || 0);
-        const RentalFee = Number(Bill?.PaymentStore?.Store?.Membership?.RentalFee || 0);
+        const Pwa = Number(Bill?.PaymentStore?.PayStorePwa || 0);
+        const Pea = Number(Bill?.PaymentStore?.PayStorePea || 0);
+        const RentalFee = Number(Bill?.PaymentStore?.PayStoreRental || 0);
         setTotal(Pwa + Pea + RentalFee);
     }, [Bill]);
 
@@ -98,9 +98,9 @@ const BillStore: React.FC = () => {
                         </div>
                         <hr />
                         <div className='Sublist'>
-                            <div style={{display: 'flex',justifyContent: 'space-between',textAlign: 'left'}}><p style={{width:"70px"}}>PWA</p><p>{Bill.PaymentStore?.Store?.Membership?.PackageName}</p><p>{Bill.PaymentStore?.Store?.Membership?.Pwa} Bath</p></div>
-                            <div style={{display: 'flex',justifyContent: 'space-between',textAlign: 'left'}}><p style={{width:"70px"}}>PEA</p><p>{Bill.PaymentStore?.Store?.Membership?.PackageName}</p><p>{Bill.PaymentStore?.Store?.Membership?.Pea} Bath</p></div>
-                            <div style={{display: 'flex',justifyContent: 'space-between',textAlign: 'left'}}><p style={{width:"70px"}}>Rental Fee</p><p>{Bill.PaymentStore?.Store?.Membership?.PackageName}</p><p>{Bill.PaymentStore?.Store?.Membership?.RentalFee} Bath</p></div>
+                            <div style={{display: 'flex',justifyContent: 'space-between',textAlign: 'left'}}><p style={{width:"70px"}}>PWA</p><p>{Bill.PaymentStore?.PayStorePackage}</p><p>{Bill.PaymentStore?.PayStorePwa} Bath</p></div>
+                            <div style={{display: 'flex',justifyContent: 'space-between',textAlign: 'left'}}><p style={{width:"70px"}}>PEA</p><p>{Bill.PaymentStore?.PayStorePackage}</p><p>{Bill.PaymentStore?.PayStorePea} Bath</p></div>
+                            <div style={{display: 'flex',justifyContent: 'space-between',textAlign: 'left'}}><p style={{width:"70px"}}>Rental Fee</p><p>{Bill.PaymentStore?.PayStorePackage}</p><p>{Bill.PaymentStore?.PayStoreRental} Bath</p></div>
                         </div>
                         <hr />
                     </div>

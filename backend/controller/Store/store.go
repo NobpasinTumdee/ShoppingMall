@@ -130,7 +130,7 @@ func GetStoreWaiting(c *gin.Context) {
 
 
 
-	results := db.Where("status_store = ?", StatusStore).Find(&Stores)
+	results := db.Preload("Membership").Preload("ProductType").Where("status_store = ?", StatusStore).Find(&Stores)
 	if results.Error != nil {
 		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
