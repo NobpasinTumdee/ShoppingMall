@@ -30,6 +30,7 @@ func main() {
 
 	r.GET("/user" , user.ListUsers)
 	r.GET("/store/:id",Store.GetStoreByFloor)
+	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
 	{
 		router.Use(middlewares.Authorizes())

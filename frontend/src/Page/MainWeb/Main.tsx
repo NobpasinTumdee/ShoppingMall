@@ -10,7 +10,7 @@ import Computer from "../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 
 //New
 import Newtest from "../../assets/icon/ForPage/MainIcon/TestNew.png"
-
+//import axios from 'axios';
 import './Main.css';
 const Main: React.FC = () => {
 
@@ -36,8 +36,23 @@ const Main: React.FC = () => {
             info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         },
     ]
-
-
+    // const gmail = {
+    //     to: 'porporpor547@gmail.com',
+    //     subject: 'test',
+    //     message: 'test message',
+    //   };
+      
+    //   const handleSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     try {
+    //       const response = await axios.post('http://localhost:8000/send-email', gmail);
+    //       alert(response.data.message);
+    //     } catch (error) {
+    //       console.error(error);
+    //       alert('Failed to send email');
+    //     }
+    //   };
+      
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -52,7 +67,7 @@ const Main: React.FC = () => {
                     mollit anim id est laborum.
                 </span>
             </div>
-            
+            {/* <div onClick={handleSubmit}>Gmail</div> */}
             <div className='Floor'>
                 <span className='subFloor'>
                     <img src={market} alt="market" />
