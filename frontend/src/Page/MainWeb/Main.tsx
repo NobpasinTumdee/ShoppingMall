@@ -92,6 +92,7 @@ const Main: React.FC = () => {
                 </span>
             </div>
             {/* <div onClick={handleSubmit}>Gmail</div> */}
+            
             <div className='Floor'>
                 <span className='subFloor'>
                     <img src={market} alt="market" />

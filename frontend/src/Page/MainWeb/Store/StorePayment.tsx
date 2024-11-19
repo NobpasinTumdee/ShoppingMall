@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {message} from 'antd'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import './StoreAndPay.css'
 
@@ -94,6 +95,44 @@ const StorePayment: React.FC = () => {
         const RentalFee = Number(Payment?.PayStoreRental || 0);
         setTotal(Pwa + Pea + RentalFee);
     }, [Payment]);
+    //==================================Gmail============================
+    const gmail = {
+        to: Payment?.User?.Email,
+        subject: 'Payment successful (' + Payment?.PayStoreName + ') 🎉',
+        message: 
+`เรียน ลูกค้าผู้มีอุปการคุณ,
+
+ทางบริษัท ICONIC ขอขอบพระคุณที่ท่านได้ให้ความไว้วางใจและเลือกใช้บริการล็อคขายสินค้ากับเรา เรารู้สึกยินดีเป็นอย่างยิ่งที่ได้มีโอกาสต้อนรับท่านเป็นส่วนหนึ่งของครอบครัว ICONIC
+การจองล็อคขายสินค้าของท่านได้รับการดำเนินการสำเร็จเรียบร้อยแล้ว ทางเราขอแจ้งให้ทราบว่า ท่านสามารถใช้พื้นที่ที่ท่านจองได้ตามรายละเอียดที่ท่านได้รับในเอกสารยืนยันการจอง
+หากท่านมีคำถามเพิ่มเติม หรือต้องการข้อมูลเพิ่มเติมเกี่ยวกับการใช้งานพื้นที่ ท่านสามารถติดต่อทีมงานของเราที่หมายเลข [044-265-9861] หรืออีเมล [shoppingmallse13@gmail.com] เรามีความยินดีที่จะช่วยเหลือและให้คำปรึกษาท่านในทุกขั้นตอน
+อีกทั้งทาง ICONIC มุ่งมั่นที่จะสนับสนุนและสร้างสรรค์สภาพแวดล้อมที่เอื้อต่อความสำเร็จของธุรกิจของท่าน เราพร้อมที่จะร่วมเดินทางไปกับท่านเพื่อให้การดำเนินธุรกิจของท่านเต็มไปด้วยความราบรื่นและประสบความสำเร็จ
+ขอแสดงความนับถือ,  
+ทีมงาน ICONIC
+
+Dear Valued Customer,
+
+On behalf of ICONIC, we would like to extend our heartfelt gratitude for choosing our services and reserving a sales space with us. We are delighted to welcome you as a part of the ICONIC family.
+Your booking has been successfully completed. We are pleased to inform you , as detailed in the confirmation documents provided.
+If you have any further questions or require additional assistance regarding your space, please do not hesitate to contact our team at [044-265-9861] or via email at [shoppingmallse13@gmail.com]. We are more than happy to assist and guide you every step of the way.
+At ICONIC, we are committed to supporting your business endeavors by fostering an environment conducive to success. We look forward to walking alongside you on your journey to achieve seamless operations and outstanding growth.
+
+Sincerely,
+[Sender's Name]
+ICONIC Team
+        `
+    };
+    
+    
+    const handleSubmitGmail = async () => {
+    try {
+        const response = await axios.post('http://localhost:8000/send-email', gmail);
+        console.info(response);
+    } catch (error) {
+        console.error(error);
+    }
+    };
+
+
     //================================= set date ========================
     const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
     const Last = new Date(Booking); // คัดลอกค่า BookingDate
@@ -136,6 +175,7 @@ const StorePayment: React.FC = () => {
                     type: "success",
                     content: res.data.message,
                 });
+                await handleSubmitGmail(); //Gmail
                 setTimeout(() => {
                     if (Payment) {
                         GotoBillPageClick(Payment);
