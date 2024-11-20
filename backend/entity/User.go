@@ -29,7 +29,6 @@ type User struct {
 
 	MessageBoard []MessageBoard `gorm:"foreignKey:UserID"`
 
-<<<<<<< HEAD
 	BookingHall []BookingHall	`gorm:"foreignKey:UserID"`
 
 	InfoUserStore []InfoUserStore	`gorm:"foreignKey:UserID"`
@@ -38,9 +37,7 @@ type User struct {
 	CleaningRecords []CleaningRecord	`gorm:"foreignKey:UserID"` //บันทึกการทำความสะอาด
 
 	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
-=======
 	UsageCard []UsageCard `gorm:"foreignKey:UserID"`
->>>>>>> CarPark
 }
 
 
