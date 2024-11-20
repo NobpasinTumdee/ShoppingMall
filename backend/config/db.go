@@ -111,6 +111,40 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.PaymentMethodStore{MethodName: pkg.MethodName})
 	}
 
+	//Hall
+	Hall := []entity.Hall{
+		{
+			HallName:     "Grand Conference Room",
+			Capacity:     200,
+			Location:     "1st Floor, Building A",
+			IsAvailable:  true,
+			ImageHall:    "https://example.com/images/grand-conference-room.jpg",
+			Description:  "A spacious hall suitable for conferences and seminars.",
+			PricePerHour: 5000,
+		},
+		{
+			HallName:     "VIP Meeting Room",
+			Capacity:     50,
+			Location:     "2nd Floor, Building B",
+			IsAvailable:  false,
+			ImageHall:    "https://example.com/images/vip-meeting-room.jpg",
+			Description:  "A premium meeting room for exclusive gatherings.",
+			PricePerHour: 3000,
+		},
+		{
+			HallName:     "Outdoor Event Space",
+			Capacity:     500,
+			Location:     "Garden Area",
+			IsAvailable:  true,
+			ImageHall:    "https://example.com/images/outdoor-event-space.jpg",
+			Description:  "An open space perfect for weddings and large events.",
+			PricePerHour: 7000,
+		},
+	}
+	for _, pkg := range Hall {
+		db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
+	}
+
 
 
 	//Store

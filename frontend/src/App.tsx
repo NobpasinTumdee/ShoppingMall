@@ -1,4 +1,3 @@
-//import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-router-dom';
 import Login from './Page/Login/Login';
 import Main from './Page/MainWeb/Main';
@@ -8,14 +7,12 @@ import Store from './Page/MainWeb/Store/Store';
 import StorePayment from './Page/MainWeb/Store/StorePayment';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
-<<<<<<< HEAD
-import Hall from './Page/MainWeb/Hall/SelectHall/SelectHall';
-=======
 import Inbox from './Page/MainWeb/Inbox/Inbox';
 import BillStore from './Page/MainWeb/Store/BillStore';
 import { NavBar } from './Page/Component/NavBar';
-import Hall from './Page/MainWeb/Hall/HallBookingPage';
->>>>>>> main
+// import Hall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
+import Hall from './Page/MainWeb/Hall/SelectHall/SelectHall';
+
 
 
 const App: React.FC = () => {
@@ -36,10 +33,6 @@ const App: React.FC = () => {
         <Route path="/Inbox" element={<Inbox />} /> 
         <Route path="/BillStore" element={<BillStore />} /> 
         <Route path="/Hall" element={<Hall />} />
-<<<<<<< HEAD
-=======
-        
->>>>>>> main
       </Routes>
     </>
   );

@@ -337,7 +337,28 @@ async function GetStoreWaiting(status: string) {
 
 }
 
+//===========================Hall==========================================
+//Get ListHall
+async function ListHall() {
+  
+  return await axios
 
+  .get(`${apiUrl}/hall`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+
+//Get HallByID
+async function GetHallByID(id: string) {
+
+  .get(`${apiUrl}/hallid/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
 export {
     SignIn,//user
     GetUserById,
@@ -367,4 +388,7 @@ export {
     GetPaymentMethod,
     GetBillByPayidPreload,//bill
     CreateBill,
+
+    ListHall,
+    GetHallByID,
 }
