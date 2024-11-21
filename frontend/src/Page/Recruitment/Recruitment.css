@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Parkinsans:wght@300..800&display=swap');
+
+
+.JobContenner{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    font-family: "Parkinsans", sans-serif;
+    background-color: #E8D196;
+    color: #fff;
+}
+.InfoJobPreview{
+    margin-left: 100px;
+}
+.InfoJobPreview h1{
+    font-weight: 800;
+    font-size: 40px;
+}
+.PreviewJob {
+    font-size: 26px;
+    text-align: center;
+    font-family: "PT Serif", serif;
+    line-height: 40px;
+    overflow-y: scroll;
+    height: 100px;
+}
+
+.PreviewJob h1{
+    animation: blur linear both;
+    animation-timeline: view();
+}
+@keyframes blur {
+    0%{
+        filter: blur(10px);
+    }40%{
+        filter: blur(0px);
+    }55%{
+        filter: blur(0px);
+    }100%{
+        filter: blur(10px);
+    }
+}
+
+.NEWS {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.NEWS span{
+    width: 500px;
+    height: 3px;
+    background-color: #E8D196;
+    margin-left: 150px;
+    margin-right: 150px;
+
+}
+
+.BoxJob{
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+    animation: BoxJob 1s ease-in-out;
+}
+@keyframes BoxJob {
+    0%{
+        transform: translateY(-140px);
+        opacity: 0;
+    }100%{
+
+    }
+}
+
+.BoxJobC{
+    width: 250px;
+    height: 300px;
+    background-color: #e8d19600;
+    margin: 0px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00000010;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.5s;
+} 
+.BoxJobC img{
+    margin: 20px;
+}
+.BoxJobC p{
+    font-family: "Parkinsans", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+}
+.BoxJobC:hover{
+    background-color: #ffebba;
+    transform: translateY(-20px);
+}
+
+.MemberA {
+    margin: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Parkinsans", sans-serif;
+    animation: show ;
+    animation-timeline: view(70% auto);
+}
+.infoA{
+    width: 800px;
+    margin: 0 40px;
+}
+@keyframes show {
+    from{
+        opacity: 0;
+        transform: translateX(-300px) scale(0.8);
+    }to{
+        opacity: 1;
+    }
+}
+
+
+
+.MemberB {
+    margin: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Parkinsans", sans-serif;
+    animation: showB ;
+    animation-timeline: view(70% auto);
+}
+.infoB{
+    width: 800px;
+    margin: 0 40px;
+}
+@keyframes showB {
+    from{
+        opacity: 0;
+        transform: translateX(300px) scale(0.8);
+    }to{
+        opacity: 1;
+    }
+}

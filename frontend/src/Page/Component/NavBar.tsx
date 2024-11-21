@@ -668,7 +668,7 @@ export const NavBar: React.FC = () => {
                         
                             <div className={`dropboxMenu ${isMenuOpen ? 'fade-in' : 'fade-out'}`}>
                                 <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>
-                                <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
+                                <a href="/Recruitment" ><p className='dropboxMenuP'>Recruitment</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
                                 {user?.Status === 'Admin' && 
                                     <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>

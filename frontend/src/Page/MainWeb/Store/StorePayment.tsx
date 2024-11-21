@@ -182,7 +182,7 @@ ICONIC Team
                     } else {
                         message.error("Payment ไม่สามารถเป็น null ได้");
                     }
-                }, 2000);
+                }, 200);
             } else {
                 message.open({
                     type: "error",
