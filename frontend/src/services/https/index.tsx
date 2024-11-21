@@ -350,15 +350,6 @@ async function ListHall() {
   .catch((e) => e.response);
 }
 
-//Get HallByID
-async function GetHallByID(id: string) {
-
-  .get(`${apiUrl}/hallid/${id}`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-}
 export {
     SignIn,//user
     GetUserById,
@@ -390,5 +381,5 @@ export {
     CreateBill,
 
     ListHall,
-    GetHallByID,
+    
 }
