@@ -141,6 +141,7 @@ const Main: React.FC = () => {
                 <span></span>
             </div>
             <div className='Store1'> 
+                <div ><img src={Store[0]?.PicStore||st} alt="" /></div>
                 <div ><img src={Store[1]?.PicStore||st} alt="" /></div>
                 <div ><img src={Store[2]?.PicStore||st} alt="" /></div>
                 <div ><img src={Store[3]?.PicStore||st} alt="" /></div>
@@ -148,7 +149,6 @@ const Main: React.FC = () => {
                 <div ><img src={Store[5]?.PicStore||st} alt="" /></div>
                 <div ><img src={Store[6]?.PicStore||st} alt="" /></div>
                 <div ><img src={Store[7]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[8]?.PicStore||st} alt="" /></div>
             </div>
             <div className='NEWS'>
                 <span></span>

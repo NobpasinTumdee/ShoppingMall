@@ -10,6 +10,9 @@ import E from '../../assets/icon/ForPage/Job/NameTag.png';
 import M from '../../assets/icon/ForPage/Job/UserGroups.png';
 import C from '../../assets/icon/ForPage/Job/Housewife.png';
 import t from '../../assets/icon/ForPage/Job/Plumber.png';
+
+import { UsersInterface } from '../../interfaces/UsersInterface';
+import { GetUserById , UpdateUserByid} from '../../services/https';
 const Recruitment: React.FC = () => {
     const images = [Stonk, Wow];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -21,6 +24,70 @@ const Recruitment: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
+    const [Popup, setPopup] = useState(false);
+    const SaveStatus = (S : any) => {
+        if (S == 1) {
+            setStatusHolder('Employee')
+        }else if (S == 2) {
+            setStatusHolder('User')
+        }else if (S == 3) {
+            setStatusHolder('Admin')
+        }else if (S == 4) {
+            setStatusHolder('Employee')
+        }
+        setPopup(true)
+    };
+    const ClosePopupState = () => {
+        setPopup(false)
+    }
+
+    //====================================data user========================================
+    const [user, setUser] = useState<UsersInterface | null>(null); // State to store user data
+    const userIdstr = localStorage.getItem("id");
+    useEffect(() => {
+        if (userIdstr) {
+            fetchUserData(userIdstr);
+        } else {
+            
+        }
+    }, [userIdstr]);
+    const fetchUserData = async (userIdstr: string ) => {
+        try {
+            const res = await GetUserById(userIdstr);
+            if (res.status === 200) {
+                setUser(res.data);
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
+    const [checked, setChecked] = useState(false);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(e.target.checked);
+    }
+    //================================== update status ===================================
+    const UpdateStatus = async (user : UsersInterface) => {
+        const values : UsersInterface = {...user , Status: StatusHolder}
+        try {
+            const res = await UpdateUserByid(String(userIdstr), values);
+            if (res.status === 200) {
+                setPopup(false)
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500); 
+            } else {
+
+            }
+        } catch (error) {
+
+        }
+    }
+    const [StatusHolder, setStatusHolder] = useState('');
+    const SubmitStatus = () => {
+        if (user) {
+            UpdateStatus(user);
+        }
+    };
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -53,22 +120,22 @@ const Recruitment: React.FC = () => {
             {/* <div style={{width: 'auto' , height: '4px' , backgroundColor: '#E8D196', margin: '40px 150px'}}></div> */}
 
             <div className='BoxJob'>
-                <div className='BoxJobC'>
+                <div className='BoxJobC' onClick={() => SaveStatus(1)}>
                     <img src={E} width={100} />
                     <p>Employee</p>
                     <p style={{fontSize: '14px' , fontWeight: '100', margin: '20px'}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas hic quod sapiente ab culpa ullam.</p>
                 </div>
-                <div className='BoxJobC'>
+                <div className='BoxJobC' onClick={() => SaveStatus(2)}>
                     <img src={M} width={100} />
                     <p>Member</p>
                     <p style={{fontSize: '14px' , fontWeight: '100', margin: '20px'}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas hic quod sapiente ab culpa ullam.</p>
                 </div>
-                <div className='BoxJobC'>
+                <div className='BoxJobC' onClick={() => SaveStatus(3)}>
                     <img src={C} width={100} />
                     <p>Cleaning</p>
                     <p style={{fontSize: '14px' , fontWeight: '100', margin: '20px'}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas hic quod sapiente ab culpa ullam.</p>
                 </div>
-                <div className='BoxJobC'>
+                <div className='BoxJobC' onClick={() => SaveStatus(4)}>
                     <img src={t} width={100} />
                     <p>Repairman</p>
                     <p style={{fontSize: '14px' , fontWeight: '100', margin: '20px'}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas hic quod sapiente ab culpa ullam.</p>
@@ -103,6 +170,32 @@ const Recruitment: React.FC = () => {
                 </div>
                 <img src={Klee} width={400} height={400} />
             </div>
+
+
+            
+                <div className={`Information ${Popup ? 'Open' : 'Close'}`}> 
+                    <h1>Your information {StatusHolder}</h1>
+                    <div className='Informationsub'>
+                        <div className='datauser'>
+                            <img src={Klee} width={100} height={100} />
+                            <div style={{marginLeft: '10px'}}>
+                                <p>User Name : {user?.UserName}</p>
+                                <p>First Name : {user?.FirstName}</p>
+                                <p>Last Name : {user?.LastName}</p>
+                            </div>
+                            <div style={{marginLeft: '15px'}}>
+                                <p>Gmail : {user?.Email}</p>
+                                <p>Tel : {user?.Tel}</p>
+                                <p>Age : {user?.Age}</p>
+                            </div>
+                            <div className='Status'>{user?.Status}</div>
+                        </div>
+                        <div style={{margin:'50px 5%'}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis suscipit omnis voluptates iste accusantium, quibusdam nam? Cupiditate, nulla eius accusamus libero consectetur voluptatem molestiae sapiente ex accusantium alias consequatur deleniti excepturi saepe nemo similique reiciendis eos temporibus cum ea error quo nobis in facilis dolorem. Praesentium quis nesciunt atque iusto?</div>
+                    </div>
+                    <div style={{margin:'0px 5%'}}><label><input type="checkbox" checked={checked} onChange={handleChange} />Accept the terms and conditions of application</label></div>
+                    <div className={`SubmitBB ${checked ? 'Open' : 'Close'}`} onClick={SubmitStatus}>Submit an application</div>
+                </div>
+            <div className={`backB ${Popup ? 'Open' : 'Close'}`}onClick={ClosePopupState}></div>
         </>
 
     );
