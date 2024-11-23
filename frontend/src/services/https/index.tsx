@@ -155,6 +155,18 @@ async function UpdateTaxByid(id: string, data: TaxUserInterface) {
     .catch((e) => e.response);
 
 }
+// get User by status
+async function GetUserByStatus(Status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/job/${Status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -350,6 +362,7 @@ export {
     GetTaxById,
     AddTax,
     UpdateTaxByid,
+    GetUserByStatus,
 
     GetStoreWaiting,//admin
 

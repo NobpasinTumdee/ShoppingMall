@@ -13,6 +13,9 @@ const Admin: React.FC = () => {
     const handleClickToStore = () => {
         navigate('/AdminStore');
     };
+    const handleClickToJob = () => {
+        navigate('/AdminJob');
+    };
 
     return(
         <>
@@ -31,7 +34,7 @@ const Admin: React.FC = () => {
                     <img src={Store} alt="Store" />
                     <span>Manage Store</span>
                 </span>
-                <span className='ManagementSpan' >
+                <span className='ManagementSpan' onClick={handleClickToJob} >
                     <img src={Job} alt="Job" />
                     <span>Manage Job</span>
                 </span>

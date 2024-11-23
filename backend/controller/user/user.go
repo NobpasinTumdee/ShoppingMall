@@ -296,3 +296,26 @@ func UpdateTaxUserByid(c *gin.Context) {
  
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
+
+
+//GET user by status
+func GetListUserByStatus(c *gin.Context) {
+	StatusUser := c.Param("status")
+	var User []entity.User
+
+	db := config.DB()
+
+
+
+	results := db.Preload("TaxUser").Where("status = ?", StatusUser).Find(&User)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, User)
+}

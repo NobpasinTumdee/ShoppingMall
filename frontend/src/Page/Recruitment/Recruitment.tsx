@@ -27,13 +27,13 @@ const Recruitment: React.FC = () => {
     const [Popup, setPopup] = useState(false);
     const SaveStatus = (S : any) => {
         if (S == 1) {
-            setStatusHolder('Employee')
+            setStatusHolder('WaitEmployee')
         }else if (S == 2) {
-            setStatusHolder('User')
+            setStatusHolder('WaitMember')
         }else if (S == 3) {
-            setStatusHolder('Admin')
+            setStatusHolder('WaitCleaning')
         }else if (S == 4) {
-            setStatusHolder('Employee')
+            setStatusHolder('WaitRepairman')
         }
         setPopup(true)
     };

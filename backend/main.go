@@ -50,6 +50,7 @@ func main() {
 		router.PUT("/Tax/:id",user.UpdateTaxUserByid)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
+		router.GET("/job/:status",user.GetListUserByStatus)
 		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
