@@ -167,6 +167,18 @@ async function GetUserByStatus(Status: string) {
     .catch((e) => e.response);
 
 }
+// get Users
+async function ListUser() {
+
+  return await axios
+
+    .get(`${apiUrl}/users`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -363,6 +375,7 @@ export {
     AddTax,
     UpdateTaxByid,
     GetUserByStatus,
+    ListUser,
 
     GetStoreWaiting,//admin
 

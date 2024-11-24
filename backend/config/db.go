@@ -70,10 +70,13 @@ func SetupDatabase() {
 	//User
 	hashedPassword, _ := HashPassword("1")
 	User := []entity.User{
-	 	{UserName: "NobpasinTumdee" ,Password: hashedPassword ,Email: "B6506407@g.sut.ac.th" ,FirstName: "Nobpasin" , LastName: "Tumdee" , Age: 21 , Profile: "https://cache-igetweb-v2.mt108.info/uploads/images-cache/12677/product/dd87089fb03608d6fab36fa1204ce286_full.jpg",ProfileBackground: "" ,Status: "User" },
+	 	{UserName: "NobpasinTumdee" ,Password: hashedPassword ,Email: "B6506407@g.sut.ac.th" ,FirstName: "Nobpasin" , LastName: "Tumdee" , Age: 21 , Profile: "https://i.pinimg.com/736x/db/c0/14/dbc014d8d2229eb5e5a3e76980c137ca.jpg",ProfileBackground: "" ,Status: "User" },
 	 	{UserName: "PorGz" ,Password: hashedPassword ,Email: "PorGz@g.sut.ac.th" ,FirstName: "Por" , LastName: "Gz" , Age: 21 , Profile: "",ProfileBackground: "" ,Status: "User"},
 	 	{UserName: "Admin" ,Password: hashedPassword ,Email: "Admin@g.sut.ac.th" ,FirstName: "Admin" , LastName: "" , Age: 100 , Profile: "https://theinformalgamer.wordpress.com/wp-content/uploads/2022/02/character_yae_miko_thumb-min.png",ProfileBackground: "" ,Status: "Admin"},
 	 	{UserName: "Employee" ,Password: hashedPassword ,Email: "Employee@g.sut.ac.th" ,FirstName: "employee" , LastName: "" , Age: 100 , Profile: "https://tiermaker.com/images/template_images/2022/15460683/genshin-characters-going-to-a-beach---pool-party-15460683/screenshot20221127-203037googlejpg.png",ProfileBackground: "" ,Status: "Employee"},
+	 	{UserName: "Member" ,Password: hashedPassword ,Email: "Member@g.sut.ac.th" ,FirstName: "Member" , LastName: "" , Age: 100 , Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png",ProfileBackground: "" ,Status: "Member"},
+	 	{UserName: "Cleaning" ,Password: hashedPassword ,Email: "Cleaning@g.sut.ac.th" ,FirstName: "Cleaning" , LastName: "" , Age: 100 , Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/kokomijpg.png",ProfileBackground: "" ,Status: "Cleaning"},
+	 	{UserName: "Repairman" ,Password: hashedPassword ,Email: "Repairman@g.sut.ac.th" ,FirstName: "Repairman" , LastName: "" , Age: 100 , Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg",ProfileBackground: "" ,Status: "Repairman"},
 	}
 	for _, pkg := range User {
 		db.FirstOrCreate(&pkg,entity.User{UserName: pkg.UserName})

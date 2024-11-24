@@ -625,12 +625,26 @@ footer{
     border-radius: 5px;
     cursor: pointer;
     box-shadow:  0 0 10px #00000023;
+    animation: selectP 0.8s linear;
+}
+@keyframes selectP {
+    0%{
+        transform: scale(0.6);
+        opacity: 0;
+    }
 }
 .cardUser{
     background-color: #ffffff;
     height: 300px;
     box-shadow: 0 0 5px #00000056;
     border-radius: 5px;
+    animation: cardUser 0.5s ease-in-out;
+}
+@keyframes cardUser {
+    0%{
+        transform: translateY(300px);
+        opacity: 0;
+    }
 }
 .backgroundUserJob{
     width: 225px;
@@ -646,6 +660,16 @@ footer{
     border-radius: 50%;
     border: 5px solid #fff;
     box-shadow: 0 0 2px #00000081;
+    animation: Profile 5s ease-in-out 0.5s infinite ;
+}
+@keyframes Profile {
+    0%{
+        transform: translateY(-5px);
+    }50%{
+        transform: translateY(0px);
+    }100%{
+        transform: translateY(-5px);
+    }
 }
 .infoUser{
     position: relative;
@@ -653,5 +677,36 @@ footer{
     text-align: center;
     font-family: "Parkinsans", sans-serif;
     line-height: 5px;
-    font-size: 14px;
+    font-size: 10px;
+    height: 80px;
+    overflow-y: scroll;
+}
+.setButton{
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-210%);
+    margin: 0px 10px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    
+}
+.setButton p{
+    cursor: pointer;
+    color: #C9AF62;
+    padding: 0px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #00000037;
+    border: 1px solid #C9AF62;
+}
+.StatusUser{
+    transform: translateY(-320px);
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    background-color: #c7ac5a;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    box-shadow: 0 5px 5px #00000033;
 }
