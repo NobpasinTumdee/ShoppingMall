@@ -130,7 +130,7 @@ func GetStoreWaiting(c *gin.Context) {
 
 
 
-	results := db.Where("status_store = ?", StatusStore).Find(&Stores)
+	results := db.Preload("Membership").Preload("ProductType").Where("status_store = ?", StatusStore).Find(&Stores)
 	if results.Error != nil {
 		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
@@ -162,4 +162,87 @@ func GetMembership(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, Membership)
+}
+
+
+
+// POST Comment
+func CreateRating(c *gin.Context) {
+	var Rating entity.Rating
+
+	if err := c.ShouldBindJSON(&Rating); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	db := config.DB()
+	u := entity.Rating{
+		Rating:			Rating.Rating,
+		Comment: 		Rating.Comment,
+		UserID:        	Rating.UserID,
+		StoreID:        Rating.StoreID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Comment success", "data": u})
+}
+
+
+// GET /comment/:id
+func ListCommentByStoreId(c *gin.Context) {
+	ID := c.Param("id")
+	var Rating []entity.Rating
+
+	db := config.DB()
+
+
+	results := db.Preload("User").Preload("Store").Where("store_id = ?", ID).Find(&Rating)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Rating)
+}
+
+// GET /comment/:id by userid
+func ListCommentByUserId(c *gin.Context) {
+	ID := c.Param("id")
+	var Rating []entity.Rating
+
+	db := config.DB()
+
+
+	results := db.Preload("User").Preload("Store").Where("user_id = ?", ID).Find(&Rating)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Rating)
+}
+
+// DELETE /comment/:id
+func DeleteComment(c *gin.Context) {
+
+	id := c.Param("id")
+	db := config.DB()
+	if tx := db.Exec("DELETE FROM ratings WHERE store_id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
 }

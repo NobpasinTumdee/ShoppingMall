@@ -1,6 +1,6 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
-import { InfoUserStoreInterface } from "../../interfaces/StoreInterface";
+import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
 
 import axios from 'axios';
@@ -155,6 +155,30 @@ async function UpdateTaxByid(id: string, data: TaxUserInterface) {
     .catch((e) => e.response);
 
 }
+// get User by status
+async function GetUserByStatus(Status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/job/${Status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Users
+async function ListUser() {
+
+  return await axios
+
+    .get(`${apiUrl}/users`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================Store========================================
 // get Store by Floor
 async function GetStoreByFloor(id: string) {
@@ -215,6 +239,55 @@ async function GetMembershipByid(id: string) {
 
     .catch((e) => e.response);
 
+}
+//============================store rating ========================================
+// get comment by id store
+async function GetCommentByStore(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/commentbystore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get comment by id User
+async function GetCommentByUser(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/commentbyuser/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// create comment
+async function CreateComment(data: RatingInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/comment`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete comment
+async function DeleteCommentFromStore(id: string) {
+  return await axios
+    .delete(`${apiUrl}/comment/${id}`, requestOptions)
+    .then((res) => {
+      // if (res) {
+      //   window.location.reload(); // reload หลังจากลบเสร็จ
+      // }
+      return res;
+    })
+    .catch((e) => e.response);
 }
 //============================payment store========================================
 // get payment by userid Preload
@@ -350,14 +423,20 @@ export {
     GetTaxById,
     AddTax,
     UpdateTaxByid,
-
+    GetUserByStatus,
+    
     GetStoreWaiting,//admin
+    ListUser,
 
     GetStoreByFloor,//store
     UpdateStoreByid,
     BackUpStore,
     GetStoreById,
     GetMembershipByid,
+    GetCommentByStore,//rating
+    GetCommentByUser,
+    CreateComment,
+    DeleteCommentFromStore,
 
     GetPaymentByuseridPreload,//payment store
     GetPaymentByuserid,

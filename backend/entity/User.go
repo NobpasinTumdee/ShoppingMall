@@ -37,6 +37,7 @@ type User struct {
 	CleaningRecords []CleaningRecord	`gorm:"foreignKey:UserID"` //บันทึกการทำความสะอาด
 
 	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
+	UsageCard []UsageCard `gorm:"foreignKey:UserID"`
 }
 
 

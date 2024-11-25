@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {message} from 'antd'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import './StoreAndPay.css'
 
-import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid , CreateBill} from '../../../services/https';
-import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface , ReceiptInterface} from '../../../interfaces/StoreInterface';
+import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid , CreateBill , GetTaxById} from '../../../services/https';
+import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface , ReceiptInterface , TaxUserInterface} from '../../../interfaces/StoreInterface';
 
 import PWA from '../../../assets/icon/ForPage/StorePayment/PWA.jpg'
 import PEA from '../../../assets/icon/ForPage/StorePayment/PEA.jpg'
@@ -17,7 +18,7 @@ import storeicon from '../../../assets/icon/ForPage/StorePayment/storeicon.jpg'
 
 const StorePayment: React.FC = () => {
     const location = useLocation();
-    //const userIdstr = localStorage.getItem("id");
+    const userIdstr = localStorage.getItem("id");
     const [Payment, setPayment] = useState<PaymentInterface | null>(null);
     const [Store, setStore] = useState<StoreInterface | null>(null);
     const [Members, setMembers] = useState<MembershipInterface | null>(null);
@@ -89,11 +90,49 @@ const StorePayment: React.FC = () => {
     const [Total, setTotal] = useState(0);
 
     useEffect(() => {
-        const Pwa = Number(Payment?.Store?.Membership?.Pwa || 0);
-        const Pea = Number(Payment?.Store?.Membership?.Pea || 0);
-        const RentalFee = Number(Payment?.Store?.Membership?.RentalFee || 0);
+        const Pwa = Number(Payment?.PayStorePwa || 0);
+        const Pea = Number(Payment?.PayStorePea || 0);
+        const RentalFee = Number(Payment?.PayStoreRental || 0);
         setTotal(Pwa + Pea + RentalFee);
     }, [Payment]);
+    //==================================Gmail============================
+    const gmail = {
+        to: Payment?.User?.Email,
+        subject: 'Payment successful (' + Payment?.PayStoreName + ') 🎉',
+        message: 
+`เรียน ลูกค้าผู้มีอุปการคุณ,
+
+ทางบริษัท ICONIC ขอขอบพระคุณที่ท่านได้ให้ความไว้วางใจและเลือกใช้บริการล็อคขายสินค้ากับเรา เรารู้สึกยินดีเป็นอย่างยิ่งที่ได้มีโอกาสต้อนรับท่านเป็นส่วนหนึ่งของครอบครัว ICONIC
+การจองล็อคขายสินค้าของท่านได้รับการดำเนินการสำเร็จเรียบร้อยแล้ว ทางเราขอแจ้งให้ทราบว่า ท่านสามารถใช้พื้นที่ที่ท่านจองได้ตามรายละเอียดที่ท่านได้รับในเอกสารยืนยันการจอง
+หากท่านมีคำถามเพิ่มเติม หรือต้องการข้อมูลเพิ่มเติมเกี่ยวกับการใช้งานพื้นที่ ท่านสามารถติดต่อทีมงานของเราที่หมายเลข [044-265-9861] หรืออีเมล [shoppingmallse13@gmail.com] เรามีความยินดีที่จะช่วยเหลือและให้คำปรึกษาท่านในทุกขั้นตอน
+อีกทั้งทาง ICONIC มุ่งมั่นที่จะสนับสนุนและสร้างสรรค์สภาพแวดล้อมที่เอื้อต่อความสำเร็จของธุรกิจของท่าน เราพร้อมที่จะร่วมเดินทางไปกับท่านเพื่อให้การดำเนินธุรกิจของท่านเต็มไปด้วยความราบรื่นและประสบความสำเร็จ
+ขอแสดงความนับถือ,  
+ทีมงาน ICONIC
+
+Dear Valued Customer,
+
+On behalf of ICONIC, we would like to extend our heartfelt gratitude for choosing our services and reserving a sales space with us. We are delighted to welcome you as a part of the ICONIC family.
+Your booking has been successfully completed. We are pleased to inform you , as detailed in the confirmation documents provided.
+If you have any further questions or require additional assistance regarding your space, please do not hesitate to contact our team at [044-265-9861] or via email at [shoppingmallse13@gmail.com]. We are more than happy to assist and guide you every step of the way.
+At ICONIC, we are committed to supporting your business endeavors by fostering an environment conducive to success. We look forward to walking alongside you on your journey to achieve seamless operations and outstanding growth.
+
+Sincerely,
+[Sender's Name]
+ICONIC Team
+        `
+    };
+    
+    
+    const handleSubmitGmail = async () => {
+    try {
+        const response = await axios.post('http://localhost:8000/send-email', gmail);
+        console.info(response);
+    } catch (error) {
+        console.error(error);
+    }
+    };
+
+
     //================================= set date ========================
     const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
     const Last = new Date(Booking); // คัดลอกค่า BookingDate
@@ -104,7 +143,7 @@ const StorePayment: React.FC = () => {
             ...Data , PayMethodStoreID: selectMethod  ,StatusPaymentStore: "paid" 
         };
         const valuesBill: ReceiptInterface = { 
-            DateReceipt: Booking , DescribtionBill: String(Store?.NameStore) , PaymentStoreID: Payment?.ID , UserTaxID: 0
+            DateReceipt: Booking , DescribtionBill: String(Store?.NameStore) , PaymentStoreID: Payment?.ID , UserTaxID: TaxHld
         };
         try {
             const res = await UpdatePaymentStatus(String(ID),values);
@@ -136,13 +175,14 @@ const StorePayment: React.FC = () => {
                     type: "success",
                     content: res.data.message,
                 });
+                await handleSubmitGmail(); //Gmail
                 setTimeout(() => {
                     if (Payment) {
                         GotoBillPageClick(Payment);
                     } else {
                         message.error("Payment ไม่สามารถเป็น null ได้");
                     }
-                }, 2000);
+                }, 200);
             } else {
                 message.open({
                     type: "error",
@@ -164,7 +204,7 @@ const StorePayment: React.FC = () => {
             if (res.status === 200) {
                 message.open({
                     type: "success",
-                    content: 'Approve Success!',
+                    content: 'Payment Success!',
                 });
             } else {
                 message.open({
@@ -189,6 +229,34 @@ const StorePayment: React.FC = () => {
             } 
         });
     };
+    //==========================================================tax==================================================
+    const [checked, setChecked] = useState(false);
+    const [Tax, setTax] = useState<TaxUserInterface | null>(null);
+    const [TaxHld, setTaxHld] = useState(0);
+    useEffect(() => {
+        if (userIdstr) {
+            fetchTax(userIdstr);
+        }
+    }, [userIdstr]);
+    const fetchTax = async (ID: string ) => {//Payment
+        try {
+            const res = await GetTaxById(ID);
+            if (res.status === 200) {
+                setTax(res.data);
+            }
+        } catch (error) {
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลTax");
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(e.target.checked);
+        if (checked == true) {
+            setTaxHld(0);
+        }else if (checked == false){
+            setTaxHld(Number(Tax?.ID));
+        }
+    };
 
     return(
         <>
@@ -201,7 +269,7 @@ const StorePayment: React.FC = () => {
             {/* <div>{Payment?.ID}{Payment?.PayMethodStoreID}{Payment?.StatusPaymentStore}</div> */}
             <div className='PaymentContanerBox'>
                 <div className='listPay'>
-                    <h1>Total amount to be paid  "{Payment?.Store?.NameStore}"</h1>
+                    <h1>Total amount to be paid  "{Payment?.PayStoreName}"</h1>
                     <div className='PaymentContanerBoxSub'>
                         <div>Section</div>
                         <div>Price</div>
@@ -210,31 +278,31 @@ const StorePayment: React.FC = () => {
                     <div className='PWA'>
                         <img src={PWA} alt="PWA" />
                         <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Provincial Waterworks Authority #{Payment?.Store?.Membership?.PackageName}</p>
-                            <p>Booking Date : {String(Payment?.Store?.BookingDate)}</p>
-                            <p>Last Day : {String(Payment?.Store?.LastDay)}</p>
+                            <p style={{fontWeight: '900'}}>Provincial Waterworks Authority #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
+                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
                         </div>
-                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.Store?.Membership?.Pwa} Bath</div>
+                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStorePwa} Bath</div>
                     </div>
 
                     <div className='PWA'>
                         <img src={PEA} alt="PEA" />
                         <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Provincial ELECTRICITY Authority #{Payment?.Store?.Membership?.PackageName}</p>
-                            <p>Booking Date : {String(Payment?.Store?.BookingDate)}</p>
-                            <p>Last Day : {String(Payment?.Store?.LastDay)}</p>
+                            <p style={{fontWeight: '900'}}>Provincial ELECTRICITY Authority #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
+                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
                         </div>
-                        <div style={{marginLeft: '18%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.Store?.Membership?.Pea} Bath</div>
+                        <div style={{marginLeft: '18%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStorePea} Bath</div>
                     </div>
 
                     <div className='PWA'>
                         <img src={storeicon} alt="storeicon" />
                         <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Rental Fee #{Payment?.Store?.Membership?.PackageName}</p>
-                            <p>Booking Date : {String(Payment?.Store?.BookingDate)}</p>
-                            <p>Last Day : {String(Payment?.Store?.LastDay)}</p>
+                            <p style={{fontWeight: '900'}}>Rental Fee #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
+                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
                         </div>
-                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.Store?.Membership?.RentalFee} Bath</div>
+                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStoreRental} Bath</div>
                     </div>
                     <hr />
                     <div className='total'><p></p><p>Total : {Total} Bath <hr /></p></div>
@@ -246,10 +314,20 @@ const StorePayment: React.FC = () => {
                         {PaymentMethod.map((data) => (
                             <div className='PaymentPaymentMethod' key={data.ID} onClick={() => SelectPaymentMethod(data)}><img src={data.MethodPic} alt="" />{data.MethodName}</div>
                         ))}
-                        <p>Your Selection : {selectMethodName} {selectMethod} {Store?.MembershipID} {Members?.Day} {String(Last)}</p>
-
+                        <p>Your Selection : {selectMethodName} </p>
+                        <hr />
+                        <div>
+                        <label>
+                            <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={handleChange}
+                            />
+                            Receive a tax invoice
+                        </label>
+                        </div>
                         {Payment?.StatusPaymentStore !== 'paid' && 
-                            <div className='PayNow' onClick={() => paid(Payment)}>Pay Now!</div>
+                            <div className={`PayNow ${selectMethod ? 'Method' : 'NoMethod'}`} onClick={() => paid(Payment)}>Pay Now!</div>
                         }
                         {Payment?.StatusPaymentStore === 'paid' && 
                             <div className='PayNow' style={{backgroundColor: '#0d9e00', opacity: "1"}} onClick={() => GotoBillPageClick(Payment)} >Paid Get bill</div>

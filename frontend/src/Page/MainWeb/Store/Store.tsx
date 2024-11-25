@@ -18,7 +18,7 @@ import Computer from "../../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 import {GetStoreByFloor} from '../../../services/https/index'
 import {StoreInterface} from '../../../interfaces/StoreInterface'
 
-import {UpdateStoreByid} from '../../../services/https/index';
+import {UpdateStoreByid , DeleteCommentFromStore} from '../../../services/https/index';
 
 
 const Store: React.FC = () => {
@@ -131,9 +131,11 @@ const Store: React.FC = () => {
         try {
             const res = await UpdateStoreByid(String(formData), values);
             if (res.status === 200) {
-                setTimeout(() => {
-                    //navigate("/Store"); // นำทางกลับไปที่หน้า Store
-                }, 2000);
+                fetchUserData(String(1));
+            }
+            const resDeleteComment = await DeleteCommentFromStore(String(formData));
+            if (resDeleteComment.status === 200) {
+                fetchUserData(String(1));
             }
         } catch (error) {
             

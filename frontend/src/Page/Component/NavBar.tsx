@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 
 //API
 import { UsersInterface } from "../../interfaces/UsersInterface";
-import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID , UpdateUserByid , GetTaxById , UpdateTaxByid} from '../../services/https';
+import { GetUserById , AddStore , UserStoreByid , DeleteUserStoreByID , UpdateUserByid , GetTaxById , UpdateTaxByid , AddTax} from '../../services/https';
 import { InfoUserStoreInterface , TaxUserInterface} from '../../interfaces/StoreInterface';
 
 
@@ -148,6 +148,7 @@ export const NavBar: React.FC = () => {
         setProfile(false);
         closeCard();
         setEditProfile(false);
+        setTaxpopup(false)
     };
     const closeCard = () => {
         setcard(0);
@@ -362,6 +363,7 @@ export const NavBar: React.FC = () => {
         IdentificationNumber: '',
         UserID: ''
     });
+    const [isTaxpopup, setTaxpopup] = useState(false);
     const handleChangeTax = (e: any) => {
         const { name, value } = e.target;
         setformTax({ ...formTax, [name]: name === "IdentificationNumber" ? Number(value) : value });
@@ -380,7 +382,9 @@ export const NavBar: React.FC = () => {
                 })
 
             }else {
-                message.error("There is no Store on this floor.");
+                setTimeout(() => {
+                    message.info("You can store tax invoice information at Your profile if you need.");
+                }, 2000);
             }
         } catch (error) {
             console.error("Error fetching user Tax data:", error); // Debug
@@ -389,6 +393,40 @@ export const NavBar: React.FC = () => {
     };
     //create
 
+    const handleSubmitCreatetax = async (e: any) => {
+        e.preventDefault();
+        CreateTax(formTax);
+    };
+    const CreateTax = async (formTax: any) => {
+        const values: TaxUserInterface = {
+            CompanyName: formTax.CompanyName,
+            Residencee: formTax.Residencee,
+            IdentificationNumber: formTax.IdentificationNumber,
+            UserID: Number(userIdstr)
+        };
+        try {
+            const res = await AddTax(values);
+            if (res.status === 201) {
+                messageApi.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "Can't Add your store",
+            });
+        }
+    };
     //update
     const handleSubmitUpdatetax = async (e: any) => {
         e.preventDefault();
@@ -408,9 +446,6 @@ export const NavBar: React.FC = () => {
                     type: "success",
                     content: res.data.message,
                 });
-                setTimeout(() => {
-                    //setAddstore(false)
-                }, 500);
             } else {
                 messageApi.open({
                     type: "error",
@@ -442,31 +477,57 @@ export const NavBar: React.FC = () => {
                         <div onClick={OpenEditProfile}>🛠️</div>
                         <div onClick={OpenUserStore}>your store</div>
                         <div onClick={OpenAddStore}>Create your store</div>
-                        <div onClick={OpenUserStore}>info tax</div>
+                        <div onClick={() => setTaxpopup(true)}>info tax</div>
                     </div>
 
-                    <div className='TaxContaner'>
-                        <div className='TaxContannersub'>
-                            <h1 style={{textAlign: 'center'}}>Tax info</h1>
-                            {Tax &&
-                                <div style={{display:'flex',justifyContent: 'flex-start' ,backgroundColor: '#fff' ,margin: '20px',padding: '10px',borderRadius: '10px' , boxShadow: '0 0 20px #0001'}}>
-                                    <img src={commpany} alt="commpany" /><div> Company: {Tax.CompanyName} <br />Residecnee: {Tax.Residencee} <br />ID: {Tax.IdentificationNumber}</div>
+                    {Tax ? (
+                        <>
+                            <div className={`TaxContaner ${isTaxpopup ? 'fade-in' : 'fade-out'}`}>
+                                <div className='TaxContannersub'>
+                                    <h1 style={{textAlign: 'center'}}>Tax info</h1>
+                                    {Tax &&
+                                        <div style={{display:'flex',justifyContent: 'flex-start' ,backgroundColor: '#fff' ,margin: '20px',padding: '10px',borderRadius: '10px' , boxShadow: '0 0 20px #0001'}}>
+                                            <img src={commpany} alt="commpany" style={{width: '80px'}} /><div style={{overflowY: 'scroll',height: '60px'}}>Company: {Tax.CompanyName} <br />Residecnee: {Tax.Residencee} <br />ID: {Tax.IdentificationNumber}</div>
+                                        </div>
+                                    }
+                                    <div >
+                                        <form onSubmit={handleSubmitUpdatetax}>
+                                            <label>Company Name</label><br />
+                                            <input type="text" name="CompanyName" value={formTax.CompanyName} onChange={handleChangeTax} required /><br />
+                                            <label>Identification Number</label><br />
+                                            <input type="Number" name="IdentificationNumber" value={formTax.IdentificationNumber} onChange={handleChangeTax} required /><br />
+                                            <label>Residencee</label><br />
+                                            <textarea name="Residencee" value={formTax.Residencee} onChange={handleChangeTax} required />
+
+                                            <button type="submit" className='Taxsubmit'>Save Changes</button>
+                                        </form>
+                                        <div onClick={() => setTaxpopup(false)} className='closeTax'>X</div>
+                                    </div>
                                 </div>
-                            }
-                            <div >
-                                <form onSubmit={handleSubmitUpdatetax}>
-                                    <label>Company Name</label><br />
-                                    <input type="text" name="CompanyName" value={formTax.CompanyName} onChange={handleChangeTax} required /><br />
-                                    <label>Identification Number</label><br />
-                                    <input type="Number" name="IdentificationNumber" value={formTax.IdentificationNumber} onChange={handleChangeTax} required /><br />
-                                    <label>Residencee</label><br />
-                                    <textarea name="Residencee" value={formTax.Residencee} onChange={handleChangeTax} required />
-
-                                    <button type="submit" className='Editsubmit'>Save Changes</button>
-                                </form>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={`TaxContaner ${isTaxpopup ? 'fade-in' : 'fade-out'}`}>
+                                <div className='TaxContannersub'>
+                                    <h1 style={{textAlign: 'center'}}>Tax info</h1>
+                                    <div >
+                                        <form onSubmit={handleSubmitCreatetax}>
+                                            <label>Company Name</label><br />
+                                            <input type="text" name="CompanyName" value={formTax.CompanyName} onChange={handleChangeTax} required /><br />
+                                            <label>Identification Number</label><br />
+                                            <input type="Number" name="IdentificationNumber" value={formTax.IdentificationNumber} onChange={handleChangeTax} required /><br />
+                                            <label>Residencee</label><br />
+                                            <textarea name="Residencee" value={formTax.Residencee} onChange={handleChangeTax} required />
+
+                                            <button type="submit" className='Taxsubmit'>Save Changes</button>
+                                        </form>
+                                        <div onClick={() => setTaxpopup(false)} className='closeTax'>X</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     <div className={`EditProfileContaner ${isEditProfile ? 'fade-in' : 'fade-out'}`}>
                         <div className='EditContaner'>
@@ -607,7 +668,7 @@ export const NavBar: React.FC = () => {
                         
                             <div className={`dropboxMenu ${isMenuOpen ? 'fade-in' : 'fade-out'}`}>
                                 <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>
-                                <a href="" ><p className='dropboxMenuP'>Job Application</p></a>
+                                <a href="/Recruitment" ><p className='dropboxMenuP'>Recruitment</p></a>
                                 <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
                                 {user?.Status === 'Admin' && 
                                     <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>
@@ -623,12 +684,14 @@ export const NavBar: React.FC = () => {
                     <div>
                         <a href="/Main" ><span className={`MenuHover ${location.pathname === "/Main" ? "active" : ""}`}>NEWS</span></a>
                         <a href="/Store" ><span className={`MenuHover ${location.pathname === "/Store" ? "active" : ""}`}>STORE</span></a>
-                        {user?.Status === 'Admin' && 
+                        {(user?.Status === 'Admin' || user?.Status === 'Employee') && 
                             <a href="/Hall" ><span className={`MenuHover ${location.pathname === "/Hall" ? "active" : ""}`}>BOOK A HALL</span></a>
                         }
-                        <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
-                        {user?.Status === 'Maid' && 
-                            <a href="/Cleaning" ><span className={`MenuHover ${location.pathname === "/Cleaning" ? "active" : ""}`}>CLEANING</span></a>
+                        {(user?.Status === 'Repairman' || user?.Status === 'Admin'|| user?.Status === 'Employee') &&
+                            <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
+                        }
+                        {(user?.Status === 'Cleaning' || user?.Status === 'Admin'|| user?.Status === 'Employee') &&
+                            <a href="#" ><span className='MenuHover'>CLEANING</span></a>
                         }
                     </div>
                     <div></div>

@@ -30,6 +30,7 @@ func main() {
 
 	r.GET("/user" , user.ListUsers)
 	r.GET("/store/:id",Store.GetStoreByFloor)
+	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
 	{
 		router.Use(middlewares.Authorizes())
@@ -37,6 +38,7 @@ func main() {
 		
 		//User
 		router.GET("/user/:id", user.GetUser)
+		router.GET("/users", user.ListUsers)
 		router.PUT("/user/:id",user.UpdateUserByid)
 		router.POST("/addStore",user.AddStoreUser)
 		router.GET("/userstore", user.ListUserstore)
@@ -49,12 +51,17 @@ func main() {
 		router.PUT("/Tax/:id",user.UpdateTaxUserByid)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
+		router.GET("/job/:status",user.GetListUserByStatus)
 		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
 		router.GET("/storeid/:id",Store.GetStoreByid)
 		router.GET("/Membership/:id",Store.GetMembership)
+		router.GET("/commentbystore/:id",Store.ListCommentByStoreId)//rating
+		router.GET("/commentbyuser/:id",Store.ListCommentByUserId)
+		router.POST("/comment",Store.CreateRating)
+		router.DELETE("/comment/:id",Store.DeleteComment)
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
 		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)
