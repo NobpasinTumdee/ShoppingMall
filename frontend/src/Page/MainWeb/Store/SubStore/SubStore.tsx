@@ -10,7 +10,8 @@ import PicFloor from "../../../../assets/icon/ForPage/Store/Reserve.png"
 import PicNoStore from '../../../../assets/icon/ForPage/Store/Store3.jpg';
 //API
 import { UsersInterface } from "../../../../interfaces/UsersInterface";
-import { GetUserById } from '../../../../services/https';
+import { RatingInterface } from '../../../../interfaces/StoreInterface';
+import { GetUserById , GetCommentByStore , CreateComment} from '../../../../services/https';
 
 const SubStore: React.FC = () => {
     const location = useLocation();
@@ -74,11 +75,12 @@ const SubStore: React.FC = () => {
     //=================================================================================================
 
 
-    const [user, setUser] = useState<UsersInterface | null>(null); // State to store user data
-    //const userIdstr = localStorage.getItem("id");
+    const [user, setUser] = useState<UsersInterface | null>(null);
+    const [userWatch, setUserWatch] = useState<UsersInterface | null>(null);
     useEffect(() => {
         if (UserID) {
             fetchUserData(String(UserID));
+            fetchComment(String(ID))
         }
     }, [UserID]);
 
@@ -87,6 +89,11 @@ const SubStore: React.FC = () => {
             const res = await GetUserById(userIdStore);
             if (res.status === 200) {
                 setUser(res.data);
+                //message.success("พบข้อมูลUser");
+            }
+            const resWatch = await GetUserById(String(userIdstr));
+            if (resWatch.status === 200) {
+                setUserWatch(resWatch.data);
                 //message.success("พบข้อมูลUser");
             }
         } catch (error) {
@@ -105,12 +112,48 @@ const SubStore: React.FC = () => {
         return stars;
     };
 
-    const testdata = [
-         {id: 1,Rating: 2},{id: 2,Rating: 5},{id: 3,Rating: 0},{id: 4,Rating: 3},
-         {id: 5,Rating: 1},{id: 1,Rating: 1},{id: 2,Rating: 2},{id: 3,Rating: 2},
-         {id: 4,Rating: 5},{id: 5,Rating: 2},{id: 1,Rating: 4},{id: 2,Rating: 5},
-         {id: 3,Rating: 3},{id: 4,Rating: 4},{id: 5,Rating: 2},{id: 5,Rating: 4},
-    ]
+    const [Rating, setRating] = useState<RatingInterface[]>([]);
+    const fetchComment = async (ID: string ) => {
+        try {
+            const res = await GetCommentByStore(ID);
+            if (res.status === 200) {
+                setRating(res.data);
+            }
+        } catch (error) {
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลComment");
+        }
+    };
+    const userIdstr = localStorage.getItem("id");
+    const [newComment, setNewComment] = useState('');
+    const [newRating, setNewRating] = useState(0);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newComment || !userIdstr || !ID) {
+            message.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+            return;
+        }
+        const commentData: RatingInterface = {
+            Rating: newRating,
+            Comment: newComment,
+            UserID: Number(userIdstr),
+            StoreID: ID,
+        };
+
+        try {
+            const res = await CreateComment(commentData);
+            if (res.status === 201) {
+                message.success("เพิ่มความคิดเห็นสำเร็จ");
+                fetchComment(String(ID));
+                setNewComment('');
+                setNewRating(0);
+            } else {
+                message.error("เกิดข้อผิดพลาดในการเพิ่มความคิดเห็น");
+            }
+        } catch {
+            message.error("เกิดข้อผิดพลาด");
+        }
+    };
+
     //=========================ตรวจสอบStatusStore============================================
     const [statusCanbook,setStatus] = useState(false);
     useEffect(() => {
@@ -149,21 +192,53 @@ const SubStore: React.FC = () => {
                     <p>The contract will end on {formattedLastDay}</p>
                     <p>Status Store {StatusStore} from id user {UserID} on the floor {ProductTypeID} {MembershipID}</p>
                     <h1 >Rating and Feedback</h1>
-                    
+                    <div className='commentContaner'>
+                        <img src={userWatch?.Profile || Pic} width={50} height={50} />
+                        <div className='inputComment'>
+                            <form onSubmit={handleSubmit} autoComplete="off">
+                                <label htmlFor="AddComment">Add Your Comment</label>
+                                <div>
+                                    <input
+                                        type="text"
+                                        id="AddComment"
+                                        name="AddComment"
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        required
+                                    />
+                                    <select
+                                        name="Star"
+                                        id="Star"
+                                        value={newRating}
+                                        onChange={(e) => setNewRating(Number(e.target.value))}
+                                        style={{ marginLeft: '5px' }}
+                                    >
+                                        <option value={0}>0 Very bad</option>
+                                        <option value={1}>1 Bad</option>
+                                        <option value={2}>2 Not Bad</option>
+                                        <option value={3}>3 Nice</option>
+                                        <option value={4}>4 Good</option>
+                                        <option value={5}>5 very Good</option>
+                                    </select>
+                                    <button type="submit">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div className='RatingandFeedback'>
-                    {testdata.length > 0 ? (
-                        testdata.map((data ,index) => (
+                    {Rating.length > 0 ? (
+                        Rating.map((data ,index) => (
                             <div className='cardFeedbackbox' key={index}>
                             <div className='cardFeedback'>
-                                <img src={Pic} alt="Pic" />
-                                <span>Name</span>
+                                <img src={data.User?.Profile || Pic} alt="Pic" />
+                                <span>{data.User?.UserName}</span>
                             </div>
-                            <div className='rating'>{renderStars(data.Rating)}</div>
-                            <div className='comment'><p>Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur</p></div>
+                            <div className='rating'>{renderStars(Number(data.Rating))}</div>
+                            <div className='comment'><p>{data.Comment || "No Comment. . ."}</p></div>
                         </div>))
                         ) : (
                             <>
-                                <h1 >No Comment. . .</h1>
+                                <h3 style={{fontFamily: '"Parkinsans", sans-serif' ,fontWeight: '100'}}>No Comment. . .</h3>
                             </>
                         )}
                         

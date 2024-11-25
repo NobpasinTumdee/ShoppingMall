@@ -58,6 +58,10 @@ func main() {
 		router.POST("/backup",Store.CreateBackUpStore)
 		router.GET("/storeid/:id",Store.GetStoreByid)
 		router.GET("/Membership/:id",Store.GetMembership)
+		router.GET("/commentbystore/:id",Store.ListCommentByStoreId)//rating
+		router.GET("/commentbyuser/:id",Store.ListCommentByUserId)
+		router.POST("/comment",Store.CreateRating)
+		router.DELETE("/comment/:id",Store.DeleteComment)
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
 		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)

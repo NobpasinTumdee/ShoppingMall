@@ -103,3 +103,14 @@ export interface TaxUserInterface{
 
     User?: UsersInterface;
 }
+
+export interface RatingInterface{
+    ID?:                    number ;
+    Rating?:                number ;
+    Comment?:               string ;
+    UserID?:                number ;
+    StoreID?:               number ;
+
+    User?: UsersInterface;
+    Store?: StoreInterface;
+}
