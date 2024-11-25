@@ -114,3 +114,8 @@ export interface RatingInterface{
     User?: UsersInterface;
     Store?: StoreInterface;
 }
+export interface AverageRatingInterface {
+    store_id: string;       
+    averageRating: number;  
+    totalRatings: number;   
+}

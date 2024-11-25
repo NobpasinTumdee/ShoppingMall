@@ -18,7 +18,7 @@ import Computer from "../../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 import {GetStoreByFloor} from '../../../services/https/index'
 import {StoreInterface} from '../../../interfaces/StoreInterface'
 
-import {UpdateStoreByid , DeleteCommentFromStore} from '../../../services/https/index';
+import {UpdateStoreByid , DeleteCommentFromStore , GetAvgCommentByStore} from '../../../services/https/index';
 
 
 const Store: React.FC = () => {
@@ -73,6 +73,7 @@ const Store: React.FC = () => {
             const res = await GetStoreByFloor(F);
             if (res.status === 200 && res.data) {
                 setStore(res.data); // กำหนดให้เป็น array ที่ได้จาก API
+                res.data.forEach((store : StoreInterface) => fetchRating(String(store.ID)));
             } else {
                 setStore([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
                 message.error("There is no Store on this floor.");
@@ -80,6 +81,23 @@ const Store: React.FC = () => {
         } catch (error) {
             setStore([]); // กำหนดให้เป็น array ว่างเมื่อมี error
             message.error("There is no Store on this floor.");
+        }
+    };
+    //===========================================To page sub==========================================
+    const [ratings, setRatings] = useState<Record<string, number>>({});
+    const [SumRating, setSumRating] = useState<Record<string, number>>({});
+    const fetchRating = async (StoreID: string) => {
+        try {
+            const res = await GetAvgCommentByStore(StoreID);
+            if (res.status === 200) {
+                setRatings((prev) => ({ ...prev, [StoreID]: res.data.averageRating }));
+                setSumRating((prev) => ({ ...prev, [StoreID]: res.data.totalRatings }));
+            } else {
+                setRatings((prev) => ({ ...prev, [StoreID]: 0 })); // ไม่มีคะแนน
+                setSumRating((prev) => ({ ...prev, [StoreID]: 0 })); // ไม่มีคะแนน
+            }
+        } catch (error) {
+            setRatings((prev) => ({ ...prev, [StoreID]: 0 })); // กรณี error
         }
     };
     //===========================================To page sub==========================================
@@ -182,7 +200,11 @@ const Store: React.FC = () => {
                                                 <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
                                                 <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
                                                 <div className='lineStore'></div>
-                                                <div className='rating'>{renderStars(4)}</div>
+                                                {SumRating[Number(data.ID)] ? (
+                                                    <div className='rating'>{renderStars(ratings[Number(data.ID)] || 5)} {ratings[Number(data.ID)].toFixed(2)} Star from {SumRating[Number(data.ID)]} people</div>
+                                                ) : (
+                                                    <div className='rating' style={{fontSize: '20px'}}>No Rating...</div>
+                                                )}
                                                 <div className='lineStore'></div>
                                                 <div className='DescribtionStore'>{data.BookingDate ? new Date(data.BookingDate).toLocaleDateString() : 'No Date'}<br />{data.LastDay ? new Date(data.LastDay).toLocaleDateString() : 'No Date'}</div>
                                             </div>

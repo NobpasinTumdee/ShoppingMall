@@ -246,3 +246,31 @@ func DeleteComment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
 
 }
+
+// GET /average-rating/:id
+func GetAverageRatingByStoreID(c *gin.Context) {
+	ID := c.Param("id")
+	var totalRatings int64
+	var sumRatings int64
+
+	db := config.DB()
+
+	// ดึงค่าคะแนนรวมและจำนวนคะแนนทั้งหมด
+	results := db.Model(&entity.Rating{}).Where("store_id = ?", ID).Count(&totalRatings).Select("SUM(rating)").Row()
+	results.Scan(&sumRatings)
+
+	// ถ้าไม่มีข้อมูล ให้ return ค่าเฉลี่ยเป็น 0
+	var averageRating float64
+	if totalRatings == 0 {
+		averageRating = 0
+	} else {
+		// คำนวณค่าเฉลี่ย
+		averageRating = float64(sumRatings) / float64(totalRatings)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"store_id":      ID,
+		"averageRating": averageRating,
+		"totalRatings":  totalRatings,
+	})
+}
