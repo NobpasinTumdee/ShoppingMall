@@ -12,11 +12,11 @@ import Inbox from './Page/MainWeb/Inbox/Inbox';
 import BillStore from './Page/MainWeb/Store/BillStore';
 import { NavBar } from './Page/Component/NavBar';
 import Hall from './Page/MainWeb/Hall/HallBookingPage';
-
+import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore","/Cleaning"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -32,6 +32,7 @@ const App: React.FC = () => {
         <Route path="/Inbox" element={<Inbox />} /> 
         <Route path="/BillStore" element={<BillStore />} /> 
         <Route path="/Hall" element={<Hall />} />
+        <Route path="/Cleaning" element={<Cleaning />} />
         
       </Routes>
     </>
