@@ -10,7 +10,7 @@ import Own from '../../../assets/icon/ForPage/Admin/Own.png';
 
 import { message} from "antd";
 
-import {GetStoreWaiting , UpdateStoreByid , AddMessage , AddPayment} from '../../../services/https/index';
+import {GetStoreWaiting , UpdateStoreByid , AddMessage , AddPayment , DeleteCommentFromStore} from '../../../services/https/index';
 import {StoreInterface , PaymentInterface} from '../../../interfaces/StoreInterface'
 import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 
@@ -177,6 +177,13 @@ const AdminStore: React.FC = () => {
                 messageApi.open({
                     type: "error",
                     content: res.data.error,
+                });
+            }
+            const resDeleteComment = await DeleteCommentFromStore(String(approval.ID));
+            if (resDeleteComment.status === 200) {
+                messageApi.open({
+                    type: "info",
+                    content: 'Delete All Comment!',
                 });
             }
         } catch (error) {
