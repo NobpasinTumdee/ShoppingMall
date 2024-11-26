@@ -10,8 +10,8 @@ import PicFloor from "../../../../assets/icon/ForPage/Store/Reserve.png"
 import PicNoStore from '../../../../assets/icon/ForPage/Store/Store3.jpg';
 //API
 import { UsersInterface } from "../../../../interfaces/UsersInterface";
-import { RatingInterface } from '../../../../interfaces/StoreInterface';
-import { GetUserById , GetCommentByStore , CreateComment} from '../../../../services/https';
+import { RatingInterface , AverageRatingInterface} from '../../../../interfaces/StoreInterface';
+import { GetUserById , GetCommentByStore , CreateComment , GetAvgCommentByStore} from '../../../../services/https';
 
 const SubStore: React.FC = () => {
     const location = useLocation();
@@ -80,7 +80,8 @@ const SubStore: React.FC = () => {
     useEffect(() => {
         if (UserID) {
             fetchUserData(String(UserID));
-            fetchComment(String(ID))
+            fetchComment(String(ID));
+            fetchRating(String(ID));
         }
     }, [UserID]);
 
@@ -163,6 +164,21 @@ const SubStore: React.FC = () => {
             setStatus(false);
         }
     }, [UserID]);
+
+    //========================================review=========================================
+    const [RatingAvg, setRatingAvg] = useState<AverageRatingInterface | null>(null);
+    const fetchRating = async (StoreID: string) => {
+        try {
+            const res = await GetAvgCommentByStore(StoreID);
+            if (res.status === 200) {
+                setRatingAvg(res.data)
+            } else {
+
+            }
+        } catch (error) {
+
+        }
+    };
     return (
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -178,19 +194,46 @@ const SubStore: React.FC = () => {
                 <div className='picStore'><img src={PicStore ||  PicNoStore} alt="PicStore" /><span>The store is on floor F{ProductTypeID}.</span></div>
                 <img className='ProfileUserStore' src={user?.Profile || Pic} alt="Profile" />
                 <div style={{height: '120px'}}></div>
-                    <h1 style={{marginLeft: '70px'}}>{NameStore} </h1>
+                <div className='gropInfoStoreUser'>
+                    <h1 >{NameStore}</h1>
+                    <p>Rating : {renderStars(Number(RatingAvg?.averageRating.toFixed(2)))}</p>
+                </div>
+                <div className='picstoresub' style={{justifyContent: 'center',margin: '0 10%'}}>
+                    <img src={SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                    <img src={SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                    <img src={SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                </div>
                 <div className='infoSubStore'>
-                    <div className='picstoresub'>
-                        <span><img src={SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" /></span>
-                        <span><img src={SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" /></span>
-                        <span><img src={SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" /></span>
-                    </div>
                     <h1>Store information</h1>
                     <p>The store is on floor F{ID}.</p>
                     <p>{DescribtionStore} Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident fugit rem, est eum voluptatibus harum dolorem animi nobis esse quas voluptatem nostrum deserunt omnis numquam impedit tenetur et iure. Voluptate pariatur consequatur ipsa adipisci commodi obcaecati ratione illo officiis aut, optio earum doloremque aspernatur veniam molestiae vitae. Modi eaque cumque corporis ea? Quasi voluptas exercitationem consectetur facere ipsam ad fuga saepe distinctio molestiae nobis beatae quia asperiores error veritatis non, vel totam sunt cumque fugiat neque nisi corporis. Commodi neque est eligendi quis sunt itaque ipsa assumenda eius quod deserunt! Officiis tenetur libero rerum rem incidunt excepturi. Temporibus tenetur dicta omnis rerum sit. Officiis velit minus distinctio debitis, dicta dignissimos quod hic dolorum placeat doloremque omnis sunt. Soluta recusandae asperiores saepe. Quasi fuga nam, earum blanditiis id laudantium recusandae sit, iusto, aperiam aut voluptates incidunt veniam fugiat! Iste nihil porro libero officiis suscipit debitis, cupiditate possimus! Corrupti suscipit iste sunt enim! Odit harum velit facere tempore voluptatem non, molestias magni dolor eaque impedit unde debitis dicta, reprehenderit doloribus quidem ex! Repellat accusamus suscipit numquam excepturi velit illum blanditiis omnis cupiditate quo voluptatibus? Quis ullam ipsa inventore perspiciatis facilis necessitatibus illum, consectetur nobis deleniti, alias voluptatibus praesentium quaerat distinctio minus nisi!</p>
                     <p>The store's contract starts on {formattedBookingDate}</p>
                     <p>The contract will end on {formattedLastDay}</p>
                     <p>Status Store {StatusStore} from id user {UserID} on the floor {ProductTypeID} {MembershipID}</p>
+                    
+                    <div className='picstoresub'>
+                        <span className='infoPicStore'>
+                            <img src={SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                            <div>
+                                <p style={{fontSize: '30px',fontWeight: '800'}}>Preview Product!</p>
+                                <p style={{fontSize: '20px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
+                            </div>
+                        </span>
+                        <span className='infoPicStore'>
+                        <div>
+                                <p style={{fontSize: '30px',fontWeight: '800'}}>Preview Product!</p>
+                                <p style={{fontSize: '20px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
+                            </div>
+                            <img src={SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                        </span>
+                        <span className='infoPicStore'>
+                            <img src={SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                            <div>
+                                <p style={{fontSize: '30px',fontWeight: '800'}}>Preview Product!</p>
+                                <p style={{fontSize: '20px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
+                            </div>
+                        </span>
+                    </div>
                     <h1 >Rating and Feedback</h1>
                     <div className='commentContaner'>
                         <img src={userWatch?.Profile || Pic} width={50} height={50} />
