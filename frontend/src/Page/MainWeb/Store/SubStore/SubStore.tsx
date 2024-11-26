@@ -147,6 +147,7 @@ const SubStore: React.FC = () => {
                 fetchComment(String(ID));
                 setNewComment('');
                 setNewRating(0);
+                fetchRating(String(ID))
             } else {
                 message.error("เกิดข้อผิดพลาดในการเพิ่มความคิดเห็น");
             }
@@ -198,10 +199,10 @@ const SubStore: React.FC = () => {
                     <h1 >{NameStore}</h1>
                     <p>Rating : {renderStars(Number(RatingAvg?.averageRating.toFixed(2)))}</p>
                 </div>
-                <div className='picstoresub' style={{justifyContent: 'center',margin: '0 10%'}}>
-                    <img src={SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
-                    <img src={SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
-                    <img src={SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                <div className='picstoresub' style={{justifyContent: 'center',margin: '0 10%' ,display: 'flex'}}>
+                    <img style={{margin: '0 10px'}} src={SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                    <img style={{margin: '0 10px'}} src={SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                    <img style={{margin: '0 10px'}} src={SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
                 </div>
                 <div className='infoSubStore'>
                     <h1>Store information</h1>
@@ -209,7 +210,7 @@ const SubStore: React.FC = () => {
                     <p>{DescribtionStore} Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident fugit rem, est eum voluptatibus harum dolorem animi nobis esse quas voluptatem nostrum deserunt omnis numquam impedit tenetur et iure. Voluptate pariatur consequatur ipsa adipisci commodi obcaecati ratione illo officiis aut, optio earum doloremque aspernatur veniam molestiae vitae. Modi eaque cumque corporis ea? Quasi voluptas exercitationem consectetur facere ipsam ad fuga saepe distinctio molestiae nobis beatae quia asperiores error veritatis non, vel totam sunt cumque fugiat neque nisi corporis. Commodi neque est eligendi quis sunt itaque ipsa assumenda eius quod deserunt! Officiis tenetur libero rerum rem incidunt excepturi. Temporibus tenetur dicta omnis rerum sit. Officiis velit minus distinctio debitis, dicta dignissimos quod hic dolorum placeat doloremque omnis sunt. Soluta recusandae asperiores saepe. Quasi fuga nam, earum blanditiis id laudantium recusandae sit, iusto, aperiam aut voluptates incidunt veniam fugiat! Iste nihil porro libero officiis suscipit debitis, cupiditate possimus! Corrupti suscipit iste sunt enim! Odit harum velit facere tempore voluptatem non, molestias magni dolor eaque impedit unde debitis dicta, reprehenderit doloribus quidem ex! Repellat accusamus suscipit numquam excepturi velit illum blanditiis omnis cupiditate quo voluptatibus? Quis ullam ipsa inventore perspiciatis facilis necessitatibus illum, consectetur nobis deleniti, alias voluptatibus praesentium quaerat distinctio minus nisi!</p>
                     <p>The store's contract starts on {formattedBookingDate}</p>
                     <p>The contract will end on {formattedLastDay}</p>
-                    <p>Status Store {StatusStore} from id user {UserID} on the floor {ProductTypeID} {MembershipID}</p>
+                    <p>Status Store {StatusStore} <br /> from id user: {UserID}<br /> on the floor: {ProductTypeID}<br /> Membership: {MembershipID}</p>
                     
                     <div className='picstoresub'>
                         <span className='infoPicStore'>
@@ -221,8 +222,8 @@ const SubStore: React.FC = () => {
                         </span>
                         <span className='infoPicStore'>
                         <div>
-                                <p style={{fontSize: '30px',fontWeight: '800'}}>Preview Product!</p>
-                                <p style={{fontSize: '20px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
+                                <p style={{fontSize: '30px',fontWeight: '800',textAlign: 'right'}}>Preview Product!</p>
+                                <p style={{fontSize: '20px',textAlign: 'right'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
                             </div>
                             <img src={SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
                         </span>
