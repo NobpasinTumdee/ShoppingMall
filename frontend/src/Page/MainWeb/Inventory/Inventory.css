@@ -1,0 +1,80 @@
+
+
+.headerInventory h1{
+    font-family: "Parkinsans", sans-serif;
+    text-align: center;
+    color: #C9AF62;
+    font-size: 40px;
+
+    animation: headerH2 1s ease-in-out ;
+}
+@keyframes headerH2 {
+    0%{
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+}
+
+.tableInventory{
+    background-color: #ffffff;
+    width: 80%;
+    height: 600px;
+    margin: 0 10%;
+    border: 0px solid #C9AF62;
+    box-shadow: 0 0px 10px #acacac2d;
+
+    animation: tableInventory 1s ease-in-out ;
+}
+@keyframes tableInventory {
+    0%{
+        opacity: 0;
+        transform: translateY(130%);
+    }
+}
+
+.columntable {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: 50px;
+    border-bottom: 0px solid #C9AF62;
+    box-shadow: 0 5px 5px #c9af622d;
+    background-color: #fbe8af;
+}
+
+.columntable p{
+    width: 25%;
+    text-align: start;
+    padding-left: 15px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+}
+
+.contanerRow {
+    overflow-y: scroll;
+    height: 550px;
+}
+
+.columntableSub {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: 50px;
+    border-bottom: 0.1px solid #e5e5e5;
+    border-top: 0.1px solid #e5e5e5;
+    transition: 0.5s;
+}
+
+.columntableSub:hover {
+    background-color: #FAFAFA;
+}
+
+.columntableSub p{
+    width: 25%;
+    text-align: start;
+    padding-left: 15px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 100;
+}

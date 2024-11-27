@@ -421,7 +421,31 @@ async function GetStoreWaiting(status: string) {
     .catch((e) => e.response);
 
 }
+//=============================อุปกรณ์=====================================
+// get Inventory
+async function ListInventory() {
 
+  return await axios
+
+    .get(`${apiUrl}/inventory`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get CategoryInventory
+async function ListCategoryInventory() {
+
+  return await axios
+
+    .get(`${apiUrl}/CategoryInventory`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 export {
     SignIn,//user
@@ -459,4 +483,7 @@ export {
     GetPaymentMethod,
     GetBillByPayidPreload,//bill
     CreateBill,
+
+    ListInventory,//อุปกรณ์ทั้งหมด
+    ListCategoryInventory,
 }

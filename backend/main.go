@@ -8,6 +8,7 @@ import (
 	"example.com/ProjectSeG13/middlewares"
 	"example.com/ProjectSeG13/controller/user"
 	"example.com/ProjectSeG13/controller/Store"
+	"example.com/ProjectSeG13/controller/Inventory"
 )
 
 const PORT = "8000"
@@ -90,7 +91,9 @@ func main() {
 
 
 
-
+		//อุปกรณ์ทั้งหมด
+		router.GET("/inventory", Inventory.ListInventory)
+		router.GET("/CategoryInventory", Inventory.ListCategoryInventory)
 		//ระบบ แจ้งซ่อม
 
 		//ระบบ เช็คอุปกรณ์ช่าง

@@ -114,6 +114,44 @@ func SetupDatabase() {
 	}
 
 
+	//CategoryInventory
+	item := []entity.CategoryInventory{
+		{CategoryName: "Cleaning equipment"},{CategoryName: "Tools"},
+	}
+	for _, pkg := range item {
+		db.FirstOrCreate(&pkg,entity.CategoryInventory{CategoryName: pkg.CategoryName})
+	}
+
+
+	//Inventory
+	Inventory := []entity.Inventory{
+		{InventoryName: "ไม้ถูพื้น",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ถังน้ำ",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "น้ำยาทำความสะอาดพื้น",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ไม้กวาด",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ที่โกยผง",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ผ้าไมโครไฟเบอร์",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "น้ำยาเช็ดกระจก",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ฟองน้ำล้างจาน",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "เครื่องดูดฝุ่น",QuantityInventory: 5,CategoryID: 1},
+		{InventoryName: "ถุงมือยาง",QuantityInventory: 150,CategoryID: 1},
+		{InventoryName: "ไขควง",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "คีม",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ประแจ",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "เลื่อยมือ",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ตลับเมตร",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "สว่านไฟฟ้า",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ระดับน้ำ",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ค้อน",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ใบตัดเหล็ก",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ปืนยิงซิลิโคน",QuantityInventory: 15,CategoryID: 2},
+		
+	}
+	for _, pkg := range Inventory {
+		db.FirstOrCreate(&pkg,entity.Inventory{InventoryName: pkg.InventoryName})
+	}
+
+
 
 	//Store
 	/*
