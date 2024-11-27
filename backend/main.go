@@ -29,7 +29,7 @@ func main() {
     r.PUT("/ResetPasswordUser", user.ResetPasswordUser) //Sign in == login 
 
 	r.GET("/user" , user.ListUsers)
-	r.GET("/store/:id",Store.GetStoreByFloor)
+	r.GET("/store/:id",Store.GetStoresByProductTypeID)
 	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
 	{

@@ -141,14 +141,14 @@ const Main: React.FC = () => {
                 <span></span>
             </div>
             <div className='Store1'> 
-                <div ><img src={Store[0]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[1]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[2]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[3]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[4]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[5]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[6]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[7]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[0]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[1]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[2]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[3]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[4]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[5]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[6]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[7]?.pic_store||st} alt="" /></div>
             </div>
             <div className='NEWS'>
                 <span></span>

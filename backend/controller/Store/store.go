@@ -1,11 +1,13 @@
 package Store
 
 import (
+	"errors" // เพิ่ม import สำหรับ package errors
 	"net/http"
-	"example.com/ProjectSeG13/entity"
+	"time"
+
 	"example.com/ProjectSeG13/config"
+	"example.com/ProjectSeG13/entity"
 	"github.com/gin-gonic/gin"
-	"errors"  // เพิ่ม import สำหรับ package errors
 	"gorm.io/gorm" // เพิ่ม import สำหรับ gorm
 )
 
@@ -78,41 +80,44 @@ func GetStoreDetails(c *gin.Context) {
 	}
 }
 
-// func GetStoresByProductTypeID(c *gin.Context) {
-// 	// รับค่า ProductTypeID จาก URL Parameters
-// 	productTypeID := c.Param("id")
+func GetStoresByProductTypeID(c *gin.Context) {
+	// รับค่า ProductTypeID จาก URL Parameters
+	productTypeID := c.Param("id")
 
-// 	db := config.DB()
-// 	type StoreWithRating struct {
-// 		ID            uint    `json:"id"`
-// 		NameStore     string  `json:"name_store"`
-// 		BookingDate   time.Time `json:"booking_date"`
-// 		LastDay       time.Time `json:"last_day"`
-// 		TotalRating   float64 `json:"total_rating"`
-// 	}
+	db := config.DB()
+	type StoreWithRating struct {
+		ID            	uint    	`json:"id"`
+		PicStore  		string 		`json:"pic_store"`
+		SubPicOne  		string 		`json:"sub_pic_one"`
+		SubPicTwo  		string 		`json:"sub_pic_two"`
+		SubPicThree  	string 		`json:"sub_pic_three"`
+		NameStore     	string  	`json:"name_store"`
+		BookingDate   	time.Time 	`json:"booking_date"`
+		LastDay       	time.Time 	`json:"last_day"`
+		DescribtionStore  	string 		`json:"describtion_store"`
+		StatusStore  		string 		`json:"status_store"`
+		TotalRating   	float64 	`json:"total_rating"`
+	}
 
-// 	var stores []StoreWithRating
+	var stores []StoreWithRating
 
-// 	// สร้าง SQL Query สำหรับคำนวณค่าเฉลี่ยของ Rating
-// 	const sqlAverageRating = `
-// 		SELECT r.store_id, AVG(r.rating) as avg_rating
-// 		FROM ratings r
-// 		WHERE r.deleted_at IS NULL
-// 		GROUP BY r.store_id
-// 	`
+	// สร้าง SQL Query สำหรับคำนวณค่าเฉลี่ยของ Rating
+	const sqlAverageRating = `
+		SELECT r.store_id, AVG(r.rating) as avg_rating
+		FROM ratings r
+		WHERE r.deleted_at IS NULL
+		GROUP BY r.store_id
+	`
 
-// 	// Query ดึงข้อมูลร้านค้าพร้อมค่าเฉลี่ยของรีวิว
-// 	db.Table("stores as s").
-// 		Select("s.id, s.name_store, s.booking_date, s.last_day, COALESCE(sr.avg_rating, 0) as total_rating").
-// 		Joins("LEFT JOIN (" + sqlAverageRating + ") sr ON sr.store_id = s.id").
-// 		Where("s.deleted_at IS NULL AND s.product_type_id = ?", productTypeID).
-// 		Scan(&stores)
+	// Query ดึงข้อมูลร้านค้าพร้อมค่าเฉลี่ยของรีวิว
+	db.Table("stores as s").
+		Select("s.id, s.pic_store, s.sub_pic_one, s.sub_pic_two, s.sub_pic_three, s.name_store, s.booking_date, s.last_day, s.describtion_store, s.status_store,  COALESCE(sr.avg_rating, 0) as total_rating").
+		Joins("LEFT JOIN (" + sqlAverageRating + ") sr ON sr.store_id = s.id").
+		Where("s.deleted_at IS NULL AND s.product_type_id = ?", productTypeID).
+		Scan(&stores)
 
-// 	// ส่งผลลัพธ์กลับไปเป็น JSON
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"data": stores,
-// 	})
-// }
+	c.JSON(http.StatusOK,stores)
+}
 
 //GET ListStore by id
 func GetStoreByid(c *gin.Context) {
