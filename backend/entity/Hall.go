@@ -7,45 +7,45 @@ import (
 
 type Hall struct {
 	gorm.Model
-	HallName       string          `json:"hall_name"`
-	Capacity       int             `json:"capacity"`
-	Location       string          `json:"location"`
-	IsAvailable    bool            `json:"is_available"`
-	ImageHall      string          `json:"image_hall"`
-	Description    string          `json:"description"`
+	HallName       string          `json:"HallName"`
+	Capacity       int             `json:"Capacity"`
+	Location       string          `json:"Location"`
+	IsAvailable    bool            `json:"IsAvailable"`
+	ImageHall      string          `json:"ImageHall"`
+	Description    string          `json:"Description"`
 	PricePerHour   int             `json:"price_per_hour"`
-	HallBookings   []BookingHall   `gorm:"foreignKey:HallID" json:"hall_bookings"`
-	HallFacilities []Facilities    `gorm:"foreignKey:HallID" json:"hall_facilities"`
+	HallBookings   []BookingHall   `gorm:"foreignKey:HallID"`
+	HallFacilities []Facilities    `gorm:"foreignKey:HallID"`
 }
 
 type FacilityList struct {
 	gorm.Model
 	FacilityName string        `json:"facility_name"`
 	Description  string        `json:"description"`
-	Facilities   []Facilities  `gorm:"foreignKey:FacilityListID" json:"facilities"`
+	Facilities   []Facilities  `gorm:"foreignKey:FacilityListID"`
 }
 
 type Facilities struct {
 	gorm.Model
-	HallID         uint   `json:"hall_id"`
-	FacilityListID uint   `json:"facility_list_id"`
-	Quantity       int    `json:"quantity"`
+	HallID         uint   `json:"HallID"`
+	FacilityListID uint   `json:"FacilityListID"`
+	Quantity       int    `json:"Quantity"`
 }
 
 type BookingHall struct {
 	gorm.Model
-	UserID          uint            `json:"user_id"`
-	HallID          uint            `json:"hall_id"`
-	StartDateTime   time.Time       `json:"start_date_time"`
-	EndDateTime     time.Time       `json:"end_date_time"`
-	Status          string          `json:"status"`          // ใช้ enum สำหรับสถานะ
-	CustomerName    string          `json:"customer_name"`
-	CustomerEmail   string          `json:"customer_email"`
-	CustomerPhone   string          `json:"customer_phone"`
-	CustomerAddress string          `json:"customer_address"`
-	CancelDate      *time.Time      `json:"cancel_date,omitempty"` // ใช้ pointer ถ้าอนุญาตให้ null
-	TotalCost       int             `json:"total_cost"`     // เพิ่มฟิลด์นี้
-	PaymentHall     []PaymentHall   `gorm:"foreignKey:BookingHallID" json:"payment_hall"`
+	UserID          uint            `json:"UserID"`
+	HallID          uint            `json:"HallID"`
+	StartDateTime   time.Time       `json:"StartDateTime"`
+	EndDateTime     time.Time       `json:"EndDateTime"`
+	Status          string          `json:"Status"`          // ใช้ enum สำหรับสถานะ
+	CustomerName    string          `json:"CustomerName"`
+	CustomerEmail   string          `json:"CustomerEmail"`
+	CustomerPhone   string          `json:"CustomerPhone"`
+	CustomerAddress string          `json:"CustomerAddress"`
+	CancelDate      *time.Time      `json:"CancelDate,omitempty"` // ใช้ pointer ถ้าอนุญาตให้ null
+	TotalCost       int             `json:"TotalCost"`     // เพิ่มฟิลด์นี้
+	PaymentHall     []PaymentHall   `gorm:"foreignKey:BookingHallID"`
 }
 
 type PaymentHall struct {

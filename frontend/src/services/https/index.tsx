@@ -349,6 +349,53 @@ async function ListHall() {
 
   .catch((e) => e.response);
 }
+async function GetHallByID(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function CreateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/hallbooking/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function UpdateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/hallbooking/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function DeleteBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/hallbooking/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetBookingByID(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/hallbooking/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
 
 export {
     SignIn,//user
@@ -381,5 +428,9 @@ export {
     CreateBill,
 
     ListHall,
-    
+    GetHallByID,
+    CreateBookingHall,
+    UpdateBookingHall,
+    DeleteBookingHall,
+    GetBookingByID,
 }

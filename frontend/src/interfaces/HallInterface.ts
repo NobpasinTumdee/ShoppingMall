@@ -1,10 +1,25 @@
+import { UsersInterface } from "./UsersInterface";
 export interface HallInterface {
     ID: number;               // รหัสของ Hall
-    hallName: string;         // ชื่อของ Hall
-    capacity: number;         // ความจุของ Hall
-    location: string;         // สถานที่ตั้งของ Hall
-    isAvailable: boolean;     // สถานะการใช้งาน Hall (พร้อมใช้งานหรือไม่)
-    imageHall: string;        // URL ของรูปภาพ Hall
-    description: string;      // คำอธิบายเกี่ยวกับ Hall
-    pricePerHour: number;     // ราคาเช่าต่อชั่วโมงของ Hall
+    HallName: string;         // ชื่อของ Hall
+    Capacity: number;         // ความจุของ Hall
+    Location: string;         // สถานที่ตั้งของ Hall
+    IsAvailable: boolean;     // สถานะการใช้งาน Hall (พร้อมใช้งานหรือไม่)
+    ImageHall: string;        // URL ของรูปภาพ Hall
+    Description: string;      // คำอธิบายเกี่ยวกับ Hall
+    PricePerHour: number;     // ราคาเช่าต่อชั่วโมงของ Hall
+}
+export interface BookingHallInterface {
+    ID: number;
+    User?: UsersInterface;
+    Hall?: HallInterface;
+    StartDateTime: Date;
+    EndDateTime: Date;
+    Status: string;
+    CustomerName: string;
+    CustomerEmail: string
+    CustomerPhone:  string;
+    CustomerAddress: string;
+    CancelDate: Date;
+    TotalCost: number;
 }
