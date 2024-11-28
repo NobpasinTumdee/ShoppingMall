@@ -1,0 +1,135 @@
+body,
+.ant-card,
+.ant-modal,
+.ant-btn,
+.ant-table {
+  font-family: "Dongle", sans-serif !important;
+}
+
+body,
+.ant-btn {
+  font-size: 24px !important;
+}
+.ant-table-wrapper .ant-table-tbody > tr > td,
+.ant-table-wrapper .ant-table-tbody > tr > th {
+  justify-content: center;
+  font-size: 24px !important;
+  font-weight: lighter;
+  text-align: center; /* จัดตัวอักษรแนวนอน */
+  vertical-align: middle; /* จัดตัวอักษรแนวตั้ง */
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th {
+  justify-content: center;
+  font-size: 24px !important;
+  font-weight: lighter;
+  text-align: center; /* จัดตัวอักษรแนวนอน */
+  vertical-align: middle; /* จัดตัวอักษรแนวตั้ง */
+}
+
+.header-title {
+  text-align: center;
+  font-family: "Dongle", sans-serif;
+  font-size: 80px;
+  font-weight: 400; /* regular */
+  color: #62501a;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* เงาของข้อความ */
+  margin: 0% 0;
+  line-height: 70px;
+  flex: 1; /* ใช้พื้นที่มากที่สุดที่เป็นไปได้ */
+  text-align: center; /* จัดให้อยู่ตรงกลาง */
+}
+
+.sub-title {
+  text-align: center;
+  font-family: "Dongle", sans-serif;
+  font-size: 30px;
+  font-weight: 400; /* regular */
+  color: #62501a;
+  margin: 20px 0;
+}
+
+.block-id-card {
+  width: 32px; /* กำหนดความกว้าง */
+  height: 39px; /* กำหนดความสูง */
+  background-color: #f5f5f5; /* สีพื้นหลัง */
+  border: 1px solid #ccc; /* เส้นขอบ */
+  border-radius: 10px; /* มุมโค้ง */
+  display: flex; /* เพื่อใช้ Flexbox */
+  align-items: center; /* จัดเนื้อหาให้อยู่กึ่งกลางแนวตั้ง */
+  justify-content: center; /* จัดเนื้อหาให้อยู่กึ่งกลางแนวนอน */
+  text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+  font-family: "Dongle", sans-serif;
+  color: #333; /* สีข้อความ */
+}
+
+.text-id-card {
+  font-family: "Dongle", sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #1e1e1e;
+  margin: 0px;
+}
+
+/*แก้ ant design*/
+.ant-input:focus {
+  border-color: #c9af62 !important; /* เปลี่ยนสีขอบเป็นทองเมื่อโฟกัส */
+  box-shadow: 0 0 5px rgba(201, 175, 98, 0.5); /* เพิ่มเงาขอบเมื่อโฟกัส */
+}
+.ant-input:hover {
+  border-color: #c9af62 !important; /* สีกรอบตอนลากเมาส์ผ่าน (Hover) เป็นทอง */
+}
+
+.text-select-card {
+  font-family: "Dongle", sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: #1e1e1e;
+  margin: 0px;
+}
+
+.sub-text-select-card {
+  font-family: "Dongle", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #757575;
+  margin: 0px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: space-between; /* จัดการให้ช่องว่างระหว่างแต่ละ Card เท่ากัน */
+  gap: 20px; /* ช่องว่างระหว่างแต่ละ Card */
+  -ms-flex-align: center;
+  flex-wrap: wrap;
+}
+
+.card-item {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column; /* ให้จัดองค์ประกอบในแนวตั้ง */
+  align-items: center; /* จัดให้องค์ประกอบในแต่ละ Card อยู่กลาง */
+  justify-content: center; /* จัดให้ทุกอย่างอยู่กลาง */
+  text-align: center;
+  gap: 20px; /* ช่องว่างระหว่างรูปและข้อความ */
+  padding: 24px;
+}
+
+.card-general {
+  border: 1px solid #d9d9d9; /* กำหนดกรอบให้กับ card */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* เงา */
+}
+
+.card-container-zone {
+  display: flex;
+  align-items: center; /* จัดให้ทุกอย่างอยู่กึ่งกลางในแนวตั้ง */
+  justify-content: space-between; /* ให้มีพื้นที่ว่างระหว่าง Zone และรูป */
+}
+
+.card-container-zone-select {
+  display: flex;
+  align-items: center; /* จัดให้ทุกอย่างอยู่กึ่งกลางในแนวตั้ง */
+  justify-content: space-between; /* ให้มีพื้นที่ว่างระหว่าง Zone และรูป */
+  gap: 100px;
+}

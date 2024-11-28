@@ -8,6 +8,7 @@ import (
 	"example.com/ProjectSeG13/middlewares"
 	"example.com/ProjectSeG13/controller/user"
 	"example.com/ProjectSeG13/controller/Store"
+	"example.com/ProjectSeG13/controller/CarPark"
 )
 
 const PORT = "8000"
@@ -47,8 +48,9 @@ func main() {
 
 
 
-		//ระบบ จองรถ
-
+		//ระบบ จองรถ	
+		router.GET("/get-list-parking-card", CarPark.GetListCard)	
+		router.GET("/get-card-zone/:id", CarPark.GetIdCardZone)
 		//ระบบ จองรถ payment
 
 

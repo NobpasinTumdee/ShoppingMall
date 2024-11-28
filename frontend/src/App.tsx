@@ -5,7 +5,9 @@ import Main from './Page/MainWeb/Main';
 import Store from './Page/MainWeb/Store/Store';
 import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
-
+import CarPark from './Page/MainWeb/CarPark/CarPark';
+import CarParkIN from './Page/MainWeb/CarPark/CarParkIN';
+import CarParkINZone from './Page/MainWeb/CarPark/IN/CarParkINZone'
 
 const App: React.FC = () => {
   return (
@@ -17,6 +19,9 @@ const App: React.FC = () => {
         <Route path="/Store" element={<Store />} />
         <Route path="/SubStore" element={<SubStore />} />
         <Route path="/BookStore" element={<BookStore />} />
+        <Route path="/CarParking" element={<CarPark />} />
+        <Route path="/CarParking-In" element={<CarParkIN />} />
+        <Route path="/CarParking-In-Zone" element={<CarParkINZone />} />
       </Routes>
     </>
   );

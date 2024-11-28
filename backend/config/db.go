@@ -1,11 +1,12 @@
 package config
 
 import (
-	"example.com/ProjectSeG13/entity"
 	"fmt"
+	"time"
+
+	"example.com/ProjectSeG13/entity"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"time"
 )
 
 var db *gorm.DB
@@ -23,9 +24,7 @@ func ConnectionDB() {
 	db = database
 }
 
-func SetupDatabase() {/*
-	db.Migrator().DropTable(
-		&entity.MembershipCustomer{}, &entity.HistoryMembership{}, &entity.ParkingCard{}, &entity.ParkingZone{}, &entity.ParkingCardZone{})*/
+func SetupDatabase() {
 	db.AutoMigrate(
 		&entity.User{},
 		&entity.MessageBoard{},
@@ -47,10 +46,12 @@ func SetupDatabase() {/*
 		&entity.Equipment{},
 
 		//ระบบจองที่จอดรถและชำระเงิน
-		&entity.ParkingCard{},
-		&entity.StatusParking{},
+		&entity.TypePark{},
+		&entity.StatusCard{},
+		&entity.StatusPayment{},
 		&entity.MembershipCustomer{},
 		&entity.HistoryMembership{},
+		&entity.ParkingCard{},
 		&entity.ParkingZone{},
 		&entity.ParkingCardZone{},
 		&entity.ParkingFeePolicy{},
@@ -77,9 +78,9 @@ func SetupDatabase() {/*
 
 	//Membership
 	Membership := []entity.Membership{
-		{PackageName: "Week", Day: 7, Pwa: 350, Pea: 700, RentalFee: 1050, ParkingCardCount: 1},
-		{PackageName: "Mount", Day: 30, Pwa: 1500, Pea: 3000, RentalFee: 3600, ParkingCardCount: 3},
-		{PackageName: "Year", Day: 365, Pwa: 18250, Pea: 35600, RentalFee: 36500, ParkingCardCount: 6},
+		{PackageName: "Week", Day: 7, Pwa: 350, Pea: 700, RentalFee: 1050},
+		{PackageName: "Mount", Day: 30, Pwa: 1500, Pea: 3000, RentalFee: 3600},
+		{PackageName: "Year", Day: 365, Pwa: 18250, Pea: 35600, RentalFee: 36500},
 	}
 	for _, pkg := range Membership {
 		db.FirstOrCreate(&pkg, entity.Membership{PackageName: pkg.PackageName})
@@ -175,12 +176,30 @@ func SetupDatabase() {/*
 		db.FirstOrCreate(&pkg, entity.Store{NameStore: pkg.NameStore})
 	}
 
-	//StatusParking
-	NameStatus := []entity.StatusParking{
-		{Status: "Pending"}, {Status: "Paid"}, {Status: "Expired"}, {Status: "Error"}, {Status: "Un Used"},
+	// StatusPayment
+	NameStatusPayment := []entity.StatusPayment{
+		{Status: "Pending"}, {Status: "Paid"}, {Status: "Error"},
 	}
-	for _, pkg := range NameStatus {
-		db.FirstOrCreate(&pkg, entity.StatusParking{Status: pkg.Status})
+	for _, pkg := range NameStatusPayment {
+		db.FirstOrCreate(&pkg, entity.StatusPayment{Status: pkg.Status})
+	}
+
+	// StatusCard
+	NameStatusCard := []entity.StatusCard{
+		{Status: "IN"}, {Status: "OUT"}, {Status: "Un Used"}, {Status: "Expired"},
+	}
+	for _, pkg := range NameStatusCard {
+		db.FirstOrCreate(&pkg, entity.StatusCard{Status: pkg.Status})
+	}
+
+	// TypePark
+	TypeParks := []entity.TypePark{
+		{Type: "GENERAL"},
+		{Type: "VIP"},
+		{Type: "STORE"},
+	}
+	for _, pkg := range TypeParks {
+		db.FirstOrCreate(&pkg, entity.TypePark{Type: pkg.Type})
 	}
 
 	//MembershipCustomer
@@ -197,7 +216,7 @@ func SetupDatabase() {/*
 		{FirstName: "Narissara", LastName: "Sutthiwong", DOB: time.Date(1998, 6, 1, 0, 0, 0, 0, time.UTC), Tel: "0811981672"},
 	}
 	for _, customer := range MembershipCustomers {
-		db.FirstOrCreate(&customer)
+		db.FirstOrCreate(&customer, entity.MembershipCustomer{FirstName: customer.FirstName, LastName: customer.LastName})
 	}
 
 	//HistoryMembership
@@ -214,7 +233,17 @@ func SetupDatabase() {/*
 		{IssueDate: time.Date(2004, 1, 10, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 10},
 	}
 	for _, history := range historyMemberships {
-		db.FirstOrCreate(&history)
+		db.FirstOrCreate(&history, entity.HistoryMembership{IssueDate: history.IssueDate, ExpiryDate: history.ExpiryDate, MembershipCustomerID: history.MembershipCustomerID})
+	}
+
+	// ParkingZone
+	ParkingZones := []entity.ParkingZone{
+		{Name: "VIP", Capacity: 150, AvailableZone: 150, Image: "https://scontent.fbkk29-5.fna.fbcdn.net/v/t1.6435-9/69634816_3284945448183041_5929657803344969728_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH7aZEh79aE3GrCMxEycVazK-Qi7lmfAMkr5CLuWZ8AyQdP4deNxQ9TxWEA_xaEXJJ1bkMeLxaK6l0IguiF1ScP&_nc_ohc=HHwdlMsqInMQ7kNvgHcBK4q&_nc_zt=23&_nc_ht=scontent.fbkk29-5.fna&_nc_gid=AysvpZXPyfWOMR0V7BbkNjS&oh=00_AYB86cIxoXTgtujJm4Oha2iNfyQ5ADMaB1vD-Rp38dbzaw&oe=676FFD02", TypeParkID: 2},
+		{Name: "STORE", Capacity: 150, AvailableZone: 150, Image: "https://scontent.fbkk29-1.fna.fbcdn.net/v/t1.15752-9/467472946_1244156386684689_3812533161216721348_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEf-7GCGOcBEkWwVtPsZDA7Mo9cV6lZQjgyj1xXqVlCOLp0Vo2D3380RKH459Xq0reVeWE0GjRPuNp0Aygtng54&_nc_ohc=L7HrMPnJMlQQ7kNvgGUUJe-&_nc_zt=23&_nc_ht=scontent.fbkk29-1.fna&oh=03_Q7cD1QEtF_SJWRQn9oIsRDoLWWJ-2xOq50VV9Ah_4oY5q3HPJw&oe=676FFEEF", TypeParkID: 3},
+		{Name: "GENERAL", Capacity: 500, AvailableZone: 500, Image: "https://image.makewebeasy.net/makeweb/m_1920x0/ODn1Yn6Lo/CARPARK/%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%88%E0%B8%AD_2565_01_31_%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%B2_14_00_35.png?v=202012190947", TypeParkID: 1},
+	}
+	for _, zone := range ParkingZones {
+		db.FirstOrCreate(&zone, entity.ParkingZone{Name: zone.Name, Capacity: zone.Capacity, AvailableZone: zone.AvailableZone, Image: zone.Image})
 	}
 
 	//ParkingCard
@@ -222,22 +251,19 @@ func SetupDatabase() {/*
 	var membershipCustomers []entity.MembershipCustomer
 	db.Find(&stores)
 	db.Find(&membershipCustomers)
+
+	// สร้าง ParkingCard สำหรับ Store
 	for _, store := range stores {
-		var membership entity.Membership
-		db.First(&membership, store.MembershipID)
-
-		if membership.ParkingCardCount > 0 {
-			for i := 0; i < membership.ParkingCardCount; i++ {
-				parkingCard := entity.ParkingCard{
-					StoreID:         store.ID,
-					ExpiryDate:      store.LastDay,
-					StatusParkingID: 5,
-				}
-
-				db.FirstOrCreate(&parkingCard)
-			}
+		parkingCard := entity.ParkingCard{
+			StoreID:      store.ID,
+			ExpiryDate:   store.LastDay,
+			StatusCardID: 1,
+			TypeParkID:   3,
 		}
+
+		db.FirstOrCreate(&parkingCard, entity.ParkingCard{StoreID: parkingCard.StoreID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
 	}
+	// สร้าง ParkingCard สำหรับ MembershipCustomer
 	for _, membershipCustomer := range membershipCustomers {
 		var historyMembership entity.HistoryMembership
 		db.First(&historyMembership, membershipCustomer.ID)
@@ -245,59 +271,70 @@ func SetupDatabase() {/*
 		parkingCard := entity.ParkingCard{
 			MembershipCustomerID: membershipCustomer.ID,
 			ExpiryDate:           historyMembership.ExpiryDate,
-			StatusParkingID:      5,
+			StatusCardID:         1,
+			TypeParkID:           2,
 		}
 
-		db.FirstOrCreate(&parkingCard)
+		db.FirstOrCreate(&parkingCard, entity.ParkingCard{MembershipCustomerID: parkingCard.MembershipCustomerID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
+	}
+	// เพิ่ม ParkingCard สำหรับ GENERAL
+	var generalZone entity.ParkingZone
+	var existingGeneralCards int64
+	db.First(&generalZone, "name = ?", "GENERAL")
+
+	db.Model(&entity.ParkingCard{}).Where("membership_customer_id = 0 AND store_id = 0").Count(&existingGeneralCards)
+
+	generalZoneCapacity := int(generalZone.Capacity)
+	cardsToCreate := generalZoneCapacity - int(existingGeneralCards)
+
+	for i := 0; i < cardsToCreate; i++ {
+		parkingCard := entity.ParkingCard{
+			ExpiryDate:   time.Now().AddDate(1, 0, 0),
+			StatusCardID: 1,
+			TypeParkID:   1,
+		}
+
+		db.FirstOrCreate(&parkingCard, entity.ParkingCard{ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
 	}
 
-	//ParkingZone
-	ParkingZones := []entity.ParkingZone{
-		{Name: "GENERAL", Capacity: 500, AvailableZone: 500},
-		{Name: "VIP", Capacity: 150, AvailableZone: 150},
-		{Name: "STORE", Capacity: 150, AvailableZone: 150},
-	}
-	for _, zone := range ParkingZones {
-		db.FirstOrCreate(&zone)
-	}
-
-	//ParkingZone
+	// ParkingCardZone
 	var parkingCards []entity.ParkingCard
 	var parkingZones []entity.ParkingZone
 	db.Find(&parkingCards)
 	db.Find(&parkingZones)
-	for _, card := range parkingCards {
-		var zoneType string
-		var membershipCustomer entity.MembershipCustomer
-		var store entity.Store
-		var zone entity.ParkingZone
 
-		// ตรวจสอบเงื่อนไขต่างๆ
-		if card.MembershipCustomerID == 0 && card.StoreID == 0 {
-			zone.ID = 1
-			zoneType = "GENERAL"
-		} else if card.MembershipCustomerID != 0 && card.StoreID == 0 {
-			result := db.First(&membershipCustomer, "id = ?", card.MembershipCustomerID)
-			if result.RowsAffected > 0 {
-				zone = parkingZones[1]
-				zoneType = zone.Name
-			}
-		} else if card.MembershipCustomerID == 0 && card.StoreID != 0 {
-			result := db.First(&store, "id = ?", card.StoreID)
-			if result.RowsAffected > 0 {
-				zone = parkingZones[2]
-				zoneType = zone.Name
-			}
-		}
-		parkingCardZone := entity.ParkingCardZone{
-			ParkingCardID: card.ID,
-			ParkingZoneID: zone.ID,
-			Type:          zoneType,
-		}
-		db.FirstOrCreate(&parkingCardZone)
+	zoneMap := make(map[string]entity.ParkingZone) // Map zone name เป็น ID เพื่อให้ค้นหาง่ายขึ้น
+	for _, zone := range parkingZones {
+		zoneMap[zone.Name] = zone
 	}
 
-	//ParkingFeePolicy=
+	for _, card := range parkingCards {
+		var zonesToAssign []entity.ParkingZone
+
+		// ตรวจสอบเพื่อกำหนด TypeCard
+		if card.StoreID != 0 {
+			zonesToAssign = append(zonesToAssign, zoneMap["STORE"], zoneMap["GENERAL"])
+		} else if card.MembershipCustomerID != 0 {
+			zonesToAssign = append(zonesToAssign, zoneMap["VIP"], zoneMap["GENERAL"])
+		} else {
+			zonesToAssign = append(zonesToAssign, zoneMap["GENERAL"])
+		}
+
+		// สร้าง ParkingCardZone
+		for _, zone := range zonesToAssign {
+			parkingCardZone := entity.ParkingCardZone{
+				ParkingCardID: card.ID, // ใช้ ParkingCardID ที่ได้จากการดึงข้อมูล ParkingCard
+				ParkingZoneID: zone.ID, // ใช้ ParkingZoneID ที่ได้จาก zoneMap
+			}
+			// ตรวจสอบและสร้างหรืออัปเดตข้อมูล ParkingCardZone
+			db.FirstOrCreate(&parkingCardZone, entity.ParkingCardZone{
+				ParkingCardID: parkingCardZone.ParkingCardID,
+				ParkingZoneID: parkingCardZone.ParkingZoneID,
+			})
+		}
+	}
+
+	//ParkingFeePolicy
 	feePolicy := []entity.ParkingFeePolicy{
 		{FreeHours: 3.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 0, LostCard: 50.0, IsExempt: false, ParkingCardZoneID: 1},
 		{FreeHours: 4.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, LostCard: 50.0, IsExempt: false, ParkingCardZoneID: 2},
