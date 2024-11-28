@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 //import { NavBar } from '../Component/NavBar';
 import Product from "../../assets/icon/ForPage/MainIcon/Product.png";
 import Product1 from "../../assets/icon/ForPage/MainIcon/Product/PD1.png";
@@ -20,6 +20,8 @@ import './Main.css';
 
 import { GetStoreByFloor } from '../../services/https';
 import { StoreInterface } from '../../interfaces/StoreInterface';
+import STMB from '../../assets/Audio/SwayToMyBest.mp3'
+import STMBpic from '../../assets/Audio/SwayToMyBeat.jpg'
 const Main: React.FC = () => {
     const images = [Product1, Product2, Product3, Product4, Product];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -96,9 +98,18 @@ const Main: React.FC = () => {
         }
     };
       
+    const [popup, setpopup] = useState(false);
+    const Openpopup = () => {
+        setpopup(!popup)
+    };
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
+            <div className='ButtonMusic' onClick={Openpopup}>{popup ? "💛" : "🥳"}</div>
+            <div className={`showMusic ${popup ? 'show' : 'notshow'}`}>
+                <MusicPlayer />
+            </div>
+                
             <div className='AdvertisingMain'>
                 <img src={images[currentImageIndex]} alt="Product" className={`fade ${fade ? 'visible' : 'hidden'}`}  />
                 <span className='advertisingtext'>
@@ -182,3 +193,109 @@ const Main: React.FC = () => {
     );
 };
 export default Main;
+
+
+
+export const MusicPlayer: React.FC = () => {
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(1); // ค่าเริ่มต้นเสียง 100%
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+    }
+    setCurrentTime(newTime);
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+    return(
+        <>
+            <div className='Audio'>
+                <div className='AudioTop'>
+                    <img src={STMBpic} alt="STMBpic" width={60} height={60} style={{borderRadius: '5px'}} />
+                    <div className='AudioTopP'>
+                        <p>Sway To My Beat</p>
+                        <p>Artist: miHoYo, Chevy</p>
+                    </div>
+                </div>
+                <div className='Player'>
+                    <audio ref={audioRef} src={STMB} onLoadedMetadata={handleLoadedMetadata} onTimeUpdate={handleTimeUpdate} ></audio>
+                    <div>◀</div>
+                    <button onClick={togglePlayPause}>
+                        {isPlaying ? "⏸" : "▶"}
+                    </button>
+                    <div>▶</div>
+                </div>
+                
+                <div className='vol'>
+                    <label>
+                    🥳
+                    <input
+                        type="range"
+                        min="0"
+                        max={duration || 0}
+                        step="0.1"
+                        value={currentTime}
+                        onChange={handleTimeChange}
+                    />
+                    </label>
+                </div>
+
+                <div className='vol'>
+                    <label>
+                    🔈
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                    />
+                    </label>
+                </div>
+                <div style={{textAlign:'right' ,marginRight: '20px',color: '#fff'}}>
+                    <span>
+                    {Math.floor(currentTime)} / {Math.floor(duration)} s
+                    </span>
+                </div>
+            </div>
+            <div className={`spin ${isPlaying === true ? 'active' : 'stop'}`}>
+                <img src={STMBpic} alt="" width={70} height={70} style={{borderRadius:'50%'}} />
+            </div>
+        </>
+    );
+};
