@@ -29,7 +29,7 @@ const CalendarPage: React.FC = () => {
   // แปลงข้อมูลการจองตามวันที่
   const getBookingsByDate = (date: Date) => {
     return bookings.filter((booking) =>
-      isSameDay(parseISO(booking.StartDateTime), date)
+      isSameDay(parseISO(String(booking.StartDateTime)), date)
     );
   };
 
@@ -89,9 +89,9 @@ const CalendarPage: React.FC = () => {
                       <List.Item.Meta
                         title={`ห้อง: ${item.ID}`}
                         description={`ผู้จอง: ${item.CustomerName}, เวลา: ${format(
-                          parseISO(item.StartDateTime),
+                          parseISO(String(item.StartDateTime)),
                           "HH:mm"
-                        )} - ${format(parseISO(item.EndDateTime), "HH:mm")}`}
+                        )} - ${format(parseISO(String(item.EndDateTime)), "HH:mm")}`}
                       />
                     </List.Item>
                   )}

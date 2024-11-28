@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const SelectHall: React.FC = () => {
     const navigate = useNavigate();
     const handleHallClick = (HallID: string) => {
-    navigate('calendar', { state: { HallID } });
+    navigate('BookingHall', { state: { HallID } });
   };
     // สร้าง state สำหรับเก็บข้อมูลห้อง
     const [Hall, setHall] = useState<HallInterface[]>([]);

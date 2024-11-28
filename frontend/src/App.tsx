@@ -12,8 +12,7 @@ import BillStore from './Page/MainWeb/Store/BillStore';
 import { NavBar } from './Page/Component/NavBar';
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import Hall from './Page/MainWeb/Hall/SelectHall/SelectHall';
-import Celendar from './Page/MainWeb/Hall/calendar/calendar';
-
+import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Hall/BookingHall","/Inbox","/StorePayment","/BillStore","/Celendar"].includes(location.pathname);
@@ -32,8 +31,8 @@ const App: React.FC = () => {
         <Route path="/Inbox" element={<Inbox />} /> 
         <Route path="/BillStore" element={<BillStore />} />
         <Route path="/Hall" element={<Hall />} />
-        <Route path="Hall/BookingHall" element={<BookingHall/>} />
-        <Route path="/celendar" element={<Celendar />} />
+        <Route path="/Hall/BookingHall" element={<BookingHall/>} />
+        <Route path="/Hall/Celendar" element={<CalendarPage />} />
       </Routes>
     </>
   );
