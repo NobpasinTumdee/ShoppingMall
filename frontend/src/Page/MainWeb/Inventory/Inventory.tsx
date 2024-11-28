@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Inventory.css';
 
-// API
+// API ทำระบบลิสอุปกรณ์ทุกอย่างครบแล้ว
 import { InventoryInterface, CategoryInventoryInterface } from '../../../interfaces/InventoryInterface';
 import { ListCategoryInventory, GetInventoryById } from '../../../services/https';
 
