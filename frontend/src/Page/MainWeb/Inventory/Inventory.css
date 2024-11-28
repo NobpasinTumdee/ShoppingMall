@@ -18,7 +18,7 @@
 .tableInventory{
     background-color: #ffffff;
     width: 80%;
-    height: 600px;
+    height: 500px;
     margin: 0 10%;
     border: 0px solid #C9AF62;
     box-shadow: 0 0px 10px #acacac2d;
@@ -30,6 +30,21 @@
         opacity: 0;
         transform: translateY(130%);
     }
+}
+
+.Mode{
+    display: flex;
+    justify-content: center;
+}
+.Mode p{
+    margin: 10px 10px;
+    padding: 5px;
+    cursor: pointer;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+    border-radius: 20px;
+    color: #C9AF62;
+    border: 2px solid #C9AF62;
 }
 
 .columntable {
@@ -53,7 +68,7 @@
 
 .contanerRow {
     overflow-y: scroll;
-    height: 550px;
+    height: 450px;
 }
 
 .columntableSub {

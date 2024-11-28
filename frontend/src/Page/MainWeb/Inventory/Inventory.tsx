@@ -1,53 +1,77 @@
 import React, { useEffect, useState } from 'react';
 import './Inventory.css';
 
-//api
-import { InventoryInterface , CategoryInventoryInterface } from '../../../interfaces/InventoryInterface';
-import { ListInventory , ListCategoryInventory} from '../../../services/https';
+// API
+import { InventoryInterface, CategoryInventoryInterface } from '../../../interfaces/InventoryInterface';
+import { ListCategoryInventory, GetInventoryById } from '../../../services/https';
 
 const Inventory: React.FC = () => {
-    const [equipment,seteEquipment] = useState<InventoryInterface[]>([]);
-    const [Category,seteCategory] = useState<CategoryInventoryInterface[]>([]);
+    const [typeInventory, setTypeInventory] = useState<InventoryInterface[]>([]);
+    const [categories, setCategories] = useState<CategoryInventoryInterface[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number>(1);
+
     useEffect(() => {
-        fetchEquipment();
+        fetchCategories();
+        fetchInventoryByCategory(selectedCategory);
     }, []);
 
-    const fetchEquipment = async () => {
+    useEffect(() => {
+        fetchInventoryByCategory(selectedCategory);
+    }, [selectedCategory]);
+
+    const fetchCategories = async () => {
         try {
-            const res = await ListInventory();
-            if (res.status === 200) {
-                seteEquipment(res.data); 
-            } else {
-                seteEquipment([]);
-            }
             const resCategory = await ListCategoryInventory();
             if (resCategory.status === 200) {
-                seteCategory(resCategory.data); 
+                setCategories(resCategory.data);
             } else {
-                seteCategory([]);
+                setCategories([]);
             }
         } catch (error) {
-            seteEquipment([]); 
-            seteCategory([]);
+            setCategories([]);
         }
     };
 
-    return(
+    const fetchInventoryByCategory = async (categoryId: number) => {
+        try {
+            const res = await GetInventoryById(String(categoryId));
+            if (res.status === 200) {
+                setTypeInventory(res.data);
+            } else {
+                setTypeInventory([]);
+            }
+        } catch (error) {
+            setTypeInventory([]);
+        }
+    };
+
+    const filter = (categoryId: number) => {
+        setSelectedCategory(categoryId);
+    };
+
+    return (
         <>
-            <div style={{height: '110px',zIndex: '0'}}></div>
+            <div style={{ height: '110px', zIndex: '0' }}></div>
             <div className='headerInventory'>
                 <h1>Inventory</h1>
+            </div>
+            <div className='Mode'>
+                {categories.map((category) => (
+                    <p key={category.ID} onClick={() => filter(Number(category.ID))}>
+                        {category.CategoryName}
+                    </p>
+                ))}
             </div>
             <div className='tableInventory'>
                 <div className='columntable'>
                     <p>ID</p>
                     <p>Name</p>
-                    <p>Quatity</p>
-                    <p>Categor</p>
+                    <p>Quantity</p>
+                    <p>Category</p>
                 </div>
                 <div className='contanerRow'>
-                    {equipment.length > 0 ? (
-                        equipment.map((data) => (
+                    {typeInventory.length > 0 ? (
+                        typeInventory.map((data) => (
                             <div key={data.ID} className='columntableSub'>
                                 <p>{data.ID}</p>
                                 <p>{data.InventoryName}</p>
@@ -56,15 +80,12 @@ const Inventory: React.FC = () => {
                             </div>
                         ))
                     ) : (
-                        <>No Equipment</>
+                        <p>No Equipment</p>
                     )}
                 </div>
             </div>
-            <p style={{textAlign: 'center'}}>{Category[0]?.CategoryName} & {Category[1]?.CategoryName}</p>
         </>
-
     );
-
 };
 
 export default Inventory;

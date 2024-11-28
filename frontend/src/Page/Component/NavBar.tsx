@@ -694,7 +694,7 @@ export const NavBar: React.FC = () => {
                             <a href="#" ><span className='MenuHover'>CLEANING</span></a>
                         }
                         {(user?.Status === 'Repairman' || user?.Status === 'Cleaning' || user?.Status === 'Admin'|| user?.Status === 'Employee') &&
-                            <a href="/Inventory" ><span className='MenuHover'>Inventory</span></a>
+                            <a href="/Inventory" ><span className={`MenuHover ${location.pathname === "/Inventory" ? "active" : ""}`}>INVENTORY</span></a>
                         }
                     </div>
                     <div></div>

@@ -93,6 +93,7 @@ func main() {
 
 		//อุปกรณ์ทั้งหมด
 		router.GET("/inventory", Inventory.ListInventory)
+		router.GET("/inventory/:id", Inventory.GetInventoryByCategory)
 		router.GET("/CategoryInventory", Inventory.ListCategoryInventory)
 		//ระบบ แจ้งซ่อม
 

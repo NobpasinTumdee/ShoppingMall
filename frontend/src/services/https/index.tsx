@@ -446,6 +446,18 @@ async function ListCategoryInventory() {
     .catch((e) => e.response);
 
 }
+// get Inventory by id
+async function GetInventoryById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/inventory/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 export {
     SignIn,//user
@@ -486,4 +498,5 @@ export {
 
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,
+    GetInventoryById,
 }
