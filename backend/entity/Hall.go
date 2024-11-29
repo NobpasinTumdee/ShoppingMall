@@ -10,7 +10,6 @@ type Hall struct {
 	HallName       string          `json:"HallName"`
 	Capacity       int             `json:"Capacity"`
 	Location       string          `json:"Location"`
-	IsAvailable    bool            `json:"IsAvailable"`
 	ImageHall      string          `json:"ImageHall"`
 	Description    string          `json:"Description"`
 	PricePerHour   int             `json:"price_per_hour"`

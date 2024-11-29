@@ -3,7 +3,7 @@ package config
 import (
 	"example.com/ProjectSeG13/entity"
 	"fmt"
-	//"time"
+	"time"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -117,7 +117,6 @@ func SetupDatabase() {
 			HallName:     "Grand Conference Room",
 			Capacity:     200,
 			Location:     "1st Floor, Building A",
-			IsAvailable:  true,
 			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
 			Description:  "A spacious hall suitable for conferences and seminars.",
 			PricePerHour: 5000,
@@ -126,7 +125,6 @@ func SetupDatabase() {
 			HallName:     "VIP Meeting Room",
 			Capacity:     50,
 			Location:     "2nd Floor, Building B",
-			IsAvailable:  false,
 			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
 			Description:  "A premium meeting room for exclusive gatherings.",
 			PricePerHour: 3000,
@@ -135,7 +133,6 @@ func SetupDatabase() {
 			HallName:     "Outdoor Event Space",
 			Capacity:     500,
 			Location:     "Garden Area",
-			IsAvailable:  true,
 			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
 			Description:  "An open space perfect for weddings and large events.",
 			PricePerHour: 7000,
@@ -147,6 +144,35 @@ func SetupDatabase() {
 	}
 	
 
+	// การเพิ่มข้อมูลการจองห้อง
+BookingHalls := []entity.BookingHall{
+	{
+		HallID:       1,  // HallID ของห้องที่เลือก
+		StartDateTime: time.Date(2024, time.November, 25, 10, 0, 0, 0, time.UTC),  // เวลาเริ่มต้น
+		EndDateTime:   time.Date(2024, time.November, 25, 12, 0, 0, 0, time.UTC),  // เวลาสิ้นสุด
+		CustomerName:  "John Doe",
+		CustomerEmail: "johndoe@example.com",
+		CustomerPhone: "0123456789",
+		CustomerAddress: "123 Main St, City, Country",
+		Status:         "Confirmed",  // สถานะการจอง
+		TotalCost:      5000,  // ราคาการจอง
+	},
+	{
+		HallID:       2,  
+		StartDateTime: time.Date(2024, time.November, 26, 14, 0, 0, 0, time.UTC),  
+		EndDateTime:   time.Date(2024, time.November, 26, 16, 0, 0, 0, time.UTC),  
+		CustomerName:  "Jane Smith",
+		CustomerEmail: "janesmith@example.com",
+		CustomerPhone: "0987654321",
+		CustomerAddress: "456 Elm St, City, Country",
+		Status:         "Confirmed",
+		TotalCost:      3000,
+	},
+}
+
+for _, booking := range BookingHalls {
+	db.FirstOrCreate(&booking, entity.BookingHall{StartDateTime: booking.StartDateTime, HallID: booking.HallID})
+}
 
 
 	//Store

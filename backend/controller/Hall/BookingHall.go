@@ -23,13 +23,6 @@ func CreateBooking(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Hall not found"})
 		return
 	}
-
-	// ตรวจสอบห้องประชุมว่าสามารถจองได้หรือไม่
-	if !hall.IsAvailable {
-		c.JSON(http.StatusConflict, gin.H{"error": "Hall is not available"})
-		return
-	}
-
 	// สร้างการจองใหม่
 	if err := db.Create(&booking).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -83,32 +76,20 @@ func DeleteBooking(c *gin.Context) {
 }
 
 
-func ListBookings(c *gin.Context) {
-	var bookings []entity.BookingHall
-
-	db := config.DB()
-
-	// ดึงข้อมูลการจองทั้งหมด
-	if err := db.Find(&bookings).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, bookings)
-}
-
 
 func GetBookingByID(c *gin.Context) {
 	bookingID := c.Param("id")
-	var booking entity.BookingHall
 
 	db := config.DB()
 
 	// ค้นหาข้อมูลการจองตาม ID
-	if err := db.Where("id = ?", bookingID).First(&booking).Error; err != nil {
+	if err := db.Where("id = ?", bookingID).First(&entity.BookingHall{}).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, booking)
+	// ส่งข้อมูลการจองกลับไป
+	c.JSON(http.StatusOK, gin.H{"message": "Booking get"})
 }
+
+

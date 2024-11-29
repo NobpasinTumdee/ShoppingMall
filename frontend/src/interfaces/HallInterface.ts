@@ -4,7 +4,6 @@ export interface HallInterface {
     HallName: string;         // ชื่อของ Hall
     Capacity: number;         // ความจุของ Hall
     Location: string;         // สถานที่ตั้งของ Hall
-    IsAvailable: boolean;     // สถานะการใช้งาน Hall (พร้อมใช้งานหรือไม่)
     ImageHall: string;        // URL ของรูปภาพ Hall
     Description: string;      // คำอธิบายเกี่ยวกับ Hall
     PricePerHour: number;     // ราคาเช่าต่อชั่วโมงของ Hall

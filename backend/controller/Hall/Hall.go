@@ -14,7 +14,7 @@ func ListHall(c *gin.Context){
 
 	db := config.DB()
 
-	results := db.Select("id, hall_name, capacity, location, is_available, image_hall, description, price_per_hour").Find(&hall)
+	results := db.Select("id, hall_name, capacity, location, image_hall, description, price_per_hour").Find(&hall)
 
 	if results.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})

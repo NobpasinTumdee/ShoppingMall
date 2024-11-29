@@ -5,12 +5,14 @@ import SideBar from '../../../Component/SideBar'; // นำเข้า SideBar 
 import './HallBookingPage.css';
 import { BookingHallInterface } from '../../../../interfaces/HallInterface';
 import { HallInterface } from '../../../../interfaces/HallInterface';
+import { useParams } from "react-router-dom";
 
 const { Sider, Content } = Layout;
 const { Option } = Select;
 
 const BookingHall: React.FC = () => {
     const [form] = Form.useForm();
+    const { id } = useParams<{ id: string }>();
     const [Hall, setHall] = useState<HallInterface[]>([]); // เก็บข้อมูลห้องประชุม
     const [loading, setLoading] = useState<boolean>(true); // สถานะการโหลด
 
@@ -18,7 +20,7 @@ const BookingHall: React.FC = () => {
     useEffect(() => {
         const fetchHalls = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/hall'); // URL API
+                const response = await axios.get(`http://localhost:8000/bookinghall`); // URL API
                 setHall(response.data); // เก็บข้อมูลห้องประชุมใน state
                 setLoading(false); // ปิดสถานะการโหลด
             } catch (error) {

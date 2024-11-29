@@ -3,14 +3,14 @@ import { ListHall } from '../../../../services/https'; // ฟังก์ชั�
 import { HallInterface } from '../../../../interfaces/HallInterface'; // Interface ของข้อมูล Hall
 import { Card, Button, Row, Col } from 'antd'; // ใช้ Ant Design
 import './SelectHall.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 
 
 
 const SelectHall: React.FC = () => {
     const navigate = useNavigate();
     const handleHallClick = (HallID: string) => {
-    navigate('BookingHall', { state: { HallID } });
+    navigate(`/celendar`, { state: { HallID } });
   };
     // สร้าง state สำหรับเก็บข้อมูลห้อง
     const [Hall, setHall] = useState<HallInterface[]>([]);

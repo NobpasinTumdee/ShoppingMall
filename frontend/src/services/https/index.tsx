@@ -362,7 +362,7 @@ async function GetHallByID(id: string) {
 async function CreateBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/hallbooking/${id}`, requestOptions)
+  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
 
   .then((res) => res)
 
@@ -371,7 +371,7 @@ async function CreateBookingHall(id: string) {
 async function UpdateBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/hallbooking/${id}`,requestOptions)
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
 
   .then((res) => res)
 
@@ -381,16 +381,16 @@ async function UpdateBookingHall(id: string) {
 async function DeleteBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/hallbooking/${id}`,requestOptions)
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
 
   .then((res) => res)
 
   .catch((e) => e.response);
 }
-async function GetBookingByID(id: string) {
+async function GetBookinghall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/hallbooking/${id}`,requestOptions)
+  .get(`${apiUrl}/bookinghall/${id}`,requestOptions)
 
   .then((res) => res)
 
@@ -432,5 +432,5 @@ export {
     CreateBookingHall,
     UpdateBookingHall,
     DeleteBookingHall,
-    GetBookingByID,
+    GetBookinghall,
 }
