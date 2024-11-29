@@ -1,20 +1,30 @@
 export interface BookCarParkInterface {
   key?: string; // Change from string to string | undefined
   idcard: string;
+  TypeCardID: number;
   TypeCard?: string;
   status?: string[];
-  idzone?: string[];
+  EntryTime: string;
+  ExitTime: string;
+  ParkingZone: {
+    ID: string;
+    Name: string;
+    Capacity: number;
+    AvailableZone: number;
+    Image: string;
+  }[];
+  idzone?: number[];
   NameZone: string[];
   Image: string[];
-  Capacity: number[];
-  Available: number[];
-  LicensePlate: string[];
+  Capacity: number;
+  Available: number;
+  LicensePlate: string;
   UserID: number;
 }
 
 export interface ParkingCardInterface {
   ID?: number;
-  ExpiryDate?: string; // ใช้ string แทน time เพราะไม่สามารถใช้ date ได้ใน TypeScript
+  ExpiryDate?: string;
   StoreID?: number;
   TypeParkID?: number;
   StatusCardID?: number;

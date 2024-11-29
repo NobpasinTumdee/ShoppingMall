@@ -28,7 +28,6 @@ import "./../Store/StoreAndPay.css";
 import "./CarPark.css";
 import { GetListCard, GetIdCardZone } from "../../../services/https";
 
-
 type OTPProps = GetProps<typeof Input.OTP>;
 type ColumnsType<T extends object> = TableProps<T>["columns"];
 type TablePagination<T extends object> = NonNullable<
@@ -39,18 +38,23 @@ type TablePaginationPosition<T extends object> = NonNullable<
 >[number];
 
 const CarPark: React.FC = () => {
-  const myId = localStorage.getItem("id");
 
   const [data, setData] = useState<BookCarParkInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [selectedCard, setSelectedCard] = useState<BookCarParkInterface | null>(null);  const [searchValue, setSearchValue] = useState<string>("");
+  const [selectedCard, setSelectedCard] = useState<BookCarParkInterface | null>(
+    null
+  );
+  const [searchValue, setSearchValue] = useState<string>("");
   const [isHoverable, setIsHoverable] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
     null
   ); // Zone
-  const [carRegistration, setCarRegistration] = useState<string>(""); // LicenseNo
+  const [carLicensePlate, setCarLicensePlate] = useState("");
+  const [selectedIdCard, setSelectedIdCard] = useState<string | null>(null);
+  const [cardData, setCardData] = useState<any>(null);
+  const [form] = Form.useForm();
 
   const fetchParkingCards = async () => {
     setLoading(true);
@@ -65,13 +69,9 @@ const CarPark: React.FC = () => {
             idcard: card?.ID?.toString() || "",
             TypeCard: card?.TypePark?.Type || "Unknown",
             status: card?.StatusCard?.Status || "Unknown",
-            idzone: card.ParkingZone.map((zone: { ID: any }) => zone.ID).join(
-              ", "
-            ),
+            idzone: card.ParkingZone.map((zone: { ID: any }) => zone.ID),
             NameZone: card.ParkingZone.map((zone: { Name: any }) => zone.Name),
-            LicensePlate: card.ParkingZone.map(
-              (zone: { LicensePlate: any }) => zone.LicensePlate
-            ) ,
+            LicensePlate: card.UsageCard || "-",
             Image: card.ParkingZone.map((zone: { Image: any }) => zone.Image),
             Capacity: card.ParkingZone.reduce(
               (total: any, zone: { Capacity: any }) => total + zone.Capacity,
@@ -99,10 +99,6 @@ const CarPark: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchParkingCards();
-  }, []);
-
   const columns = [
     {
       title: "ID CARD",
@@ -127,22 +123,21 @@ const CarPark: React.FC = () => {
         <Space>
           <Button
             type="primary"
-            onClick={() => handleStatusClick("IN", record)}
-            disabled={status !== "IN"}
+            onClick={() => handleStatusClick("OUT", record)}
+            disabled={status === "OUT"}
           >
             IN
           </Button>
           <Button
             type="dashed"
-            onClick={() => handleStatusClick("OUT", record)}
-            disabled={status !== "OUT"}
+            onClick={() => handleStatusClick("IN", record)}
+            disabled={status === "IN"}
           >
             OUT
           </Button>
         </Space>
       ),
     },
-
     {
       title: "History",
       dataIndex: "history",
@@ -191,55 +186,36 @@ const CarPark: React.FC = () => {
   };
 
   const handleStatusClick = (action: string, record: BookCarParkInterface) => {
-    console.log("Selected Record:", record); // ตรวจสอบข้อมูลที่ถูกส่งเข้า
+    console.log("Selected Record:", record);
     setSelectedCard(record);
+    setCarLicensePlate(record.LicensePlate || "Unknown License Plate"); // ตรวจสอบค่า License Plate
     setSelectedStatus(action);
     setIsModalVisible(true);
   };
 
-  const handleOk = async () => {
-    if (!carRegistration) {
-      message.error("กรุณากรอกหมายเลขทะเบียนรถ");
-      return; // Don't proceed if car registration number is empty
-    }
-  
-    // Perform the API call or other operations here
-    try {
-      const response = await axios.patch(
-        `/api/parking-status/${selectedCard?.idcard}`,
-        {
-          status: "OUT", // Update the status to OUT
-          licensePlate: carRegistration, // Send the license plate number
-        }
-      );
-  
-      if (response.status === 200) {
-        message.success(`สถานะเปลี่ยนเป็น OUT สำหรับรถ ${carRegistration}`);
-        setIsModalVisible(false); // Close Modal
-        // Update the UI after status change
-        setData((prevData) =>
-          prevData.map((item) =>
-            item.idcard === selectedCard?.idcard
-              ? { ...item, status: ["OUT"] } // Update status to OUT
-              : item
-          )
-        );
-      } else {
-        message.error("ไม่สามารถเปลี่ยนสถานะได้");
-      }
-    } catch (error) {
-      console.error("Error updating parking status:", error);
-      message.error("เกิดข้อผิดพลาดในการเปลี่ยนสถานะ");
-    }
-  };
-  
+  useEffect(() => {
+    fetchParkingCards();
 
-  const handleCancel = () => {
-    setIsModalVisible(false); // ปิด Modal
-  };
+    if (!isModalVisible) {
+      form.resetFields(); // รีเซ็ตค่าในฟอร์มเมื่อ Modal ปิด
+      setCarLicensePlate(""); // รีเซ็ตค่า state
+    }
+  }, []);
+
+  // ปิด Modal
+  /*   const handleCancel = () => {
+    console.log("before close modal: ", form.getFieldsValue()); // เช็กค่าก่อนรีเซ็ต
+    form.resetFields(); // รีเซ็ตฟอร์ม
+    console.log("after close modal: ", form.getFieldsValue()); // เช็กค่าหลังรีเซ็ต
+  
+    setCarLicensePlate(""); // รีเซ็ตค่า state
+    setSelectedCardIndex(null);
+    setSelectedCard(null);
+    setIsModalVisible(false);
+  }; */
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCarRegistration(e.target.value); // Update the car registration number
+    setCarLicensePlate(e.target.value); // Update the car registration number
   };
 
   const handleCardMouseDown = () => {
@@ -265,6 +241,25 @@ const CarPark: React.FC = () => {
       }
     } catch (error) {
       message.error("An error occurred while fetching random card.");
+    }
+  };
+
+  // ฟังก์ชันเปิด Modal พร้อมข้อมูลของ idCard
+  const showModal = (idCard: string) => {
+    setSelectedIdCard(idCard); // เก็บ idCard ที่เลือกไว้
+    fetchCardData(idCard); // ดึงข้อมูลของ idCard
+    setIsModalVisible(true); // แสดง Modal
+  };
+
+  // ฟังก์ชันดึงข้อมูลตาม idCard
+  const fetchCardData = async (idCard: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/get-card-zone/${idCard}`
+      );
+      setCardData(response.data); // เก็บข้อมูลลงใน state
+    } catch (error) {
+      console.error("Error fetching card data:", error);
     }
   };
 
@@ -324,18 +319,19 @@ const CarPark: React.FC = () => {
       </Row>
 
       <IN
-          selectedCard={selectedCard}
-          selectedStatus={selectedStatus}
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-          carRegistration={carRegistration}
-          setCarRegistration={setCarRegistration}
-          selectedCardIndex={selectedCardIndex}
-          setSelectedCardIndex={setSelectedCardIndex}
-          handleInputChange={handleInputChange}
-          handleOk={handleOk}
-          handleCancel={handleCancel}
-        />
+        selectedCard={selectedCard}
+        selectedStatus={selectedStatus}
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        carLicensePlate={carLicensePlate}
+        setCarLicensePlate={setCarLicensePlate}
+        selectedCardIndex={selectedCardIndex}
+        setSelectedCardIndex={setSelectedCardIndex}
+        handleInputChange={handleInputChange}
+        setSelectedCard={setSelectedCard} // <-- Add this line
+
+        /* handleCancel={handleCancel} */
+      />
     </>
   );
 };

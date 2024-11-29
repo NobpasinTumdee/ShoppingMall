@@ -8,6 +8,7 @@ import (
 
 type ParkingCard struct {
 	gorm.Model
+	ID         string    `gorm:"primaryKey" json:"ParkingCardID"`
 	ExpiryDate time.Time `json:"ExpiryDate"`
 
 	StoreID uint  `json:"StoreID"`
@@ -27,8 +28,8 @@ type ParkingCard struct {
 }
 
 type ParkingCardZone struct {
-	ParkingCardID uint `json:"ParkingCardID"`
-	ParkingZoneID uint `json:"ParkingZoneID"`
+	ParkingCardID string `json:"ParkingCardID"`
+	ParkingZoneID uint   `json:"ParkingZoneID"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
@@ -55,8 +56,9 @@ type TypePark struct {
 	gorm.Model
 	Type string `json:"Type"`
 
-	ParkingCard []ParkingCard `gorm:"foreignKey:TypeParkID"`
-	ParkingZone []ParkingZone `gorm:"foreignKey:TypeParkID"`
+	ParkingCard      []ParkingCard      `gorm:"foreignKey:TypeParkID"`
+	ParkingZone      []ParkingZone      `gorm:"foreignKey:TypeParkID"`
+	ParkingFeePolicy []ParkingFeePolicy `gorm:"foreignKey:TypeParkID"`
 }
 
 type StatusCard struct {
@@ -75,11 +77,11 @@ type StatusPayment struct {
 
 type UsageCard struct {
 	gorm.Model
-	EntryTime   time.Time `json:"EntryTime"`
-	ExitTime    time.Time `json:"ExitTime"`
-	Hourly_rate time.Time `json:"Hourly_rate"`
-	Fee         float64   `json:"Fee"`
-	LicensePlate   string    `json:"LicensePlate"`
+	EntryTime    time.Time `json:"EntryTime"`
+	ExitTime     time.Time `json:"ExitTime"`
+	Hourly_rate  time.Time `json:"Hourly_rate"`
+	Fee          float64   `json:"Fee"`
+	LicensePlate string    `json:"LicensePlate"`
 
 	UserID uint `json:"UserID"`
 	User   User `gorm:"foreignKey:UserID"`
@@ -105,8 +107,8 @@ type ParkingFeePolicy struct {
 	LostCard       float64   `json:"LostCard"`
 	IsExempt       bool      `json:"IsExempt"`
 
-	ParkingCardZoneID uint            `json:"ParkingCardZoneID"`
-	ParkingCardZone   ParkingCardZone `gorm:"foreignKey:ParkingCardZoneID;references:ParkingCardID"`
+	TypeParkID uint     `json:"TypeParkID"`
+	TypePark   TypePark `gorm:"foreignKey:TypeParkID`
 
 	UsageCard []UsageCard `gorm:"foreignKey:ParkingFeePolicyID"`
 }
