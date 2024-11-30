@@ -6,13 +6,6 @@ export interface BookCarParkInterface {
   status?: string[];
   EntryTime: string;
   ExitTime: string;
-  ParkingZone: {
-    ID: string;
-    Name: string;
-    Capacity: number;
-    AvailableZone: number;
-    Image: string;
-  }[];
   idzone?: number[];
   NameZone: string[];
   Image: string[];
@@ -23,7 +16,7 @@ export interface BookCarParkInterface {
 }
 
 export interface ParkingCardInterface {
-  ID?: number;
+  ID?: string;
   ExpiryDate?: string;
   StoreID?: number;
   TypeParkID?: number;
@@ -34,7 +27,7 @@ export interface ParkingCardInterface {
 }
 
 export interface ParkingCardZoneInterface {
-  ParkingCardID?: number;
+  ParkingCardID?: string;
   ParkingZoneID?: number;
   CreatedAt?: string; // ใช้ string แทน time
   DeletedAt?: string; // ใช้ string แทน time
@@ -45,6 +38,7 @@ export interface ParkingCardZoneInterface {
 export interface ParkingZoneInterface {
   ID?: number;
   Name?: string;
+  Image?: string;
   Capacity?: number;
   AvailableZone?: number;
   TypeParkID?: number;
@@ -72,16 +66,16 @@ export interface StatusPaymentInterface {
 
 export interface UsageCardInterface {
   ID?: number;
-  EntryTime?: string; // ใช้ string แทน time
-  ExitTime?: string; // ใช้ string แทน time
-  Hourly_rate?: string; // ใช้ string แทน time
+  EntryTime?: string; 
+  ExitTime?: string; 
+  Hourly_rate?: string;
   Fee?: number;
-  LicenseNo?: string;
+  LicensePlate?: string;
   UserID?: number;
-  ParkingCardID?: number;
+  ParkingCardID?: string;
   StatusPaymentID?: number;
   ParkingFeePolicyID?: number;
-  ParkingPayment?: ParkingPaymentInterface[]; // หลายๆ ParkingPayment
+  ParkingPayment?: ParkingPaymentInterface[];
 }
 
 export interface ParkingFeePolicyInterface {

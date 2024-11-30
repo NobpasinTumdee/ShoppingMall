@@ -38,7 +38,6 @@ type TablePaginationPosition<T extends object> = NonNullable<
 >[number];
 
 const CarPark: React.FC = () => {
-
   const [data, setData] = useState<BookCarParkInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -47,6 +46,7 @@ const CarPark: React.FC = () => {
     null
   );
   const [searchValue, setSearchValue] = useState<string>("");
+  const [filteredData, setFilteredData] = useState<BookCarParkInterface[]>([]);
   const [isHoverable, setIsHoverable] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
     null
@@ -58,42 +58,35 @@ const CarPark: React.FC = () => {
 
   const fetchParkingCards = async () => {
     setLoading(true);
-    console.log("Fetching parking cards...");
     try {
       const response = await GetListCard();
-      console.log("Response from API:", response); // Log full response
-      if (response.status === 200) {
-        if (Array.isArray(response.data)) {
-          const formattedData = response.data.map((card: any) => ({
-            key: card?.ID?.toString() || `${Math.random()}`, // Fallback to unique random ID
-            idcard: card?.ID?.toString() || "",
-            TypeCard: card?.TypePark?.Type || "Unknown",
-            status: card?.StatusCard?.Status || "Unknown",
-            idzone: card.ParkingZone.map((zone: { ID: any }) => zone.ID),
-            NameZone: card.ParkingZone.map((zone: { Name: any }) => zone.Name),
-            LicensePlate: card.UsageCard || "-",
-            Image: card.ParkingZone.map((zone: { Image: any }) => zone.Image),
-            Capacity: card.ParkingZone.reduce(
-              (total: any, zone: { Capacity: any }) => total + zone.Capacity,
-              0
-            ),
-            Available: card.ParkingZone.reduce(
-              (total: any, zone: { AvailableZone: any }) =>
-                total + zone.AvailableZone,
-              0
-            ),
-            UserID: card?.MembershipCustomerID || 0,
-          }));
-          console.log("formattedData from API:", formattedData); // Log full response
-          setData(formattedData);
-        } else {
-          console.error("Unexpected response structure:", response.data);
-          message.error("Failed to fetch parking cards");
-        }
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const formattedData = response.data.map((card: any) => ({
+          key: card?.ParkingCardID?.toString() || `key_${Math.random()}`,
+          idcard: card?.ParkingCardID || "N/A",
+          TypeCard: card?.TypePark?.Type || "Unknown",
+          status: card?.StatusCard?.Status || "Unknown",
+          idzone: card?.ParkingZone?.map((zone: any) => zone.ID) || [],
+          NameZone: card?.ParkingZone?.map((zone: any) => zone.Name) || [],
+          LicensePlate: card?.UsageCard || "-",
+          Image: card?.ParkingZone?.map((zone: any) => zone.Image) || [],
+          Capacity: card?.ParkingZone?.reduce(
+            (total: any, zone: any) => total + zone.Capacity,
+            0
+          ),
+          Available: card?.ParkingZone?.reduce(
+            (total: any, zone: any) => total + zone.AvailableZone,
+            0
+          ),
+          UserID: card?.MembershipCustomerID || 0,
+        }));
+        setData(formattedData);
+      } else {
+        message.error("Unexpected response structure");
       }
     } catch (error) {
       console.error("Error fetching parking cards:", error);
-      message.error("An error occurred while fetching parking cards");
+      message.error("Failed to fetch parking cards");
     } finally {
       setLoading(false);
     }
@@ -129,7 +122,7 @@ const CarPark: React.FC = () => {
             IN
           </Button>
           <Button
-            type="dashed"
+            type="primary"
             onClick={() => handleStatusClick("IN", record)}
             disabled={status === "IN"}
           >
@@ -162,27 +155,20 @@ const CarPark: React.FC = () => {
 
   const onChange: OTPProps["onChange"] = (text: string) => {
     console.log("onChange:", text);
-  };
+    setSearchValue(text); // อัปเดตค่าของ searchValue
 
-  // const onInput: OTPProps["onInput"] = (value: string) => {
-  //   console.log("onInput:", value);
-  // };
-  const onInput: React.FormEventHandler<HTMLDivElement> = (event) => {
-    const value = (event.target as HTMLInputElement).value;
-    console.log("onInput:", value);
+    // กรองข้อมูลตาม searchValue
+    const filtered = data.filter((item) =>
+      item.idcard?.toLowerCase().includes(text.toLowerCase())
+    );
+
+    console.log("Filtered Data:", filtered); // ดูผลลัพธ์ที่กรอง
+    setFilteredData(filtered); // อัปเดตข้อมูลที่กรอง
   };
 
   const sharedProps: OTPProps = {
     onChange,
-    onInput,
     value: otp, // กำหนดค่า OTP ที่จะแสดงใน Input
-  };
-
-  const handleSearch = () => {
-    const filteredData = data.filter((item) =>
-      item.idcard?.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setData(filteredData);
   };
 
   const handleStatusClick = (action: string, record: BookCarParkInterface) => {
@@ -195,24 +181,12 @@ const CarPark: React.FC = () => {
 
   useEffect(() => {
     fetchParkingCards();
-
+    console.log("data: ", data);
     if (!isModalVisible) {
       form.resetFields(); // รีเซ็ตค่าในฟอร์มเมื่อ Modal ปิด
       setCarLicensePlate(""); // รีเซ็ตค่า state
     }
   }, []);
-
-  // ปิด Modal
-  /*   const handleCancel = () => {
-    console.log("before close modal: ", form.getFieldsValue()); // เช็กค่าก่อนรีเซ็ต
-    form.resetFields(); // รีเซ็ตฟอร์ม
-    console.log("after close modal: ", form.getFieldsValue()); // เช็กค่าหลังรีเซ็ต
-  
-    setCarLicensePlate(""); // รีเซ็ตค่า state
-    setSelectedCardIndex(null);
-    setSelectedCard(null);
-    setIsModalVisible(false);
-  }; */
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCarLicensePlate(e.target.value); // Update the car registration number
@@ -228,39 +202,40 @@ const CarPark: React.FC = () => {
 
   const handleGeneralCardClick = async () => {
     try {
-      const response = await GetListCard(); // เรียก API จาก backend
-      if (response.status === 200) {
-        const randomCard = response.data.cards.find(
-          (card: any) => card.StatusCard.Status === "IN"
-        );
-        if (randomCard) {
-          message.success(`Random ID Card: ${randomCard.ID}`);
-        } else {
-          message.error("No available cards with status 'IN'.");
+      // กรองข้อมูลที่สถานะเป็น "IN" โดยพิจารณาจากทั้งกรณีที่ status เป็น string หรือ array
+      const availableCards = data.filter((card: BookCarParkInterface) => {
+        if (Array.isArray(card.status)) {
+          // หาก status เป็น array ให้ตรวจสอบว่า status มี "IN"
+          return card.status.includes("IN");
         }
+        return card.status === "IN"; // หาก status เป็น string เปรียบเทียบตรงๆ
+      });
+
+      // หากมีข้อมูลที่ตรงเงื่อนไข
+      if (availableCards.length > 0) {
+        // เลือก card แบบสุ่มจาก availableCards
+        const randomCard =
+          availableCards[Math.floor(Math.random() * availableCards.length)];
+        setSearchValue(randomCard.idcard); // อัปเดต searchValue เป็น idcard ที่สุ่มได้
+        setOtp(randomCard.idcard); // อัปเดต otp เป็น idcard ที่สุ่มได้
+
+        // เรียกฟังก์ชัน onChange เพื่อกรองข้อมูลตาม idcard ที่สุ่มได้
+        const filtered = data.filter((item) =>
+          item.idcard?.toLowerCase().includes(randomCard.idcard.toLowerCase())
+        );
+        setFilteredData(filtered); // อัปเดตข้อมูลที่กรอง
+      } else {
+        message.warning("No available cards with status 'IN'.");
       }
     } catch (error) {
+      console.error("Error fetching random card:", error);
       message.error("An error occurred while fetching random card.");
     }
   };
 
-  // ฟังก์ชันเปิด Modal พร้อมข้อมูลของ idCard
-  const showModal = (idCard: string) => {
-    setSelectedIdCard(idCard); // เก็บ idCard ที่เลือกไว้
-    fetchCardData(idCard); // ดึงข้อมูลของ idCard
-    setIsModalVisible(true); // แสดง Modal
-  };
-
-  // ฟังก์ชันดึงข้อมูลตาม idCard
-  const fetchCardData = async (idCard: string) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/get-card-zone/${idCard}`
-      );
-      setCardData(response.data); // เก็บข้อมูลลงใน state
-    } catch (error) {
-      console.error("Error fetching card data:", error);
-    }
+  const handleReset = () => {
+    setSearchValue(""); // Clear the search value
+    setFilteredData(data); // Reset the filtered data to show all records
   };
 
   return (
@@ -279,7 +254,7 @@ const CarPark: React.FC = () => {
             <Flex justify="space-between" gap={"16px"}>
               <div className="text-id-card">ID CARD</div>
               <div>
-                <Input.OTP length={4} {...sharedProps} {...handleSearch} />
+                <Input.OTP length={4} value={otp} {...sharedProps} />
               </div>
             </Flex>
           </Card>
@@ -304,21 +279,33 @@ const CarPark: React.FC = () => {
           </Card>
         </Col>
       </Row>
-      <Row
-        style={{ margin: "16px" }}
-        justify={"center"}
-        gutter={{ xs: 8, sm: 16, md: 24 }}
-      >
-        <Table<BookCarParkInterface>
-          columns={columns}
-          pagination={{ position: [bottom] }}
-          dataSource={data}
-          loading={loading} // แสดงสถานะระหว่างการโหลด
-          style={{ fontSize: "30px" }}
-        />
-      </Row>
+      <Col>
+        <Row
+          style={{ margin: "16px" }}
+          justify={"center"}
+          gutter={{ xs: 8, sm: 16, md: 24 }}
+        >
+          <Table<BookCarParkInterface>
+            columns={columns}
+            pagination={{ position: [bottom] }}
+            dataSource={searchValue ? filteredData : data} // Use filteredData if search is active
+            loading={loading}
+            style={{ fontSize: "30px" }}
+          />
+        </Row>
+        <Row justify={"center"}>
+          <Button
+            onClick={handleReset}
+            type="default"
+            style={{ marginBottom: "16px" }}
+          >
+            Reset
+          </Button>
+        </Row>
+      </Col>
 
       <IN
+        fetchParkingCards={fetchParkingCards}
         selectedCard={selectedCard}
         selectedStatus={selectedStatus}
         isModalVisible={isModalVisible}

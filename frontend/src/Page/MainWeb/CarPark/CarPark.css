@@ -10,6 +10,10 @@ body,
   font-size: 24px !important;
 }
 
+.ant-btn {
+  background-color: #c9af62;
+}
+
 .ant-table-wrapper .ant-table-tbody > tr > td,
 .ant-table-wrapper .ant-table-tbody > tr > th,
 .ant-table-wrapper .ant-table-thead > tr > th {

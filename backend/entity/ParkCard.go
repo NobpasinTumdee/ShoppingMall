@@ -86,7 +86,7 @@ type UsageCard struct {
 	UserID uint `json:"UserID"`
 	User   User `gorm:"foreignKey:UserID"`
 
-	ParkingCardID uint        `json:"ParkingCardID"`
+	ParkingCardID string        `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
 
 	StatusPaymentID uint          `json:"StatusPaymentID"`

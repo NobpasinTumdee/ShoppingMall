@@ -15,6 +15,7 @@ import layout from "antd/es/layout";
 import { CreateUsageCard } from "../../../../services/https";
 
 interface InProps {
+  fetchParkingCards: () => void;
   selectedCard: BookCarParkInterface | null;
   selectedStatus: string;
   isModalVisible: boolean;
@@ -32,6 +33,7 @@ interface InProps {
 }
 
 const IN: React.FC<InProps> = ({
+  fetchParkingCards,
   selectedCard,
   selectedStatus,
   isModalVisible,
@@ -61,6 +63,7 @@ const IN: React.FC<InProps> = ({
 
   const handleOk = async () => {
     // Trigger form validation first
+    fetchParkingCards();
     try {
       await form.validateFields();  // This will trigger validation for required fields
     } catch (error) {
@@ -84,7 +87,7 @@ const IN: React.FC<InProps> = ({
       EntryTime: new Date().toISOString(),
       LicensePlate: licensePlate,
       UserID: Number(userID),
-      ParkingCardID: Number(parkingCardID),
+      ParkingCardID: parkingCardID,
       ParkingZoneID: zone, // Use the selected zone ID
       StatusPaymentID: 1,
     };
@@ -94,7 +97,8 @@ const IN: React.FC<InProps> = ({
       if (response.status === 201) {
         message.success("UsageCard created successfully");
         setIsModalVisible(false);
-  
+
+        fetchParkingCards();
         // Update the selected card's available parking spots
         setSelectedCard((prevCard) => {
           if (!prevCard) return null;
