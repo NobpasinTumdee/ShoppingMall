@@ -24,7 +24,7 @@ const CalendarPage: React.FC = () => {
 
     const fetchData = async (id: number) => { // เพิ่มการรับ `id` เป็นพารามิเตอร์
         try {
-            const res = await GetBookinghall(id); // เรียก API พร้อมส่ง ID
+            const res = await GetBookinghall(ID); // เรียก API พร้อมส่ง ID
             if (res.status === 200) {
                 setBookings(res.data);
                 console.log("Fetched Booking Data:", res.data);
