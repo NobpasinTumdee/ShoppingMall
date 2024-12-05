@@ -145,30 +145,41 @@ func SetupDatabase() {
 	
 
 	// การเพิ่มข้อมูลการจองห้อง
-BookingHalls := []entity.BookingHall{
-	{
-		HallID:       1,  // HallID ของห้องที่เลือก
-		StartDateTime: time.Date(2024, time.November, 25, 10, 0, 0, 0, time.UTC),  // เวลาเริ่มต้น
-		EndDateTime:   time.Date(2024, time.November, 25, 12, 0, 0, 0, time.UTC),  // เวลาสิ้นสุด
-		CustomerName:  "John Doe",
-		CustomerEmail: "johndoe@example.com",
-		CustomerPhone: "0123456789",
-		CustomerAddress: "123 Main St, City, Country",
-		Status:         "Confirmed",  // สถานะการจอง
-		TotalCost:      5000,  // ราคาการจอง
-	},
-	{
-		HallID:       2,  
-		StartDateTime: time.Date(2024, time.November, 26, 14, 0, 0, 0, time.UTC),  
-		EndDateTime:   time.Date(2024, time.November, 26, 16, 0, 0, 0, time.UTC),  
-		CustomerName:  "Jane Smith",
-		CustomerEmail: "janesmith@example.com",
-		CustomerPhone: "0987654321",
-		CustomerAddress: "456 Elm St, City, Country",
-		Status:         "Confirmed",
-		TotalCost:      3000,
-	},
-}
+	BookingHalls := []entity.BookingHall{
+		{
+			HallID:        1,
+			StartDateTime: time.Date(2024, time.December, 6, 10, 0, 0, 0, time.UTC),
+			EndDateTime:   time.Date(2024, time.December, 6, 12, 0, 0, 0, time.UTC),
+			CustomerName:  "John Doe",
+			CustomerEmail: "johndoe@example.com",
+			CustomerPhone: "0123456789",
+			CustomerAddress: "123 Main St, City, Country",
+			Status:         "Confirmed",
+			TotalCost:      5000,
+		},
+		{
+			HallID:        2,
+			StartDateTime: time.Date(2024, time.December, 7, 14, 0, 0, 0, time.UTC),
+			EndDateTime:   time.Date(2024, time.December, 7, 16, 0, 0, 0, time.UTC),
+			CustomerName:  "Jane Smith",
+			CustomerEmail: "janesmith@example.com",
+			CustomerPhone: "0987654321",
+			CustomerAddress: "456 Elm St, City, Country",
+			Status:         "Confirmed",
+			TotalCost:      3000,
+		},
+		{
+			HallID:        1,
+			StartDateTime: time.Date(2024, time.December, 8, 9, 0, 0, 0, time.UTC),
+			EndDateTime:   time.Date(2024, time.December, 8, 11, 0, 0, 0, time.UTC),
+			CustomerName:  "Mike Taylor",
+			CustomerEmail: "miketaylor@example.com",
+			CustomerPhone: "0234567890",
+			CustomerAddress: "789 Oak St, City, Country",
+			Status:         "Pending",
+			TotalCost:      4000,
+		},
+	}
 
 for _, booking := range BookingHalls {
 	db.FirstOrCreate(&booking, entity.BookingHall{StartDateTime: booking.StartDateTime, HallID: booking.HallID})

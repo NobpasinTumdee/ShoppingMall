@@ -93,3 +93,20 @@ func GetBookingByID(c *gin.Context) {
 }
 
 
+func ListBookingHall(c *gin.Context) {
+	var bookings []entity.BookingHall
+
+	db := config.DB()
+
+	results := db.Select("id, user_id, hall_id, start_date_time, end_date_time, status, customer_name, customer_email, customer_phone, customer_address, cancel_date, total_cost").Find(&bookings)
+	
+	// ค้นหาข้อมูลการจองและ Preload ข้อมูล Hall ที่เกี่ยวข้อง
+	if results.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+		return
+	}
+
+	// ส่งข้อมูลการจองกลับไป
+	c.JSON(http.StatusOK, bookings)
+}
+

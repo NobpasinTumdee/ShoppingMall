@@ -15,7 +15,7 @@ import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/hall/bookinghall","/Inbox","/StorePayment","/BillStore","/celendar"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/Inbox","/StorePayment","/BillStore","/celendar"].includes(location.pathname);
 
   return (
     <>
@@ -32,7 +32,7 @@ const App: React.FC = () => {
         <Route path="/Inbox" element={<Inbox />} /> 
         <Route path="/BillStore" element={<BillStore />} />
         <Route path="/Hall" element={<Hall />} />
-        <Route path="/hall/bookinghall" element={<BookingHall />} />
+        <Route path="/bookinghall" element={<BookingHall />} />
         <Route path="/celendar" element={<CalendarPage />} />
       </Routes>
     </>

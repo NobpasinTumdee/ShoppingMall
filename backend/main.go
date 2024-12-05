@@ -87,6 +87,7 @@ func main() {
 		router.GET("/hall/bookinghall/:id", Hall.GetBookingByID) //Get Booking by ID
 		router.PUT("/hall/bookinghall/:id", Hall.UpdateBooking) //Update Booking
 		router.DELETE("/hall/bookinghall/:id", Hall.DeleteBooking) //Delete Booking
+		router.GET("/bookings", Hall.ListBookingHall) // List all bookings
 		
 		//ระบบ hall payment
 

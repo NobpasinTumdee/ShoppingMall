@@ -397,6 +397,16 @@ async function GetBookinghall(id: string) {
   .catch((e) => e.response);
 }
 
+async function ListBookingHall() {
+  return await axios
+
+    .get(`${apiUrl}/bookings`, requestOptions)
+
+    .then((res) => res)
+    
+    .catch((e) => e.response);
+}
+
 export {
     SignIn,//user
     GetUserById,
@@ -433,4 +443,5 @@ export {
     UpdateBookingHall,
     DeleteBookingHall,
     GetBookinghall,
+    ListBookingHall,
 }
