@@ -1,8 +1,11 @@
 package config
 
 import (
-	"example.com/ProjectSeG13/entity"
 	"fmt"
+	"time"
+
+	"example.com/ProjectSeG13/entity"
+
 	//"time"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -112,6 +115,47 @@ func SetupDatabase() {
 	}
 	for _, pkg := range PaymentMethod {
 		db.FirstOrCreate(&pkg,entity.PaymentMethodStore{MethodName: pkg.MethodName})
+	}
+
+//cleaning
+	// ใส่ข้อมูลเริ่มต้นในตาราง Areas
+	areas := []entity.Area{
+    	{AreaName: "ห้องน้ำชั้น 1", Floor: 1},
+    	{AreaName: "ห้องน้ำชั้น 2", Floor: 2},
+    	{AreaName: "ห้องน้ำชั้น 3", Floor: 3},
+    	{AreaName: "ห้องน้ำชั้น 4", Floor: 4},
+	}
+
+	for _, area := range areas {
+    	db.FirstOrCreate(&area, entity.Area{AreaName: area.AreaName})
+	}
+
+	// ดึงวันสุดท้ายจากฐานข้อมูล
+	var lastSchedule entity.Schedule
+	db.Order("schedule_date desc").First(&lastSchedule)
+
+	// กำหนดวันเริ่มต้น
+	var startDate time.Time
+	if lastSchedule.ID == 0 {
+    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้
+    	startDate = time.Now().UTC().Truncate(24 * time.Hour)
+	} else {
+    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไปของวันสุดท้าย
+    	startDate = lastSchedule.ScheduleDate.AddDate(0, 0, 1)
+	}
+
+	// สร้างข้อมูลใหม่จนถึงวันนี้หรืออนาคต
+	currentDate := time.Now().UTC().Truncate(24 * time.Hour)
+	for date := startDate; !date.After(currentDate); date = date.AddDate(0, 0, 1) {
+    	schedule := entity.Schedule{
+        	StartTime:    time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
+        	EndTime:      time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
+        	ScheduleDate: date,
+        	AreaID:       uint((date.Day() % 4) + 1), // แปลงเป็น uint // หมุนเวียน AreaID (1 ถึง 4)
+    	}
+
+    	// เพิ่มข้อมูลลงในฐานข้อมูล
+    	db.FirstOrCreate(&schedule, entity.Schedule{ScheduleDate: schedule.ScheduleDate, AreaID: schedule.AreaID})
 	}
 
 
