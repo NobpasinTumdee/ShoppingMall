@@ -15,7 +15,7 @@ import AdminJob from './Page/MainWeb/Admin/AdminJob';
 import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
 import Hall from './Page/MainWeb/Hall/HallBookingPage';
-
+import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -38,6 +38,7 @@ const App: React.FC = () => {
         <Route path="/AdminJob" element={<AdminJob />} />
         <Route path="/Inventory" element={<Inventory />} />
         <Route path="/Hall" element={<Hall />} />
+        <Route path="/Cleaning" element={<Cleaning />} />
         
       </Routes>
     </>
