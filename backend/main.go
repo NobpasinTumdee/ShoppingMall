@@ -50,8 +50,10 @@ func main() {
 
 		//ระบบ จองรถ	
 		router.GET("/get-list-parking-card", CarPark.GetListCard)	
-		router.POST("/create-usagecard",CarPark.CreateUsageCard)
+		router.POST("/create-parkingcard",CarPark.CreateParkingCard)
+		router.PUT("/update-parkingcard/:id",CarPark.UpdateParkingCard)
 		router.GET("/get-card-zone/:id", CarPark.GetIdCardZone)
+		router.PUT("/update-parkingzone/:id",CarPark.UpdateParkingZone)
 		
 		//ระบบ จองรถ payment
 

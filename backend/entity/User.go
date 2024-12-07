@@ -29,7 +29,9 @@ type User struct {
 
 	MessageBoard []MessageBoard `gorm:"foreignKey:UserID"`
 
-	UsageCard []UsageCard `gorm:"foreignKey:UserID"`
+	BackupCard []BackupCard `gorm:"foreignKey:UserID"`
+	ParkingPayment []ParkingPayment `gorm:"foreignKey:UserID"`
+	ParkingCard []ParkingCard `gorm:"foreignKey:UserID"`
 }
 
 

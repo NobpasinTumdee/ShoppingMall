@@ -16,15 +16,37 @@ export interface BookCarParkInterface {
 }
 
 export interface ParkingCardInterface {
-  ID?: string;
+  ID: string;
   ExpiryDate?: string;
+  EntryTime?: string;
+  ExitTime?: string;
+  Hourly_rate?: string;
+  Fee?: number;
+  LicensePlate?: string;
+  TypePark?: {
+    ID: number;
+    Type: string;
+  };
   StoreID?: number;
-  TypeParkID?: number;
-  StatusCardID?: number;
   MembershipCustomerID?: number;
-  ParkingZone?: ParkingZoneInterface[]; // หลายๆ ParkingZone
-  UsageCard?: UsageCardInterface;
+  StatusCard?: {
+    ID: number;
+    Status?: string;
+  };
+  StatusPaymentID?: number;
+  ParkingFeePolicyID?: number;
+  UserID?: number;
+  ParkingZone?: {
+    ID?: number;
+    Name?: string;
+    Image?: string;
+    Capacity?: number;
+    AvailableZone?: number;
+    TypeParkID?: number;
+  } [];  // Remove the array type here
+  BackupCard?: BackupCardInterface[];
 }
+
 
 export interface ParkingCardZoneInterface {
   ParkingCardID?: string;
@@ -42,6 +64,7 @@ export interface ParkingZoneInterface {
   Capacity?: number;
   AvailableZone?: number;
   TypeParkID?: number;
+  TypePark?: TypeParkInterface;
   ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
 }
 
@@ -50,6 +73,7 @@ export interface TypeParkInterface {
   Type?: string;
   ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
   ParkingZone?: ParkingZoneInterface[]; // หลายๆ ParkingZone
+  ParkingFeePolicy?: ParkingFeePolicyInterface[]; // หลายๆ ParkingFeePolicy
 }
 
 export interface StatusCardInterface {
@@ -61,21 +85,7 @@ export interface StatusCardInterface {
 export interface StatusPaymentInterface {
   ID?: number;
   Status?: string;
-  UsageCard?: UsageCardInterface[]; // หลายๆ UsageCard
-}
-
-export interface UsageCardInterface {
-  ID?: number;
-  EntryTime?: string; 
-  ExitTime?: string; 
-  Hourly_rate?: string;
-  Fee?: number;
-  LicensePlate?: string;
-  UserID?: number;
-  ParkingCardID?: string;
-  StatusPaymentID?: number;
-  ParkingFeePolicyID?: number;
-  ParkingPayment?: ParkingPaymentInterface[];
+  ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
 }
 
 export interface ParkingFeePolicyInterface {
@@ -86,9 +96,10 @@ export interface ParkingFeePolicyInterface {
   Discount?: number;
   LostCard?: number;
   IsExempt?: boolean;
-  ParkingCardZoneID?: number;
-  ParkingCardZone?: ParkingCardZoneInterface;
-  UsageCard?: UsageCardInterface[]; // หลายๆ UsageCard
+  TypeParkID?: number;
+  TypePark?: TypeParkInterface;
+
+  ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
 }
 
 export interface MembershipCustomerInterface {
@@ -97,7 +108,7 @@ export interface MembershipCustomerInterface {
   LastName?: string;
   DOB?: string; // ใช้ string แทน time
   Tel?: string;
-  HistoryMembership?: HistoryMembershipInterface[]; // หลายๆ HistoryMembership
+  HistoryMembership?: HistoryMembershipInterface[];
 }
 
 export interface HistoryMembershipInterface {
@@ -108,6 +119,22 @@ export interface HistoryMembershipInterface {
   MembershipCustomer?: MembershipCustomerInterface;
 }
 
+export interface BackupCardInterface {
+  EntryTime?: string; // ใช้ string แทน time
+  ExitTime?: string; // ใช้ string แทน time
+  Hourly_rate?: string; // ใช้ string แทน time
+  Fee?: number;
+  LicensePlate?: string;
+
+  UserID?: number;
+
+  ParkingCardID?: string;
+  ParkingCard?: ParkingCardInterface;
+
+  ParkingPaymentID?: number;
+  ParkingPayment?: ParkingPaymentInterface;
+}
+
 export interface ParkingPaymentInterface {
   ID?: number;
   TaxID?: string;
@@ -115,6 +142,20 @@ export interface ParkingPaymentInterface {
   IsLostCard?: boolean;
   IsPaid?: boolean;
   IsCash?: boolean;
-  UsageCardID?: number;
+  UsageCardID?: string;
   UsageCard?: UsageCardInterface;
+}
+
+export interface UsageCardInterface {
+  ID?: number;
+  EntryTime?: string;
+  ExitTime?: string;
+  Hourly_rate?: string;
+  Fee?: number;
+  LicensePlate?: string;
+  UserID?: number;
+  ParkingCardID?: string;
+  StatusPaymentID?: number;
+  ParkingFeePolicyID?: number;
+  ParkingPayment?: ParkingPaymentInterface[];
 }

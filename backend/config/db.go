@@ -57,6 +57,7 @@ func SetupDatabase() {
 		&entity.ParkingCardZone{},
 		&entity.ParkingFeePolicy{},
 		&entity.ParkingPayment{},
+		&entity.BackupCard{},
 	)
 
 	//User
@@ -254,46 +255,48 @@ func SetupDatabase() {
 	db.Find(&membershipCustomers)
 
 	// สร้าง ParkingCard สำหรับ Store
-for _, store := range stores {
-    var lastCard entity.ParkingCard
-    result := db.Last(&lastCard)
+	for _, store := range stores {
+		var lastCard entity.ParkingCard
+		result := db.Last(&lastCard)
 
-    // ตรวจสอบว่า Last() พบข้อมูลหรือไม่
-    if result.Error != nil && result.Error.Error() == "record not found" {
-        // ถ้าไม่มีข้อมูลในตาราง parking_cards
-        newID := "0001"  // กำหนดเป็น 0001 หรือค่าเริ่มต้นอื่น ๆ
-        parkingCard := entity.ParkingCard{
-            ID:            newID,
-            StoreID:       store.ID,
-            ExpiryDate:    store.LastDay,
-            StatusCardID:  1,
-            TypeParkID:    3,
-        }
-        db.Create(&parkingCard)  // สร้างบันทึกใหม่
-    } else if result.Error != nil {
-        // ถ้ามีข้อผิดพลาดอื่น ๆ
-        fmt.Println("Error fetching last parking card:", result.Error)
-        return
-    } else {
-        // ถ้าพบข้อมูลในตาราง
-        lastID, err := strconv.Atoi(lastCard.ID)
-        if err != nil {
-            fmt.Println("Error converting ID:", err)
-            return
-        }
-        newID := fmt.Sprintf("%04d", lastID+1)
+		// ตรวจสอบว่า Last() พบข้อมูลหรือไม่
+		if result.Error != nil && result.Error.Error() == "record not found" {
+			// ถ้าไม่มีข้อมูลในตาราง parking_cards
+			newID := "0001" // กำหนดเป็น 0001 หรือค่าเริ่มต้นอื่น ๆ
+			parkingCard := entity.ParkingCard{
+				ID:           newID,
+				StoreID:      store.ID,
+				ExpiryDate:   store.LastDay,
+				StatusCardID: 1,
+				TypeParkID:   2,
+				ParkingFeePolicyID: 2,
+			}
+			db.Create(&parkingCard) // สร้างบันทึกใหม่
+		} else if result.Error != nil {
+			// ถ้ามีข้อผิดพลาดอื่น ๆ
+			fmt.Println("Error fetching last parking card:", result.Error)
+			return
+		} else {
+			// ถ้าพบข้อมูลในตาราง
+			lastID, err := strconv.Atoi(lastCard.ID)
+			if err != nil {
+				fmt.Println("Error converting ID:", err)
+				return
+			}
+			newID := fmt.Sprintf("%04d", lastID+1)
 
-        parkingCard := entity.ParkingCard{
-            ID:            newID,
-            StoreID:       store.ID,
-            ExpiryDate:    store.LastDay,
-            StatusCardID:  1,
-            TypeParkID:    3,
-        }
+			parkingCard := entity.ParkingCard{
+				ID:                 newID,
+				StoreID:            store.ID,
+				ExpiryDate:         store.LastDay,
+				StatusCardID:       1,
+				TypeParkID:         2,
+				ParkingFeePolicyID: 2,
+			}
 
-        db.FirstOrCreate(&parkingCard, entity.ParkingCard{StoreID: parkingCard.StoreID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
-    }
-}
+			db.FirstOrCreate(&parkingCard, entity.ParkingCard{StoreID: parkingCard.StoreID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
+		}
+	}
 
 	// สร้าง ParkingCard สำหรับ MembershipCustomer
 	for _, membershipCustomer := range membershipCustomers {
@@ -325,7 +328,8 @@ for _, store := range stores {
 			MembershipCustomerID: membershipCustomer.ID,
 			ExpiryDate:           historyMembership.ExpiryDate,
 			StatusCardID:         1,
-			TypeParkID:           2,
+			TypeParkID:           1,
+			ParkingFeePolicyID:   1,
 		}
 
 		db.FirstOrCreate(&parkingCard, entity.ParkingCard{MembershipCustomerID: parkingCard.MembershipCustomerID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
@@ -363,10 +367,11 @@ for _, store := range stores {
 		}
 
 		parkingCard := entity.ParkingCard{
-			ID:           newID,
-			ExpiryDate:   time.Now().AddDate(1, 0, 0),
-			StatusCardID: 1,
-			TypeParkID:   1,
+			ID:                 newID,
+			ExpiryDate:         time.Now().AddDate(1, 0, 0),
+			StatusCardID:       1,
+			TypeParkID:         3,
+			ParkingFeePolicyID: 3,
 		}
 
 		db.FirstOrCreate(&parkingCard, entity.ParkingCard{ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})

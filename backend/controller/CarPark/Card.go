@@ -3,6 +3,8 @@ package CarPark
 import (
 	//"errors" // เพิ่ม import สำหรับ package errors
 
+	"fmt"
+
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
 	"github.com/gin-gonic/gin"
@@ -16,7 +18,7 @@ func GetListCard(c *gin.Context) {
 
 	db := config.DB()
 
-	if err := db.Preload("TypePark").Preload("StatusCard").Preload("UsageCard").Preload("ParkingZone").Find(&cards).Error; err != nil {
+	if err := db.Preload("MembershipCustomer").Preload("MembershipCustomer.HistoryMembership").Preload("Store").Preload("ParkingFeePolicy").Preload("TypePark").Preload("StatusCard").Preload("BackupCard").Preload("ParkingZone").Find(&cards).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -25,100 +27,92 @@ func GetListCard(c *gin.Context) {
 }
 
 // POST UsageCard
-func CreateUsageCard(c *gin.Context) {
-    var usagecard entity.UsageCard
-    var zone entity.ParkingZone
+func CreateParkingCard(c *gin.Context) {
+	var card entity.ParkingCard
+	var zone entity.ParkingZone
 
-    if err := c.ShouldBindJSON(&usagecard); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err := c.ShouldBindJSON(&card); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	// Fetch TypePark from ParkingCard
+	var typePark entity.TypePark
+	db.Find(&typePark)
+	fmt.Println("TypeParkID from request:", card.TypeParkID)
+
+	// Fetch ParkingFeePolicy related to TypePark
+	var parkingFeePolicy entity.ParkingFeePolicy
+	result := db.Where("type_park_id = ?", typePark.ID).First(&parkingFeePolicy)
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ParkingFeePolicy not found"})
+		return
+	}
+
+	// Create ParkingCard and associate with ParkingFeePolicyID
+	newCard := entity.ParkingCard{
+		EntryTime:            card.EntryTime,
+		ExitTime:             card.ExitTime,
+		LicensePlate:         card.LicensePlate,
+		UserID:               card.UserID,
+		ID:                   card.ID, // Correct the ID reference
+		StatusPaymentID:      card.StatusPaymentID,
+		ParkingFeePolicyID:   parkingFeePolicy.ID,
+		ExpiryDate:           card.ExpiryDate,
+		Hourly_rate:          card.Hourly_rate,
+		Fee:                  card.Fee,
+		StoreID:              card.StoreID,              // Assuming StoreID is passed in the request
+		MembershipCustomerID: card.MembershipCustomerID, // Assuming MembershipCustomerID is passed in the request
+
+		StatusCardID: 1, // Example: assuming "1" represents an active status or whatever is appropriate
+	}
+
+	// Save ParkingCard
+	if err := db.Create(&newCard).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Update AvailableZone of ParkingZone
+	zoneID := card.ParkingZone[0].ID // Assuming you pass ParkingZone as part of the request
+	resultZone := db.First(&zone, zoneID)
+	if resultZone.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ParkingZone not found"})
+		return
+	}
+	zone.AvailableZone -= 1
+	db.Save(&zone)
+
+	// Update ParkingCard StatusCard to "Out" (ID 2)
+	newCard.StatusCardID = 2
+	db.Save(&newCard)
+
+	c.JSON(http.StatusCreated, gin.H{"message": "UsageCard created successfully", "data": newCard})
+}
+
+func UpdateParkingCard(c *gin.Context) {
+    var card entity.ParkingCard
+    CardID := c.Param("id")
 
     db := config.DB()
 
-    // ดึงข้อมูล ParkingCard ที่เชื่อมกับ UsageCard
-    var parkingCard entity.ParkingCard
-    result := db.First(&parkingCard, usagecard.ParkingCardID)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "ParkingCard not found"})
-        return
-    }
-
-    // ดึง TypePark จาก ParkingCard
-    var typePark entity.TypePark
-    result = db.First(&typePark, parkingCard.TypeParkID)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "TypePark not found"})
-        return
-    }
-
-    // ดึง ParkingFeePolicy ที่เชื่อมกับ TypePark
-    var parkingFeePolicy entity.ParkingFeePolicy
-    result = db.Where("type_park_id = ?", typePark.ID).First(&parkingFeePolicy)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "ParkingFeePolicy not found"})
-        return
-    }
-
-    // สร้าง UsageCard และกำหนด ParkingFeePolicyID
-    usage := entity.UsageCard{
-        EntryTime:         usagecard.EntryTime,
-        LicensePlate:      usagecard.LicensePlate,
-        UserID:            usagecard.UserID,
-        ParkingCardID:     usagecard.ParkingCardID,
-        StatusPaymentID:   usagecard.StatusPaymentID,
-        ParkingFeePolicyID: parkingFeePolicy.ID, // กำหนด ParkingFeePolicyID จากการเชื่อมโยง
-    }
-
-    // บันทึก UsageCard
-    if err := db.Create(&usage).Error; err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    // ลดจำนวน AvailableZone ของ ParkingZone ที่เลือก
-    zoneID := usagecard.ParkingCard.ParkingZone
-    resultZone := db.First(&zone, zoneID)
-    if resultZone.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "ParkingZone not found"})
-        return
-    }
-    zone.AvailableZone -= 1
-    db.Save(&zone)
-
-    // อัปเดต StatusCard ของ ParkingCard ให้เป็น "2 Out"
-    parkingCard.StatusCardID = 2
-    db.Save(&parkingCard)
-
-    c.JSON(http.StatusCreated, gin.H{"message": "UsageCard created successfully", "data": usage})
-}
-
-
-
-// PATCH /users
-func UpdateUser(c *gin.Context) {
-	var card entity.ParkingCard
-	CardID := c.Param("id")
-
-	db := config.DB()
-	resultCard := db.First(&card, CardID)
-	if resultCard.Error != nil {
+	result := db.First(&card, CardID)
+	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
 		return
 	}
-
 	if err := c.ShouldBindJSON(&card); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to mappayload"})
 		return
 	}
-
-	resultCard = db.Save(&card)
-	if resultCard.Error != nil {
+	result = db.Save(&card)
+	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+    c.JSON(http.StatusOK, gin.H{"message": "ParkingCard updated successfully"})
 }
 
 func GetIdCardZone(c *gin.Context) {

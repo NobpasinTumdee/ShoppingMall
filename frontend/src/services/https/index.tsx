@@ -1,27 +1,26 @@
-import { UsageCardInterface } from "../../interfaces/Carpark";
+import {
+  ParkingCardInterface,
+  UsageCardInterface,
+  ParkingZoneInterface,
+} from "../../interfaces/Carpark";
 import { SignInInterface } from "../../interfaces/SignIn";
 import {
   StoreInterface,
   BackupStoreInterface,
 } from "../../interfaces/StoreInterface";
 
-import axios from 'axios';
+import axios from "axios";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
 
 const Bearer = localStorage.getItem("token_type");
 
-
 const requestOptions = {
-
   headers: {
-
     "Content-Type": "application/json",
 
     Authorization: `${Bearer} ${Authorization}`,
-
   },
-
 };
 
 //============================User========================================
@@ -87,34 +86,23 @@ async function GetListCard() {
       return e.response;
     });
 }
-/* async function CreateUsageCard(data: UsageCardInterface) {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  };
-
-  let res = await fetch(`${apiUrl}/create-usagecard`, requestOptions)
-    .then((res) => {
-      if (res.status == 201) {
-        return res.json();
-      } else {
-        return false;
-      }
-    });
-
-  return res;
-} */
-async function CreateUsageCard(data: UsageCardInterface) {
-
+async function CreateParkingCard(data: ParkingCardInterface) {
   return await axios
-
-    .post(`${apiUrl}/create-usagecard`, data, requestOptions)
-
+    .post(`${apiUrl}/create-parkingcard`, data, requestOptions)
     .then((res) => res)
-
     .catch((e) => e.response);
-
+}
+async function UpdateParkingCard(id: string, data: ParkingCardInterface) {
+  return await axios
+    .put(`${apiUrl}/update-parkingcard/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+async function UpdateParkingZone(id: number, data: ParkingZoneInterface) {
+  return await axios
+    .put(`${apiUrl}/update-parkingzone/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 async function GetIdCardZone(id: string) {
   return await axios
@@ -132,6 +120,8 @@ export {
 
   // Car Parking
   GetListCard,
-  CreateUsageCard,
+  CreateParkingCard,
+  UpdateParkingCard,
+  UpdateParkingZone,
   GetIdCardZone,
 };
