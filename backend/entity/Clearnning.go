@@ -17,7 +17,7 @@ type Schedule struct {
 	gorm.Model
 	StartTime    time.Time `json:"StartTime"`    // เวลาที่เริ่มงาน
 	EndTime      time.Time `json:"EndTime"`      // เวลาที่จบงาน
-	ScheduleDate time.Time `json:"ScheduleDate"` // วันที่ของตาราง
+	//ScheduleDate time.Time `json:"ScheduleDate"` // วันที่ของตาราง
 
 	AreaID       uint      `json:"AreaID"`       // FK ไปยัง Area
 	Area         Area      `gorm:"foreignKey:AreaID"` // ความสัมพันธ์ไปยัง Area

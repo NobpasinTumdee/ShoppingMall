@@ -691,7 +691,7 @@ export const NavBar: React.FC = () => {
                             <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
                         }
                         {(user?.Status === 'Cleaning' || user?.Status === 'Admin'|| user?.Status === 'Employee') &&
-                            <a href="#" ><span className='MenuHover'>CLEANING</span></a>
+                            <a href="Cleaning" ><span className='MenuHover'>CLEANING</span></a>
                         }
                     </div>
                     <div></div>

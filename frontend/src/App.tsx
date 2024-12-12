@@ -14,11 +14,11 @@ import Recruitment from './Page/Recruitment/Recruitment';
 import AdminJob from './Page/MainWeb/Admin/AdminJob';
 import { NavBar } from './Page/Component/NavBar';
 import Hall from './Page/MainWeb/Hall/HallBookingPage';
-import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
+import Cleaning from './Page/MainWeb/Clearning/TaskOverview';
 
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Cleaning"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}

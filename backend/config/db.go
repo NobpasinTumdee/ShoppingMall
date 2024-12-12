@@ -130,35 +130,33 @@ func SetupDatabase() {
     	db.FirstOrCreate(&area, entity.Area{AreaName: area.AreaName})
 	}
 
-	// ดึงวันสุดท้ายจากฐานข้อมูล
-	var lastSchedule entity.Schedule
-	db.Order("schedule_date desc").First(&lastSchedule)
+	// ดึงข้อมูล StartTime ล่าสุดจากฐานข้อมูล
+	var lastSchedule entity.Schedule 
+	db.Order("start_time desc").First(&lastSchedule)
 
 	// กำหนดวันเริ่มต้น
 	var startDate time.Time
 	if lastSchedule.ID == 0 {
-    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้
-    	startDate = time.Now().UTC().Truncate(24 * time.Hour)
+    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้ เวลา 08:00
+    	startDate = time.Now().UTC().Truncate(24 * time.Hour).Add(8 * time.Hour)
 	} else {
-    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไปของวันสุดท้าย
-    	startDate = lastSchedule.ScheduleDate.AddDate(0, 0, 1)
+    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไป เวลา 08:00
+    	startDate = lastSchedule.StartTime.AddDate(0, 0, 1).Truncate(24 * time.Hour).Add(8 * time.Hour)
 	}
 
-	// สร้างข้อมูลใหม่จนถึงวันนี้หรืออนาคต
-	currentDate := time.Now().UTC().Truncate(24 * time.Hour)
+	// สร้างข้อมูลใหม่จนถึงล่วงหน้า 3 วัน
+	currentDate := time.Now().UTC().Truncate(24 * time.Hour).AddDate(0, 0, 3).Add(8 * time.Hour)
+
 	for date := startDate; !date.After(currentDate); date = date.AddDate(0, 0, 1) {
     	schedule := entity.Schedule{
-        	StartTime:    time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
-        	EndTime:      time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
-        	ScheduleDate: date,
-        	AreaID:       uint((date.Day() % 4) + 1), // แปลงเป็น uint // หมุนเวียน AreaID (1 ถึง 4)
+        	StartTime: time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
+        	EndTime:   time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
+        	AreaID:    uint((date.Day() % 4) + 1), // หมุนเวียน AreaID (1 ถึง 4)
     	}
 
     	// เพิ่มข้อมูลลงในฐานข้อมูล
-    	db.FirstOrCreate(&schedule, entity.Schedule{ScheduleDate: schedule.ScheduleDate, AreaID: schedule.AreaID})
+    	db.FirstOrCreate(&schedule, entity.Schedule{StartTime: schedule.StartTime, AreaID: schedule.AreaID})
 	}
-
-
 
 	//Store
 	/*
