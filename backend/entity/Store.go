@@ -27,7 +27,7 @@ type Store struct {
 	ProductTypeID 		uint 		`json:"ProductTypeID"`
 	ProductType   		ProductType `gorm:"foreignKey:ProductTypeID"`
 
-	ServiceRequest 		[]ServiceRequest `gorm:"foreignKey:StoreID"`
+	//ServiceRequest 		[]ServiceRequest `gorm:"foreignKey:StoreID"`
 
 	Rating 				[]Rating 		`gorm:"foreignKey:StoreID"`
 	BackupStore 		[]BackupStore 	`gorm:"foreignKey:StoreID"`

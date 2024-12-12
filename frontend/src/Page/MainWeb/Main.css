@@ -710,3 +710,111 @@ footer{
     color: #ffffff;
     box-shadow: 0 5px 5px #00000033;
 }
+
+/* =============================================== Adio player ===================================================== */
+.ButtonMusic{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1021;
+    cursor: pointer;
+}
+
+.showMusic.show{
+    visibility: visible;
+}
+
+.showMusic.notshow{
+    visibility: hidden;
+
+}
+
+.Audio{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1020;
+    background-color: #0000009e;
+    backdrop-filter: blur(10px);
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #000000c3;
+}
+.AudioTop{
+    display: flex;
+    justify-content: start;
+    margin: 5px;
+    align-items: center;
+    color: #fff;
+}
+.AudioTopP p{
+    font-family: "Parkinsans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+    margin-left: 10px;
+}
+.Player {
+    display: flex;
+    justify-content:center;
+    color: #fff;
+}
+.Player button{
+    background-color: #00000000;
+    border: 0px solid #00000000;
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 40px;
+}
+.vol{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vol input[type="range"] {
+    appearance: none;
+    width: 200px; 
+    height: 4px; 
+    background: #919191;
+}
+.vol input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 5px; 
+    height: 5px; 
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.spin{
+    position: fixed;
+    bottom: 10px;
+    left: 220px;
+    background-color: #1d1d1d;
+    padding: 20px;
+    border-radius: 50%;
+    z-index: 1010;
+    box-shadow: 0 0 40px #E8D196;
+
+}
+.spin.active {
+    animation: spinimg 5s linear infinite ;
+
+}
+@keyframes spinimg {
+    0%{
+        rotate: 360deg;
+    }
+}
+.spin.stop {
+    animation: spinimgstop 1s linear reverse forwards ;
+
+}
+@keyframes spinimgstop {
+    0%{
+        opacity: 0;
+        transform: translateX(-300px);
+    }
+}

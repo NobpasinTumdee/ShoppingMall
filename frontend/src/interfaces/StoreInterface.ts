@@ -15,6 +15,19 @@ export interface StoreInterface {
     ProductTypeID?:     number ;
 
     Membership?: MembershipInterface;
+
+    //With Rating
+    id?:                number ;
+    pic_store?:         string ;
+    sub_pic_one?:       string ;
+    sub_pic_two?:       string ;
+    sub_pic_three?:     string ;
+    name_store?:        string ;
+    booking_date?:      string ;
+    last_day?:          string ;
+    describtion_store?: string ;
+    status_store?:      string ;
+    total_rating?:      number ;
 }
 export interface MembershipInterface {
     ID?:                number;
@@ -113,4 +126,9 @@ export interface RatingInterface{
 
     User?: UsersInterface;
     Store?: StoreInterface;
+}
+export interface AverageRatingInterface {
+    store_id: string;       
+    averageRating: number;  
+    totalRatings: number;   
 }

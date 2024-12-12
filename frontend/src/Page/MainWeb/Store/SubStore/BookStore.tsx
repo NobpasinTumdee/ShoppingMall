@@ -36,38 +36,13 @@ const BookStore: React.FC = () => {
     const location = useLocation();
     const {
         ID,
-        //PicStore,
-        //SubPicOne,
-        //SubPicTwo,
-        //SubPicThree,
-        //MembershipID,
         NameStore,
-        //BookingDate,
-        //LastDay,
-        //DescribtionStore,
-        //StatusStore,
-        //UserID,
         ProductTypeID
     } = location.state as {
         ID: number;
-        PicStore: string;
-        SubPicOne: string;
-        SubPicTwo: string;
-        SubPicThree: string;
-        MembershipID: number;
         NameStore: string;
-        BookingDate: Date;
-        LastDay: Date;
-        DescribtionStore: string;
-        StatusStore: string;
-        UserID: number;
         ProductTypeID: number;
     };
-    //const bookingDateObj = new Date(BookingDate);
-    //const lastDayObj = new Date(LastDay);
-
-    //const formattedBookingDate = bookingDateObj.toLocaleDateString();
-    //const formattedLastDay = lastDayObj.toLocaleDateString();
     //=================================select store================================
     const userIdstr = localStorage.getItem("id");
     const [isSelectStore, setSelectStore] = useState(false);
@@ -125,6 +100,20 @@ const BookStore: React.FC = () => {
             DescribtionNews: 'The system has now sent your booking information to the database. Please wait until the administrator verifies your information. and can check the movement at your message box',
             UserID: SelectStore.UserID
         };
+        const valuesBackup: BackupStoreInterface = {
+            PicStoreBackup: String(SelectStore.UserPicStore),
+            PicOneBackup: String(SelectStore.UserSubPicOne),
+            PicTwoBackup: String(SelectStore.UserSubPicTwo),
+            PicThreeBackup: String(SelectStore.UserSubPicThree),
+            MembershipBackup: Package, 
+            NameBackup: SelectStore.UserNameStore,
+            BookingBackup: BookingDate,
+            LastDayBackup: LastDate,
+            DescribtionStoreB: SelectStore.UserDescribStore,
+            UserID: Number(userIdstr),
+            ProductTypeIDB: ProductTypeID,
+            StoreID:ID,
+        };
         try {
             const res = await UpdateStoreByid(String(ID), values);
             if (res.status === 200) {
@@ -132,6 +121,7 @@ const BookStore: React.FC = () => {
                     type: "success",
                     content: res.data.message,
                 });
+                await BackUpStore(valuesBackup);
                 closepopup1();
                 setTimeout(() => {
                     SuccessPopup();

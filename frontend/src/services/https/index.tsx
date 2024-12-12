@@ -289,6 +289,18 @@ async function DeleteCommentFromStore(id: string) {
     })
     .catch((e) => e.response);
 }
+// get Avg by id store
+async function GetAvgCommentByStore(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/average-rating/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================payment store========================================
 // get payment by userid Preload
 async function GetPaymentByuseridPreload(id: string) {
@@ -409,7 +421,43 @@ async function GetStoreWaiting(status: string) {
     .catch((e) => e.response);
 
 }
+//=============================อุปกรณ์=====================================
+// get Inventory
+async function ListInventory() {
 
+  return await axios
+
+    .get(`${apiUrl}/inventory`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get CategoryInventory
+async function ListCategoryInventory() {
+
+  return await axios
+
+    .get(`${apiUrl}/CategoryInventory`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Inventory by id
+async function GetInventoryById(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/inventory/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 export {
     SignIn,//user
@@ -437,6 +485,7 @@ export {
     GetCommentByUser,
     CreateComment,
     DeleteCommentFromStore,
+    GetAvgCommentByStore,
 
     GetPaymentByuseridPreload,//payment store
     GetPaymentByuserid,
@@ -446,4 +495,8 @@ export {
     GetPaymentMethod,
     GetBillByPayidPreload,//bill
     CreateBill,
+
+    ListInventory,//อุปกรณ์ทั้งหมด
+    ListCategoryInventory,
+    GetInventoryById,
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 //import { NavBar } from '../Component/NavBar';
 import Product from "../../assets/icon/ForPage/MainIcon/Product.png";
 import Product1 from "../../assets/icon/ForPage/MainIcon/Product/PD1.png";
@@ -20,6 +20,8 @@ import './Main.css';
 
 import { GetStoreByFloor } from '../../services/https';
 import { StoreInterface } from '../../interfaces/StoreInterface';
+import STMB from '../../assets/Audio/SwayToMyBest.mp3'
+import STMBpic from '../../assets/Audio/SwayToMyBeat.jpg'
 const Main: React.FC = () => {
     const images = [Product1, Product2, Product3, Product4, Product];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -59,22 +61,7 @@ const Main: React.FC = () => {
             info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         },
     ]
-    // const gmail = {
-    //     to: 'porporpor547@gmail.com',
-    //     subject: 'test',
-    //     message: 'test message',
-    //   };
-      
-    //   const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     try {
-    //       const response = await axios.post('http://localhost:8000/send-email', gmail);
-    //       alert(response.data.message);
-    //     } catch (error) {
-    //       console.error(error);
-    //       alert('Failed to send email');
-    //     }
-    //   };
+
     const [Store, setStore] = useState<StoreInterface[]>([]);
     useEffect(() => {
         if (1) {
@@ -96,9 +83,20 @@ const Main: React.FC = () => {
         }
     };
       
+    const [popup, setpopup] = useState(false);
+    const Openpopup = () => {
+        setpopup(!popup)
+    };
+    //main && branch halooo
+    //main && branch and maindata1 test
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
+            <div className='ButtonMusic' onClick={Openpopup}>{popup ? "💛" : "🥳"}</div>
+            <div className={`showMusic ${popup ? 'show' : 'notshow'}`}>
+                <MusicPlayer />
+            </div>
+                
             <div className='AdvertisingMain'>
                 <img src={images[currentImageIndex]} alt="Product" className={`fade ${fade ? 'visible' : 'hidden'}`}  />
                 <span className='advertisingtext'>
@@ -141,14 +139,14 @@ const Main: React.FC = () => {
                 <span></span>
             </div>
             <div className='Store1'> 
-                <div ><img src={Store[0]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[1]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[2]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[3]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[4]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[5]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[6]?.PicStore||st} alt="" /></div>
-                <div ><img src={Store[7]?.PicStore||st} alt="" /></div>
+                <div ><img src={Store[0]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[1]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[2]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[3]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[4]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[5]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[6]?.pic_store||st} alt="" /></div>
+                <div ><img src={Store[7]?.pic_store||st} alt="" /></div>
             </div>
             <div className='NEWS'>
                 <span></span>
@@ -182,3 +180,109 @@ const Main: React.FC = () => {
     );
 };
 export default Main;
+
+
+
+export const MusicPlayer: React.FC = () => {
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(1); // ค่าเริ่มต้นเสียง 100%
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+    }
+    setCurrentTime(newTime);
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+    return(
+        <>
+            <div className='Audio'>
+                <div className='AudioTop'>
+                    <img src={STMBpic} alt="STMBpic" width={60} height={60} style={{borderRadius: '5px'}} />
+                    <div className='AudioTopP'>
+                        <p>Sway To My Beat</p>
+                        <p>Artist: miHoYo, Chevy</p>
+                    </div>
+                </div>
+                <div className='Player'>
+                    <audio ref={audioRef} src={STMB} onLoadedMetadata={handleLoadedMetadata} onTimeUpdate={handleTimeUpdate} ></audio>
+                    <div>◀</div>
+                    <button onClick={togglePlayPause}>
+                        {isPlaying ? "⏸" : "▶"}
+                    </button>
+                    <div>▶</div>
+                </div>
+                
+                <div className='vol'>
+                    <label>
+                    🥳
+                    <input
+                        type="range"
+                        min="0"
+                        max={duration || 0}
+                        step="0.1"
+                        value={currentTime}
+                        onChange={handleTimeChange}
+                    />
+                    </label>
+                </div>
+
+                <div className='vol'>
+                    <label>
+                    🔈
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                    />
+                    </label>
+                </div>
+                <div style={{textAlign:'right' ,marginRight: '20px',color: '#fff'}}>
+                    <span>
+                    {Math.floor(currentTime)} / {Math.floor(duration)} s
+                    </span>
+                </div>
+            </div>
+            <div className={`spin ${isPlaying === true ? 'active' : 'stop'}`}>
+                <img src={STMBpic} alt="" width={70} height={70} style={{borderRadius:'50%'}} />
+            </div>
+        </>
+    );
+};

@@ -177,7 +177,7 @@ const Recruitment: React.FC = () => {
                     <h1>Your information {StatusHolder}</h1>
                     <div className='Informationsub'>
                         <div className='datauser'>
-                            <img src={Klee} width={100} height={100} />
+                            <img src={user?.Profile || Klee} width={100} height={100} />
                             <div style={{marginLeft: '10px'}}>
                                 <p>User Name : {user?.UserName}</p>
                                 <p>First Name : {user?.FirstName}</p>
