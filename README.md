@@ -23,3 +23,7 @@ npm i react-router-dom
 npm i antd
 
 npm install axios
+
+Gen PDF
+npm install jspdf
+npm install html2canvas

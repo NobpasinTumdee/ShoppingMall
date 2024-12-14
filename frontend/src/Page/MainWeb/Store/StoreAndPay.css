@@ -330,8 +330,12 @@
 .Slip img{
     width: 150px;
     position: absolute;
-    top: 0;
+    top: 10px;
     right: 0;
+}
+.Slip h1{
+    font-size: 24px;
+    margin-bottom: 35px;
 }
 .Adress{
     transform: translateY(-20px);
@@ -362,7 +366,7 @@
 .bottoninfo{
     font-size: 10px;
     position: absolute;
-    bottom: 10px;
+    bottom: 20px;
 }
 .backtopayment{
     position: fixed;
