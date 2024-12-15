@@ -18,7 +18,7 @@ import Computer from "../../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 import {GetStoreByFloor} from '../../../services/https/index'
 import {StoreInterface} from '../../../interfaces/StoreInterface'
 
-import {UpdateStoreByid} from '../../../services/https/index';
+import {UpdateStoreByid , DeleteCommentFromStore} from '../../../services/https/index';
 
 
 const Store: React.FC = () => {
@@ -73,6 +73,7 @@ const Store: React.FC = () => {
             const res = await GetStoreByFloor(F);
             if (res.status === 200 && res.data) {
                 setStore(res.data); // กำหนดให้เป็น array ที่ได้จาก API
+                //res.data.forEach((store : StoreInterface) => fetchRating(String(store.ID)));
             } else {
                 setStore([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
                 message.error("There is no Store on this floor.");
@@ -83,11 +84,28 @@ const Store: React.FC = () => {
         }
     };
     //===========================================To page sub==========================================
+    // const [ratings, setRatings] = useState<Record<string, number>>({});
+    // const [SumRating, setSumRating] = useState<Record<string, number>>({});
+    // const fetchRating = async (StoreID: string) => {
+    //     try {
+    //         const res = await GetAvgCommentByStore(StoreID);
+    //         if (res.status === 200) {
+    //             setRatings((prev) => ({ ...prev, [StoreID]: res.data.averageRating }));
+    //             setSumRating((prev) => ({ ...prev, [StoreID]: res.data.totalRatings }));
+    //         } else {
+    //             setRatings((prev) => ({ ...prev, [StoreID]: 0 })); // ไม่มีคะแนน
+    //             setSumRating((prev) => ({ ...prev, [StoreID]: 0 })); // ไม่มีคะแนน
+    //         }
+    //     } catch (error) {
+    //         setRatings((prev) => ({ ...prev, [StoreID]: 0 })); // กรณี error
+    //     }
+    // };
+    //===========================================To page sub==========================================
     const navigate = useNavigate();
     const handleStoreClick = (SubStore: StoreInterface) => {
         navigate('/SubStore', { 
           state: { 
-            ID: SubStore.ID,
+            ID: SubStore.id,
             PicStore: SubStore.PicStore,
             SubPicOne: SubStore.SubPicOne,
             SubPicTwo: SubStore.SubPicTwo,
@@ -106,11 +124,11 @@ const Store: React.FC = () => {
     //============================================เช็ควันหมดอายุ==================================
     const currentDate = new Date(); // เวลาในปัจจุบัน
     const CheckExpiration = (data : any) => {
-        if (currentDate > new Date(data.LastDay)) {
-            UpdateStoreByidd(data.ID);
+        if (currentDate > new Date(data.last_day)) {
+            UpdateStoreByidd(data.id);
             return "Expired";
         }
-        return data.StatusStore;
+        return data.status_store;
     };
     //================================= update ==========================
     const UpdateStoreByidd = async (formData: any) => {
@@ -131,9 +149,11 @@ const Store: React.FC = () => {
         try {
             const res = await UpdateStoreByid(String(formData), values);
             if (res.status === 200) {
-                setTimeout(() => {
-                    //navigate("/Store"); // นำทางกลับไปที่หน้า Store
-                }, 2000);
+                fetchUserData(String(1));
+            }
+            const resDeleteComment = await DeleteCommentFromStore(String(formData));
+            if (resDeleteComment.status === 200) {
+                fetchUserData(String(1));
             }
         } catch (error) {
             
@@ -175,16 +195,20 @@ const Store: React.FC = () => {
                                 const status = CheckExpiration(data);
                                 if (status !== 'Expired') {
                                     return (
-                                        <span key={data.ID} className={`cardStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
+                                        <span key={data.ID} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
                                             <div onClick={() => handleStoreClick(data)}>
-                                                <div><img src={data.PicStore || PicNoStore} alt="PicNoStore" /></div>
-                                                <div><p style={{fontSize: '28px' , color: '#000'}}>{data.NameStore}</p></div>
+                                                <div><img src={data.pic_store || PicNoStore} alt="PicNoStore" /></div>
+                                                <div><p style={{fontSize: '28px' , color: '#000'}}>{data.name_store}</p></div>
                                                 <div className='lineStore'></div>
-                                                <div className='rating'>{renderStars(4)}</div>
+                                                {data.total_rating ? (
+                                                    <div className='rating'>{renderStars(data.total_rating || 5)} {data.total_rating.toFixed(2)} Point</div>
+                                                ) : (
+                                                    <div className='rating' style={{fontSize: '20px'}}>No Rating...</div>
+                                                )}
                                                 <div className='lineStore'></div>
-                                                <div className='DescribtionStore'>{data.BookingDate ? new Date(data.BookingDate).toLocaleDateString() : 'No Date'}<br />{data.LastDay ? new Date(data.LastDay).toLocaleDateString() : 'No Date'}</div>
+                                                <div className='DescribtionStore'>{data.booking_date ? new Date(data.booking_date).toLocaleDateString() : 'No Date'}<br />{data.last_day ? new Date(data.last_day).toLocaleDateString() : 'No Date'}</div>
                                             </div>
-                                            <div className={`ViewStore ${data.StatusStore === "This store is already taken." ? "active" : data.StatusStore === "WaitingForApproval" ? "inactive" : data.StatusStore === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.StatusStore}  --</div>
+                                            <div className={`ViewStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.status_store}  --</div>
                                         </span>
                                     );
                                 }

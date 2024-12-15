@@ -15,6 +15,19 @@ export interface StoreInterface {
     ProductTypeID?:     number ;
 
     Membership?: MembershipInterface;
+
+    //With Rating
+    id?:                number ;
+    pic_store?:         string ;
+    sub_pic_one?:       string ;
+    sub_pic_two?:       string ;
+    sub_pic_three?:     string ;
+    name_store?:        string ;
+    booking_date?:      string ;
+    last_day?:          string ;
+    describtion_store?: string ;
+    status_store?:      string ;
+    total_rating?:      number ;
 }
 export interface MembershipInterface {
     ID?:                number;
@@ -58,6 +71,14 @@ export interface InfoUserStoreInterface{
 export interface PaymentInterface{
     ID?:                    number ;
     StatusPaymentStore?:    string ;
+    PayStoreName?:          string ;
+    PayStorePackage?:       string ;
+    PayStorePwa?:           number ;
+    PayStorePea?:           number ;
+    PayStoreRental?:        number ;
+    PayStoreBook?:          Date ;
+    PayStoreLast?:          Date ;
+
     UserID?:                number ;
     StoreID?:               number ;
     PayMethodStoreID?:      number ;
@@ -94,4 +115,20 @@ export interface TaxUserInterface{
     UserID?:                 number ;
 
     User?: UsersInterface;
+}
+
+export interface RatingInterface{
+    ID?:                    number ;
+    Rating?:                number ;
+    Comment?:               string ;
+    UserID?:                number ;
+    StoreID?:               number ;
+
+    User?: UsersInterface;
+    Store?: StoreInterface;
+}
+export interface AverageRatingInterface {
+    store_id: string;       
+    averageRating: number;  
+    totalRatings: number;   
 }

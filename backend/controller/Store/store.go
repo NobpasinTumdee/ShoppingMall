@@ -1,11 +1,13 @@
 package Store
 
 import (
+	"errors" // เพิ่ม import สำหรับ package errors
 	"net/http"
-	"example.com/ProjectSeG13/entity"
+	"time"
+
 	"example.com/ProjectSeG13/config"
+	"example.com/ProjectSeG13/entity"
 	"github.com/gin-gonic/gin"
-	"errors"  // เพิ่ม import สำหรับ package errors
 	"gorm.io/gorm" // เพิ่ม import สำหรับ gorm
 )
 
@@ -30,6 +32,93 @@ func GetStoreByFloor(c *gin.Context) {
 
 	c.JSON(http.StatusOK, Stores)
 }
+
+func GetStoreDetails(c *gin.Context) {
+	ID := c.Param("id")
+	action := c.Query("action") // ใช้ query parameter เพื่อเลือก action
+	db := config.DB()
+
+	if action == "average-rating" {
+		// Logic สำหรับการดึงค่าเฉลี่ยคะแนน
+		var totalRatings int64
+		var sumRatings int64
+
+		results := db.Model(&entity.Rating{}).Where("store_id = ?", ID).Count(&totalRatings).Select("SUM(rating)").Row()
+		results.Scan(&sumRatings)
+
+		// ถ้าไม่มีข้อมูล ให้ return ค่าเฉลี่ยเป็น 0
+		var averageRating float64
+		if totalRatings == 0 {
+			averageRating = 0
+		} else {
+			// คำนวณค่าเฉลี่ย
+			averageRating = float64(sumRatings) / float64(totalRatings)
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"store_id":      ID,
+			"averageRating": averageRating,
+			"totalRatings":  totalRatings,
+		})
+	} else if action == "list-store" {
+		// Logic สำหรับการดึงรายการร้านค้า
+		var Stores []entity.Store
+		results := db.Where("product_type_id = ?", ID).Find(&Stores)
+		if results.Error != nil {
+			if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+			} else {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+			}
+			return
+		}
+
+		c.JSON(http.StatusOK, Stores)
+	} else {
+		// ถ้าไม่มี action ที่รองรับ
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid action"})
+	}
+}
+
+func GetStoresByProductTypeID(c *gin.Context) {
+	// รับค่า ProductTypeID จาก URL Parameters
+	productTypeID := c.Param("id")
+
+	db := config.DB()
+	type StoreWithRating struct {
+		ID            	uint    	`json:"id"`
+		PicStore  		string 		`json:"pic_store"`
+		SubPicOne  		string 		`json:"sub_pic_one"`
+		SubPicTwo  		string 		`json:"sub_pic_two"`
+		SubPicThree  	string 		`json:"sub_pic_three"`
+		NameStore     	string  	`json:"name_store"`
+		BookingDate   	time.Time 	`json:"booking_date"`
+		LastDay       	time.Time 	`json:"last_day"`
+		DescribtionStore  	string 		`json:"describtion_store"`
+		StatusStore  		string 		`json:"status_store"`
+		TotalRating   	float64 	`json:"total_rating"`
+	}
+
+	var stores []StoreWithRating
+
+	// สร้าง SQL Query สำหรับคำนวณค่าเฉลี่ยของ Rating
+	const sqlAverageRating = `
+		SELECT r.store_id, AVG(r.rating) as avg_rating
+		FROM ratings r
+		WHERE r.deleted_at IS NULL
+		GROUP BY r.store_id
+	`
+
+	// Query ดึงข้อมูลร้านค้าพร้อมค่าเฉลี่ยของรีวิว
+	db.Table("stores as s").
+		Select("s.id, s.pic_store, s.sub_pic_one, s.sub_pic_two, s.sub_pic_three, s.name_store, s.booking_date, s.last_day, s.describtion_store, s.status_store,  COALESCE(sr.avg_rating, 0) as total_rating").
+		Joins("LEFT JOIN (" + sqlAverageRating + ") sr ON sr.store_id = s.id").
+		Where("s.deleted_at IS NULL AND s.product_type_id = ?", productTypeID).
+		Scan(&stores)
+
+	c.JSON(http.StatusOK,stores)
+}
+
 //GET ListStore by id
 func GetStoreByid(c *gin.Context) {
 	ID := c.Param("id")
@@ -130,7 +219,7 @@ func GetStoreWaiting(c *gin.Context) {
 
 
 
-	results := db.Where("status_store = ?", StatusStore).Find(&Stores)
+	results := db.Preload("Membership").Preload("ProductType").Where("status_store = ?", StatusStore).Find(&Stores)
 	if results.Error != nil {
 		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
@@ -162,4 +251,115 @@ func GetMembership(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, Membership)
+}
+
+
+
+// POST Comment
+func CreateRating(c *gin.Context) {
+	var Rating entity.Rating
+
+	if err := c.ShouldBindJSON(&Rating); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	db := config.DB()
+	u := entity.Rating{
+		Rating:			Rating.Rating,
+		Comment: 		Rating.Comment,
+		UserID:        	Rating.UserID,
+		StoreID:        Rating.StoreID,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Comment success", "data": u})
+}
+
+
+// GET /comment/:id
+func ListCommentByStoreId(c *gin.Context) {
+	ID := c.Param("id")
+	var Rating []entity.Rating
+
+	db := config.DB()
+
+
+	results := db.Preload("User").Preload("Store").Where("store_id = ?", ID).Find(&Rating)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Rating)
+}
+
+// GET /comment/:id by userid
+func ListCommentByUserId(c *gin.Context) {
+	ID := c.Param("id")
+	var Rating []entity.Rating
+
+	db := config.DB()
+
+
+	results := db.Preload("User").Preload("Store").Where("user_id = ?", ID).Find(&Rating)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Rating)
+}
+
+// DELETE /comment/:id
+func DeleteComment(c *gin.Context) {
+
+	id := c.Param("id")
+	db := config.DB()
+	if tx := db.Exec("DELETE FROM ratings WHERE store_id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
+}
+
+// GET /average-rating/:id
+func GetAverageRatingByStoreID(c *gin.Context) {
+	ID := c.Param("id")
+	var totalRatings int64
+	var sumRatings int64
+
+	db := config.DB()
+
+	// ดึงค่าคะแนนรวมและจำนวนคะแนนทั้งหมด
+	results := db.Model(&entity.Rating{}).Where("store_id = ?", ID).Count(&totalRatings).Select("SUM(rating)").Row()
+	results.Scan(&sumRatings)
+
+	// ถ้าไม่มีข้อมูล ให้ return ค่าเฉลี่ยเป็น 0
+	var averageRating float64
+	if totalRatings == 0 {
+		averageRating = 0
+	} else {
+		// คำนวณค่าเฉลี่ย
+		averageRating = float64(sumRatings) / float64(totalRatings)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"store_id":      ID,
+		"averageRating": averageRating,
+		"totalRatings":  totalRatings,
+	})
 }

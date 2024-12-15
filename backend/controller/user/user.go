@@ -19,7 +19,7 @@ func ListUsers(c *gin.Context) {
 	db := config.DB()
 
 	// Query the user table for basic user data
-	results := db.Select("id, email, user_name, password, status, first_name, last_name, age, profile, profile_background").Find(&users)
+	results := db.Select("id, email, user_name, password, status, first_name, last_name, age, profile, profile_background, tel").Find(&users)
 
 	// Check for errors in the query
 	if results.Error != nil {
@@ -295,4 +295,27 @@ func UpdateTaxUserByid(c *gin.Context) {
 	}
  
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+}
+
+
+//GET user by status
+func GetListUserByStatus(c *gin.Context) {
+	StatusUser := c.Param("status")
+	var User []entity.User
+
+	db := config.DB()
+
+
+
+	results := db.Preload("TaxUser").Where("status = ?", StatusUser).Find(&User)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, User)
 }

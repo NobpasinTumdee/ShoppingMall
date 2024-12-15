@@ -32,9 +32,9 @@
     0%{
         transform: translateY(0%);
     }25%{
-        transform: translateY(5%);
+        transform: translateY(2%);
     }75%{
-        transform: translateY(-5%);
+        transform: translateY(-2%);
     }100%{
         transform: translateY(0%);
     }
@@ -52,6 +52,23 @@
     margin: 100px 0 10px ;
 }
 
+.fade {
+    width: 319px;
+    height: 347px;
+    margin-left: 40px;
+
+    /* การเปลี่ยนแปลงสมูท */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.fade.visible {
+    opacity: 1;
+}
+
+.fade.hidden {
+    opacity: 0;
+}
 
 
 
@@ -217,7 +234,7 @@ footer{
     max-width: 1536px;
     width: 90%;
     height: 120px;
-    padding: 20px 0;
+    padding: 50px 0;
     margin-inline: auto;
     position: relative;
     overflow: hidden;
@@ -577,5 +594,227 @@ footer{
         rotate: 10deg;
     }100%{
         
+    }
+}
+
+/* ====================================================Admin job========================================================= */
+.headJob{
+    text-align: center;
+    font-family: "PT Serif", serif;
+    font-size:35px;
+}
+.JobRQ{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 225px);
+    gap: 20px;
+    justify-content: center;
+}
+.selcetStatus{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 100px);
+    gap: 20px;
+    justify-content: center;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 800;
+    color: #fff;
+}
+.selcetStatus p{
+    background-color: #C9AF62;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow:  0 0 10px #00000023;
+    animation: selectP 0.8s linear;
+}
+@keyframes selectP {
+    0%{
+        transform: scale(0.6);
+        opacity: 0;
+    }
+}
+.cardUser{
+    background-color: #ffffff;
+    height: 300px;
+    box-shadow: 0 0 5px #00000056;
+    border-radius: 5px;
+    animation: cardUser 0.5s ease-in-out;
+}
+@keyframes cardUser {
+    0%{
+        transform: translateY(300px);
+        opacity: 0;
+    }
+}
+.backgroundUserJob{
+    width: 225px;
+    height: 130px;
+    border-radius: 5px 5px 0 0;
+}
+.ProfileUserJob{
+    position: relative;
+    left: 25%;
+    top: -20%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 0 2px #00000081;
+    animation: Profile 5s ease-in-out 0.5s infinite ;
+}
+@keyframes Profile {
+    0%{
+        transform: translateY(-5px);
+    }50%{
+        transform: translateY(0px);
+    }100%{
+        transform: translateY(-5px);
+    }
+}
+.infoUser{
+    position: relative;
+    top: -70px;
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    line-height: 5px;
+    font-size: 10px;
+    height: 80px;
+    overflow-y: scroll;
+}
+.setButton{
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-210%);
+    margin: 0px 10px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    
+}
+.setButton p{
+    cursor: pointer;
+    color: #C9AF62;
+    padding: 0px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #00000037;
+    border: 1px solid #C9AF62;
+}
+.StatusUser{
+    transform: translateY(-320px);
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    background-color: #c7ac5a;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    box-shadow: 0 5px 5px #00000033;
+}
+
+/* =============================================== Adio player ===================================================== */
+.ButtonMusic{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1021;
+    cursor: pointer;
+}
+
+.showMusic.show{
+    visibility: visible;
+}
+
+.showMusic.notshow{
+    visibility: hidden;
+
+}
+
+.Audio{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1020;
+    background-color: #0000009e;
+    backdrop-filter: blur(10px);
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #000000c3;
+}
+.AudioTop{
+    display: flex;
+    justify-content: start;
+    margin: 5px;
+    align-items: center;
+    color: #fff;
+}
+.AudioTopP p{
+    font-family: "Parkinsans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+    margin-left: 10px;
+}
+.Player {
+    display: flex;
+    justify-content:center;
+    color: #fff;
+}
+.Player button{
+    background-color: #00000000;
+    border: 0px solid #00000000;
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 40px;
+}
+.vol{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vol input[type="range"] {
+    appearance: none;
+    width: 200px; 
+    height: 4px; 
+    background: #919191;
+}
+.vol input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 5px; 
+    height: 5px; 
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.spin{
+    position: fixed;
+    bottom: 10px;
+    left: 220px;
+    background-color: #1d1d1d;
+    padding: 20px;
+    border-radius: 50%;
+    z-index: 1010;
+    box-shadow: 0 0 40px #E8D196;
+
+}
+.spin.active {
+    animation: spinimg 5s linear infinite ;
+
+}
+@keyframes spinimg {
+    0%{
+        rotate: 360deg;
+    }
+}
+.spin.stop {
+    animation: spinimgstop 1s linear reverse forwards ;
+
+}
+@keyframes spinimgstop {
+    0%{
+        opacity: 0;
+        transform: translateX(-300px);
     }
 }

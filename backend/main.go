@@ -11,6 +11,7 @@ import (
 	"example.com/ProjectSeG13/controller/Store"
 	"example.com/ProjectSeG13/controller/user"
 	"example.com/ProjectSeG13/middlewares"
+	"example.com/ProjectSeG13/controller/Inventory"
 )
 
 const PORT = "8000"
@@ -32,7 +33,7 @@ func main() {
     r.PUT("/ResetPasswordUser", user.ResetPasswordUser) //Sign in == login 
 
 	r.GET("/user" , user.ListUsers)
-	r.GET("/store/:id",Store.GetStoreByFloor)
+	r.GET("/store/:id",Store.GetStoresByProductTypeID)
 	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
 	{
@@ -41,6 +42,7 @@ func main() {
 		
 		//User
 		router.GET("/user/:id", user.GetUser)
+		router.GET("/users", user.ListUsers)
 		router.PUT("/user/:id",user.UpdateUserByid)
 		router.POST("/addStore",user.AddStoreUser)
 		router.GET("/userstore", user.ListUserstore)
@@ -53,12 +55,18 @@ func main() {
 		router.PUT("/Tax/:id",user.UpdateTaxUserByid)
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
+		router.GET("/job/:status",user.GetListUserByStatus)
 		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
 		router.POST("/backup",Store.CreateBackUpStore)
 		router.GET("/storeid/:id",Store.GetStoreByid)
 		router.GET("/Membership/:id",Store.GetMembership)
+		router.GET("/commentbystore/:id",Store.ListCommentByStoreId)//rating
+		router.GET("/commentbyuser/:id",Store.ListCommentByUserId)
+		router.POST("/comment",Store.CreateRating)
+		router.DELETE("/comment/:id",Store.DeleteComment)
+		router.GET("/average-rating/:id",Store.GetAverageRatingByStoreID)
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
 		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)
@@ -93,7 +101,10 @@ func main() {
 
 
 
-
+		//อุปกรณ์ทั้งหมด
+		router.GET("/inventory", Inventory.ListInventory)
+		router.GET("/inventory/:id", Inventory.GetInventoryByCategory)
+		router.GET("/CategoryInventory", Inventory.ListCategoryInventory)
 		//ระบบ แจ้งซ่อม
 
 		//ระบบ เช็คอุปกรณ์ช่าง

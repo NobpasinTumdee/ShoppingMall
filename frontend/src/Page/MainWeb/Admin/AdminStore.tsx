@@ -10,7 +10,7 @@ import Own from '../../../assets/icon/ForPage/Admin/Own.png';
 
 import { message} from "antd";
 
-import {GetStoreWaiting , UpdateStoreByid , AddMessage , AddPayment} from '../../../services/https/index';
+import {GetStoreWaiting , UpdateStoreByid , AddMessage , AddPayment , DeleteCommentFromStore} from '../../../services/https/index';
 import {StoreInterface , PaymentInterface} from '../../../interfaces/StoreInterface'
 import { MessageBoardInterface } from '../../../interfaces/UsersInterface';
 
@@ -68,7 +68,16 @@ const AdminStore: React.FC = () => {
             DescribtionNews: 'Your shop reservation has been approved by the administrator and you can You can proceed by making the next payment within 3 days.',
             UserID: approval.UserID
         };
+        const LastDate = new Date(Booking); // วันจริงตามแพ็คเกจ
+        LastDate.setDate(LastDate.getDate() + Number(approval.Membership?.Day)); 
         const valuesPayment: PaymentInterface = { 
+            PayStoreName: approval.NameStore,
+            PayStorePackage: approval.Membership?.PackageName,
+            PayStorePwa: approval.Membership?.Pwa,
+            PayStorePea: approval.Membership?.Pea,
+            PayStoreRental: approval.Membership?.RentalFee,
+            PayStoreBook: Booking,
+            PayStoreLast: LastDate,
             UserID: approval.UserID,
             StoreID: approval.ID
         };
@@ -168,6 +177,13 @@ const AdminStore: React.FC = () => {
                 messageApi.open({
                     type: "error",
                     content: res.data.error,
+                });
+            }
+            const resDeleteComment = await DeleteCommentFromStore(String(approval.ID));
+            if (resDeleteComment.status === 200) {
+                messageApi.open({
+                    type: "info",
+                    content: 'Delete All Comment!',
                 });
             }
         } catch (error) {

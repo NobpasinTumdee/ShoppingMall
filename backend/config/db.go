@@ -1,9 +1,9 @@
 package config
 
 import (
-	"example.com/ProjectSeG13/entity"
 	"fmt"
 	"time"
+	"example.com/ProjectSeG13/entity"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -42,9 +42,8 @@ func SetupDatabase() {
 		&entity.PaymentMethodStore{},
 
 		//ระบบแจ้งซ่อมและอุปการณ์
-		&entity.ServiceRequest{}, 
-		&entity.HistoryEquipment{}, 
-		&entity.Equipment{}, 
+
+
 
 		//ระบบจองHall
 		&entity.Hall{},
@@ -70,10 +69,13 @@ func SetupDatabase() {
 	//User
 	hashedPassword, _ := HashPassword("1")
 	User := []entity.User{
-	 	{UserName: "NobpasinTumdee" ,Password: hashedPassword ,Email: "B6506407@g.sut.ac.th" ,FirstName: "Nobpasin" , LastName: "Tumdee" , Age: 21 , Profile: "https://cache-igetweb-v2.mt108.info/uploads/images-cache/12677/product/dd87089fb03608d6fab36fa1204ce286_full.jpg",ProfileBackground: "" ,Status: "User" },
+	 	{UserName: "NobpasinTumdee" ,Password: hashedPassword ,Email: "B6506407@g.sut.ac.th" ,FirstName: "Nobpasin" , LastName: "Tumdee" , Age: 21 , Profile: "https://i.pinimg.com/736x/db/c0/14/dbc014d8d2229eb5e5a3e76980c137ca.jpg",ProfileBackground: "" ,Status: "User" },
 	 	{UserName: "PorGz" ,Password: hashedPassword ,Email: "PorGz@g.sut.ac.th" ,FirstName: "Por" , LastName: "Gz" , Age: 21 , Profile: "",ProfileBackground: "" ,Status: "User"},
 	 	{UserName: "Admin" ,Password: hashedPassword ,Email: "Admin@g.sut.ac.th" ,FirstName: "Admin" , LastName: "" , Age: 100 , Profile: "https://theinformalgamer.wordpress.com/wp-content/uploads/2022/02/character_yae_miko_thumb-min.png",ProfileBackground: "" ,Status: "Admin"},
 	 	{UserName: "Employee" ,Password: hashedPassword ,Email: "Employee@g.sut.ac.th" ,FirstName: "employee" , LastName: "" , Age: 100 , Profile: "https://tiermaker.com/images/template_images/2022/15460683/genshin-characters-going-to-a-beach---pool-party-15460683/screenshot20221127-203037googlejpg.png",ProfileBackground: "" ,Status: "Employee"},
+	 	{UserName: "Member" ,Password: hashedPassword ,Email: "Member@g.sut.ac.th" ,FirstName: "Member" , LastName: "" , Age: 100 , Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png",ProfileBackground: "" ,Status: "Member"},
+	 	{UserName: "Cleaning" ,Password: hashedPassword ,Email: "Cleaning@g.sut.ac.th" ,FirstName: "Cleaning" , LastName: "" , Age: 100 , Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/kokomijpg.png",ProfileBackground: "" ,Status: "Cleaning"},
+	 	{UserName: "Repairman" ,Password: hashedPassword ,Email: "Repairman@g.sut.ac.th" ,FirstName: "Repairman" , LastName: "" , Age: 100 , Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg",ProfileBackground: "" ,Status: "Repairman"},
 	}
 	for _, pkg := range User {
 		db.FirstOrCreate(&pkg,entity.User{UserName: pkg.UserName})
@@ -111,79 +113,85 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.PaymentMethodStore{MethodName: pkg.MethodName})
 	}
 
-	//Hall
-	Hall := []entity.Hall{
-		{
-			HallName:     "Grand Conference Room",
-			Capacity:     200,
-			Location:     "1st Floor, Building A",
-			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
-			Description:  "A spacious hall suitable for conferences and seminars.",
-			PricePerHour: 5000,
-		},
-		{
-			HallName:     "VIP Meeting Room",
-			Capacity:     50,
-			Location:     "2nd Floor, Building B",
-			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
-			Description:  "A premium meeting room for exclusive gatherings.",
-			PricePerHour: 3000,
-		},
-		{
-			HallName:     "Outdoor Event Space",
-			Capacity:     500,
-			Location:     "Garden Area",
-			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
-			Description:  "An open space perfect for weddings and large events.",
-			PricePerHour: 7000,
-		},
-	}
-	
-	for _, pkg := range Hall {
-		db.FirstOrCreate(&pkg, entity.Hall{HallName: pkg.HallName})
-	}
-	
-
-	// การเพิ่มข้อมูลการจองห้อง
-	BookingHalls := []entity.BookingHall{
-		{
-			HallID:        1,
-			StartDateTime: time.Date(2024, time.December, 6, 10, 0, 0, 0, time.UTC),
-			EndDateTime:   time.Date(2024, time.December, 6, 12, 0, 0, 0, time.UTC),
-			CustomerName:  "John Doe",
-			CustomerEmail: "johndoe@example.com",
-			CustomerPhone: "0123456789",
-			CustomerAddress: "123 Main St, City, Country",
-			Status:         "Confirmed",
-			TotalCost:      5000,
-		},
-		{
-			HallID:        2,
-			StartDateTime: time.Date(2024, time.December, 7, 14, 0, 0, 0, time.UTC),
-			EndDateTime:   time.Date(2024, time.December, 7, 16, 0, 0, 0, time.UTC),
-			CustomerName:  "Jane Smith",
-			CustomerEmail: "janesmith@example.com",
-			CustomerPhone: "0987654321",
-			CustomerAddress: "456 Elm St, City, Country",
-			Status:         "Confirmed",
-			TotalCost:      3000,
-		},
-		{
-			HallID:        1,
-			StartDateTime: time.Date(2024, time.December, 8, 9, 0, 0, 0, time.UTC),
-			EndDateTime:   time.Date(2024, time.December, 8, 11, 0, 0, 0, time.UTC),
-			CustomerName:  "Mike Taylor",
-			CustomerEmail: "miketaylor@example.com",
-			CustomerPhone: "0234567890",
-			CustomerAddress: "789 Oak St, City, Country",
-			Status:         "Pending",
-			TotalCost:      4000,
-		},
+//cleaning
+	// ใส่ข้อมูลเริ่มต้นในตาราง Areas
+	areas := []entity.Area{
+    	{AreaName: "ห้องน้ำชั้น 1", Floor: 1},
+    	{AreaName: "ห้องน้ำชั้น 2", Floor: 2},
+    	{AreaName: "ห้องน้ำชั้น 3", Floor: 3},
+    	{AreaName: "ห้องน้ำชั้น 4", Floor: 4},
 	}
 
-for _, booking := range BookingHalls {
-	db.FirstOrCreate(&booking, entity.BookingHall{StartDateTime: booking.StartDateTime, HallID: booking.HallID})
-}
+	for _, area := range areas {
+    	db.FirstOrCreate(&area, entity.Area{AreaName: area.AreaName})
+	}
+
+	// ดึงวันสุดท้ายจากฐานข้อมูล
+	var lastSchedule entity.Schedule
+	db.Order("schedule_date desc").First(&lastSchedule)
+
+	// กำหนดวันเริ่มต้น
+	var startDate time.Time
+	if lastSchedule.ID == 0 {
+    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้
+    	startDate = time.Now().UTC().Truncate(24 * time.Hour)
+	} else {
+    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไปของวันสุดท้าย
+    	startDate = lastSchedule.ScheduleDate.AddDate(0, 0, 1)
+	}
+
+	// สร้างข้อมูลใหม่จนถึงวันนี้หรืออนาคต
+	currentDate := time.Now().UTC().Truncate(24 * time.Hour)
+	for date := startDate; !date.After(currentDate); date = date.AddDate(0, 0, 1) {
+    	schedule := entity.Schedule{
+        	StartTime:    time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
+        	EndTime:      time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
+        	ScheduleDate: date,
+        	AreaID:       uint((date.Day() % 4) + 1), // แปลงเป็น uint // หมุนเวียน AreaID (1 ถึง 4)
+    	}
+
+    	// เพิ่มข้อมูลลงในฐานข้อมูล
+    	db.FirstOrCreate(&schedule, entity.Schedule{ScheduleDate: schedule.ScheduleDate, AreaID: schedule.AreaID})
+	}
+
+
+	//CategoryInventory
+	item := []entity.CategoryInventory{
+		{CategoryName: "Cleaning equipment"},{CategoryName: "Tools"},
+	}
+	for _, pkg := range item {
+		db.FirstOrCreate(&pkg,entity.CategoryInventory{CategoryName: pkg.CategoryName})
+	}
+
+
+	//Inventory
+	Inventory := []entity.Inventory{
+		{InventoryName: "ไม้ถูพื้น",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ถังน้ำ",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "น้ำยาทำความสะอาดพื้น",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ไม้กวาด",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ที่โกยผง",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ผ้าไมโครไฟเบอร์",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "น้ำยาเช็ดกระจก",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "ฟองน้ำล้างจาน",QuantityInventory: 15,CategoryID: 1},
+		{InventoryName: "เครื่องดูดฝุ่น",QuantityInventory: 5,CategoryID: 1},
+		{InventoryName: "ถุงมือยาง",QuantityInventory: 150,CategoryID: 1},
+		{InventoryName: "ไขควง",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "คีม",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ประแจ",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "เลื่อยมือ",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ตลับเมตร",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "สว่านไฟฟ้า",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ระดับน้ำ",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ค้อน",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ใบตัดเหล็ก",QuantityInventory: 15,CategoryID: 2},
+		{InventoryName: "ปืนยิงซิลิโคน",QuantityInventory: 15,CategoryID: 2},
+		
+	}
+	for _, pkg := range Inventory {
+		db.FirstOrCreate(&pkg,entity.Inventory{InventoryName: pkg.InventoryName})
+	}
+
 
 
 	//Store

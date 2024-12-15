@@ -9,14 +9,19 @@ import SubStore from './Page/MainWeb/Store/SubStore/SubStore';
 import BookStore from './Page/MainWeb/Store/SubStore/BookStore';
 import Inbox from './Page/MainWeb/Inbox/Inbox';
 import BillStore from './Page/MainWeb/Store/BillStore';
+import Recruitment from './Page/Recruitment/Recruitment';
+import AdminJob from './Page/MainWeb/Admin/AdminJob';
+import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
+
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
+import Hall from './Page/MainWeb/Hall/HallBookingPage';
+import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/Inbox","/StorePayment","/BillStore","/celendar"].includes(location.pathname);
-
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -30,10 +35,20 @@ const App: React.FC = () => {
         <Route path="/SubStore" element={<SubStore />} />
         <Route path="/BookStore" element={<BookStore />} /> 
         <Route path="/Inbox" element={<Inbox />} /> 
+
         <Route path="/BillStore" element={<BillStore />} />
         <Route path="/Hall" element={<Hall />} />
         <Route path="/bookinghall" element={<BookingHall />} />
         <Route path="/celendar" element={<CalendarPage />} />
+
+        <Route path="/BillStore" element={<BillStore />} /> 
+        <Route path="/Recruitment" element={<Recruitment />} />
+        <Route path="/AdminJob" element={<AdminJob />} />
+        <Route path="/Inventory" element={<Inventory />} />
+        <Route path="/Hall" element={<Hall />} />
+        <Route path="/Cleaning" element={<Cleaning />} />
+        
+
       </Routes>
     </>
   );

@@ -8,6 +8,13 @@ import (
 type PaymentStore struct {
 	gorm.Model
 	StatusPaymentStore 			string 		`json:"StatusPaymentStore"`
+	PayStoreName 				string 		`json:"PayStoreName"`
+	PayStorePackage 			string 		`json:"PayStorePackage"`
+	PayStorePwa 				int 		`json:"PayStorePwa"`
+	PayStorePea 				int 		`json:"PayStorePea"`
+	PayStoreRental 				int 		`json:"PayStoreRental"`
+	PayStoreBook  				time.Time 	`json:"PayStoreBook"`
+	PayStoreLast  				time.Time 	`json:"PayStoreLast"`
 
 	UserID 			uint 		`json:"UserID"`
 	User   			User 		`gorm:"foreignKey:UserID"`

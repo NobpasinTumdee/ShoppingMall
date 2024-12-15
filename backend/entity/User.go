@@ -23,7 +23,7 @@ type User struct {
 	BackupStore []BackupStore `gorm:"foreignKey:UserID"`
 	PaymentStore []PaymentStore `gorm:"foreignKey:UserID"`
 	
-	ServiceRequest []ServiceRequest `gorm:"foreignKey:UserID"`
+	//ServiceRequest []ServiceRequest `gorm:"foreignKey:UserID"`
 
 	Rating []Rating `gorm:"foreignKey:UserID"`
 
@@ -37,6 +37,7 @@ type User struct {
 	CleaningRecords []CleaningRecord	`gorm:"foreignKey:UserID"` //บันทึกการทำความสะอาด
 
 	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
+	UsageCard []UsageCard `gorm:"foreignKey:UserID"`
 }
 
 

@@ -96,10 +96,17 @@ func CreatePayment(c *gin.Context) {
 	db := config.DB()
 
 	u := entity.PaymentStore{
-		StatusPaymentStore:        "wait",
-		PayMethodStoreID:        0,
-		UserID:        payment.UserID,
-		StoreID:        payment.StoreID,
+		StatusPaymentStore:     "wait",
+		PayMethodStoreID:       0,
+		PayStoreName:        	payment.PayStoreName,
+		PayStorePackage:        payment.PayStorePackage,
+		PayStorePwa:        	payment.PayStorePwa,
+		PayStorePea:        	payment.PayStorePea,
+		PayStoreRental:        	payment.PayStoreRental,
+		PayStoreBook:        	payment.PayStoreBook,
+		PayStoreLast:        	payment.PayStoreLast,
+		UserID:        			payment.UserID,
+		StoreID:       	 		payment.StoreID,
 	}
 
 	// บันทึก
