@@ -293,6 +293,12 @@
     background-color: #fff;
     margin: 10px 2%;
 }
+.QRCODE.Method{
+    visibility: visible;
+}
+.QRCODE.NoMethod{
+    visibility: hidden;
+}
 .QRCODESub1{
     height: 40px;
     background-color: #084370;
@@ -308,6 +314,43 @@
     border-radius:0 0 10px 10px ;
 }
 
+.extractedText{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    background-color: #fff;
+    padding: 0 50px;
+    box-shadow: 0 0 5px #484848;
+    z-index: 1020;
+}
+.backgroundextractedText{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #00000043;
+    z-index: 1010;
+}
+.AttachSlip{
+    position: absolute;
+    text-align: center;
+    bottom: 100px;
+    width: 26%;
+    height: 20px;
+    background-color: transparent;
+    border: 2px solid #C9AF62;
+    font-size: 20px;
+    padding:10px 0 ;
+    color: #C9AF62;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.AttachSlip.Method{
+    visibility: visible;
+}
+.AttachSlip.NoMethod{
+    visibility: hidden;
+}
 .PayNow {
     position: absolute;
     text-align: center;

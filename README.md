@@ -27,3 +27,6 @@ npm install axios
 Gen PDF
 npm install jspdf
 npm install html2canvas
+
+ตรวจสอบภาพ
+npm install tesseract.js

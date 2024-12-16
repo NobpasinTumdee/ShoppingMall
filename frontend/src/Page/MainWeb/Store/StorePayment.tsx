@@ -16,6 +16,9 @@ import storeicon from '../../../assets/icon/ForPage/StorePayment/storeicon.jpg'
 //import Card from '../../../assets/icon/ForPage/StorePayment/CardPayment.png'
 //import QRcode from '../../../assets/icon/ForPage/StorePayment/QrCode.png'
 
+//ตรวจสอบสลิป
+import Tesseract from "tesseract.js";
+
 const StorePayment: React.FC = () => {
     const location = useLocation();
     const userIdstr = localStorage.getItem("id");
@@ -257,9 +260,79 @@ ICONIC Team
             setTaxHld(Number(Tax?.ID));
         }
     };
+    //==================================================ตรวจสอบสลิป=========================================================
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const [extractedText, setExtractedText] = useState("");
+  
+    const handleFileChange = (e : any) => {
+      setSelectedFile(e.target.files[0]);
+      setExtractedText(""); // Reset extracted text
+    };
+  
+    const handleUpload = async () => {
+      if (!selectedFile) {
+        alert("กรุณาเลือกไฟล์สลิป!");
+        return;
+      }
+  
+      setProcessing(true);
+      try {
+        const result = await Tesseract.recognize(selectedFile, "tha", {
+          logger: (info) => console.log(info),
+        });
+        setExtractedText(result.data.text);
+        // setpaysuccessful(true)
+      } catch (error) {
+        console.error("Error during OCR processing:", error);
+        alert("เกิดข้อผิดพลาดในการตรวจสอบสลิป");
+      } finally {
+        setProcessing(false);
+      }
+    };
+
+    const [isPopup, setPopup] = useState(false);
+    const [paysuccessful, setpaysuccessful] = useState(false);
+    const OpenPopup = () => {
+        setPopup(true);
+    };
+    const ClosePopup = () => {
+        setPopup(false);
+    };
+    const successful = () => {
+        setpaysuccessful(true);
+        setPopup(false);
+    };
 
     return(
         <>
+            {/* ตรวจสอบสลิป */}
+            {isPopup && (
+                <>
+                    <div className='extractedText'>
+                        <div style={{ padding: "20px" }}>
+                            <h1>Thai bank slip check system</h1>
+                            <div style={{ marginBottom: "20px" }}>
+                                <input type="file" accept="image/*" onChange={handleFileChange} />
+                            </div>
+                            <button onClick={handleUpload} disabled={processing}>
+                                {processing ? "Processing..." : "Upload and review"}
+                            </button>
+                            {extractedText ? (
+                                <div style={{ margin: "20px 0" }}>
+                                <h2>result:</h2>
+                                <pre>{extractedText}</pre>
+                                <div  style={{backgroundColor: "#C9AF62" , width: '70px' ,padding: '5px',color: '#fff' ,cursor:"pointer" , textAlign: 'center'}} onClick={successful}>Confirm</div>
+                                </div>
+                            ) : (
+                                <div>No information</div>
+                            )}
+                        </div>
+                    </div>
+                    <div className='backgroundextractedText' onClick={ClosePopup}></div>
+                </>
+            )}
+
             <div style={{height: '110px',zIndex: '0'}}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>
@@ -326,13 +399,16 @@ ICONIC Team
                             Receive a tax invoice
                         </label>
                         </div>
-                        <div className='QRCODE'>
-                            <div className='QRCODESub1'>Promptpay</div>
-                            <img src={`https://promptpay.io/0616918493.png/${Total}`} width={200} />
-                            <div className='QRCODESub2'></div>
-                        </div>
                         {Payment?.StatusPaymentStore !== 'paid' && 
-                            <div className={`PayNow ${selectMethod ? 'Method' : 'NoMethod'}`} onClick={() => paid(Payment)}>Pay Now!</div>
+                            <>
+                                <div className={`QRCODE ${selectMethod ? 'Method' : 'NoMethod'}`}>
+                                    <div className='QRCODESub1'>Promptpay</div>
+                                    <img src={`https://promptpay.io/0616918493.png/${Total}`} width={200} />
+                                    <div className='QRCODESub2'></div>
+                                </div>
+                                <div className={`AttachSlip ${selectMethod ? 'Method' : 'NoMethod'}`} onClick={OpenPopup}>Attach payment slip</div>
+                                <div className={`PayNow ${paysuccessful ? 'Method' : 'NoMethod'}`} onClick={() => paid(Payment)}>Pay Now!</div>
+                            </>
                         }
                         {Payment?.StatusPaymentStore === 'paid' && 
                             <div className='PayNow' style={{backgroundColor: '#0d9e00', opacity: "1"}} onClick={() => GotoBillPageClick(Payment)} >Paid Get bill</div>
