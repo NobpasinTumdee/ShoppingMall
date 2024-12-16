@@ -326,6 +326,11 @@ ICONIC Team
                             Receive a tax invoice
                         </label>
                         </div>
+                        <div className='QRCODE'>
+                            <div className='QRCODESub1'>Promptpay</div>
+                            <img src={`https://promptpay.io/0616918493.png/${Total}`} />
+                            <div className='QRCODESub2'></div>
+                        </div>
                         {Payment?.StatusPaymentStore !== 'paid' && 
                             <div className={`PayNow ${selectMethod ? 'Method' : 'NoMethod'}`} onClick={() => paid(Payment)}>Pay Now!</div>
                         }

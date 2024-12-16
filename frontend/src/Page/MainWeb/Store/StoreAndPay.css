@@ -284,6 +284,29 @@
     height: 30px;
     margin: 10px;
 }
+
+.QRCODE{
+    position: absolute;
+    width: 25%;
+    text-align: center;
+    margin-top: 14px;
+    background-color: #fff;
+}
+.QRCODESub1{
+    height: 40px;
+    background-color: #084370;
+    font-size: 30px;
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+}
+.QRCODESub2{
+    height: 20px;
+    background-color: #084370;
+    font-size: 30px;
+    color: #fff;
+    border-radius:0 0 10px 10px ;
+}
+
 .PayNow {
     position: absolute;
     text-align: center;
