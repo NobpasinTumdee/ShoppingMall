@@ -287,10 +287,11 @@
 
 .QRCODE{
     position: absolute;
-    width: 25%;
+    width: 21%;
     text-align: center;
     margin-top: 14px;
     background-color: #fff;
+    margin: 10px 2%;
 }
 .QRCODESub1{
     height: 40px;

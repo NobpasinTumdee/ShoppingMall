@@ -328,7 +328,7 @@ ICONIC Team
                         </div>
                         <div className='QRCODE'>
                             <div className='QRCODESub1'>Promptpay</div>
-                            <img src={`https://promptpay.io/0616918493.png/${Total}`} />
+                            <img src={`https://promptpay.io/0616918493.png/${Total}`} width={200} />
                             <div className='QRCODESub2'></div>
                         </div>
                         {Payment?.StatusPaymentStore !== 'paid' && 
