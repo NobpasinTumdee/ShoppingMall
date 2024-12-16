@@ -8,5 +8,13 @@ export interface UsersInterface {
 	FirstName?: 		string;
 	LastName?: 			string;
 	Age?: 		number;
+	Tel?: 			string ;
 	Status?: 			string ;
+}
+export interface MessageBoardInterface {
+    ID?: 				number;
+	PicNews?: 			string;
+	TextHeader?: 		string;
+	DescribtionNews?: 	string;
+	UserID?:			number;
 }

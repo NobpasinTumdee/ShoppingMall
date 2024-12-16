@@ -1,72 +1,218 @@
-import React, { useState } from 'react';
-import { NavBar } from '../../../../Page/Component/NavBar';
+import React, { useEffect, useState } from 'react';
+//import { NavBar } from '../../../../Page/Component/NavBar';
 import { useLocation } from 'react-router-dom';
 import './SubStore.css'
-import {UpdateStoreByid , BackUpStore} from '../../../../services/https/index';
+import {UpdateStoreByid , BackUpStore , UserStoreByid , AddMessage} from '../../../../services/https/index';
 import { StoreInterface , BackupStoreInterface} from '../../../../interfaces/StoreInterface';
+import { InfoUserStoreInterface } from '../../../../interfaces/StoreInterface';
+import { MessageBoardInterface } from '../../../../interfaces/UsersInterface';
 
-
-import { message} from "antd";
-
+import Store3 from '../../../../assets/icon/ForPage/Store/Store3.jpg';
+import { message,Upload} from "antd";
+import type {  UploadFile, UploadProps } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 const BookStore: React.FC = () => {
-    const userIdstr = localStorage.getItem("id");
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src && file.originFileObj) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as File);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+    
+
     const location = useLocation();
     const {
         ID,
-        //PicStore,
-        //SubPicOne,
-        //SubPicTwo,
-        //SubPicThree,
-        //MembershipID,
         NameStore,
-        BookingDate,
-        LastDay,
-        //DescribtionStore,
-        //StatusStore,
-        //UserID,
         ProductTypeID
     } = location.state as {
         ID: number;
-        PicStore: string;
-        SubPicOne: string;
-        SubPicTwo: string;
-        SubPicThree: string;
-        MembershipID: number;
         NameStore: string;
-        BookingDate: Date;
-        LastDay: Date;
-        DescribtionStore: string;
-        StatusStore: string;
-        UserID: number;
         ProductTypeID: number;
     };
-    const bookingDateObj = new Date(BookingDate);
-    const lastDayObj = new Date(LastDay);
-
-    const formattedBookingDate = bookingDateObj.toLocaleDateString();
-    const formattedLastDay = lastDayObj.toLocaleDateString();
-
-    const [isPopup, setPopup] = useState(true);
-    const closepopup = () => {
-        setPopup(false)
+    //=================================select store================================
+    const userIdstr = localStorage.getItem("id");
+    const [isSelectStore, setSelectStore] = useState(false);
+    const closeSelectStore = () => {
+        setSelectStore(false)
     };
-    const [Package, setPackage] = useState(0);
+    useEffect(() => {
+        if (userIdstr) {
+            fetchUserStoreData(userIdstr);
+        } else {
+            
+        }
+    }, [userIdstr]);
+    //=====================listStore===========================
+    const [Storeu, setStoree] = useState<InfoUserStoreInterface[]>([]);
+    const fetchUserStoreData = async (userIdstr: string ) => {
+        try {
+            const res = await UserStoreByid(userIdstr);
+            if (res.status === 200) {
+                setStoree(res.data);
+                console.log(res.data); 
+
+            }else {
+                setStoree([]); // ถ้าไม่มีข้อมูล ให้กำหนดเป็น array ว่าง
+                message.error("There is no Store on this floor.");
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error); // Debug
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+        }
+    };
+    const BookingDate = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const LastDate = new Date(BookingDate); // คัดลอกค่า BookingDate
+    LastDate.setDate(LastDate.getDate() + 10); // เพิ่ม วันให้กับ LastDate 10 สำหรับรออนุมัติ
+
+    const SelectUserStore = async (SelectStore: InfoUserStoreInterface) => {
+        const values: StoreInterface = {
+            ID,
+            PicStore: String(SelectStore.UserPicStore),
+            SubPicOne: String(SelectStore.UserSubPicOne),
+            SubPicTwo: String(SelectStore.UserSubPicTwo),
+            SubPicThree: String(SelectStore.UserSubPicThree),
+            MembershipID: Package,
+            NameStore: SelectStore.UserNameStore,
+            BookingDate:BookingDate,
+            LastDay:LastDate,
+            DescribtionStore: SelectStore.UserDescribStore,
+            StatusStore: 'WaitingForApproval',
+            UserID: Number(userIdstr),
+            ProductTypeID
+        };
+        const valuesMessage: MessageBoardInterface = { 
+            PicNews: 'https://cdn-icons-png.flaticon.com/512/4942/4942676.png',
+            TextHeader: 'Store reservations' , 
+            DescribtionNews: 'The system has now sent your booking information to the database. Please wait until the administrator verifies your information. and can check the movement at your message box',
+            UserID: SelectStore.UserID
+        };
+        const valuesBackup: BackupStoreInterface = {
+            PicStoreBackup: String(SelectStore.UserPicStore),
+            PicOneBackup: String(SelectStore.UserSubPicOne),
+            PicTwoBackup: String(SelectStore.UserSubPicTwo),
+            PicThreeBackup: String(SelectStore.UserSubPicThree),
+            MembershipBackup: Package, 
+            NameBackup: SelectStore.UserNameStore,
+            BookingBackup: BookingDate,
+            LastDayBackup: LastDate,
+            DescribtionStoreB: SelectStore.UserDescribStore,
+            UserID: Number(userIdstr),
+            ProductTypeIDB: ProductTypeID,
+            StoreID:ID,
+        };
+        try {
+            const res = await UpdateStoreByid(String(ID), values);
+            if (res.status === 200) {
+                messageApi.open({
+                    type: "success",
+                    content: res.data.message,
+                });
+                await BackUpStore(valuesBackup);
+                closepopup1();
+                setTimeout(() => {
+                    SuccessPopup();
+                }, 500);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "การจองไม่สำเร็จ",
+            });
+        }
+        try {
+            const res = await AddMessage(valuesMessage);
+            if (res.status === 201) {
+                setTimeout(() => {
+                    messageApi.open({
+                        type: "info",
+                        content: 'You have a new Message !!',
+                    });
+                }, 3000);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
+            });
+        }
+
+    };
+
+    //=============================================================================
+    const [isPopup, setPopup] = useState(false);//popup Conditions
+    const closepopupConditions = () => {
+        setPopup(false);
+    };
+    const GotopopupinfoStore = () => {
+        setPopup(false)
+        setPopup1(true)
+        setSelectStore(true)
+    };
+    const [Package, setPackage] = useState(0);//package
+    //const [datePackage , setDatePackage] = useState(0);
     const savePackage = async (newMembershipID: number) => {
         setPackage(newMembershipID);
+        if (newMembershipID == 1) {
+            //setDatePackage(7);
+        }else if (newMembershipID == 2) {
+            //setDatePackage(30);
+        }else if (newMembershipID == 3) {
+            //setDatePackage(365);
+        }
         setTimeout(() => {
-            setPopup1(true)
-        }, 2000);
+            setPopup(true)
+        }, 100);
     };
-    const [isPopup1, setPopup1] = useState(false);
+    const [isPopup1, setPopup1] = useState(false);//popup infostore
     const closepopup1 = () => {
-        setPopup1(false)
+        setPopup1(false);
+        closeSelectStore();
     };
     const UpdateAndBackup = async (formData: any) => {
         UpdateStoreByidd(formData);
         BackupStoreF(formData);
+        SuccessPopup();
+        setPopup1(false)
     };
+    const [Success,SetSuccess] = useState(false);//Popup Success
+    const closeSuccess = () => {
+        SetSuccess(false)
+    }
+    const SuccessPopup = () => {
+        SetSuccess(true);
+        setTimeout(() => {
+            SetSuccess(false);
+        }, 5000);
+    }
     const [messageApi, contextHolder] = message.useMessage();
+    //================================= set date ========================
+    const Booking = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
+    const Last = new Date(Booking); // คัดลอกค่า BookingDate
+    Last.setDate(Last.getDate() + 10); // เพิ่ม วันให้กับ LastDay
     //================================= update ==========================
     const UpdateStoreByidd = async (formData: any) => {
         const values: StoreInterface = {
@@ -77,12 +223,18 @@ const BookStore: React.FC = () => {
             SubPicThree: String(formData.subPicThree),
             MembershipID: Package,
             NameStore: formData.nameStore,
-            BookingDate,
-            LastDay,
+            BookingDate:Booking,
+            LastDay:Last,
             DescribtionStore: formData.description,
             StatusStore: 'WaitingForApproval',
             UserID: Number(userIdstr),
             ProductTypeID
+        };
+        const valuesMessage: MessageBoardInterface = { 
+            PicNews: 'https://cdn-icons-png.flaticon.com/512/4942/4942676.png',
+            TextHeader: 'Store reservations' , 
+            DescribtionNews: 'The system has now sent your booking information to the database. Please wait until the administrator verifies your information. and can check the movement at your message box',
+            UserID: Number(userIdstr)
         };
         try {
             const res = await UpdateStoreByid(String(ID), values);
@@ -106,6 +258,27 @@ const BookStore: React.FC = () => {
                 content: "การอัพเดทไม่สำเร็จ",
             });
         }
+        try {
+            const res = await AddMessage(valuesMessage);
+            if (res.status === 201) {
+                setTimeout(() => {
+                    messageApi.open({
+                        type: "info",
+                        content: 'You have a new Message !!',
+                    });
+                }, 3000);
+            } else {
+                messageApi.open({
+                    type: "error",
+                    content: res.data.error,
+                });
+            }
+        } catch (error) {
+            messageApi.open({
+                type: "error",
+                content: "ไม่สำเร็จ",
+            });
+        }
     };
     //============================== backup ============================
     const BackupStoreF = async (formData: any) => {
@@ -116,10 +289,10 @@ const BookStore: React.FC = () => {
             PicThreeBackup: String(formData.subPicThree),
             MembershipBackup: Package, 
             NameBackup: formData.nameStore,
-            BookingBackup: BookingDate,
-            LastDayBackup: LastDay,
-            DescribtionStoreB: formData.nameStore,
-            UserIDB: Number(userIdstr),
+            BookingBackup: Booking,
+            LastDayBackup: Last,
+            DescribtionStoreB: formData.description,
+            UserID: Number(userIdstr),
             ProductTypeIDB: ProductTypeID,
             StoreID:ID,
         };
@@ -149,10 +322,10 @@ const BookStore: React.FC = () => {
     //========================================all input============================
     const [formData, setFormData] = useState({
         nameStore: '',
-        picStore: null,
-        subPicOne: null,     // ภาพย่อยที่ 1
-        subPicTwo: null,     // ภาพย่อยที่ 2
-        subPicThree: null,   // ภาพย่อยที่ 3
+        picStore: '',
+        subPicOne: '',     // ภาพย่อยที่ 1
+        subPicTwo: '',     // ภาพย่อยที่ 2
+        subPicThree: '',   // ภาพย่อยที่ 3
         description: '',
     });
 
@@ -160,22 +333,26 @@ const BookStore: React.FC = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-
-    const handleFileChange = (e: any) => {
-        const { name, files } = e.target;
-
-        // เก็บไฟล์แต่ละไฟล์แยกกัน
-        if (files.length > 0) {
-            setFormData({ ...formData, [name]: files[0] }); 
-        }
-    };
     
-
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
+        formData.picStore = await getImageURL(fileList[0]?.originFileObj);
+        formData.subPicOne = await getImageURL(fileList[1]?.originFileObj);
+        formData.subPicTwo = await getImageURL(fileList[2]?.originFileObj);
+        formData.subPicThree = await getImageURL(fileList[3]?.originFileObj);
         console.log('Form data submitted:', formData);
         UpdateAndBackup(formData);
     };
+
+    const getImageURL = async (file?: File): Promise<string> => {
+        if (!file) return '';
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+        });
+    };
+    
 
     
 
@@ -184,7 +361,7 @@ const BookStore: React.FC = () => {
             {contextHolder}
             {isPopup && 
                 <>
-                    <div style={{backgroundColor: 'rgba(0, 0, 0, 0.315)',width: '100%',height:'100%',position: 'fixed',zIndex: '1005'}}></div>
+                    <div onClick={closepopupConditions} style={{backgroundColor: 'rgba(0, 0, 0, 0.315)',width: '100%',height:'100%',position: 'fixed',zIndex: '1005'}}></div>
                     <div className='Conditions '>
                         <h2>Terms and Conditions for Retail Space Rental in the Mall</h2>
                         <p> 1. Purpose of Rental <br />
@@ -220,7 +397,32 @@ const BookStore: React.FC = () => {
                             9. Acceptance of Terms and Conditions  <br />
                                 The tenant agrees to accept and adhere to all terms and conditions outlined in this agreement, which serves as a legal contract between the tenant and the mall management.<br />
                                 In the event of any disputes or uncertainties, both parties agree to seek mediation or negotiation before pursuing legal action.<br /></p>
-                    <div className='Accept' onClick={closepopup}>Accept all terms</div>
+                    <div className='Accept' onClick={GotopopupinfoStore}>Accept all terms</div>
+                    </div>
+                </>
+            }
+
+            {isSelectStore &&
+                <>
+                    <div className='SelectStore'>
+                        <h1>Select Your Store</h1>
+                        <div className='contentSelectStore'>
+                        {Storeu.length > 0 ? (
+                            Storeu.map((data) => 
+                                <>
+                                    <div className='cardUserStoreSelect' key={data.ID} onClick={() => SelectUserStore(data)}>
+                                        <img src={data.UserPicStore || Store3} alt="Store3" />
+                                        <p className='cardUserStoreSelectName'>{data.UserNameStore || 'No Name!!!'}</p>
+                                        <p className='cardUserStoreSelectinfo'>{data.UserDescribStore || 'No info!!!'}</p>
+                                    </div>
+                                </>
+                            )) : (
+                                <>
+                                    <div className='NoStore' onClick={closeSelectStore}>You don't have any store information yet. <br />Go to the data entry page</div>
+                                </>
+                            )}
+                        </div>
+                        <div className='ExitSelectStore' onClick={closepopup1}></div>
                     </div>
                 </>
             }
@@ -241,22 +443,13 @@ const BookStore: React.FC = () => {
                                     onChange={handleChange}
                                     required
                                 />
+                                <label htmlFor="picStore">Preview Store</label>
+                                <p style={{fontSize: '20px',margin: '0px'}}>You can upload up to 4 sample images of your store.</p>
+                                <Upload fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
+                                    maxCount={4} multiple={false} listType="picture-card" >
+                                    <div><PlusOutlined /><div style={{ marginTop: 8 }}>อัพโหลด</div></div>
+                                </Upload>
                                 
-                                <label htmlFor="picStore">Shop Image</label>
-                                <input
-                                    type="file"
-                                    id="picStore"
-                                    name="picStore"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                />
-
-                                <label>Preview Store</label>
-                                <div className="preview-images">
-                                    <input type="file" id="subPicOne" name="subPicOne" accept="image/*" onChange={handleFileChange} />
-                                    <input type="file" id="subPicTwo" name="subPicTwo" accept="image/*" onChange={handleFileChange} />
-                                    <input type="file" id="subPicThree" name="subPicThree" accept="image/*" onChange={handleFileChange} />
-                                </div>
                             </div>
                             <div className="right-section">
                                 <label htmlFor="description">Description</label>
@@ -269,17 +462,24 @@ const BookStore: React.FC = () => {
                                 />
                             </div>
                     </div>
-                    <button type="submit">Confirm</button>
+                    <div className='submitbtn'>
+                        <div></div>
+                        <button type="submit">Confirm</button>
+                    </div>
             </div>
             </form>
             </>}
+            {Success && 
+                <>
+                    <div onClick={closeSuccess} style={{ backgroundColor: 'rgba(0, 0, 0, 0.315)', width: '100%', height: '100%', position: 'fixed', zIndex: '1005' }}></div>
+                        <div className='success'>
+                            <h1>🎉SUCCESS🎉</h1>
+                            Thank you for your reservation. We have successfully received your information, and we will review it shortly.
+                        </div>
+                </>
+            }
 
-
-
-
-
-            <NavBar />
-            <div style={{ height: '110px' }}></div>
+            <div style={{height: '110px',zIndex: '0'}}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>
                 <a style={{ padding: '0px' }} href="/Store">Store Directory /</a>
