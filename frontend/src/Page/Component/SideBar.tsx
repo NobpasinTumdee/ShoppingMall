@@ -6,7 +6,7 @@ import {
   NotificationOutlined,
 } from '@ant-design/icons';
 import './SideBar.css';
-const { Sider, Content, Header } = Layout;
+const { Sider, Content } = Layout;
 
 const SidebarExample: React.FC = () => {
   return (
