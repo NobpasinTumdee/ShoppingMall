@@ -1,5 +1,6 @@
 import {
   ParkingCardInterface,
+  ParkingTransactionInterface,
   UsageCardInterface,
   ParkingZoneInterface,
 } from "../../interfaces/Carpark";
@@ -86,9 +87,24 @@ async function GetListCard() {
       return e.response;
     });
 }
+/* async function GetListLastTransaction() {
+  return await axios
+    .get(`${apiUrl}/get-list-last-parkingtransaction`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}		 */
 async function CreateParkingCard(data: ParkingCardInterface) {
   return await axios
     .post(`${apiUrl}/create-parkingcard`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+async function CreateParkingTransaction(data: ParkingTransactionInterface) {
+  return await axios
+    .post(`${apiUrl}/create-parkingtransaction`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -101,6 +117,25 @@ async function UpdateParkingCard(id: string, data: ParkingCardInterface) {
 async function UpdateParkingZone(id: number, data: ParkingZoneInterface) {
   return await axios
     .put(`${apiUrl}/update-parkingzone/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+async function UpdateParkingCardAndZone(
+  cid: string,
+  zid: number,
+  cardData: ParkingCardInterface,
+  zoneData: ParkingZoneInterface
+) {
+  const payload = {
+    parking_card: cardData,
+    parking_zone: zoneData,
+  };
+  return await axios
+    .put(
+      `${apiUrl}/update-parkingcard-zone/${cid}/${zid}`,
+      payload,
+      requestOptions
+    )
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -120,8 +155,11 @@ export {
 
   // Car Parking
   GetListCard,
+  //GetListLastTransaction,
   CreateParkingCard,
+  CreateParkingTransaction,
   UpdateParkingCard,
   UpdateParkingZone,
+  UpdateParkingCardAndZone,
   GetIdCardZone,
 };

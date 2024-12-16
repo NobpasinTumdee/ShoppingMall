@@ -24,13 +24,15 @@ import { UserOutlined } from "@ant-design/icons";
 import { NavBar } from "../../Component/NavBar";
 import IN from "./../CarPark/Modal/In";
 import {
-  BookCarParkInterface,
   ParkingCardInterface,
 } from "./../../../interfaces/Carpark";
 
 import "./../Store/StoreAndPay.css";
 import "./CarPark.css";
-import { GetListCard, GetIdCardZone } from "../../../services/https";
+import {
+  GetListCard,
+  GetIdCardZone,
+} from "../../../services/https";
 import OUT from "./Modal/Out";
 
 type OTPProps = GetProps<typeof Input.OTP>;
@@ -63,18 +65,23 @@ const CarPark: React.FC = () => {
   const [form] = Form.useForm();
 
   const getParkingCards = async () => {
-    setLoading(true); // ตั้ง loading เป็น true ก่อนเริ่มโหลดข้อมูล
-    let res = await GetListCard();
-    if (res.status === 200) {
-      setCards(res.data);
-    } else {
-      setCards([]); // ล้างข้อมูลเก่าเมื่อเกิดข้อผิดพลาด
-      messageApi.open({
-        type: "error",
-        content: res.data.error,
-      });
+    setLoading(true); // เปิดสถานะโหลดข้อมูล
+    try {
+      const resCard = await GetListCard();
+
+      // ตรวจสอบการตอบกลับจาก API
+      if (resCard.status === 200) {
+        setCards(resCard.data); // ตั้งค่า cards ด้วยข้อมูลจากการ์ด
+      } else {
+        messageApi.error("Failed to fetch parking cards.");
+      }
+  
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      messageApi.error("An error occurred while fetching data.");
+    } finally {
+      setLoading(false); // ปิดสถานะโหลดข้อมูล
     }
-    setLoading(false); // ตั้ง loading เป็น false เมื่อการโหลดเสร็จสิ้น
   };
 
   const columns = [
@@ -86,18 +93,29 @@ const CarPark: React.FC = () => {
     {
       title: "Card Type",
       key: "TypePark.Type",
-      render: (_: any, record: any) => record.TypePark?.Type || "N/A",
+      render: (_: any, record: any) => record.TypePark?.Type || " ",
     },
     {
       title: "License Plate",
-      dataIndex: "LicensePlate",
-      key: "LicensePlate",
+      dataIndex: "ParkingTransaction.LicensePlate",
+      key: "ParkingTransaction.LicensePlate",
+      render: (_: any, record: any) => {
+        // ตรวจสอบว่า ParkingTransaction มีข้อมูลก่อน
+        const parkingTransactions = record.ParkingTransaction || [];
+        const latestTransaction = parkingTransactions.length > 0
+          ? parkingTransactions.sort((a: any, b: any) => new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime())[0]
+          : null;
+    
+        // หากมีข้อมูลล่าสุดให้แสดง LicensePlate
+        const licensePlate = latestTransaction ? latestTransaction.LicensePlate : " ";
+        return licensePlate;
+      },
     },
     {
       title: "Status",
       key: "Status",
       render: (_: any, record: ParkingCardInterface) => {
-        const status = record.StatusCard?.Status || "N/A"; // กำหนดค่า status
+        const status = record.StatusCard?.Status || " "; // กำหนดค่า status
         return (
           <ConfigProvider
             theme={{
@@ -326,6 +344,7 @@ const CarPark: React.FC = () => {
               loading={loading}
               style={{ fontSize: "30px", textAlignLast: "center" }}
               className="table-card"
+              rowKey="ID"
             />
           </ConfigProvider>
         </Row>
@@ -365,6 +384,7 @@ const CarPark: React.FC = () => {
         setSelectedCardIndex={setSelectedCardIndex}
         setSelectedCard={setSelectedCard} // <-- Add this line
         setFilteredData={setFilteredData}
+        setOtp={setOtp}
         setSearchValue={setSearchValue}
         searchValue={searchValue}
         onChange={onChange}
@@ -391,7 +411,6 @@ const CarPark: React.FC = () => {
         setFilteredData={setFilteredData}
         setSearchValue={setSearchValue}
         searchValue={searchValue}
-        onChange={onChange}
         setIsModalOutVisible={setIsModalOutVisible}
         isModalOutVisible={isModalOutVisible}
         handleCancelIn={handleCancelIn}

@@ -57,7 +57,7 @@ func SetupDatabase() {
 		&entity.ParkingCardZone{},
 		&entity.ParkingFeePolicy{},
 		&entity.ParkingPayment{},
-		&entity.BackupCard{},
+		&entity.ParkingTransaction{},
 	)
 
 	//User

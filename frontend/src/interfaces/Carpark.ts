@@ -1,4 +1,4 @@
-export interface BookCarParkInterface {
+/* export interface BookCarParkInterface {
   key?: string; // Change from string to string | undefined
   idcard: string;
   TypeCardID: number;
@@ -14,15 +14,10 @@ export interface BookCarParkInterface {
   LicensePlate: string;
   UserID: number;
 }
-
+ */
 export interface ParkingCardInterface {
   ID: string;
   ExpiryDate?: string;
-  EntryTime?: string;
-  ExitTime?: string;
-  Hourly_rate?: string;
-  Fee?: number;
-  LicensePlate?: string;
   TypePark?: {
     ID: number;
     Type: string;
@@ -33,7 +28,6 @@ export interface ParkingCardInterface {
     ID: number;
     Status?: string;
   };
-  StatusPaymentID?: number;
   ParkingFeePolicyID?: number;
   UserID?: number;
   ParkingZone?: {
@@ -43,10 +37,22 @@ export interface ParkingCardInterface {
     Capacity?: number;
     AvailableZone?: number;
     TypeParkID?: number;
-  } [];  // Remove the array type here
-  BackupCard?: BackupCardInterface[];
+  }[]; // Remove the array type here
+  ParkingTransaction?: {
+    EntryTime?: string; // ใช้ string แทน time
+    ExitTime?: string; // ใช้ string แทน time
+    Hourly_rate?: number;
+    Fee?: number;
+    LicensePlate?: string;
+    UserID?: number;
+    StatusPaymentID?: number;
+    ParkingCardID?: string;
+    ParkingCard?: ParkingCardInterface;
+    IsLostCard?: boolean;
+    IsPaid?: boolean;
+    IsCash?: boolean;
+  }[];
 }
-
 
 export interface ParkingCardZoneInterface {
   ParkingCardID?: string;
@@ -66,6 +72,24 @@ export interface ParkingZoneInterface {
   TypeParkID?: number;
   TypePark?: TypeParkInterface;
   ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
+}
+
+export interface ParkingTransactionInterface {
+  EntryTime?: string; // ใช้ string แทน time
+  ExitTime?: string; // ใช้ string แทน time
+  Hourly_rate?: number;
+  Fee?: number;
+  LicensePlate?: string;
+
+  UserID?: number;
+  StatusPaymentID?: number;
+
+  ParkingCardID?: string;
+  ParkingCard?: ParkingCardInterface;
+
+  IsLostCard?: boolean;
+  IsPaid?: boolean;
+  IsCash?: boolean;
 }
 
 export interface TypeParkInterface {
@@ -119,7 +143,7 @@ export interface HistoryMembershipInterface {
   MembershipCustomer?: MembershipCustomerInterface;
 }
 
-export interface BackupCardInterface {
+/* export interface BackupCardInterface {
   EntryTime?: string; // ใช้ string แทน time
   ExitTime?: string; // ใช้ string แทน time
   Hourly_rate?: string; // ใช้ string แทน time
@@ -133,12 +157,13 @@ export interface BackupCardInterface {
 
   ParkingPaymentID?: number;
   ParkingPayment?: ParkingPaymentInterface;
-}
+} */
 
 export interface ParkingPaymentInterface {
   ID?: number;
   TaxID?: string;
   PaymentDate?: string; // ใช้ string แทน time
+  Amount?: number;
   IsLostCard?: boolean;
   IsPaid?: boolean;
   IsCash?: boolean;

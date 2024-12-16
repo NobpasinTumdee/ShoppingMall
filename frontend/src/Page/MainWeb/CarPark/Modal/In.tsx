@@ -12,14 +12,17 @@ import {
   Row,
 } from "antd";
 import {
-  BookCarParkInterface,
   ParkingCardInterface,
 } from "./../../../../interfaces/Carpark";
 import "./../Carpark.css";
 import layout from "antd/es/layout";
 
-import { UpdateParkingCard } from "../../../../services/https";
-import { UpdateParkingZone } from "../../../../services/https";
+import {
+  CreateParkingTransaction,
+  UpdateParkingCard,
+  UpdateParkingCardAndZone,
+  UpdateParkingZone,
+} from "../../../../services/https";
 
 interface InProps {
   setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
@@ -36,6 +39,7 @@ interface InProps {
   setSelectedCard: React.Dispatch<
     React.SetStateAction<ParkingCardInterface | null>
   >;
+  setOtp: React.Dispatch<React.SetStateAction<string>>;
   setFilteredData: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
   searchValue: string;
@@ -61,6 +65,7 @@ const IN: React.FC<InProps> = ({
   setSelectedCardIndex,
   /* handleCancel, */
   setSelectedCard,
+  setOtp,
   setFilteredData,
   setSearchValue,
   searchValue,
@@ -127,25 +132,39 @@ const IN: React.FC<InProps> = ({
       const userID = localStorage.getItem("id");
       const parkingCardID = selectedCard?.ID;
 
-      const usageCardData = {
-        ID: parkingCardID,
+      const CardTransData = {
         EntryTime: new Date().toISOString(),
         LicensePlate: licensePlate,
         UserID: Number(userID),
-        StatusCardID: 2,
+        parkingCardID: parkingCardID,
         StatusPaymentID: 1,
       };
-
+      const updateCardData = {
+        ID: parkingCardID,
+        StatusCardID: 2,
+      };
       const updateZoneData = {
         ID: zoneId,
         AvailableZone: availableZone - 1,
       };
 
       try {
-        const resCard = await UpdateParkingCard(parkingCardID, usageCardData);
+        const resCard = await UpdateParkingCard(parkingCardID, updateCardData);
         const resZone = await UpdateParkingZone(zoneId || 0, updateZoneData);
+        /*      const resCardZone = await UpdateParkingCardAndZone(
+          parkingCardID,
+          zoneId || 0,
+          updateCardData,
+          updateZoneData
+        );
+ */
+        const restrans = await CreateParkingTransaction(CardTransData);
 
-        if (resCard.status === 200 && resZone.status === 200) {
+        if (
+          restrans.status === 201 &&
+          resCard.status === 200 &&
+          resZone.status === 200
+        ) {
           messageApi.open({
             type: "success",
             content: "Parking card and zone updated successfully!",
@@ -153,9 +172,8 @@ const IN: React.FC<InProps> = ({
 
           handleCancel();
           getParkingCards();
-          onChange(searchValue);
-          setSearchValue("");
-          setFilteredData([]);
+          onChange("");
+          setOtp("");
           setIsModalInVisible(false);
         } else {
           message.error("Error updating parking card or zone.");

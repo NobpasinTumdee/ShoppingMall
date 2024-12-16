@@ -15,7 +15,8 @@ type ParkingPayment struct {
 	ParkingCardID string      `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
 
-	BackupCard *BackupCard `gorm:"foreignKey:ParkingPaymentID"`
+	ParkingTransactionID uint                `json:"ParkingTransactionID"`
+	ParkingTransaction   ParkingTransaction `gorm:"foreignKey:ParkingTransactionID"`
 
 	UserID uint `json:"UserID"`
 	User   User `gorm:"foreignKey:UserID"`
