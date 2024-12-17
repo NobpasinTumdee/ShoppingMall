@@ -17,7 +17,7 @@ import { NavBar } from './Page/Component/NavBar';
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
-import Hall from './Page/MainWeb/Hall/HallBookingPage';
+
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();

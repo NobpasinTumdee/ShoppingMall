@@ -192,6 +192,44 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Inventory{InventoryName: pkg.InventoryName})
 	}
 
+	halls := []entity.Hall{
+		{
+			HallName:     "Grand Hall",
+			Capacity:     500,
+			Location:     "ชั้น 1 อาคาร A",
+			ImageHall:    "https://example.com/images/grand_hall.jpg",
+			Description:  "ห้องโถงขนาดใหญ่สำหรับจัดงานประชุมและสัมมนา",
+			PricePerHour: 15000,
+		},
+		{
+			HallName:     "Conference Room 101",
+			Capacity:     50,
+			Location:     "ชั้น 2 อาคาร B",
+			ImageHall:    "https://example.com/images/conference_101.jpg",
+			Description:  "ห้องประชุมขนาดเล็ก เหมาะสำหรับการประชุมทีมและอบรม",
+			PricePerHour: 3000,
+		},
+		{
+			HallName:     "Ballroom 202",
+			Capacity:     300,
+			Location:     "ชั้น 2 อาคาร C",
+			ImageHall:    "https://example.com/images/ballroom_202.jpg",
+			Description:  "ห้องบอลรูมสุดหรูสำหรับงานแต่งงานและงานเลี้ยงสังสรรค์",
+			PricePerHour: 12000,
+		},
+		{
+			HallName:     "Training Room 305",
+			Capacity:     40,
+			Location:     "ชั้น 3 อาคาร D",
+			ImageHall:    "https://example.com/images/training_room_305.jpg",
+			Description:  "ห้องฝึกอบรมพร้อมอุปกรณ์มัลติมีเดีย",
+			PricePerHour: 2500,
+		},
+	}
+	for _, pkg := range halls {
+		db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
+	}
+	
 
 
 	//Store
