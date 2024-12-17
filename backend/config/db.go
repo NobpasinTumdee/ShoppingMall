@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"example.com/ProjectSeG13/entity"
@@ -305,7 +306,6 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Store{NameStore: pkg.NameStore})
 	}
 */
-/*
 	// StatusPayment
 	NameStatusPayment := []entity.StatusPayment{
 		{Status: "Pending"}, {Status: "Paid"}, {Status: "Error"},
@@ -551,7 +551,5 @@ func SetupDatabase() {
 	for _, pkg := range feePolicy {
 		db.FirstOrCreate(&pkg, entity.ParkingFeePolicy{TypeParkID: pkg.TypeParkID})
 	}
-
-	*/
 
 }

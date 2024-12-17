@@ -1,8 +1,3 @@
-import { SignInInterface } from "../../interfaces/SignIn";
-import {
-  StoreInterface,
-  BackupStoreInterface,
-} from "../../interfaces/StoreInterface";
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
@@ -13,7 +8,6 @@ import {
   UsageCardInterface,
   ParkingZoneInterface,
 } from "../../interfaces/Carpark";
-
 import axios from "axios";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
