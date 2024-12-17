@@ -481,39 +481,110 @@ async function GetStoreWaiting(status: string) {
 //=============================อุปกรณ์=====================================
 // get Inventory
 async function ListInventory() {
-
   return await axios
 
-    .get(`${apiUrl}/inventory`, requestOptions)
+  .get(`${apiUrl}/inventory`, requestOptions)
 
-    .then((res) => res)
+  .then((res) => res)
 
-    .catch((e) => e.response);
+  .catch((e) => e.response);
 
 }
 // get CategoryInventory
 async function ListCategoryInventory() {
 
-  return await axios
+return await axios
 
-    .get(`${apiUrl}/CategoryInventory`, requestOptions)
+  .get(`${apiUrl}/CategoryInventory`, requestOptions)
 
-    .then((res) => res)
+  .then((res) => res)
 
-    .catch((e) => e.response);
+  .catch((e) => e.response);
 
 }
 // get Inventory by id
 async function GetInventoryById(id: string) {
 
+return await axios
+
+  .get(`${apiUrl}/inventory/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+
+
+}
+
+
+//===========================Hall==========================================
+//Get ListHall
+async function ListHall() {
+  
   return await axios
 
-    .get(`${apiUrl}/inventory/${id}`, requestOptions)
+  .get(`${apiUrl}/hall`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetHallByID(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function CreateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function UpdateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function DeleteBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetBookinghall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+
+async function ListBookingHall() {
+  return await axios
+
+    .get(`${apiUrl}/bookings`, requestOptions)
 
     .then((res) => res)
-
+    
     .catch((e) => e.response);
-
 }
 
 export {
@@ -553,6 +624,14 @@ export {
     GetBillByPayidPreload,//bill
     CreateBill,
 
+    ListHall,
+    GetHallByID,
+    CreateBookingHall,
+    UpdateBookingHall,
+    DeleteBookingHall,
+    GetBookinghall,
+    ListBookingHall,
+
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,
     GetInventoryById,
@@ -567,3 +646,4 @@ export {
   UpdateParkingCardAndZone,
   GetIdCardZone,
 }
+

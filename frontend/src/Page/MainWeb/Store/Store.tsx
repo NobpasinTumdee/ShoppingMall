@@ -191,11 +191,11 @@ const Store: React.FC = () => {
                     <span style={{width: "20%"}}></span>
                     <span style={{width: "100%"}} className='Store'>
                         {Store.length > 0 ? (
-                            Store.map((data) => {
+                            Store.map((data,index) => {
                                 const status = CheckExpiration(data);
                                 if (status !== 'Expired') {
                                     return (
-                                        <span key={data.ID} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
+                                        <span key={index} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
                                             <div onClick={() => handleStoreClick(data)}>
                                                 <div><img src={data.pic_store || PicNoStore} alt="PicNoStore" /></div>
                                                 <div><p style={{fontSize: '28px' , color: '#000'}}>{data.name_store}</p></div>

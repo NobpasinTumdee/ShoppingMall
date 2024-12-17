@@ -1,4 +1,3 @@
-//import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-router-dom';
 import Login from './Page/Login/Login';
 import Main from './Page/MainWeb/Main';
@@ -14,15 +13,20 @@ import Recruitment from './Page/Recruitment/Recruitment';
 import AdminJob from './Page/MainWeb/Admin/AdminJob';
 import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
-import Hall from './Page/MainWeb/Hall/HallBookingPage';
+
+import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
+import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
+import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
+
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
+
 import CarPark from './Page/MainWeb/CarPark/CarPark';
 import CarParkIN from './Page/MainWeb/CarPark/CarParkIN';
 import CarParkINZone from './Page/MainWeb/CarPark/IN/CarParkINZone';
 
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -37,6 +41,12 @@ const App: React.FC = () => {
         <Route path="/BookStore" element={<BookStore />} />
         <Route path="/BookStore" element={<BookStore />} /> 
         <Route path="/Inbox" element={<Inbox />} /> 
+
+        <Route path="/BillStore" element={<BillStore />} />
+        <Route path="/Hall" element={<Hall />} />
+        <Route path="/bookinghall" element={<BookingHall />} />
+        <Route path="/celendar" element={<CalendarPage />} />
+
         <Route path="/BillStore" element={<BillStore />} /> 
         <Route path="/Recruitment" element={<Recruitment />} />
         <Route path="/AdminJob" element={<AdminJob />} />
@@ -46,6 +56,8 @@ const App: React.FC = () => {
         <Route path="/CarParking" element={<CarPark />} />
         <Route path="/CarParking-In" element={<CarParkIN />} />
         <Route path="/CarParking-In-Zone" element={<CarParkINZone />} />
+        
+
       </Routes>
     </>
   );

@@ -66,8 +66,6 @@ const Main: React.FC = () => {
     useEffect(() => {
         if (1) {
             fetchStore('1');
-        } else {
-            
         }
     }, [1]);
 
@@ -76,7 +74,6 @@ const Main: React.FC = () => {
             const res = await GetStoreByFloor(id);
             if (res.status === 200) {
                 setStore(res.data);
-            }else {
             }
         } catch (error) {
             console.error("Error fetching user data:", error);

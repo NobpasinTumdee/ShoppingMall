@@ -3,12 +3,15 @@ package main
 import (
 	"example.com/ProjectSeG13/config"
 	"github.com/gin-gonic/gin"
+
 	//"example.com/ProjectSeG13/controller"
-  	"net/http"
-	"example.com/ProjectSeG13/middlewares"
-	"example.com/ProjectSeG13/controller/user"
+	"net/http"
+
+	"example.com/ProjectSeG13/controller/Hall"
 	"example.com/ProjectSeG13/controller/Store"
 	"example.com/ProjectSeG13/controller/CarPark"
+	"example.com/ProjectSeG13/controller/user"
+	"example.com/ProjectSeG13/middlewares"
 	"example.com/ProjectSeG13/controller/Inventory"
 )
 
@@ -95,7 +98,14 @@ func main() {
 
 
 		//ระบบ hall
-
+		router.GET("/hall",Hall.ListHall)
+		router.GET("/hall/:id",Hall.GetHall)
+		router.POST("/hall/bookinghall", Hall.CreateBooking) //Create Booking
+		router.GET("/hall/bookinghall/:id", Hall.GetBookingByID) //Get Booking by ID
+		router.PUT("/hall/bookinghall/:id", Hall.UpdateBooking) //Update Booking
+		router.DELETE("/hall/bookinghall/:id", Hall.DeleteBooking) //Delete Booking
+		router.GET("/bookings", Hall.ListBookingHall) // List all bookings
+		
 		//ระบบ hall payment
 
 

@@ -1,53 +1,26 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from '@ant-design/icons';
-import './SideBar.css';
-const { Sider, Content } = Layout;
+import { Menu } from 'antd';
+import { CalendarOutlined, BookOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
-const SidebarExample: React.FC = () => {
-  return (
-    <Layout>
-        {/* Sidebar */}
-        <Sider width={200} theme="dark">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            style={{ height: '100%', borderRight: 0 }}
-          >
-            <Menu.Item key="1" icon={<UserOutlined />}>
-              Dashboard
-            </Menu.Item>
-            <Menu.Item key="2" icon={<LaptopOutlined />}>
-              Projects
-            </Menu.Item>
-            <Menu.Item key="3" icon={<NotificationOutlined />}>
-              Notifications
-            </Menu.Item>
-            <Menu.Item key="4" icon={<UserOutlined />}>
-              Profile
-            </Menu.Item>
-          </Menu>
-        </Sider>
 
-        {/* Main Content */}
-        <Layout style={{ padding: '0 24px 24px' }}>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: '#fff',
-            }}
-          >
-            Main Content Goes Here
-          </Content>
-        </Layout>
-    </Layout>
-  );
+const SideBar: React.FC = () => {
+    return (
+      <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
+        <Menu.Item key="1" icon={<CalendarOutlined />}>
+            <Link to="/celendar">ปฏิทินการใช้ห้อง</Link>
+        </Menu.Item>
+        <Menu.Item key="2" icon={<BookOutlined />}>
+            <Link to="/booking-status">สถานะการจองห้อง</Link>
+        </Menu.Item>
+        <Menu.Item key="3" icon={<FileTextOutlined />}>
+            <Link to="/reports">รายงานการจองห้องประชุม</Link>
+        </Menu.Item>
+        <Menu.Item key="4" icon={<SettingOutlined />}>
+            <Link to="/admin-info">ข้อมูลผู้ดูแล</Link>
+        </Menu.Item>
+  </Menu>
+    );
 };
 
-export default SidebarExample;
+export default SideBar;
