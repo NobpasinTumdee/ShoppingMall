@@ -39,10 +39,39 @@ func SetupDatabase() {
 		&entity.HistoryStore{},
 		&entity.Rating{},
 
+<<<<<<< Updated upstream
 		//ระบบแจ้งซ่อมและอุปการณ์
 		&entity.ServiceRequest{}, 
 		&entity.HistoryEquipment{}, 
 		&entity.Equipment{}, 
+=======
+		//ระบบแจ้งซ่อม
+		&entity.ServiceRequest{},
+		
+		//อุปการณ์ช่างซ่อม
+		&entity.EquipmentRequest{},
+
+
+		//ระบบจองHall
+		&entity.Hall{},
+		&entity.BookingHall{},
+		&entity.Facilities{},
+		&entity.FacilityList{},
+		&entity.PaymentHall{},
+
+
+		//ระบบบันทึกการทำความสะอาดของแม่บ้าน
+		&entity.Area{},
+		&entity.Schedule{},
+		&entity.CleaningRecord{},
+
+		//ตารางอุปกรณ์ส่วนกลาง
+		&entity.Inventory{},
+		&entity.CategoryInventory{},
+
+		//ระบบเบิกอุปกรณ์การทำความสะอาด
+		&entity.InventoryRequest{},
+>>>>>>> Stashed changes
 	)
 	
 	//User
