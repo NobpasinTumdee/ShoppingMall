@@ -137,6 +137,9 @@ const BookingHall: React.FC = () => {
                     </Content>
                 </Layout>
             </Layout>
+            <div>
+                {id}{String(Hall)}{loading}{String(Option)}
+            </div>
         </>
     );
 };

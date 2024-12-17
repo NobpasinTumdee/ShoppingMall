@@ -30,3 +30,7 @@ npm install html2canvas
 
 ตรวจสอบภาพ
 npm install tesseract.js
+
+
+ระบบ hall
+npm i date-fns

@@ -17,6 +17,8 @@ const CalendarPage: React.FC = () => {
 
     useEffect(() => {
         ListBookingHall();
+        //เอาใส่ไว้ก่อนไม่ให้เตือนสีเหลือง
+        setBookings([])
     }, []); 
 
     const getBookingsByDate = (date: Date) => {
@@ -32,36 +34,36 @@ const CalendarPage: React.FC = () => {
         navigate(`/bookinghall`);
     };
 
-    const dateCellRender = (date: Date) => {
-        const dailyBookings = getBookingsByDate(date);
-        // ตรวจสอบว่าในวันนั้นมีการจองห้องประชุมหรือไม่
-        const hasBookings = dailyBookings.length > 0;
+    // const dateCellRender = (date: Date) => {
+    //     const dailyBookings = getBookingsByDate(date);
+    //     // ตรวจสอบว่าในวันนั้นมีการจองห้องประชุมหรือไม่
+    //     const hasBookings = dailyBookings.length > 0;
 
-        return (
-            <ul style={{ padding: 0 }}>
-                {dailyBookings.map((booking) => (
-                    <li key={booking.ID} style={{ listStyle: "none", color: "green" }}>
-                        {booking.CustomerName} - {booking.Hall?.HallName || "ไม่มีห้องประชุม"}
-                    </li>
-                ))}
-                {/* เปลี่ยนสีเซลล์เป็นสีแดงหากมีการจอง */}
-                {hasBookings && (
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: 5,
-                            left: 5,
-                            right: 5,
-                            bottom: 5,
-                            backgroundColor: "red",
-                            borderRadius: "50%",
-                            opacity: 0.4,
-                        }}
-                    />
-                )}
-            </ul>
-        );
-    };
+    //     return (
+    //         <ul style={{ padding: 0 }}>
+    //             {dailyBookings.map((booking) => (
+    //                 <li key={booking.ID} style={{ listStyle: "none", color: "green" }}>
+    //                     {booking.CustomerName} - {booking.Hall?.HallName || "ไม่มีห้องประชุม"}
+    //                 </li>
+    //             ))}
+    //             {/* เปลี่ยนสีเซลล์เป็นสีแดงหากมีการจอง */}
+    //             {hasBookings && (
+    //                 <div
+    //                     style={{
+    //                         position: "absolute",
+    //                         top: 5,
+    //                         left: 5,
+    //                         right: 5,
+    //                         bottom: 5,
+    //                         backgroundColor: "red",
+    //                         borderRadius: "50%",
+    //                         opacity: 0.4,
+    //                     }}
+    //                 />
+    //             )}
+    //         </ul>
+    //     );
+    // };
 
     return (
         <>
@@ -75,7 +77,7 @@ const CalendarPage: React.FC = () => {
                         <h2>ปฏิทินการจองห้องประชุม</h2>
                         <Calendar
                             onSelect={(date) => onSelectDate(date.toDate())}
-                            dateCellRender={dateCellRender}
+                            // dateCellRender {dateCellRender}
                             style={{ borderRadius: "10px" }}
                         />
                         <Modal
