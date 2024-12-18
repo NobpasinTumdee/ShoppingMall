@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Admin: React.FC = () => {
     const navigate = useNavigate();
+    const handleClickToCalendar = () => {
+        navigate('/CalendarAdmin');
+    };
     const handleClickToStore = () => {
         navigate('/AdminStore');
     };
@@ -24,6 +27,7 @@ const Admin: React.FC = () => {
             <p className='PManagement'>What do you want to do?</p>
             <div className='Mainpage'>
                 <p className='ManageMainPage'><img src={Home} alt="Home" />Manage Main Page</p>
+                <p className='ManageMainPage' onClick={handleClickToCalendar}><img src={Home} alt="Home" />Calendar </p>
             </div>
             <div className='Management'>
                 <span className='ManagementSpan' >

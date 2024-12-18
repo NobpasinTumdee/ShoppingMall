@@ -34,3 +34,6 @@ npm install tesseract.js
 
 ระบบ hall
 npm i date-fns
+
+Calendar
+npm install @schedule-x/react @schedule-x/theme-default @schedule-x/events-service
