@@ -1,0 +1,84 @@
+/* Container หลักของฟอร์ม */
+.service-form-container {
+    width: 50%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border: 2px solid #d2b469;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* หัวข้อหลักของฟอร์ม */
+  .service-form-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #8c7327;
+    margin-bottom: 20px;
+  }
+  
+  /* ช่อง input และ textarea */
+  .service-form-group {
+    margin-bottom: 15px;
+  }
+  
+  .service-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .service-form-group input,
+  .service-form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+  }
+  
+  .service-form-group input:focus,
+  .service-form-group textarea:focus {
+    outline: none;
+    border-color: #d2b469;
+    box-shadow: 0 0 4px rgba(210, 180, 105, 0.5);
+  }
+  
+  .service-form-group textarea {
+    height: 100px;
+    resize: none;
+  }
+  
+  /* ปุ่มกด */
+  .service-form-button {
+    display: block;
+    width: 100px;
+    padding: 10px;
+    margin: 20px auto 0;
+    background-color: #d2b469;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .service-form-button:hover {
+    background-color: #8c7327;
+  }
+  
+  /* แถบสีด้านล่าง */
+  .service-form-footer {
+    height: 40px;
+    background-color: #d2b469;
+    margin-top: 20px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  
