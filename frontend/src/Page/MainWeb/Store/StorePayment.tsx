@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import {message} from 'antd'
+import { message } from 'antd'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import './StoreAndPay.css'
 
-import { GetPaymentid , GetPaymentMethod , UpdatePaymentStatus , UpdateStoreByid , GetStoreById , GetMembershipByid , CreateBill , GetTaxById} from '../../../services/https';
-import { PaymentInterface , PaymentMethodStoreInterface , StoreInterface , MembershipInterface , ReceiptInterface , TaxUserInterface} from '../../../interfaces/StoreInterface';
+import { GetPaymentid, GetPaymentMethod, UpdatePaymentStatus, UpdateStoreByid, GetStoreById, GetMembershipByid, CreateBill, GetTaxById } from '../../../services/https';
+import { PaymentInterface, PaymentMethodStoreInterface, StoreInterface, MembershipInterface, ReceiptInterface, TaxUserInterface } from '../../../interfaces/StoreInterface';
 
 import PWA from '../../../assets/icon/ForPage/StorePayment/PWA.jpg'
 import PEA from '../../../assets/icon/ForPage/StorePayment/PEA.jpg'
 import storeicon from '../../../assets/icon/ForPage/StorePayment/storeicon.jpg'
+import PaymentSucc from '../../../assets/icon/ForPage/StorePayment/PaymentSucc.gif'
 //import Card from '../../../assets/icon/ForPage/StorePayment/CardPayment.png'
 //import QRcode from '../../../assets/icon/ForPage/StorePayment/QrCode.png'
 
@@ -32,7 +33,7 @@ const StorePayment: React.FC = () => {
             fetchPaymentMethod();
         }
     }, [1]);
-    const fetchPayment = async (ID: string ) => {//Payment
+    const fetchPayment = async (ID: string) => {//Payment
         try {
             const res = await GetPaymentid(ID);
             if (res.status === 200) {
@@ -52,7 +53,7 @@ const StorePayment: React.FC = () => {
             fetchMember(String(Store.MembershipID))
         }
     }, [Store]);
-    const fetchStore = async (ID: string ) => {//Store
+    const fetchStore = async (ID: string) => {//Store
         try {
             const res = await GetStoreById(ID);
             if (res.status === 200) {
@@ -62,7 +63,7 @@ const StorePayment: React.FC = () => {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลStore");
         }
     };
-    const fetchMember = async (ID: string ) => {//Members
+    const fetchMember = async (ID: string) => {//Members
         try {
             const res = await GetMembershipByid(ID);
             if (res.status === 200) {
@@ -85,7 +86,7 @@ const StorePayment: React.FC = () => {
     };
     const [selectMethod, setselectMethod] = useState(0);
     const [selectMethodName, setselectMethodName] = useState('');
-    const SelectPaymentMethod = (data : PaymentMethodStoreInterface) => {
+    const SelectPaymentMethod = (data: PaymentMethodStoreInterface) => {
         setselectMethod(Number(data.ID));
         setselectMethodName(String(data.MethodName));
     };
@@ -102,8 +103,8 @@ const StorePayment: React.FC = () => {
     const gmail = {
         to: Payment?.User?.Email,
         subject: 'Payment successful (' + Payment?.PayStoreName + ') 🎉',
-        message: 
-`เรียน ลูกค้าผู้มีอุปการคุณ,
+        message:
+            `เรียน ลูกค้าผู้มีอุปการคุณ,
 
 ทางบริษัท ICONIC ขอขอบพระคุณที่ท่านได้ให้ความไว้วางใจและเลือกใช้บริการล็อคขายสินค้ากับเรา เรารู้สึกยินดีเป็นอย่างยิ่งที่ได้มีโอกาสต้อนรับท่านเป็นส่วนหนึ่งของครอบครัว ICONIC
 การจองล็อคขายสินค้าของท่านได้รับการดำเนินการสำเร็จเรียบร้อยแล้ว ทางเราขอแจ้งให้ทราบว่า ท่านสามารถใช้พื้นที่ที่ท่านจองได้ตามรายละเอียดที่ท่านได้รับในเอกสารยืนยันการจอง
@@ -124,15 +125,15 @@ Sincerely,
 ICONIC Team
         `
     };
-    
-    
+
+
     const handleSubmitGmail = async () => {
-    try {
-        const response = await axios.post('http://localhost:8000/send-email', gmail);
-        console.info(response);
-    } catch (error) {
-        console.error(error);
-    }
+        try {
+            const response = await axios.post('http://localhost:8000/send-email', gmail);
+            console.info(response);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
 
@@ -143,13 +144,13 @@ ICONIC Team
     //=========================================paynow================================================
     const paid = async (Data: any) => {
         const values = {
-            ...Data , PayMethodStoreID: selectMethod  ,StatusPaymentStore: "paid" 
+            ...Data, PayMethodStoreID: selectMethod, StatusPaymentStore: "paid"
         };
-        const valuesBill: ReceiptInterface = { 
-            DateReceipt: Booking , DescribtionBill: String(Store?.NameStore) , PaymentStoreID: Payment?.ID , UserTaxID: TaxHld
+        const valuesBill: ReceiptInterface = {
+            DateReceipt: Booking, DescribtionBill: String(Store?.NameStore), PaymentStoreID: Payment?.ID, UserTaxID: TaxHld
         };
         try {
-            const res = await UpdatePaymentStatus(String(ID),values);
+            const res = await UpdatePaymentStatus(String(ID), values);
             if (res.status === 200) {
                 message.open({
                     type: "success",
@@ -159,6 +160,7 @@ ICONIC Team
                 setTimeout(() => {
                     //navigate("/Store"); // นำทางกลับไปที่หน้า Store
                 }, 2000);
+                SetPopupsuccessful();
             } else {
                 message.open({
                     type: "error",
@@ -201,7 +203,7 @@ ICONIC Team
     };
     //=========================================updateStore================================================
     const updateStore = async (approval: any) => {
-        const values = { ...approval, StatusStore: 'This store is already taken.' , BookingDate:Booking , LastDay:Last };
+        const values = { ...approval, StatusStore: 'This store is already taken.', BookingDate: Booking, LastDay: Last };
         try {
             const res = await UpdateStoreByid(String(Payment?.StoreID), values);
             if (res.status === 200) {
@@ -226,10 +228,10 @@ ICONIC Team
     const navigate = useNavigate();
     const GotoBillPageClick = (Payment: PaymentInterface) => {
 
-        navigate('/BillStore', { 
-            state: { 
+        navigate('/BillStore', {
+            state: {
                 ID: Payment.ID,
-            } 
+            }
         });
     };
     //==========================================================tax==================================================
@@ -241,7 +243,7 @@ ICONIC Team
             fetchTax(userIdstr);
         }
     }, [userIdstr]);
-    const fetchTax = async (ID: string ) => {//Payment
+    const fetchTax = async (ID: string) => {//Payment
         try {
             const res = await GetTaxById(ID);
             if (res.status === 200) {
@@ -256,7 +258,7 @@ ICONIC Team
         setChecked(e.target.checked);
         if (checked == true) {
             setTaxHld(0);
-        }else if (checked == false){
+        } else if (checked == false) {
             setTaxHld(Number(Tax?.ID));
         }
     };
@@ -264,31 +266,31 @@ ICONIC Team
     const [selectedFile, setSelectedFile] = useState(null);
     const [processing, setProcessing] = useState(false);
     const [extractedText, setExtractedText] = useState("");
-  
-    const handleFileChange = (e : any) => {
-      setSelectedFile(e.target.files[0]);
-      setExtractedText(""); // Reset extracted text
+
+    const handleFileChange = (e: any) => {
+        setSelectedFile(e.target.files[0]);
+        setExtractedText(""); // Reset extracted text
     };
-  
+
     const handleUpload = async () => {
-      if (!selectedFile) {
-        alert("กรุณาเลือกไฟล์สลิป!");
-        return;
-      }
-  
-      setProcessing(true);
-      try {
-        const result = await Tesseract.recognize(selectedFile, "tha", {
-          logger: (info) => console.log(info),
-        });
-        setExtractedText(result.data.text);
-        // setpaysuccessful(true)
-      } catch (error) {
-        console.error("Error during OCR processing:", error);
-        alert("เกิดข้อผิดพลาดในการตรวจสอบสลิป");
-      } finally {
-        setProcessing(false);
-      }
+        if (!selectedFile) {
+            alert("กรุณาเลือกไฟล์สลิป!");
+            return;
+        }
+
+        setProcessing(true);
+        try {
+            const result = await Tesseract.recognize(selectedFile, "tha", {
+                logger: (info) => console.log(info),
+            });
+            setExtractedText(result.data.text);
+            // setpaysuccessful(true)
+        } catch (error) {
+            console.error("Error during OCR processing:", error);
+            alert("เกิดข้อผิดพลาดในการตรวจสอบสลิป");
+        } finally {
+            setProcessing(false);
+        }
     };
 
     const [isPopup, setPopup] = useState(false);
@@ -304,7 +306,16 @@ ICONIC Team
         setPopup(false);
     };
 
-    return(
+    //==============================UI payment successful========================
+    const [issuccessful, setsuccessful] = useState(false);
+    const SetPopupsuccessful = () => {
+        setsuccessful(true);
+        setTimeout(() => {
+            setsuccessful(false);
+        },5000)
+    };
+
+    return (
         <>
             {/* ตรวจสอบสลิป */}
             {isPopup && (
@@ -320,9 +331,9 @@ ICONIC Team
                             </button>
                             {extractedText ? (
                                 <div style={{ margin: "20px 0" }}>
-                                <h2>result:</h2>
-                                <pre>{extractedText}</pre>
-                                <div  style={{backgroundColor: "#C9AF62" , width: '70px' ,padding: '5px',color: '#fff' ,cursor:"pointer" , textAlign: 'center'}} onClick={successful}>Confirm</div>
+                                    <h2>result:</h2>
+                                    <pre>{extractedText}</pre>
+                                    <div style={{ backgroundColor: "#C9AF62", width: '70px', padding: '5px', color: '#fff', cursor: "pointer", textAlign: 'center' }} onClick={successful}>Confirm</div>
                                 </div>
                             ) : (
                                 <div>No information</div>
@@ -332,8 +343,17 @@ ICONIC Team
                     <div className='backgroundextractedText' onClick={ClosePopup}></div>
                 </>
             )}
+            {/* payment successful UI */}
+            {issuccessful &&
+                <>
+                    <div className='succ'>
+                        <img src={PaymentSucc} width={150} />
+                        <p>Payment Successful</p>
+                    </div>
+                </>
+            }
 
-            <div style={{height: '110px',zIndex: '0'}}></div>
+            <div style={{ height: '110px', zIndex: '0' }}></div>
             <div className='route'>
                 <a href="/Main">Home /</a>
                 <a style={{ padding: '0px' }} href="/Inbox">Inbox /</a>
@@ -350,35 +370,36 @@ ICONIC Team
                     <hr />
                     <div className='PWA'>
                         <img src={PWA} alt="PWA" />
-                        <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Provincial Waterworks Authority #{Payment?.PayStorePackage}</p>
-                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
-                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
+                        <div style={{ marginLeft: '20px' , width: '320px'}}>
+                            <p style={{ fontWeight: '900' }}>Provincial Waterworks Authority #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String((Payment?.PayStoreBook ? new Date(Payment?.PayStoreBook).toLocaleDateString() : "No Date Available" ))} : {String((Payment?.PayStoreBook ? new Date(Payment?.PayStoreBook).toLocaleTimeString() : "" ))}</p>
+                            <p>Last Day : {String((Payment?.PayStoreLast ? new Date(Payment?.PayStoreLast).toLocaleDateString() : "No Date Available" ))} : {String((Payment?.PayStoreLast ? new Date(Payment?.PayStoreLast).toLocaleTimeString() : "" ))}</p>
                         </div>
-                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStorePwa} Bath</div>
+                        <div style={{ marginLeft: '150px', fontWeight: '900', display: 'flex', alignItems: 'center' }}>{Payment?.PayStorePwa} Bath</div>
                     </div>
 
                     <div className='PWA'>
                         <img src={PEA} alt="PEA" />
-                        <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Provincial ELECTRICITY Authority #{Payment?.PayStorePackage}</p>
-                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
-                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
+                        <div style={{ marginLeft: '20px' , width: '320px' }}>
+                            <p style={{ fontWeight: '900' }}>Provincial ELECTRICITY Authority #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String((Payment?.PayStoreBook ? new Date(Payment?.PayStoreBook).toLocaleDateString() : "No Date Available" ))} : {String((Payment?.PayStoreBook ? new Date(Payment?.PayStoreBook).toLocaleTimeString() : "" ))}</p>
+                            <p>Last Day : {String((Payment?.PayStoreLast ? new Date(Payment?.PayStoreLast).toLocaleDateString() : "No Date Available" ))} : {String((Payment?.PayStoreLast ? new Date(Payment?.PayStoreLast).toLocaleTimeString() : "" ))}</p>
                         </div>
-                        <div style={{marginLeft: '18%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStorePea} Bath</div>
+                        <div style={{ marginLeft: '150px', fontWeight: '900', display: 'flex', alignItems: 'center' }}>{Payment?.PayStorePea} Bath</div>
                     </div>
 
                     <div className='PWA'>
                         <img src={storeicon} alt="storeicon" />
-                        <div style={{marginLeft: '20px'}}>
-                            <p style={{fontWeight: '900'}}>Rental Fee #{Payment?.PayStorePackage}</p>
-                            <p>Booking Date : {String(Payment?.PayStoreBook)}</p>
-                            <p>Last Day : {String(Payment?.PayStoreLast)}</p>
+                        <div style={{ marginLeft: '20px' , width: '320px'}}>
+                            <p style={{ fontWeight: '900' }}>Rental Fee #{Payment?.PayStorePackage}</p>
+                            <p>Booking Date : {String((Payment?.PayStoreBook ? new Date(Payment?.PayStoreBook).toLocaleDateString() : "No Date Available" ))} : {String((Payment?.PayStoreBook ? new Date(Payment?.PayStoreBook).toLocaleTimeString() : "" ))}</p>
+                            <p>Last Day : {String((Payment?.PayStoreLast ? new Date(Payment?.PayStoreLast).toLocaleDateString() : "No Date Available" ))} : {String((Payment?.PayStoreLast ? new Date(Payment?.PayStoreLast).toLocaleTimeString() : "" ))}</p>
                         </div>
-                        <div style={{marginLeft: '20%',fontWeight: '900' ,display: 'flex',alignItems: 'center'}}>{Payment?.PayStoreRental} Bath</div>
+                        <div style={{ marginLeft: '150px', fontWeight: '900', display: 'flex', alignItems: 'center' }}>{Payment?.PayStoreRental} Bath</div>
                     </div>
                     <hr />
-                    <div className='total'><p></p><p>Total : {Total} Bath <hr /></p></div>
+                    <div className='total'><p></p><p>Total : {Total.toLocaleString()} Bath <hr /></p></div>
+                    <div className='Completed'>Payment completed</div>
                 </div>
                 <div className='listPayR'>
                     <div className='listPayRSub'>
@@ -387,31 +408,37 @@ ICONIC Team
                         {PaymentMethod.map((data) => (
                             <div className='PaymentPaymentMethod' key={data.ID} onClick={() => SelectPaymentMethod(data)}><img src={data.MethodPic} alt="" />{data.MethodName}</div>
                         ))}
-                        <p>Your Selection : {selectMethodName} </p>
+                        {selectMethodName && <p>Your Selection : {selectMethodName} </p>}
                         <hr />
                         <div>
-                        <label>
-                            <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={handleChange}
-                            />
-                            Receive a tax invoice
-                        </label>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={handleChange}
+                                />
+                                Receive a tax invoice
+                            </label>
                         </div>
-                        {Payment?.StatusPaymentStore !== 'paid' && 
+                        {Payment?.StatusPaymentStore !== 'paid' &&
                             <>
                                 <div className={`QRCODE ${selectMethod ? 'Method' : 'NoMethod'}`}>
                                     <div className='QRCODESub1'>Promptpay</div>
-                                    <img src={`https://promptpay.io/0616918493.png/${Total}`} width={200} />
+                                    <img src={`https://promptpay.io/0616918493.png/${Total}`|| "https://img.freepik.com/premium-vector/broken-credit-card-debt-bankruptcy-failed-money-transaction-vector-stock-illustration_100456-11684.jpg"} width={150} />
                                     <div className='QRCODESub2'></div>
                                 </div>
+                            </>
+                        }
+                    </div>
+                    <div style={{margin: '10px 0'}}>
+                        {Payment?.StatusPaymentStore !== 'paid' &&
+                            <>
                                 <div className={`AttachSlip ${selectMethod ? 'Method' : 'NoMethod'}`} onClick={OpenPopup}>Attach payment slip</div>
                                 <div className={`PayNow ${paysuccessful ? 'Method' : 'NoMethod'}`} onClick={() => paid(Payment)}>Pay Now!</div>
                             </>
                         }
-                        {Payment?.StatusPaymentStore === 'paid' && 
-                            <div className='PayNow' style={{backgroundColor: '#0d9e00', opacity: "1"}} onClick={() => GotoBillPageClick(Payment)} >Paid Get bill</div>
+                        {Payment?.StatusPaymentStore === 'paid' &&
+                            <div className='PayNow' style={{ backgroundColor: '#0d9e00', opacity: "1" }} onClick={() => GotoBillPageClick(Payment)} >Paid Get bill</div>
                         }
                     </div>
                 </div>
