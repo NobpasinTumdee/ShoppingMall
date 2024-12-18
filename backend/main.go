@@ -88,9 +88,11 @@ func main() {
 		//router.POST("/create-parkingcard",CarPark.CreateParkingCard)
 		router.POST("/create-parkingtransaction",CarPark.CreateParkingTransaction)
 		router.PUT("/update-parkingcard/:id",CarPark.UpdateParkingCard)
+		router.GET("/get-parking-card-with-zone/:id", CarPark.GetParkingCardWithZoneByID)
 		router.GET("/get-card-zone/:id", CarPark.GetIdCardZone)
 		router.PUT("/update-parkingzone/:id",CarPark.UpdateParkingZone)
 		router.PUT("/update-parkingcard-zone/:cid/:zid",CarPark.UpdateParkingCardAndZone)
+		
 		
 		//ระบบ จองรถ payment
 

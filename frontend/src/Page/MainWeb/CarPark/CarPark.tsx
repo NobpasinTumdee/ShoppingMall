@@ -23,16 +23,11 @@ import axios from "axios";
 import { UserOutlined } from "@ant-design/icons";
 import { NavBar } from "../../Component/NavBar";
 import IN from "./../CarPark/Modal/In";
-import {
-  ParkingCardInterface,
-} from "./../../../interfaces/Carpark";
+import { ParkingCardInterface } from "./../../../interfaces/Carpark";
 
 import "./../Store/StoreAndPay.css";
 import "./CarPark.css";
-import {
-  GetListCard,
-  GetIdCardZone,
-} from "../../../services/https";
+import { GetListCard, GetIdCardZone } from "../../../services/https";
 import OUT from "./Modal/Out";
 
 type OTPProps = GetProps<typeof Input.OTP>;
@@ -71,11 +66,16 @@ const CarPark: React.FC = () => {
 
       // ตรวจสอบการตอบกลับจาก API
       if (resCard.status === 200) {
-        setCards(resCard.data); // ตั้งค่า cards ด้วยข้อมูลจากการ์ด
+        const sortedCards = resCard.data.sort((a: any, b: any) => {
+          // คำนวณการจัดเรียงตามเวลา UpdatedAt
+          return (
+            new Date(b.UpdatedAt).getTime() - new Date(a.UpdatedAt).getTime()
+          );
+        });
+        setCards(sortedCards); // ตั้งค่า cards ด้วยข้อมูลที่จัดเรียงแล้ว
       } else {
         messageApi.error("Failed to fetch parking cards.");
       }
-  
     } catch (error) {
       console.error("Error fetching data:", error);
       messageApi.error("An error occurred while fetching data.");
@@ -102,12 +102,18 @@ const CarPark: React.FC = () => {
       render: (_: any, record: any) => {
         // ตรวจสอบว่า ParkingTransaction มีข้อมูลก่อน
         const parkingTransactions = record.ParkingTransaction || [];
-        const latestTransaction = parkingTransactions.length > 0
-          ? parkingTransactions.sort((a: any, b: any) => new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime())[0]
-          : null;
-    
-        // หากมีข้อมูลล่าสุดให้แสดง LicensePlate
-        const licensePlate = latestTransaction ? latestTransaction.LicensePlate : " ";
+        const latestTransaction =
+          parkingTransactions.length > 0
+            ? parkingTransactions.sort(
+                (a: any, b: any) =>
+                  new Date(b.EntryTime).getTime() -
+                  new Date(a.EntryTime).getTime()
+              )[0]
+            : null;
+
+        const licensePlate = latestTransaction
+          ? latestTransaction.LicensePlate
+          : " ";
         return licensePlate;
       },
     },
@@ -331,6 +337,12 @@ const CarPark: React.FC = () => {
         >
           <ConfigProvider
             theme={{
+              components: {
+                Table: {
+                  rowSelectedHoverBg: "#c9af62",
+                  rowSelectedBg: "#c9af62",
+                },
+              },
               token: {
                 fontFamily: "Dongle, sans-serif",
                 fontSize: 22,
@@ -340,7 +352,7 @@ const CarPark: React.FC = () => {
           >
             <Table<ParkingCardInterface>
               columns={columns}
-              dataSource={searchValue ? filteredData : cards} // Use filteredData if search is active
+              dataSource={searchValue ? filteredData : cards} // ใช้ filteredData หากมีการค้นหา
               loading={loading}
               style={{ fontSize: "30px", textAlignLast: "center" }}
               className="table-card"
@@ -372,34 +384,33 @@ const CarPark: React.FC = () => {
       </Col>
 
       <IN
-        setCards={setCards}
+        /*setCards={setCards}
         cards={cards}
-        //fetchParkingCards={fetchParkingCards}
         getParkingCards={getParkingCards}
-        selectedCard={selectedCard}
         selectedStatus={selectedStatus}
         carLicensePlate={carLicensePlate}
         setCarLicensePlate={setCarLicensePlate}
         selectedCardIndex={selectedCardIndex}
         setSelectedCardIndex={setSelectedCardIndex}
-        setSelectedCard={setSelectedCard} // <-- Add this line
         setFilteredData={setFilteredData}
-        setOtp={setOtp}
         setSearchValue={setSearchValue}
         searchValue={searchValue}
+*/
+        selectedCard={selectedCard}
+        setSelectedCard={setSelectedCard}
         onChange={onChange}
+        setOtp={setOtp}
         setIsModalInVisible={setIsModalInVisible}
         isModalInVisible={isModalInVisible}
-        setIsModalOutVisible={setIsModalOutVisible}
-        isModalOutVisible={isModalOutVisible}
+        getParkingCards={getParkingCards}
+        //setIsModalOutVisible={setIsModalOutVisible}
+        //isModalOutVisible={isModalOutVisible}
         handleCancelIn={handleCancelIn}
-        handleCancelOut={handleCancelOut}
-        /* handleCancel={handleCancel} */
-      />
-      <OUT
+        // handleCancelOut={handleCancelOut}
+      ></IN>
+      {/*   <OUT
         setCards={setCards}
         cards={cards}
-        //fetchParkingCards={fetchParkingCards}
         getParkingCards={getParkingCards}
         selectedCard={selectedCard}
         selectedStatus={selectedStatus}
@@ -407,16 +418,14 @@ const CarPark: React.FC = () => {
         setCarLicensePlate={setCarLicensePlate}
         selectedCardIndex={selectedCardIndex}
         setSelectedCardIndex={setSelectedCardIndex}
-        setSelectedCard={setSelectedCard} // <-- Add this line
+        setSelectedCard={setSelectedCard} 
         setFilteredData={setFilteredData}
         setSearchValue={setSearchValue}
         searchValue={searchValue}
         setIsModalOutVisible={setIsModalOutVisible}
         isModalOutVisible={isModalOutVisible}
         handleCancelIn={handleCancelIn}
-        handleCancelOut={handleCancelOut}
-        /* handleCancel={handleCancel} */
-      />
+        handleCancelOut={handleCancelOut}*/}
     </>
   );
 };

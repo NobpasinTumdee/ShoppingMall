@@ -18,6 +18,7 @@
 export interface ParkingCardInterface {
   ID: string;
   ExpiryDate?: string;
+  UpdatedAt?: string;
   TypePark?: {
     ID: number;
     Type: string;

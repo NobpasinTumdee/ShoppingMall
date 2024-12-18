@@ -390,7 +390,7 @@ async function CreateBill(data: ReceiptInterface) {
 
 }
 
-// Car Parking
+//============================ Car Park ========================================
 async function GetListCard() {
   return await axios
     .get(`${apiUrl}/get-list-parking-card`, requestOptions)
@@ -451,7 +451,14 @@ async function UpdateParkingCardAndZone(
     )
     .then((res) => res)
     .catch((e) => e.response);
+}		
+async function GetParkingCardWithZoneByID(id: string) {
+  return await axios
+    .get(`${apiUrl}/get-parking-card-with-zone/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
+
 async function GetIdCardZone(id: string) {
   return await axios
     .get(`${apiUrl}/get-card-zone/${id}`, requestOptions)
@@ -644,6 +651,7 @@ export {
   UpdateParkingCard,
   UpdateParkingZone,
   UpdateParkingCardAndZone,
+  GetParkingCardWithZoneByID,
   GetIdCardZone,
 }
 

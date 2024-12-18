@@ -1,4 +1,5 @@
-import React from "react";
+// Updated IN Component for Parking Management System
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -12,100 +13,78 @@ import {
   Row,
 } from "antd";
 import {
-  ParkingCardInterface,
-} from "./../../../../interfaces/Carpark";
-import "./../Carpark.css";
-import layout from "antd/es/layout";
-
-import {
+  GetParkingCardWithZoneByID,
   CreateParkingTransaction,
   UpdateParkingCard,
-  UpdateParkingCardAndZone,
   UpdateParkingZone,
 } from "../../../../services/https";
+import "./../Carpark.css";
+import { ParkingCardInterface } from "../../../../interfaces/Carpark";
+
+import Tesseract from "tesseract.js";
 
 interface InProps {
-  setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
-  cards: ParkingCardInterface[];
-  // fetchParkingCards: () => void;
-  getParkingCards: () => void;
+  getParkingCards: () => Promise<void>;
   selectedCard: ParkingCardInterface | null;
-  selectedStatus: string;
-  carLicensePlate: string;
-  setCarLicensePlate: React.Dispatch<React.SetStateAction<string>>;
-  selectedCardIndex: number | null;
-  setSelectedCardIndex: React.Dispatch<React.SetStateAction<number | null>>;
-
   setSelectedCard: React.Dispatch<
     React.SetStateAction<ParkingCardInterface | null>
   >;
-  setOtp: React.Dispatch<React.SetStateAction<string>>;
-  setFilteredData: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
-  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-  searchValue: string;
   onChange: (value: string) => void;
-  setIsModalInVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setOtp: React.Dispatch<React.SetStateAction<string>>;
   isModalInVisible: boolean;
-  setIsModalOutVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  isModalOutVisible: boolean;
+  setIsModalInVisible: React.Dispatch<React.SetStateAction<boolean>>;
   handleCancelIn: () => void;
-  handleCancelOut: () => void;
 }
 
 const IN: React.FC<InProps> = ({
-  setCards,
-  cards,
-  //fetchParkingCards,
   getParkingCards,
-  selectedCard,
-  selectedStatus,
-  carLicensePlate,
-  setCarLicensePlate,
-  selectedCardIndex,
-  setSelectedCardIndex,
-  /* handleCancel, */
-  setSelectedCard,
-  setOtp,
-  setFilteredData,
-  setSearchValue,
-  searchValue,
   onChange,
-  setIsModalInVisible,
+  setOtp,
+  selectedCard,
+  setSelectedCard,
   isModalInVisible,
-  setIsModalOutVisible,
-  isModalOutVisible,
-  handleCancelOut,
+  setIsModalInVisible,
   handleCancelIn,
 }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
+  const [selectedCardIndex, setSelectedCardIndex] = useState(null);
+  const [carLicensePlate, setCarLicensePlate] = useState("");
+  const [carColor, setCarColor] = useState("");
+  const [carMake, setCarMake] = useState("");
+  const [image, setImage] = useState<string | null>(null); // กำหนดให้รองรับทั้ง string หรือ null
 
-  const handleCardClick = (index: number) => {
-    setSelectedCardIndex(selectedCardIndex === index ? null : index);
-    //setSelectedCardIndex(index);
+  useEffect(() => {
+    console.log("Requesting with ID:", selectedCard?.ID);
+    const fetchData = async () => {
+      try {
+        const response = await GetParkingCardWithZoneByID(
+          selectedCard?.ID || ""
+        );
+        setSelectedCard(response.data);
+      } catch (error) {
+        message.error("Failed to fetch parking card data.");
+      }
+    };
+    if (isModalInVisible) fetchData();
+  }, [isModalInVisible]);
+
+  const handleCardClick = (index: any) => {
+    setSelectedCardIndex(index === selectedCardIndex ? null : index);
   };
 
   const handleCancel = () => {
-    console.log(selectedCard?.ParkingZone);
-
     form.resetFields();
     setSelectedCard(null);
     setCarLicensePlate("");
     setSelectedCardIndex(null);
-    setIsModalInVisible(false); // ปิด Modal
-
-    // Reset filteredData
-    setFilteredData([]); // Reset filtered data when closing modal
+    setIsModalInVisible(false);
   };
 
   const handleOk = async () => {
-    console.log("selectedCard?.ParkingZone: ", selectedCard?.ParkingZone);
-    console.log("selectedCardIndex: ", selectedCardIndex);
-    console.log("selectedCard: ", selectedCard);
-
     try {
-      await form.validateFields(); // Validate required fields
-    } catch (error) {
+      await form.validateFields();
+    } catch {
       message.error("Please fill in all required fields!");
       return;
     }
@@ -117,73 +96,102 @@ const IN: React.FC<InProps> = ({
       return;
     }
 
-    if (Array.isArray(selectedCard?.ParkingZone)) {
-      const zone = selectedCard.ParkingZone[selectedCardIndex ?? 0];
-      const zoneId = zone?.ID;
-      const availableZone = zone?.AvailableZone || 0;
+    const zone = selectedCard?.ParkingZone?.[selectedCardIndex];
+    if (!zone || zone.AvailableZone === 0) {
+      message.error("This parking zone is full. Cannot update card!");
+      return;
+    }
 
-      // ตรวจสอบว่าที่จอดรถไม่ว่าง
-      if (availableZone === 0) {
-        message.error("This parking zone is full. Cannot update card!");
-        return;
+    const CardTransData = {
+      EntryTime: new Date().toISOString(),
+      LicensePlate: carLicensePlate,
+      UserID: Number(localStorage.getItem("id")),
+      ParkingCardID: selectedCard?.ID,
+      StatusPaymentID: 1,
+    };
+
+    const updateCardData = {
+      ID: selectedCard?.ID,
+      StatusCardID: 2,
+    };
+
+    const updateZoneData = {
+      ID: zone.ID,
+      AvailableZone: (zone.AvailableZone || 0) - 1,
+    };
+
+    try {
+      const resCard = await UpdateParkingCard(
+        selectedCard?.ID || "",
+        updateCardData
+      );
+      const resZone = await UpdateParkingZone(zone.ID || 0, updateZoneData);
+      const resTrans = await CreateParkingTransaction(CardTransData);
+
+      if (
+        resCard.status === 200 &&
+        resZone.status === 200 &&
+        resTrans.status === 201
+      ) {
+        messageApi.success("Parking card and zone updated successfully!");
+        getParkingCards();
+        handleCancel();
+        onChange("");
+        setOtp("");
+      } else {
+        throw new Error("Update failed");
       }
+    } catch (error) {
+      message.error("Error updating parking card or zone.");
+      console.error("Error details:", error);
+    }
+  };
 
-      const licensePlate = carLicensePlate;
-      const userID = localStorage.getItem("id");
-      const parkingCardID = selectedCard?.ID;
+  const handleImageOk = async () => {
+    try {
+      await form.validateFields();
+    } catch {
+      message.error("Please fill in all required fields!");
+      return;
+    }
 
-      const CardTransData = {
-        EntryTime: new Date().toISOString(),
-        LicensePlate: licensePlate,
-        UserID: Number(userID),
-        parkingCardID: parkingCardID,
-        StatusPaymentID: 1,
-      };
-      const updateCardData = {
-        ID: parkingCardID,
-        StatusCardID: 2,
-      };
-      const updateZoneData = {
-        ID: zoneId,
-        AvailableZone: availableZone - 1,
-      };
+    // Validation for license plate
+    if (!carLicensePlate) {
+      message.error("Please input the license plate!");
+      return;
+    }
 
-      try {
-        const resCard = await UpdateParkingCard(parkingCardID, updateCardData);
-        const resZone = await UpdateParkingZone(zoneId || 0, updateZoneData);
-        /*      const resCardZone = await UpdateParkingCardAndZone(
-          parkingCardID,
-          zoneId || 0,
-          updateCardData,
-          updateZoneData
-        );
- */
-        const restrans = await CreateParkingTransaction(CardTransData);
+    // Proceed with other operations...
+  };
 
-        if (
-          restrans.status === 201 &&
-          resCard.status === 200 &&
-          resZone.status === 200
-        ) {
-          messageApi.open({
-            type: "success",
-            content: "Parking card and zone updated successfully!",
-          });
+  const ocrImage = (image: any) => {
+    Tesseract.recognize(image, "eng", {
+      logger: (m: any) => console.log(m),
+      pageSegMode: 3, // Fully automatic page segmentation
+    } as any).then(({ data: { text } }) => {
+      const licensePlate = extractLicensePlate(text.trim().replace(/\s+/g, " "));
+      setCarLicensePlate(licensePlate);
+    });
+  };
 
-          handleCancel();
-          getParkingCards();
-          onChange("");
-          setOtp("");
-          setIsModalInVisible(false);
-        } else {
-          message.error("Error updating parking card or zone.");
-        }
-      } catch (error) {
-        message.error("Error updating parking card or zone.");
-        console.error("Error details:", error);
-      }
+  const extractLicensePlate = (text: string) => {
+    const regex = /([A-Z0-9]{1,7})/g;
+    const match = text.match(regex);
+    if (match && match[0]) {
+      console.log("Detected License Plate:", match[0]);
+      return match[0];
     } else {
-      console.log("ParkingZone is not an array.");
+      message.error("License plate could not be detected.");
+      return "";
+    }
+  };
+
+  const handleImageChange = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImage(imageUrl);
+      ocrImage(file);
     }
   };
 
@@ -212,7 +220,9 @@ const IN: React.FC<InProps> = ({
               justifySelf: "center",
             }}
           >
-            {selectedStatus === "IN" ? "Parking IN" : "Parking OUT"}
+            {selectedCard?.StatusCard?.Status === "IN"
+              ? "Parking IN"
+              : "Parking OUT"}
           </span>
         }
         open={isModalInVisible}
@@ -318,11 +328,35 @@ const IN: React.FC<InProps> = ({
             ))}
         </div>
         {/* License Plate Form Item with Validation */}
+        <div>
+          <Input type="file" onChange={handleImageChange} /> // Change imageUrl
+          to image
+          {image && (
+            <img
+              src={image}
+              alt="Uploaded"
+              style={{ width: "300px", marginTop: "20px" }}
+            />
+          )}
+          // Update the OCR button to use the correct handler
+          <Button
+            onClick={handleImageOk} // Use correct handler for OCR
+            style={{ marginTop: "20px" }}
+            disabled={!image} // Disable OCR button if no image uploaded
+          >
+            Perform OCR
+          </Button>
+          <div style={{ marginTop: "20px" }}>
+            <p>License Plate: {carLicensePlate}</p>
+            <p>Car Color: {carColor}</p>
+          </div>
+        </div>
         <Form
           form={form}
           name="parking-form"
-          layout="vertical"
+          layout="horizontal"
           style={{
+            columnRuleWidth: "150px",
             marginTop: 16,
           }}
         >
@@ -337,6 +371,30 @@ const IN: React.FC<InProps> = ({
             <Input
               value={carLicensePlate}
               onChange={(e) => setCarLicensePlate(e.target.value)}
+              placeholder="Enter license plate"
+            />
+          </Form.Item>
+          <Form.Item
+            name="car color"
+            label="Car Color"
+            rules={[{ required: true, message: "Please input the car color!" }]}
+            className="custom-form-item"
+          >
+            <Input
+              value={carColor}
+              onChange={(e) => setCarColor(e.target.value)}
+              placeholder="Enter license plate"
+            />
+          </Form.Item>
+          <Form.Item
+            name="car make"
+            label="Car Make"
+            rules={[{ required: true, message: "Please input the car color!" }]}
+            className="custom-form-item"
+          >
+            <Input
+              value={carMake}
+              onChange={(e) => setCarMake(e.target.value)}
               placeholder="Enter license plate"
             />
           </Form.Item>
