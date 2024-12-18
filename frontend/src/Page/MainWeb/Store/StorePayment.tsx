@@ -399,7 +399,9 @@ ICONIC Team
                     </div>
                     <hr />
                     <div className='total'><p></p><p>Total : {Total.toLocaleString()} Bath <hr /></p></div>
-                    <div className='Completed'>Payment completed</div>
+                    {Payment?.StatusPaymentStore === 'paid' &&
+                        <div className='Completed'>Payment completed</div>
+                    }
                 </div>
                 <div className='listPayR'>
                     <div className='listPayRSub'>
