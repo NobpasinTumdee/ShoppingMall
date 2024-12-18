@@ -41,21 +41,14 @@ func SetupDatabase() {
 		&entity.Rating{},
 		&entity.PaymentMethodStore{},
 
-<<<<<<< Updated upstream
+
 		//ระบบแจ้งซ่อมและอุปการณ์
-<<<<<<< HEAD
-		&entity.ServiceRequest{}, 
-		&entity.HistoryEquipment{}, 
-		&entity.Equipment{}, 
-=======
-		//ระบบแจ้งซ่อม
-		&entity.ServiceRequest{},
+
+		&entity.ServiceRequest{},  
+
 		
 		//อุปการณ์ช่างซ่อม
 		&entity.EquipmentRequest{},
-=======
-
->>>>>>> main
 
 
 		//ระบบจองHall
@@ -77,10 +70,6 @@ func SetupDatabase() {
 
 		//ระบบเบิกอุปกรณ์การทำความสะอาด
 		&entity.InventoryRequest{},
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> main
 	)
 	
 	//User
