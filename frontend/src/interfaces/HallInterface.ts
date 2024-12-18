@@ -8,6 +8,7 @@ export interface HallInterface {
     Description: string;      // คำอธิบายเกี่ยวกับ Hall
     PricePerHour: number;     // ราคาเช่าต่อชั่วโมงของ Hall
 }
+
 export interface BookingHallInterface {
     ID: number;
     User?: UsersInterface;
@@ -16,9 +17,9 @@ export interface BookingHallInterface {
     EndDateTime: Date;
     Status: string;
     CustomerName: string;
-    CustomerEmail: string
-    CustomerPhone:  string;
+    CustomerEmail: string;
+    CustomerPhone: string;
     CustomerAddress: string;
-    CancelDate: Date;
+    CancelDate: Date | null; // ปรับให้สามารถเป็น null ได้
     TotalCost: number;
 }

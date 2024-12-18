@@ -6,6 +6,7 @@ import (
 	"example.com/ProjectSeG13/entity"
 	"example.com/ProjectSeG13/config"
 	"github.com/gin-gonic/gin"
+	
 )
 
 func CreateBooking(c *gin.Context) {
@@ -82,15 +83,18 @@ func GetBookingByID(c *gin.Context) {
 
 	db := config.DB()
 
+	var booking entity.BookingHall
+
 	// ค้นหาข้อมูลการจองตาม ID
-	if err := db.Where("id = ?", bookingID).First(&entity.BookingHall{}).Error; err != nil {
+	if err := db.Where("id = ?", bookingID).First(&booking).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
 		return
 	}
 
 	// ส่งข้อมูลการจองกลับไป
-	c.JSON(http.StatusOK, gin.H{"message": "Booking get"})
+	c.JSON(http.StatusOK, booking)
 }
+
 
 
 func ListBookingHall(c *gin.Context) {
@@ -108,5 +112,21 @@ func ListBookingHall(c *gin.Context) {
 
 	// ส่งข้อมูลการจองกลับไป
 	c.JSON(http.StatusOK, bookings)
+}
+
+func GetBookingByHallID(c *gin.Context) {
+	var bookings []entity.BookingHall
+	
+    hallID := c.Param("id") // ดึง hallID จาก URL Parameters
+
+    db := config.DB()
+
+    // ค้นหาข้อมูลการจองเฉพาะ Hall ที่เลือก
+	if err := db.Where("hall_id = ?", hallID).Find(&bookings).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No bookings found for the specified Hall ID"})
+		return
+	}	
+
+    c.JSON(http.StatusOK, bookings)
 }
 

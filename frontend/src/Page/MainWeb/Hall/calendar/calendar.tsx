@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Layout, Calendar, Modal, Button, List } from "antd";
 import { format, isSameDay } from "date-fns";
 import SideBar from "../../../Component/SideBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BookingHallInterface } from "../../../../interfaces/HallInterface";
-import { ListBookingHall } from "../../../../services/https";
+import { GetBookingByHallID } from "../../../../services/https"; // สร้าง service ใหม่สำหรับ API นี้
 
 const { Content, Sider } = Layout;
 
@@ -13,14 +13,28 @@ const CalendarPage: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [visible, setVisible] = useState(false);
 
+    const { hallId } = useParams<{ hallId: string }>(); // รับ hallID จาก URL
     const navigate = useNavigate();
 
     useEffect(() => {
-        ListBookingHall();
-    }, []); 
+        const fetchBookings = async () => {
+            try {
+                if (hallId) {
+                    const response = await GetBookingByHallID(hallId); // เรียก API ใหม่
+                    setBookings(response.data || []);
+                }
+            } catch (error) {
+                console.error("Failed to fetch bookings:", error);
+            }
+        };
+
+        fetchBookings();
+    }, [hallId]);
 
     const getBookingsByDate = (date: Date) => {
-        return bookings.filter((booking) => isSameDay(new Date(booking.StartDateTime), date));
+        return bookings.filter((booking) =>
+            isSameDay(new Date(booking.StartDateTime), date)
+        );
     };
 
     const onSelectDate = (date: Date) => {
@@ -29,23 +43,28 @@ const CalendarPage: React.FC = () => {
     };
 
     const handleBookingClick = () => {
-        navigate(`/bookinghall`);
+        navigate(`/bookings/${hallId}`);
     };
 
     const dateCellRender = (date: Date) => {
         const dailyBookings = getBookingsByDate(date);
-        // ตรวจสอบว่าในวันนั้นมีการจองห้องประชุมหรือไม่
-        const hasBookings = dailyBookings.length > 0;
 
         return (
-            <ul style={{ padding: 0 }}>
+            <ul style={{ padding: 0, position: "relative" }}>
                 {dailyBookings.map((booking) => (
-                    <li key={booking.ID} style={{ listStyle: "none", color: "green" }}>
-                        {booking.CustomerName} - {booking.Hall?.HallName || "ไม่มีห้องประชุม"}
+                    <li
+                        key={booking.ID}
+                        style={{
+                            listStyle: "none",
+                            color: "green",
+                            fontSize: "12px",
+                        }}
+                    >
+                        {booking.CustomerName} -{" "}
+                        {booking.Hall?.HallName || "ไม่มีห้องประชุม"}
                     </li>
                 ))}
-                {/* เปลี่ยนสีเซลล์เป็นสีแดงหากมีการจอง */}
-                {hasBookings && (
+                {dailyBookings.length > 0 && (
                     <div
                         style={{
                             position: "absolute",
@@ -72,7 +91,7 @@ const CalendarPage: React.FC = () => {
                 </Sider>
                 <Layout style={{ padding: "10px" }}>
                     <Content style={{ padding: 24, margin: 0, background: "#fff" }}>
-                        <h2>ปฏิทินการจองห้องประชุม</h2>
+                        <h2>ปฏิทินการจองห้องประชุม (Hall ID: {hallId})</h2>
                         <Calendar
                             onSelect={(date) => onSelectDate(date.toDate())}
                             dateCellRender={dateCellRender}
@@ -91,20 +110,24 @@ const CalendarPage: React.FC = () => {
                                 </Button>,
                             ]}
                         >
-                            <List
-                                dataSource={getBookingsByDate(selectedDate || new Date())}
-                                renderItem={(item) => (
-                                    <List.Item>
-                                        <List.Item.Meta
-                                            title={`ห้อง: ${item.Hall?.HallName || "ไม่พบข้อมูลห้อง"}`}
-                                            description={`ผู้จอง: ${item.CustomerName}, เวลา: ${format(
-                                                new Date(item.StartDateTime),
-                                                "HH:mm"
-                                            )} - ${format(new Date(item.EndDateTime), "HH:mm")}`}
-                                        />
-                                    </List.Item>
-                                )}
-                            />
+                            {getBookingsByDate(selectedDate || new Date()).length > 0 ? (
+                                <List
+                                    dataSource={getBookingsByDate(selectedDate || new Date())}
+                                    renderItem={(item) => (
+                                        <List.Item>
+                                            <List.Item.Meta
+                                                title={`ห้อง: ${item.Hall?.HallName || "ไม่พบข้อมูลห้อง"}`}
+                                                description={`ผู้จอง: ${item.CustomerName}, เวลา: ${format(
+                                                    new Date(item.StartDateTime),
+                                                    "HH:mm"
+                                                )} - ${format(new Date(item.EndDateTime), "HH:mm")}`}
+                                            />
+                                        </List.Item>
+                                    )}
+                                />
+                            ) : (
+                                <p>ไม่มีการจองในวันที่เลือก</p>
+                            )}
                         </Modal>
                     </Content>
                 </Layout>

@@ -91,11 +91,14 @@ func main() {
 		//ระบบ hall
 		router.GET("/hall",Hall.ListHall)
 		router.GET("/hall/:id",Hall.GetHall)
-		router.POST("/hall/bookinghall", Hall.CreateBooking) //Create Booking
-		router.GET("/hall/bookinghall/:id", Hall.GetBookingByID) //Get Booking by ID
-		router.PUT("/hall/bookinghall/:id", Hall.UpdateBooking) //Update Booking
-		router.DELETE("/hall/bookinghall/:id", Hall.DeleteBooking) //Delete Booking
+
+		router.POST("/booking", Hall.CreateBooking) //Create Booking
+		router.GET("/booking/:id", Hall.GetBookingByID) //Get Booking by ID
+		router.PUT("booking/:id", Hall.UpdateBooking) //Update Booking
+		router.DELETE("/booking/:id", Hall.DeleteBooking) //Delete Booking
 		router.GET("/bookings", Hall.ListBookingHall) // List all bookings
+		router.GET("/bookings/hall/:id", Hall.GetBookingByHallID)
+
 		
 		//ระบบ hall payment
 

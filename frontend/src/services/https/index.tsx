@@ -530,6 +530,18 @@ async function ListBookingHall() {
     .catch((e) => e.response);
 }
 
+// Get BookingHall by hallId
+async function GetBookingByHallID(hallId: string) {
+  return await axios
+
+    .get(`${apiUrl}/bookings/hall/${hallId}`, requestOptions)
+
+    .then((res) => res)
+    
+    .catch((e) => e.response);
+}
+
+
 export {
     SignIn,//user
     GetUserById,
@@ -574,6 +586,7 @@ export {
     DeleteBookingHall,
     GetBookinghall,
     ListBookingHall,
+    GetBookingByHallID,
 
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,

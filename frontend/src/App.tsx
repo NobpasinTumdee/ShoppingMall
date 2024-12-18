@@ -21,7 +21,7 @@ import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookings","/bookings/:hallId","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -38,14 +38,13 @@ const App: React.FC = () => {
 
         <Route path="/BillStore" element={<BillStore />} />
         <Route path="/Hall" element={<Hall />} />
-        <Route path="/bookinghall" element={<BookingHall />} />
-        <Route path="/celendar" element={<CalendarPage />} />
+        <Route path="/bookings" element={<BookingHall />} />
+        <Route path="/bookings/hall/:hallId" element={<CalendarPage />} />
 
         <Route path="/BillStore" element={<BillStore />} /> 
         <Route path="/Recruitment" element={<Recruitment />} />
         <Route path="/AdminJob" element={<AdminJob />} />
         <Route path="/Inventory" element={<Inventory />} />
-        <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
         
 
