@@ -22,15 +22,6 @@ import {UpdateStoreByid , DeleteCommentFromStore} from '../../../services/https/
 
 
 const Store: React.FC = () => {
-    // const testdata = [
-    //     {id: 1,Rating: 2},{id: 2,Rating: 5},{id: 3,Rating: 0},{id: 4,Rating: 3},
-    //     {id: 5,Rating: 1},{id: 1,Rating: 1},{id: 2,Rating: 2},{id: 3,Rating: 2},
-    //     {id: 4,Rating: 5},{id: 5,Rating: 2},{id: 1,Rating: 4},{id: 2,Rating: 5},
-    //     {id: 3,Rating: 3},{id: 4,Rating: 4},{id: 5,Rating: 2},{id: 5,Rating: 4},
-    // ]
-
-    
-
     const renderStars = (rating: number) => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
@@ -206,7 +197,9 @@ const Store: React.FC = () => {
                                                     <div className='rating' style={{fontSize: '20px'}}>No Rating...</div>
                                                 )}
                                                 <div className='lineStore'></div>
-                                                <div className='DescribtionStore'>{data.booking_date ? new Date(data.booking_date).toLocaleDateString() : 'No Date'}<br />{data.last_day ? new Date(data.last_day).toLocaleDateString() : 'No Date'}</div>
+                                                <div className='DescribtionStore'>{data.booking_date ? new Intl.DateTimeFormat('en-GB').format(new Date(data.booking_date)) : 'No Date'}
+                                                <br />{data.last_day ? new Intl.DateTimeFormat('en-GB').format(new Date(data.last_day)) : 'No Date'}
+                                                </div>
                                             </div>
                                             <div className={`ViewStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.status_store}  --</div>
                                         </span>
