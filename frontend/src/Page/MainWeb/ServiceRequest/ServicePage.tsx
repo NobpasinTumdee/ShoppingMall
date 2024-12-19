@@ -1,86 +1,92 @@
-import React, { useState } from "react";
-import "./ServicePage.css";
+import React, { useState, useEffect } from 'react';
+import { Layout, Form, Input, Button, Select } from 'antd';
+import './ServicePage.css';
 
-const ServiceRequest: React.FC = () => {
-  // State สำหรับจัดการข้อมูลฟอร์ม
-  const [formData, setFormData] = useState({
-    date: "",
-    user: "",
-    location: "",
-    problem: "",
-    status: "",
-  });
+const { Content } = Layout;
 
-  // ฟังก์ชัน handle การเปลี่ยนแปลงค่าใน input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-  };
+const ServicePage: React.FC = () => {
+    const [form] = Form.useForm();
 
-  // ฟังก์ชัน handle การ submit ฟอร์ม
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    alert("Form Submitted Successfully!");
-  };
+    const onFinish = (values: any) => {
+        console.log('Success:', values);
+    };
 
-  return (
-    <div className="service-form-container">
-      <h1 className="service-form-title">ฟอร์มแจ้งซ่อม</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="service-form-group">
-          <label htmlFor="date">วันที่แจ้ง</label>
-          <input
-            type="date"
-            id="date"
-            value={formData.date}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="service-form-group">
-          <label htmlFor="user">ผู้ใช้</label>
-          <input
-            type="text"
-            id="user"
-            placeholder="Enter user name"
-            value={formData.user}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="service-form-group">
-          <label htmlFor="location">สถานที่</label>
-          <input
-            type="text"
-            id="location"
-            placeholder="Enter location"
-            value={formData.location}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="service-form-group">
-          <label htmlFor="problem">รายละเอียดปัญหา</label>
-          <textarea
-            id="problem"
-            placeholder="Describe the problem"
-            value={formData.problem}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="service-form-group">
-          <label htmlFor="status">สถานะ</label>
-          <input
-            type="text"
-            id="status"
-            placeholder="Enter status"
-            value={formData.status}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="submit">ส่ง</button>
-      </form>
-      <div className="footer"></div>
-    </div>
-  );
+    const onFinishFailed = (errorInfo: any) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    return (
+        <Layout style={{ minHeight: '100vh' }}>
+            <Content style={{ padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="form-container">
+                    <h1 className="form-title">Form for Service Request</h1>
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        style={{ width: '100%' }}
+                    >
+                        {/* Date */}
+                        <Form.Item
+                            label="Date"
+                            name="date"
+                            rules={[{ required: true, message: 'Please input the date!' }]}
+                        >
+                            <Input placeholder="Enter the date" />
+                        </Form.Item>
+
+                        {/* User */}
+                        <Form.Item
+                            label="User"
+                            name="user"
+                            rules={[{ required: true, message: 'Please input the user name!' }]}
+                        >
+                            <Input placeholder="Enter the user name" />
+                        </Form.Item>
+
+                        {/* Location */}
+                        <Form.Item
+                            label="Location"
+                            name="location"
+                            rules={[{ required: true, message: 'Please input the location!' }]}
+                        >
+                            <Input placeholder="Enter the location" />
+                        </Form.Item>
+
+                        {/* Problem */}
+                        <Form.Item
+                            label="Problem"
+                            name="problem"
+                            rules={[{ required: true, message: 'Please describe the problem!' }]}
+                        >
+                            <Input.TextArea placeholder="Describe the problem" rows={4} />
+                        </Form.Item>
+
+                        {/* Status */}
+                        <Form.Item
+                            label="Status"
+                            name="status"
+                            rules={[{ required: true, message: 'Please specify the status!' }]}
+                        >
+                            <Select placeholder="Select the status">
+                                <Select.Option value="open">Open</Select.Option>
+                                <Select.Option value="inProgress">In Progress</Select.Option>
+                                <Select.Option value="resolved">Resolved</Select.Option>
+                            </Select>
+                        </Form.Item>
+
+                        {/* Submit Button */}
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" className="form-submit-button">
+                                Send
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </div>
+            </Content>
+        </Layout>
+    );
 };
 
-export default ServiceRequest;
+export default ServicePage;
