@@ -56,6 +56,7 @@ func main() {
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 		router.GET("/job/:status",user.GetListUserByStatus)
+		router.GET("/Store/:status",Store.GetStoreByStatus)
 		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)

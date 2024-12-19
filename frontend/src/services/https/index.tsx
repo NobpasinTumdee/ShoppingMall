@@ -240,6 +240,18 @@ async function GetMembershipByid(id: string) {
     .catch((e) => e.response);
 
 }
+//get store by status
+async function GetStoreByStatus(status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Store/${status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================store rating ========================================
 // get comment by id store
 async function GetCommentByStore(id: string) {
@@ -552,6 +564,7 @@ export {
     BackUpStore,
     GetStoreById,
     GetMembershipByid,
+    GetStoreByStatus,
     GetCommentByStore,//rating
     GetCommentByUser,
     CreateComment,
