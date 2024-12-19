@@ -96,6 +96,7 @@ func GetStoresByProductTypeID(c *gin.Context) {
 		LastDay       	time.Time 	`json:"last_day"`
 		DescribtionStore  	string 		`json:"describtion_store"`
 		StatusStore  		string 		`json:"status_store"`
+		StatusService  		string 		`json:"status_service"`
 		TotalRating   	float64 	`json:"total_rating"`
 	}
 
