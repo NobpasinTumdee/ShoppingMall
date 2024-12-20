@@ -130,21 +130,25 @@ const Main: React.FC = () => {
                 </span>
             </div>
 
-            <div className='NEWS'>
-                <span></span>
-                <p>STORE</p>
-                <span></span>
-            </div>
-            <div className='Store1'> 
-                <div ><img src={Store[0]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[1]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[2]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[3]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[4]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[5]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[6]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[7]?.pic_store||st} alt="" /></div>
-            </div>
+            {Store &&
+                <>
+                    <div className='NEWS'>
+                        <span></span>
+                        <p>STORE</p>
+                        <span></span>
+                    </div>
+                        <div className='Store1'> 
+                            <div ><img src={Store[0]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[1]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[2]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[3]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[4]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[5]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[6]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[7]?.pic_store||st} alt="" /></div>
+                        </div>
+                </>
+            }
             <div className='NEWS'>
                 <span></span>
                 <p>NEWS</p>

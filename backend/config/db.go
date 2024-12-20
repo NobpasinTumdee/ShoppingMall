@@ -233,7 +233,7 @@ func SetupDatabase() {
 
 
 	//Store
-	/**/
+	/*
 	Store := []entity.Store{
 		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro1",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "Request",UserID: 0,ProductTypeID: 1 },
 		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro2",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
@@ -327,5 +327,5 @@ func SetupDatabase() {
 	for _, pkg := range Store {
 		db.FirstOrCreate(&pkg,entity.Store{NameStore: pkg.NameStore})
 	}
-	
+	*/
 }
