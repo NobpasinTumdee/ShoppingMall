@@ -3,7 +3,9 @@ package config
 import (
 	"fmt"
 	"time"
+
 	"example.com/ProjectSeG13/entity"
+	// "example.com/ProjectSeG13/services"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -236,7 +238,53 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
 	}
 	
+	//ServiceRequest
+	// สร้าง slice ของ serviceRequests
+	serviceRequests := []entity.ServiceRequest{
+		{
+			RequestDate:       parseDate("2024-07-05"),
+			ProblemDescription: "ไฟ LED ชำรุด",
+			Location:          "Zone A Area B105",
+			StatusService:     "pending",
+		},
+		{
+			RequestDate:       parseDate("2024-06-29"),
+			ProblemDescription: "แอร์เสีย",
+			Location:          "Zone A Area A404",
+			StatusService:     "pending",
+		},
+		{
+			RequestDate:       parseDate("2024-06-26"),
+			ProblemDescription: "เครื่องดูดฝุ่นไม่ทำงาน",
+			Location:          "Zone F Area C201",
+			StatusService:     "pending",
+		},
+		{
+			RequestDate:       parseDate("2024-06-20"),
+			ProblemDescription: "ป้ายไฟโฆษณาพัง",
+			Location:          "Zone B Area B109",
+			StatusService:     "pending",
+		},
+	}
 
+	// บันทึกข้อมูลลงในฐานข้อมูล
+	for _, request := range serviceRequests {
+		db.FirstOrCreate(&request, entity.ServiceRequest{RequestDate: request.RequestDate})
+	}
+
+	// ข้อมูลตัวอย่าง
+	serviceList := []entity.ServiceRequest{
+		{RequestDate: parseDate("2024-07-05"), ProblemDescription: "ไฟ LED ชำรุด", Location: "Zone A Area B105", StatusService: "pending", RequestforRepair: "Accept"},
+		{RequestDate: parseDate("2024-06-29"), ProblemDescription: "แอร์เสีย", Location: "Zone A Area A404", StatusService: "pending", RequestforRepair: "Accept"},
+		{RequestDate: parseDate("2024-06-26"), ProblemDescription: "เครื่องดูดฝุ่นไม่ทำงาน", Location: "Zone F Area C201", StatusService: "pending", RequestforRepair: "Accept"},
+		{RequestDate: parseDate("2024-06-20"), ProblemDescription: "ป้ายไฟโฆษณาพัง", Location: "Zone B Area B109", StatusService: "pending", RequestforRepair: "Accept"},
+		{RequestDate: parseDate("2024-06-09"), ProblemDescription: "โต๊ะชำรุด", Location: "Zone A Area A105", StatusService: "pending", RequestforRepair: "Accept"},
+	}
+
+	// เพิ่มข้อมูลตัวอย่างในฐานข้อมูล
+	for _, req := range serviceList {
+		db.Create(&req)
+	}
 
 	//Store
 	/*
@@ -334,4 +382,20 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Store{NameStore: pkg.NameStore})
 	}
 	*/
+}
+
+// ฟังก์ชันช่วยแปลงวันที่จากสตริง
+func parseDate(s string) time.Time {
+	// กำหนดรูปแบบของวันที่ เช่น "2024-12-20"
+	const layout = "2006-01-02"
+
+	// แปลงสตริงไปเป็น time.Time
+	parsedDate, err := time.Parse(layout, s)
+	if err != nil {
+		// หากแปลงไม่ได้ ให้ panic พร้อมข้อความ error
+		panic(fmt.Sprintf("invalid date format: %s, expected format YYYY-MM-DD", s))
+	}
+
+	// คืนค่าที่แปลงแล้ว
+	return parsedDate
 }

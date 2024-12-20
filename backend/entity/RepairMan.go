@@ -11,7 +11,8 @@ type ServiceRequest struct {
 	ProblemDescription string 	`json:"ProblemDescription"`
 	RequestDate time.Time 		`json:"RequestDate"` 
 	EquipmentName string 		`json:"EquipmentName"`
-	StatusService bool 			`json:"StatusService"`
+	StatusService string 		`json:"StatusService"`
+	RequestforRepair string 	`json:"RequestforRepair"` 
 
 	EquipmentRequests []EquipmentRequest `gorm:"foreignKey:ServiceRequstID"`
 

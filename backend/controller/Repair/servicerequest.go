@@ -124,3 +124,30 @@ func DeleteServiceRequest(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Repair request deleted successfully"})
 }
+
+func UpdateServiceRequestToComplete(c *gin.Context) {
+	ID := c.Param("id")
+	var request entity.ServiceRequest
+
+	db := config.DB()
+
+	// ค้นหาคำขอแจ้งซ่อมที่ต้องการอัปเดต
+	if err := db.First(&request, ID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Repair request not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	// อัปเดตสถานะเป็น 'complete'
+	request.StatusService = "complete"
+
+	if err := db.Save(&request).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Repair request status updated to 'complete' successfully", "data": request})
+}

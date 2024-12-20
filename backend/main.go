@@ -8,10 +8,11 @@ import (
 	"net/http"
 
 	"example.com/ProjectSeG13/controller/Hall"
+	"example.com/ProjectSeG13/controller/Inventory"
+	"example.com/ProjectSeG13/controller/Repair"
 	"example.com/ProjectSeG13/controller/Store"
 	"example.com/ProjectSeG13/controller/user"
 	"example.com/ProjectSeG13/middlewares"
-	"example.com/ProjectSeG13/controller/Inventory"
 )
 
 const PORT = "8000"
@@ -105,8 +106,14 @@ func main() {
 		router.GET("/inventory", Inventory.ListInventory)
 		router.GET("/inventory/:id", Inventory.GetInventoryByCategory)
 		router.GET("/CategoryInventory", Inventory.ListCategoryInventory)
-		//ระบบ แจ้งซ่อม
 
+		//ระบบ แจ้งซ่อม
+		router.GET("/service-requests",Repair.GetAllServiceRequests)
+		router.GET("/service-requests/:id",Repair.GetServiceRequestByID)
+		router.POST("/service-requests/create-service-request", Repair.CreateServiceRequest) 
+		router.PUT("/service-requests/create-service-request/:id", Repair.UpdateServiceRequestStatus) 
+		router.DELETE("/service-requests/create-service-request/:id", Repair.DeleteServiceRequest) 
+		router.PUT("/service-requests", Repair.UpdateServiceRequestToComplete)
 		//ระบบ เช็คอุปกรณ์ช่าง
 
 

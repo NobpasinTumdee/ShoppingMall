@@ -1,3 +1,4 @@
+import { ServiceInterface } from "../../interfaces/ServiceInterface";
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
@@ -530,6 +531,69 @@ async function ListBookingHall() {
     .catch((e) => e.response);
 }
 
+
+//===========================ServiceRequest==========================================
+// GET /List all repair requests
+async function GetAllServiceRequests() {
+  return await axios
+
+  .get(`${apiUrl}/service-requests`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetServiceRequestByID(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/service-requests/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function CreateServiceRequest(id: string) {
+  return await axios
+
+  .post(`${apiUrl}/service-requests/create-service-request/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function UpdateServiceRequestStatus(id: string) {
+  return await axios
+
+  .put(`${apiUrl}/service-requests/create-service-request/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function DeleteServiceRequest(id: string) {
+  return await axios
+
+  .delete(`${apiUrl}/service-requests/create-service-request/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+
+async function UpdateServiceRequestToComplete(id: string, data: ServiceInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/service-requests/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
 export {
     SignIn,//user
     GetUserById,
@@ -578,5 +642,12 @@ export {
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,
     GetInventoryById,
+
+    GetAllServiceRequests,//แจ้งซ่อม
+    GetServiceRequestByID,
+    CreateServiceRequest,
+    UpdateServiceRequestStatus,
+    DeleteServiceRequest,
+    UpdateServiceRequestToComplete,
 
 }

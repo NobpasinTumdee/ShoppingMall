@@ -10,7 +10,8 @@ export interface ServiceInterface {
 	ProblemDescription?: string;	
 	RequestDate?: Date; 		
 	EquipmentName?: string;		
-	StatusService?: boolean;			
+	StatusService?: string;	
+    RequestforRepair?: string;		
 }
 export interface EquipmentRequestInterface {
     ID: number;
