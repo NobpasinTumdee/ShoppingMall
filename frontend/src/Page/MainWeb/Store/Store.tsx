@@ -208,7 +208,7 @@ const Store: React.FC = () => {
                                 return null
                             })
                         ) : (
-                            <h1 style={{textAlign: 'center'}}>No Store On This Floor.</h1>
+                            <h1 style={{textAlign: 'center',width: '800px'}}>No Store On This Floor.</h1>
                         )}
                     </span>
                     <span style={{width: "20%"}}></span>
