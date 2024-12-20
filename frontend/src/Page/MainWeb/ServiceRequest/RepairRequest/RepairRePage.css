@@ -16,3 +16,71 @@
 
     animation: tableInventory 1s ease-in-out ;
 }
+@keyframes tableInventory {
+    0%{
+        opacity: 0;
+        transform: translateY(130%);
+    }
+}
+
+.Mode{
+    display: flex;
+    justify-content: center;
+}
+.Mode p{
+    margin: 10px 10px;
+    padding: 5px;
+    cursor: pointer;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+    border-radius: 20px;
+    color: #C9AF62;
+    border: 2px solid #C9AF62;
+}
+
+.RepairRecolumntable {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: 50px;
+    border-bottom: 0px solid #C9AF62;
+    box-shadow: 0 5px 5px #c9af622d;
+    background-color: #fbe8af;
+}
+
+.RepairRecolumntable p{
+    width: 25%;
+    text-align: start;
+    padding-left: 15px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+}
+
+.RepairRecontanerRow {
+    overflow-y: scroll;
+    height: 450px;
+}
+
+.RepairRecolumntableSub {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: 50px;
+    border-bottom: 0.1px solid #e5e5e5;
+    border-top: 0.1px solid #e5e5e5;
+    transition: 0.5s;
+}
+
+.RepairRecolumntableSub:hover {
+    background-color: #FAFAFA;
+}
+
+.RepairRecolumntableSub p{
+    width: 25%;
+    text-align: start;
+    padding-left: 15px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 100;
+}

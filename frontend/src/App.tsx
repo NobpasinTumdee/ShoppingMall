@@ -26,6 +26,9 @@ import CalendarPage from "./Page/MainWeb/Hall/calendar/calendar";
 import Cleaning from "./Page/MainWeb/Clearning/Cleaningpage";
 
 import ServiceRequest from "./Page/MainWeb/ServiceRequest/Request/ServicePage";
+import RepairRePage from "./Page/MainWeb/ServiceRequest/RepairRequest/RepairRePage";
+import HistoryRequest from "./Page/MainWeb/ServiceRequest/HistoryRequest/HistoryReqPage";
+import HistoryRepairPage from "./Page/MainWeb/ServiceRequest/RepairRequest/HistoryRepirPage"
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -46,6 +49,9 @@ const App: React.FC = () => {
     "/AdminJob",
     "/Inventory",
     "/ServiceRequest",
+    // "/RepairRePage",
+    // "/HistoryRequest",
+    // "/HistoryRepair",
   ].includes(location.pathname);
   return (
     <>
@@ -74,6 +80,9 @@ const App: React.FC = () => {
         <Route path="/Cleaning" element={<Cleaning />} />
 
         <Route path="/ServiceRequest" element={<ServiceRequest />} />
+        {/* <Route path="/RepairRequest" element={<RepairRePage />} />
+        <Route path="/HistoryRequest" element={<HistoryRequest />} />
+        <Route path="/HistoryRepair" element={<HistoryRepairPage />} /> */}
       </Routes>
     </>
   );

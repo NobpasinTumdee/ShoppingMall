@@ -1,24 +1,23 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Parkinsans", sans-serif;
   background-color: #f7f7f7;
 }
 
 .form-container {
   width: 100%;
-  max-width: 600px;
-  background: white;
-  padding: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  max-width: 100%;
+  background: rgb(254, 254, 254);
+  padding: 80px;
 }
 
 .form-title {
-  font-size: 24px;
+  font-size: 35px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
-  color: #66592d;
+  margin-top: 80px;
+  color: #C9AF62;
 }
 
 .ant-form-item-label > label {

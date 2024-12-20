@@ -21,7 +21,7 @@ const ServicePage: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100px" }}>
       <Content
         style={{
           padding: "20px",
