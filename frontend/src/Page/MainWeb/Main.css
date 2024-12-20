@@ -364,7 +364,7 @@ footer{
     display: flex;
     align-items: center;
     text-align: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 30px;
     margin-left: 200px;
     margin-right: 200px;
@@ -393,6 +393,7 @@ footer{
     color: #C9AF62;
     box-shadow: 0 4px 4px #00000047;
     cursor: pointer;
+    margin: 0 10px;
 
     animation: ManagementSpan 1s ease-in-out; /* เพิ่มระยะเวลาและใช้ easing ที่สมูทขึ้น */
 }

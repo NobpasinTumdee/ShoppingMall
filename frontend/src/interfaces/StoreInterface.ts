@@ -11,6 +11,7 @@ export interface StoreInterface {
     LastDay?:  		    Date ;
     DescribtionStore?:  string ;
     StatusStore?:       string ;
+    StatusService?:     string ;
     UserID?:            number ;
     ProductTypeID?:     number ;
 
@@ -27,6 +28,7 @@ export interface StoreInterface {
     last_day?:          string ;
     describtion_store?: string ;
     status_store?:      string ;
+    status_service?:     string ;
     total_rating?:      number ;
 }
 export interface MembershipInterface {
