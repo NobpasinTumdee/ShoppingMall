@@ -73,7 +73,7 @@ const App: React.FC = () => {
         <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
 
-        <Route path="/ServiceReuest" element={<ServiceRequest />} />
+        <Route path="/ServiceRequest" element={<ServiceRequest />} />
       </Routes>
     </>
   );

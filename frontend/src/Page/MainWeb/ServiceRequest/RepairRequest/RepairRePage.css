@@ -1,0 +1,18 @@
+.headerRepairRe h1{
+    font-family: "Dongle", sans-serif;
+    text-align: center;
+    color: #C9AF62;
+    font-size: 40px;
+
+    animation: headerH2 1s ease-in-out ;
+}
+.tableRepairRe{
+    background-color: #ffffff;
+    width: 80%;
+    height: 500px;
+    margin: 0 10%;
+    border: 0px solid #C9AF62;
+    box-shadow: 0 0px 10px #acacac2d;
+
+    animation: tableInventory 1s ease-in-out ;
+}
