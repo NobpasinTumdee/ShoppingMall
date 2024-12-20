@@ -598,6 +598,87 @@ footer{
     }
 }
 
+.popupStore{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 70%;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px #00000057;
+    border-radius: 10px;
+}
+.popupheader{
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    color: #c2a14f;
+    margin-bottom: 10px;
+}
+.BtnFloor{
+    background-color: #C9AF62;
+    margin: 0 10px;
+    color: #fff;
+    padding: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.AllStore{
+    margin: 0 10%;
+    overflow-y: scroll;
+    height: 450px;
+}
+.CardStore {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 250px);
+    gap: 10px;
+}
+.CardSubStore{
+    width: 250px;
+    height: 200px;
+    border: 2px solid #eed699;
+    color: #000;
+    cursor: pointer;
+}
+.NoStorecard{
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+}
+.FloorNumber{
+    transform: translate(10px, -215px);
+    font-family: "Parkinsans", sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #664b05;
+    text-shadow: 0 0 5px #e9cc83;
+}
+
+
+.BackUpC{
+    margin: 10px 10%;
+}
+.BackUpCard{
+    width: 100%;
+    height: 150px;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px #000;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.BackUpCard img{
+    border-radius: 10px 0 0 10px;
+}
+.BackUpCard p{
+    line-height: 0px;
+}
+.UserPicBackup{
+    transform: translate(-240px,50px);
+    border: 2px solid #ffffff;
+}
 /* ====================================================Admin job========================================================= */
 .headJob{
     text-align: center;

@@ -228,6 +228,18 @@ async function BackUpStore(data: BackupStoreInterface) {
     .catch((e) => e.response);
 
 }
+// get backUp by id
+async function GetBackUpByid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/backupstore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 // get Membership by id
 async function GetMembershipByid(id: string) {
 
@@ -550,6 +562,7 @@ export {
     GetStoreByFloor,//store
     UpdateStoreByid,
     BackUpStore,
+    GetBackUpByid,
     GetStoreById,
     GetMembershipByid,
     GetCommentByStore,//rating

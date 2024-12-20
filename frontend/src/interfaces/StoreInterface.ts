@@ -54,6 +54,9 @@ export interface BackupStoreInterface{
     ProductTypeIDB?:    number ;
     UserID?:            number ;
     StoreID?:           number ;
+
+    User?: UsersInterface;
+    Store?: StoreInterface;
 }
 
 

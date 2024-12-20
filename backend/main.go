@@ -67,6 +67,7 @@ func main() {
 		router.POST("/comment",Store.CreateRating)
 		router.DELETE("/comment/:id",Store.DeleteComment)
 		router.GET("/average-rating/:id",Store.GetAverageRatingByStoreID)
+		router.GET("/backupstore/:id",Store.GetHistoryById)//backupStore
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
 		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)

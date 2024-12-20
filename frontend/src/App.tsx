@@ -11,6 +11,7 @@ import Inbox from './Page/MainWeb/Inbox/Inbox';
 import BillStore from './Page/MainWeb/Store/BillStore';
 import Recruitment from './Page/Recruitment/Recruitment';
 import AdminJob from './Page/MainWeb/Admin/AdminJob';
+import BackUpStore from './Page/MainWeb/Admin/BackUpStore';
 import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
 
@@ -21,7 +22,7 @@ import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Route path="/Main" element={<Main />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/AdminStore" element={<AdminStore />} />
+        <Route path="/BackUpStore" element={<BackUpStore />} />
         <Route path="/Store" element={<Store />} />
         <Route path="/StorePayment" element={<StorePayment />} />
         <Route path="/SubStore" element={<SubStore />} />

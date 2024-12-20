@@ -364,3 +364,23 @@ func GetAverageRatingByStoreID(c *gin.Context) {
 		"totalRatings":  totalRatings,
 	})
 }
+
+//GET ListBackUp store by id
+func GetHistoryById(c *gin.Context) {
+	ID := c.Param("id")
+	var Stores []entity.BackupStore
+
+	db := config.DB()
+
+	results := db.Preload("User").Preload("Store").Where("store_id = ?", ID).Find(&Stores)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, Stores)
+}
