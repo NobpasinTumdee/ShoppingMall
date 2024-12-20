@@ -6,22 +6,29 @@ import {
   Col,
   ConfigProvider,
   Form,
+  GetProp,
   Input,
   message,
   Modal,
   Progress,
   Row,
+  Upload,
+  UploadFile,
+  UploadProps,
 } from "antd";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   GetParkingCardWithZoneByID,
   CreateParkingTransaction,
   UpdateParkingCard,
   UpdateParkingZone,
-} from "../../../../services/https";
-import "./../Carpark.css";
-import { ParkingCardInterface } from "../../../../interfaces/Carpark";
+} from "../../../../../services/https";
+//import "./../Carpark.css";
+import { ParkingCardInterface } from "../../../../../interfaces/Carpark";
 
 import Tesseract from "tesseract.js";
+
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 interface InProps {
   getParkingCards: () => Promise<void>;
@@ -33,7 +40,6 @@ interface InProps {
   setOtp: React.Dispatch<React.SetStateAction<string>>;
   isModalInVisible: boolean;
   setIsModalInVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleCancelIn: () => void;
 }
 
 const IN: React.FC<InProps> = ({
@@ -44,7 +50,6 @@ const IN: React.FC<InProps> = ({
   setSelectedCard,
   isModalInVisible,
   setIsModalInVisible,
-  handleCancelIn,
 }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -53,6 +58,8 @@ const IN: React.FC<InProps> = ({
   const [carColor, setCarColor] = useState("");
   const [carMake, setCarMake] = useState("");
   const [image, setImage] = useState<string | null>(null); // กำหนดให้รองรับทั้ง string หรือ null
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("Requesting with ID:", selectedCard?.ID);
@@ -105,6 +112,9 @@ const IN: React.FC<InProps> = ({
     const CardTransData = {
       EntryTime: new Date().toISOString(),
       LicensePlate: carLicensePlate,
+      Color: carColor,
+      Make: carMake,
+      TransmissionImage: image, // Include transmission image here
       UserID: Number(localStorage.getItem("id")),
       ParkingCardID: selectedCard?.ID,
       StatusPaymentID: 1,
@@ -112,6 +122,7 @@ const IN: React.FC<InProps> = ({
 
     const updateCardData = {
       ID: selectedCard?.ID,
+      IsActive: true,
       StatusCardID: 2,
     };
 
@@ -164,35 +175,78 @@ const IN: React.FC<InProps> = ({
     // Proceed with other operations...
   };
 
-  const ocrImage = (image: any) => {
+  /*   const ocrImage = (image: any) => {
     Tesseract.recognize(image, "eng", {
       logger: (m: any) => console.log(m),
-      pageSegMode: 3, // Fully automatic page segmentation
+      pageSegMode: 6, // Assume a single uniform block of text (might improve accuracy)
     } as any).then(({ data: { text } }) => {
       const licensePlate = extractLicensePlate(text.trim().replace(/\s+/g, " "));
       setCarLicensePlate(licensePlate);
-    });
+    
+      // Process color detection
+      const color = extractCarColor(text);
+      setCarColor(color);
+    });    
   };
+  
+  const extractCarColor = (text: string) => {
+    const colorRegex = /\b(white|black|red|blue|green|gray|silver|yellow|brown|orange)\b/i; // Expanded color set
+    const match = text.match(colorRegex);
+    return match ? match[0] : "Unknown"; // Return 'Unknown' if no color is detected
+  };
+  
 
   const extractLicensePlate = (text: string) => {
-    const regex = /([A-Z0-9]{1,7})/g;
+    // Update regex to capture the expected license plate format, e.g., P 688 CC
+    const regex = /([A-Z0-9]{1,3}[\s\-]?[0-9]{1,4}[\s\-]?[A-Z]{1,2})/g;
     const match = text.match(regex);
     if (match && match[0]) {
       console.log("Detected License Plate:", match[0]);
-      return match[0];
+      return match[0]; // Return the detected license plate
     } else {
       message.error("License plate could not be detected.");
       return "";
     }
-  };
-
+  }; 
+  
   const handleImageChange = (event: any) => {
-    const file = event.target.files[0];
+    const file = event?.target?.files?.[0]; // เพิ่มการตรวจสอบว่า event.target และ files ไม่ใช่ undefined
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
-      ocrImage(file);
+      //ocrImage(file);
+    } else {
+      message.error("No file selected!");
     }
+  };*/
+
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const onChangeUpload: UploadProps["onChange"] = ({
+    fileList: newFileList,
+  }) => {
+    setFileList(newFileList);
+    const file = newFileList[0]?.originFileObj as File;
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImage(imageUrl);
+      //ocrImage(file);
+    }
+  };
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src && file.originFileObj) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as File);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
   };
 
   return (
@@ -227,7 +281,7 @@ const IN: React.FC<InProps> = ({
         }
         open={isModalInVisible}
         onOk={handleOk}
-        onCancel={handleCancelIn}
+        onCancel={handleCancel}
         width={"fit-content"}
         style={{
           display: "flex",
@@ -327,10 +381,25 @@ const IN: React.FC<InProps> = ({
               </Card>
             ))}
         </div>
-        {/* License Plate Form Item with Validation */}
         <div>
-          <Input type="file" onChange={handleImageChange} /> // Change imageUrl
-          to image
+          <Upload
+            fileList={fileList}
+            onChange={onChangeUpload}
+            onPreview={onPreview}
+            beforeUpload={(file) => {
+              setFileList([...fileList, file]);
+              return false;
+            }}
+            maxCount={4}
+            multiple={false}
+            listType="picture-card"
+          >
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>อัพโหลด</div>
+            </div>
+          </Upload>
+          {/* 
           {image && (
             <img
               src={image}
@@ -338,18 +407,18 @@ const IN: React.FC<InProps> = ({
               style={{ width: "300px", marginTop: "20px" }}
             />
           )}
-          // Update the OCR button to use the correct handler
           <Button
-            onClick={handleImageOk} // Use correct handler for OCR
+            onClick={handleImageOk} // This triggers OCR processing
             style={{ marginTop: "20px" }}
             disabled={!image} // Disable OCR button if no image uploaded
           >
             Perform OCR
-          </Button>
+          </Button> 
+
           <div style={{ marginTop: "20px" }}>
             <p>License Plate: {carLicensePlate}</p>
             <p>Car Color: {carColor}</p>
-          </div>
+          </div>*/}
         </div>
         <Form
           form={form}
@@ -361,7 +430,7 @@ const IN: React.FC<InProps> = ({
           }}
         >
           <Form.Item
-            name="licenseplate"
+            name="LicensePlate"
             label="License Plate"
             rules={[
               { required: true, message: "Please input the license plate!" },
@@ -374,8 +443,9 @@ const IN: React.FC<InProps> = ({
               placeholder="Enter license plate"
             />
           </Form.Item>
+
           <Form.Item
-            name="car color"
+            name="CarColor"
             label="Car Color"
             rules={[{ required: true, message: "Please input the car color!" }]}
             className="custom-form-item"
@@ -383,19 +453,20 @@ const IN: React.FC<InProps> = ({
             <Input
               value={carColor}
               onChange={(e) => setCarColor(e.target.value)}
-              placeholder="Enter license plate"
+              placeholder="Enter car color"
             />
           </Form.Item>
+
           <Form.Item
-            name="car make"
+            name="CarMake"
             label="Car Make"
-            rules={[{ required: true, message: "Please input the car color!" }]}
+            rules={[{ required: true, message: "Please input the car make!" }]}
             className="custom-form-item"
           >
             <Input
               value={carMake}
               onChange={(e) => setCarMake(e.target.value)}
-              placeholder="Enter license plate"
+              placeholder="Enter car make"
             />
           </Form.Item>
         </Form>

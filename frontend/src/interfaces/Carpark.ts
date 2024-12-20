@@ -18,6 +18,7 @@
 export interface ParkingCardInterface {
   ID: string;
   ExpiryDate?: string;
+  IsActive?: boolean;
   UpdatedAt?: string;
   TypePark?: {
     ID: number;
@@ -26,7 +27,7 @@ export interface ParkingCardInterface {
   StoreID?: number;
   MembershipCustomerID?: number;
   StatusCard?: {
-    ID: number;
+    ID?: number;
     Status?: string;
   };
   ParkingFeePolicyID?: number;
@@ -42,9 +43,12 @@ export interface ParkingCardInterface {
   ParkingTransaction?: {
     EntryTime?: string; // ใช้ string แทน time
     ExitTime?: string; // ใช้ string แทน time
-    Hourly_rate?: number;
+    Hourly_Rate?: number;
     Fee?: number;
+    Image?: string;
     LicensePlate?: string;
+    Color?: string;
+    Make?: string;
     UserID?: number;
     StatusPaymentID?: number;
     ParkingCardID?: string;
@@ -78,9 +82,12 @@ export interface ParkingZoneInterface {
 export interface ParkingTransactionInterface {
   EntryTime?: string; // ใช้ string แทน time
   ExitTime?: string; // ใช้ string แทน time
-  Hourly_rate?: number;
+  Hourly_Rate?: number;
   Fee?: number;
+  Image?: string;
   LicensePlate?: string;
+  Color?: string;
+  Make?: string;
 
   UserID?: number;
   StatusPaymentID?: number;

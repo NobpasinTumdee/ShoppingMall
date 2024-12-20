@@ -20,10 +20,10 @@ import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 
-import CarPark from './Page/MainWeb/CarPark/CarPark';
+import CarPark from './Page/MainWeb/CarPark/ParkingEmployee/CarPark';
 import CarParkIN from './Page/MainWeb/CarPark/CarParkIN';
 import CarParkINZone from './Page/MainWeb/CarPark/IN/CarParkINZone';
-
+import HistoryCard from './Page/MainWeb/CarPark/ParkingEmployee/HistoryCard'
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
@@ -53,11 +53,11 @@ const App: React.FC = () => {
         <Route path="/Inventory" element={<Inventory />} />
         <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
-        <Route path="/CarParking" element={<CarPark />} />
+        <Route path="/CarPark" element={<CarPark />} />
+        <Route path="/HistoryCard" element={<HistoryCard />} />
         <Route path="/CarParking-In" element={<CarParkIN />} />
         <Route path="/CarParking-In-Zone" element={<CarParkINZone />} />
-        
-
+      
       </Routes>
     </>
   );

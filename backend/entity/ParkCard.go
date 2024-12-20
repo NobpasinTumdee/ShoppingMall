@@ -10,9 +10,9 @@ type ParkingCard struct {
 	gorm.Model
 	ID         string    `gorm:"primaryKey" json:"ID"`
 	ExpiryDate time.Time `json:"ExpiryDate"`
-
-	TypeParkID uint     `json:"TypeParkID"`
-	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
+	IsActive   bool      `json:"IsActive"`
+	TypeParkID uint      `json:"TypeParkID"`
+	TypePark   TypePark  `gorm:"foreignKey:TypeParkID"`
 
 	StoreID uint  `json:"StoreID"`
 	Store   Store `gorm:"foreignKey:StoreID"`
@@ -60,9 +60,12 @@ type ParkingTransaction struct {
 	gorm.Model
 	EntryTime    time.Time `json:"EntryTime"`
 	ExitTime     time.Time `json:"ExitTime"`
-	Hourly_rate  float64   `json:"Hourly_rate"`
+	Hourly_Rate  float64   `json:"Hourly_Rate"`
 	Fee          float64   `json:"Fee"`
+	Image        string    `gorm:"type:longtext" json:"Image"`
 	LicensePlate string    `json:"LicensePlate"`
+	Color        string    `json:"Color"`
+	Make         string    `json:"Make"`
 	IsLostCard   bool      `json:"IsLostCard"`
 	IsCash       bool      `json:"IsCash"`
 

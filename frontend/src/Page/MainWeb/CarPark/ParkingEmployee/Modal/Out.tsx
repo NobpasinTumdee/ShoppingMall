@@ -14,10 +14,10 @@ import {
   Tabs,
 } from "antd";
 import type { CheckboxProps } from "antd";
-import { ParkingCardInterface } from "./../../../../interfaces/Carpark";
+import { ParkingCardInterface } from "../../../../../interfaces/Carpark";
 import layout from "antd/es/layout";
-import "./../CarPark.css";
-import { UpdateParkingCard } from "../../../../services/https";
+//import "./../CarPark.css";
+import { UpdateParkingCard } from "../../../../../services/https";
 
 interface InProps {
   setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
@@ -25,7 +25,7 @@ interface InProps {
   // fetchParkingCards: () => void;
   getParkingCards: () => void;
   selectedCard: ParkingCardInterface | null;
-  selectedStatus: string;
+  selectedฺButtonInOut: boolean;
   carLicensePlate: string;
   setCarLicensePlate: React.Dispatch<React.SetStateAction<string>>;
   selectedCardIndex: number | null;
@@ -39,8 +39,7 @@ interface InProps {
   searchValue: string;
   setIsModalOutVisible: React.Dispatch<React.SetStateAction<boolean>>;
   isModalOutVisible: boolean;
-  handleCancelIn: () => void;
-  handleCancelOut: () => void;
+  handleCancel: () => void;
 }
 
 const OUT: React.FC<InProps> = ({
@@ -49,7 +48,7 @@ const OUT: React.FC<InProps> = ({
   //fetchParkingCards,
   getParkingCards,
   selectedCard,
-  selectedStatus,
+  selectedฺButtonInOut,
   carLicensePlate,
   setCarLicensePlate,
   selectedCardIndex,
@@ -61,8 +60,7 @@ const OUT: React.FC<InProps> = ({
   searchValue,
   setIsModalOutVisible,
   isModalOutVisible,
-  handleCancelIn,
-  handleCancelOut,
+  handleCancel,
 }) => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -146,7 +144,7 @@ const OUT: React.FC<InProps> = ({
       }
       open={isModalOutVisible}
       onOk={handlePaymentOk}
-      onCancel={handleCancelOut}
+      onCancel={handleCancel}
       style={{
         display: "flex",
         flexDirection: "column",

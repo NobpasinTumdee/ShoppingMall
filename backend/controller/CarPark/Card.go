@@ -71,10 +71,13 @@ func CreateParkingTransaction(c *gin.Context) {
 	newTransaction := entity.ParkingTransaction{
 		EntryTime:       trans.EntryTime,
 		ExitTime:        trans.ExitTime,
+		Image:           trans.Image,
 		LicensePlate:    trans.LicensePlate,
+		Color:           trans.Color,
+		Make:            trans.Make,
 		UserID:          trans.UserID,
 		StatusPaymentID: trans.StatusPaymentID,
-		Hourly_rate:     trans.Hourly_rate,
+		Hourly_Rate:     trans.Hourly_Rate,
 		Fee:             trans.Fee,
 		ParkingCardID:   trans.ParkingCardID, // Using ParkingCard ID
 	}
@@ -163,19 +166,31 @@ func UpdateParkingCardAndZone(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Parking card and zone updated successfully"})
 }
 
+func GetParkingCardByID(c *gin.Context) {
+	id := c.Param("id")
+	var parkingCard entity.ParkingCard
+
+	db := config.DB()
+
+	if err := db.Preload("TypePark").Preload("ParkingTransaction").First(&parkingCard, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+		return
+	}
+	c.JSON(http.StatusOK, parkingCard)
+}
+
 func GetParkingCardWithZoneByID(c *gin.Context) {
 	id := c.Param("id")
 	var parkingCard entity.ParkingCard
-   
+
 	db := config.DB()
 
-    if err := db.Preload("ParkingZone").First(&parkingCard, "id = ?", id).Error; err != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
-        return
-    }
-    c.JSON(http.StatusOK, parkingCard)
+	if err := db.Preload("ParkingZone").First(&parkingCard, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+		return
+	}
+	c.JSON(http.StatusOK, parkingCard)
 }
-
 
 func GetIdCardZone(c *gin.Context) {
 	ID := c.Param("id")
