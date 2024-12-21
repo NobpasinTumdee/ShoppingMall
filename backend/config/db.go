@@ -231,7 +231,16 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
 	}
 	
-
+	//Event
+	event := []entity.Event{
+		{EventPic: "https://media.themall.co.th/media/items/9f61a880dfb5e8d2d25f897ef37bce3e4353e69f.jpg",EventTopic: "Discover the Ultimate Shopping Destination!",EventDate: time.Now(),UserID: 3,EventDescription: "Experience the perfect blend of style, convenience, and entertainment at The Mall. Explore exclusive collections, indulge in culinary delights, and enjoy events crafted for you. Whether you're shopping for fashion, electronics, or gifts, we've got everything you need—all under one roof."},
+		{EventPic: "https://media.themall.co.th/media/items/147c701366a791b830325340b154ac7d325a0e7b.jpg",EventTopic: "🎄 Celebrate the Magic of Christmas at ICONIC! 🎁",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
+		{EventPic: "https://media.themall.co.th/media/items/44e94bacd916dc3f018fdeec741f600422bb6c38.jpg",EventTopic: "CASH COUPON",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
+		{EventPic: "https://media.themall.co.th/media/events/34246945c3bf4efc2dfc0a642be90316896207e2.jpg",EventTopic: "Toy Giving 🎁",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
+	}
+	for _, pkg := range event {
+		db.FirstOrCreate(&pkg,entity.Event{EventTopic: pkg.EventTopic})
+	}
 
 	//Store
 	/*

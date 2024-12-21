@@ -1,7 +1,7 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
-import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
+import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -433,6 +433,39 @@ async function GetStoreWaiting(status: string) {
     .catch((e) => e.response);
 
 }
+// get Event
+async function GetEvent() {
+
+  return await axios
+
+    .get(`${apiUrl}/event`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create AddEvent
+async function AddEvent(data: EventInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/event`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete Event
+async function DeleteEvent(id: string) {
+  return await axios
+    .delete(`${apiUrl}/event/${id}`, requestOptions)
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => e.response);
+}
 //=============================อุปกรณ์=====================================
 // get Inventory
 async function ListInventory() {
@@ -558,6 +591,9 @@ export {
     
     GetStoreWaiting,//admin
     ListUser,
+    GetEvent,
+    AddEvent,
+    DeleteEvent,
 
     GetStoreByFloor,//store
     UpdateStoreByid,
