@@ -12,6 +12,11 @@ import Food from "../../assets/icon/ForPage/MainIcon/FoodBar.png"
 import Decorations from "../../assets/icon/ForPage/MainIcon/Home.png"
 import Computer from "../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 import st from "../../assets/icon/ForPage/Store/Store3.jpg"
+import Award1 from "../../assets/icon/ForPage/MainIcon/Award1.png"
+import Award2 from "../../assets/icon/ForPage/MainIcon/Award2.png"
+import Award3 from "../../assets/icon/ForPage/MainIcon/Award3.png"
+import Award4 from "../../assets/icon/ForPage/MainIcon/Award4.png"
+import Award5 from "../../assets/icon/ForPage/MainIcon/Award5.png"
 
 //New
 //import axios from 'axios';
@@ -169,9 +174,40 @@ const Main: React.FC = () => {
 
 
             <footer>
-                <span>1</span>
-                <span>1</span>
-                <span>1</span>
+                <div style={{display: 'flex', margin: '0 100px',fontFamily:'"Parkinsans", sans-serif'}}>
+                    <span>
+                        <div style={{color: '#fff'}}>
+                            Getting here <br />
+                            Upadate News <br />
+                            7 Wondrous <br />
+                            About us <br />
+                            Vision & Mission <br />
+                            Privacy policy <br />
+                        </div>
+                    </span>
+                    <span>
+                        <div style={{color: '#fff'}}>
+                            Board of Director <br />
+                            Award <br /> 
+                            Contact us <br /> 
+                            Tenant services <br />
+                        </div>
+                    </span>
+                </div>
+                <div>
+                    <div>
+                        <span><img src={Award1} alt="Award1" width={80}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award2} alt="Award2" width={100}/></span>
+                    </div>
+                    <div>
+                        <span><img src={Award4} alt="Award4" width={250}/></span>
+                        <span><img src={Award5} alt="Award5" width={150}/></span>
+                    </div>
+                </div>
             </footer>
 
         </>
