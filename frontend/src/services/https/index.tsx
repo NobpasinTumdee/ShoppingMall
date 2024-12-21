@@ -33,6 +33,13 @@ async function SignIn(data: SignInInterface) {
 
     .catch((e) => e.response);
 }
+//signup
+async function CreateUser(data: UsersInterface) {
+  return await axios
+    .post(`${apiUrl}/signup`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
 // get user by id
 async function GetUserById(id: string) {
   return await axios
@@ -480,7 +487,14 @@ async function GetIdCardZone(id: string) {
     .then((res) => res)
     .catch((e) => e.response);
 }
-
+async function DeleteParkingCard(id: string) {
+  return await axios
+    .delete(`${apiUrl}/delete-parkingcard/${id}`, requestOptions)
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => e.response);
+}
 
 
 
@@ -611,6 +625,7 @@ async function ListBookingHall() {
 
 export {
     SignIn,//user
+    CreateUser,//user
     GetUserById,
     UpdateUserByid,
     AddStore,
@@ -670,5 +685,6 @@ export {
   GetParkingCardByID,
   GetParkingCardWithZoneByID,
   GetIdCardZone,
+  DeleteParkingCard,
 }
 

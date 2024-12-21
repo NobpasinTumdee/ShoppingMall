@@ -25,7 +25,7 @@ interface InProps {
   // fetchParkingCards: () => void;
   getParkingCards: () => void;
   selectedCard: ParkingCardInterface | null;
-  selectedฺButtonInOut: boolean;
+  selectedฺButtonInOutDefault: string;
   carLicensePlate: string;
   setCarLicensePlate: React.Dispatch<React.SetStateAction<string>>;
   selectedCardIndex: number | null;
@@ -48,7 +48,7 @@ const OUT: React.FC<InProps> = ({
   //fetchParkingCards,
   getParkingCards,
   selectedCard,
-  selectedฺButtonInOut,
+  selectedฺButtonInOutDefault,
   carLicensePlate,
   setCarLicensePlate,
   selectedCardIndex,

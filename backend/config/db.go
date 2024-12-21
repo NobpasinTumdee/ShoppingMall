@@ -87,6 +87,10 @@ func SetupDatabase() {
 		{UserName: "Member", Password: hashedPassword, Email: "Member@g.sut.ac.th", FirstName: "Member", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
 		{UserName: "Cleaning", Password: hashedPassword, Email: "Cleaning@g.sut.ac.th", FirstName: "Cleaning", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/kokomijpg.png", ProfileBackground: "", Status: "Cleaning"},
 		{UserName: "Repairman", Password: hashedPassword, Email: "Repairman@g.sut.ac.th", FirstName: "Repairman", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "Repairman"},
+		{UserName: "ParkingAttendant", Password: hashedPassword, Email: "ParkingAttendant@g.sut.ac.th", FirstName: "Parking Attendant", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "ParkingAttendant"},
+		{UserName: "MembershipCustomer", Password: hashedPassword, Email: "MembershipCustomer@g.sut.ac.th", FirstName: "Membership Customer", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "MembershipCustomer"},
+		{UserName: "Customer", Password: hashedPassword, Email: "Customer@g.sut.ac.th", FirstName: "Customer", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "Customer"},
+
 	}
 	for _, pkg := range User {
 		db.FirstOrCreate(&pkg, entity.User{UserName: pkg.UserName})

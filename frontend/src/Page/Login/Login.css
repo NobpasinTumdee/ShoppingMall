@@ -4,7 +4,7 @@ body {
     margin: 0px;
     padding: 0px;
     background-color: rgb(255, 255, 255);
-
+    overflow-y: auto;
 }
 .backgroud{
     position: fixed;
@@ -69,12 +69,14 @@ body {
     transform: translateY(-50px);
 }
 .gotocarpark{
+    position: absolute;
+    bottom: 20px;
     width: 200px;
     height: 50px;
     background-color: #E8D196;
     border-radius: 0 20px 20px 0;
     box-shadow: 0 0 15px #E8D196; 
-    transform: translateY(300px);
+    /* transform: translateY(300px); */
     text-align: center;
     font-size: 35px;
     color: #000;
@@ -85,6 +87,8 @@ body {
     animation-name: gotocarpark;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
+
+    z-index: 10000;
 }
 .gotocarpark:hover{
     color: #ffffff;
@@ -98,11 +102,14 @@ body {
         box-shadow: 0 0 15px #E8D196; 
     }
 }
+.gotocarpark a {
+    text-decoration: none; /* ทำให้ไม่มีขีดเส้นใต้ */
+    color: #000; /* หรือสีที่ต้องการ */
+}
 
-
-
-
-
+.gotocarpark a:hover {
+    color: #C9AF62; /* สีเมื่อเอาเมาส์ไปวาง */
+}
 
 .Loginrigth{
     background-color: #ffffff;
@@ -160,4 +167,95 @@ body {
     width: 30px;
     height: 30px;
     transform: translateX(-40px);
+}
+
+
+
+
+
+/******************************* CarPark Login ***********************************/
+.backgroudCarPark{
+    position: fixed;
+    width: 600px;
+    height: 100%;
+    background-color: #131313;
+}
+
+.LogincontannerCarPark {
+    position: relative;  
+    top: 550px; 
+    margin-bottom: 150px;
+    left: 50%;  
+    transform: translate(-50%, -50%);
+
+    background-color: rgb(34, 34, 34);
+    height: auto;
+    width: 1000px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #0000005c;
+    font-size: 40px;
+    font-family: 'Dongle', sans-serif;
+}
+.LoginsubCarPark{
+    display: flex;
+    justify-content: space-between;
+}
+.LoginLeftCarPark {
+    position: relative; /* ตั้ง position ให้เป็น relative เพื่อให้ลูกของมันใช้ absolute ได้ */
+    background-color: #1d1d1d;
+    width: 40%;
+    height: auto;
+    border-radius: 10px 0 0 10px;
+    text-align: right;
+    padding-right: 30px;
+    background-image: url('../../assets/CarPark/carpark-cover.webp'); /* เพิ่มรูปภาพ */
+    background-size: cover; /* ปรับขนาดรูปภาพให้พอดีกับพื้นที่ */
+    background-position: center; /* จัดตำแหน่งรูปภาพให้อยู่กลาง */
+    background-repeat: no-repeat; /* ไม่ให้รูปภาพซ้ำ */
+}
+.LoginLeftCarPark img{
+    position: fixed;
+    transform: translate(-90px, -45px);
+
+    animation-duration: 3s;
+    animation-name: LoginLeft;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes LoginLeftCarPark{
+    0%{
+        transform: translate(-90px, -45px);
+    }50%{
+        transform: translate(-90px, -50px);
+    }100%{
+        transform: translate(-90px, -45px);
+    }
+}
+.LoginLeftCarPark p:first-child{
+    font-weight: 800;
+    font-size: 90px;
+    line-height: 0px;
+    color: #E8D196;
+}
+.LoginrigthCarPark{
+    background-color: #ffffff;
+    width: 60%;
+    height: 950px;
+    border-radius: 0 10px 10px 0;
+    align-items: center;
+}
+.formLoginCarPark{
+    margin: 200px 100px;
+    width: 100%;
+    max-width: 400px;
+}
+.formLoginCarPark:first-child{
+    font-weight: 800;
+    font-size: 80px;
+    transform: translateY(-20%);
+}
+.formLoginCarPark p{
+    font-size: 25px;
+    font-family: 'Dongle', sans-serif;
+    margin: 0;
 }

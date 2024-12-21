@@ -3,9 +3,11 @@ import {
   Card,
   Col,
   ConfigProvider,
+  Divider,
   Flex,
   GetProps,
   Input,
+  Popconfirm,
   Row,
   Space,
   Table,
@@ -13,14 +15,24 @@ import {
 } from "antd";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
-import { GetListCard } from "./../../../../services/https";
-import { ParkingCardInterface, ParkingFeePolicyInterface } from "./../../../../interfaces/Carpark";
+import {
+  UserOutlined,
+  CloseCircleOutlined,
+  CloseOutlined,
+  CloseSquareOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { DeleteParkingCard, GetListCard } from "./../../../../services/https";
+import {
+  ParkingCardInterface,
+  ParkingFeePolicyInterface,
+} from "./../../../../interfaces/Carpark";
 import "./../CarPark.css";
-
+import PicFloor from "./../../../../assets/icon/ForPage/Store/Reserve.png";
 import IN from "./Modal/In";
 import OUT from "./Modal/Out";
-import { NavBar } from "../../../Component/NavBar";
+import { NavBar } from "../../../Component/NavBarCarPark";
+import AddCardModal from "./Modal/AddCard";
 
 //import "./../Store/StoreAndPay.css";
 
@@ -31,8 +43,8 @@ const CarPark: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedฺButtonInOut, setSelectedฺButtonInOut] =
-    useState<boolean>(false);
+  const [selectedฺButtonInOutDefault, setSelectedฺButtonInOutDefault] =
+    useState<string>("");
   const [selectedCard, setSelectedCard] = useState<ParkingCardInterface | null>(
     null
   );
@@ -44,6 +56,7 @@ const CarPark: React.FC = () => {
   const [carLicensePlate, setCarLicensePlate] = useState("");
   const [isModalInVisible, setIsModalInVisible] = useState<boolean>(false);
   const [isModalOutVisible, setIsModalOutVisible] = useState<boolean>(false);
+  const [isAddCardModalVisible, setIsAddCardModalVisible] = useState(false);
 
   const columnsCarIn = [
     { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
@@ -61,14 +74,17 @@ const CarPark: React.FC = () => {
     },
     {
       title: "Status",
-      key: "IsActive",
+      key: "StatusCard.Status",
       fixed: "right" as const,
       render: (_: any, record: ParkingCardInterface) => (
         <Button
           type="primary"
-          onClick={() => handleStatusClick(record.IsActive || false, record)}
+          onClick={() => handleStatusClick(record.StatusCard?.Status || "", record)}
         >
-          {record.IsActive ? "OUT" : "IN"}
+          {record.StatusCard?.Status === "IN" ? "IN" 
+          : record.StatusCard?.Status === "OUT" ? "OUT"
+          : record.StatusCard?.Status === "Expired" ? "Expired"
+          : "Un Used"}
         </Button>
       ),
     },
@@ -77,9 +93,22 @@ const CarPark: React.FC = () => {
       key: "history",
       fixed: "right" as const,
       render: (_: any, record: ParkingCardInterface) => (
-        <Link to="/HistoryCard">
+        <Link to="/CarPark/HistoryCard">
           <Button onClick={() => handleHistoryClick(record)}>History</Button>
         </Link>
+      ),
+    },
+    {
+      title: "",
+      key: "delete",
+      fixed: "right" as const,
+      render: (_: any, record: ParkingCardInterface) => (
+        <Popconfirm
+          title="Sure to delete?"
+          onConfirm={() => handleDeleteCard(record.ID)}
+        >
+          <DeleteOutlined />
+        </Popconfirm>
       ),
     },
   ];
@@ -91,13 +120,21 @@ const CarPark: React.FC = () => {
       title: "Image Car",
       dataIndex: "Image",
       key: "Image",
-      fixed: "left" as const,
       render: (_: any, record: any) => {
         const latestTransaction = record.ParkingTransaction?.sort(
           (a: any, b: any) =>
             new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
         )[0];
-        return latestTransaction?.Image || "";
+
+        return latestTransaction?.Image ? (
+          <img
+            src={latestTransaction.Image}
+            alt="Car"
+            style={{ width: "100px", height: "60px", objectFit: "cover" }}
+          />
+        ) : (
+          ""
+        );
       },
     },
     {
@@ -176,7 +213,7 @@ const CarPark: React.FC = () => {
           (a: any, b: any) =>
             new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
         )[0];
-        
+
         if (latestTransaction?.EntryTime && latestTransaction?.ExitTime) {
           const fee = calculateParkingFee(
             new Date(latestTransaction.EntryTime),
@@ -197,7 +234,7 @@ const CarPark: React.FC = () => {
           (a: any, b: any) =>
             new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
         )[0];
-    
+
         if (latestTransaction?.EntryTime) {
           const entryTime = new Date(latestTransaction.EntryTime);
           const hours = calculateHourlyRate(entryTime);
@@ -208,14 +245,17 @@ const CarPark: React.FC = () => {
     },
     {
       title: "Status",
-      key: "IsActive",
+      key: "StatusCard.Status",
       fixed: "right" as const,
       render: (_: any, record: ParkingCardInterface) => (
         <Button
           type="primary"
-          onClick={() => handleStatusClick(record.IsActive || false, record)}
+          onClick={() => handleStatusClick(record.StatusCard?.Status || "", record)}
         >
-          {record.IsActive ? "OUT" : "IN"}
+          {record.StatusCard?.Status === "IN" ? "IN" 
+          : record.StatusCard?.Status === "OUT" ? "OUT"
+          : record.StatusCard?.Status === "Expired" ? "Expired"
+          : "Un Used"}
         </Button>
       ),
     },
@@ -224,9 +264,22 @@ const CarPark: React.FC = () => {
       key: "history",
       fixed: "right" as const,
       render: (_: any, record: ParkingCardInterface) => (
-        <Link to="/HistoryCard">
+        <Link to="/CarPark/HistoryCard">
           <Button onClick={() => handleHistoryClick(record)}>History</Button>
         </Link>
+      ),
+    },
+    {
+      title: "",
+      key: "delete",
+      fixed: "right" as const,
+      render: (_: any, record: ParkingCardInterface) => (
+        <Popconfirm
+          title="Sure to delete?"
+          onConfirm={() => handleDeleteCard(record.ID)}
+        >
+          <DeleteOutlined />
+        </Popconfirm>
       ),
     },
   ];
@@ -251,7 +304,7 @@ const CarPark: React.FC = () => {
     const diffMs = currentTime.getTime() - entryTime.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60)); // ชั่วโมงเต็ม
     const remainingMinutes = (diffMs % (1000 * 60 * 60)) / (1000 * 60); // นาทีที่เกิน
-    
+
     // ถ้านาทีเกิน 0 ให้เพิ่ม 1 ชั่วโมง
     return remainingMinutes > 0 ? diffHours + 1 : diffHours;
   };
@@ -260,26 +313,30 @@ const CarPark: React.FC = () => {
     return policy.LostCard!;
   };
 
-  
-  const calculateParkingFee = (entryTime: Date, exitTime: Date, policy: ParkingFeePolicyInterface): number => {
+  const calculateParkingFee = (
+    entryTime: Date,
+    exitTime: Date,
+    policy: ParkingFeePolicyInterface
+  ): number => {
     const parkedMs = exitTime.getTime() - entryTime.getTime();
-    const parkedHours = Math.ceil(parkedMs / (1000 * 60 * 60)); 
-    
+    const parkedHours = Math.ceil(parkedMs / (1000 * 60 * 60));
+
     if (policy.IsExempt) return 0; // ยกเว้นค่าจอด
-  
+
     let totalFee = 0;
-    
+
     if (parkedHours > policy.FreeHours!) {
       const chargeableHours = parkedHours - policy.FreeHours!;
       const increment = parseFloat(policy.Time_Increment || "1");
-      
-      const additionalFees = Math.ceil(chargeableHours / increment) * policy.AddBase_Fee!;
-      
+
+      const additionalFees =
+        Math.ceil(chargeableHours / increment) * policy.AddBase_Fee!;
+
       totalFee = additionalFees - policy.Discount!;
     }
-    
+
     return totalFee > 0 ? totalFee : 0;
-  };  
+  };
 
   const getParkingCards = async () => {
     setLoading(true);
@@ -300,6 +357,21 @@ const CarPark: React.FC = () => {
     }
   };
 
+  const handleDeleteCard = async (cardID: string) => {
+    try {
+      const response = await DeleteParkingCard(cardID);
+      if (response.status === 200) {
+        messageApi.success("Card deleted successfully.");
+        setCards(cards.filter((card) => card.ID !== cardID));
+      } else {
+        messageApi.error("Failed to delete card.");
+      }
+    } catch (error) {
+      console.error("Error deleting card:", error);
+      messageApi.error("An error occurred while deleting the card.");
+    }
+  };
+
   const onChange: OTPProps["onChange"] = (value: string) => {
     setSearchValue(value);
 
@@ -307,8 +379,8 @@ const CarPark: React.FC = () => {
     setFilteredData(filtered);
 
     if (filtered.length > 0) {
-      const currentStatus = filtered[0].IsActive;
-      setSelectedฺButtonInOut(currentStatus === false ? false : true);
+      const currentStatus = filtered[0].StatusCard?.Status;
+      setSelectedฺButtonInOutDefault(currentStatus === "IN" ? "IN" : currentStatus === "OUT" ? "OUT" : "Expired");
     }
   };
 
@@ -319,6 +391,7 @@ const CarPark: React.FC = () => {
 
   useEffect(() => {
     getParkingCards();
+    setSelectedฺButtonInOutDefault("IN");
     /*  setSelectedฺButtonInOut(false);
     const filtered = cards.filter(
       (item) =>
@@ -328,25 +401,25 @@ const CarPark: React.FC = () => {
     setFilteredData(filtered); */
   }, []);
 
-  const handleStatusClick = (action: boolean, record: ParkingCardInterface) => {
+  const handleStatusClick = (status: string, record: ParkingCardInterface) => {
     const updatedCards = cards.map((card) =>
       card.ID === record.ID ? { ...card } : card
     );
 
     setCards(updatedCards);
     setSelectedCard(record);
-    setSelectedฺButtonInOut(action);
+    setSelectedฺButtonInOutDefault(status);
 
-    if (action === false) {
+    if (status === "IN") {
       setIsModalInVisible(true);
-    } else if (action === true) {
+    } else {
       setIsModalOutVisible(true);
     }
 
     const filtered = updatedCards.filter(
       (item) =>
         item.ID.toString().includes(searchValue) &&
-        item.IsActive === selectedฺButtonInOut
+        item.StatusCard?.Status === selectedฺButtonInOutDefault
     );
     setFilteredData(filtered);
   };
@@ -356,9 +429,18 @@ const CarPark: React.FC = () => {
     localStorage.setItem("CardParkID", record?.ID || "");
   };
 
+  const handleAddCard = () => {
+    setIsAddCardModalVisible(false);
+  };
+
+  const showAddCardModal = () => {
+    setIsAddCardModalVisible(true);
+  };
+
   const handleCancel = () => {
     setIsModalInVisible(false);
     setIsModalOutVisible(false);
+    setIsAddCardModalVisible(false);
   };
 
   const handleCardMouseDown = () => {
@@ -379,7 +461,7 @@ const CarPark: React.FC = () => {
           availableCards[Math.floor(Math.random() * availableCards.length)];
         setSearchValue(randomCard.ID || "");
         setOtp(randomCard.ID || "");
-        setSelectedฺButtonInOut(false);
+        setSelectedฺButtonInOutDefault("IN");
 
         const filtered = cards.filter(
           (item) =>
@@ -428,108 +510,132 @@ const CarPark: React.FC = () => {
           },
         }}
       >
-        <div style={{ height: "110px" }}></div>
+        <div style={{ height: "110px", zIndex: "0" }}></div>
         <div className="route">
           <a href="/Main">Home /</a> Car Parking{" "}
         </div>
+
         <Row justify={"center"} style={{ marginTop: "30px" }}>
           <div className="header-title">Car Parking</div>
         </Row>
-        <Row justify={"center"} align={"middle"} style={{ gap: "16px" }}>
-          <Col>
-            <Card>
-              <Flex justify="space-between" gap={"16px"}>
-                <div className="text-id-card">ID CARD</div>
-                <div>
-                  <Input.OTP length={4} value={otp} {...sharedProps} />
-                </div>
-              </Flex>
-            </Card>
-          </Col>
-          <Col>
-            <Card
-              onClick={handleGeneralCardClick} // เมื่อคลิกที่ Card ของ General
-              onMouseDown={handleCardMouseDown} // เมื่อกด
-              style={{
-                cursor: "pointer",
-                width: "auto",
-                boxShadow: isActive
-                  ? "0 0px 10px rgba(201, 175, 98, 0.5)" // เงาสีทองอยู่กลางการ์ด
-                  : "none", // กำหนดเงาเมื่อคลิก
-                transition: "box-shadow 0.3s ease", // การเปลี่ยนแปลงของเงา
-              }}
-            >
-              <Flex gap={"16px"}>
-                <UserOutlined
-                  style={{ fontSize: "24px", marginRight: "8px" }}
-                />
-                <div className="text-id-card">GENERAL</div>
-              </Flex>
-            </Card>
-          </Col>
+        <Row justify={"center"}>
+          <div className="line-after-header"></div>
         </Row>
-        <Col>
-          <Row justify="center" style={{ marginTop: "30px" }}>
-            <Space>
-              <Button
-                type={selectedฺButtonInOut === false ? "primary" : "default"}
-                onClick={() => {
-                  setSelectedฺButtonInOut(false);
-                  handleReset();
-                }}
-              >
-                Car IN
-              </Button>
-              <Button
-                type={selectedฺButtonInOut === true ? "primary" : "default"}
-                onClick={() => {
-                  setSelectedฺButtonInOut(true);
-                  handleReset();
-                }}
-              >
-                Car OUT
-              </Button>
-            </Space>
-          </Row>
+        <Card>
+          <div className="AddCardBtn" onClick={showAddCardModal}>
+            <p>Add Card</p>
+            <span>
+              <img src={PicFloor} />
+            </span>
+          </div>
           <Row
-            style={{ margin: "16px" }}
             justify={"center"}
-            gutter={{ xs: 24, sm: 24, md: 24 }}
+            align={"middle"}
+            style={{ gap: "16px", marginTop: "30px" }}
           >
-            <Table
-              columns={selectedฺButtonInOut ? columnsCarOut : columnsCarIn}
-              dataSource={
-                searchValue
-                  ? filteredData.filter(
-                      (card) => card.IsActive === selectedฺButtonInOut
-                    )
-                  : cards.filter(
-                      (card) => card.IsActive === selectedฺButtonInOut
-                    )
-              }
-              loading={loading}
-              style={{
-                fontSize: "30px",
-                textAlignLast: "center",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
-                animation: "ease-in-out",
-              }}
-              className="table-card"
-              rowKey="ID"
-              scroll={{ x: "max-content" }}
-            />
+            <Col>
+              <Card>
+                <Flex justify="space-between" gap={"16px"}>
+                  <div className="text-id-card">ID CARD</div>
+                  <div>
+                    <Input.OTP length={4} value={otp} {...sharedProps} />
+                  </div>
+                </Flex>
+              </Card>
+            </Col>
+            <Col>
+              <Card
+                onClick={handleGeneralCardClick} // เมื่อคลิกที่ Card ของ General
+                onMouseDown={handleCardMouseDown} // เมื่อกด
+                style={{
+                  cursor: "pointer",
+                  width: "auto",
+                  boxShadow: isActive
+                    ? "0 0px 10px rgba(201, 175, 98, 0.5)" // เงาสีทองอยู่กลางการ์ด
+                    : "none", // กำหนดเงาเมื่อคลิก
+                  transition: "box-shadow 0.3s ease", // การเปลี่ยนแปลงของเงา
+                }}
+              >
+                <Flex gap={"16px"}>
+                  <UserOutlined
+                    style={{ fontSize: "24px", marginRight: "8px" }}
+                  />
+                  <div className="text-id-card">GENERAL</div>
+                </Flex>
+              </Card>
+            </Col>
           </Row>
-          <Row justify={"center"}>
-            <Button
-              onClick={handleReset}
-              type="default"
-              style={{ marginBottom: "16px" }}
+          <Col>
+            <Row justify="center" style={{ marginTop: "30px" }}>
+              <Space>
+                <Button
+                  type={
+                    selectedฺButtonInOutDefault === "IN" 
+                      ? "primary" 
+                      : selectedฺButtonInOutDefault === "OUT" 
+                      ? "default"  
+                      : "default"   
+                  }                  
+                  onClick={() => {
+                    setSelectedฺButtonInOutDefault("IN");
+                    handleReset();
+                  }}
+                >
+                  Car IN
+                </Button>
+                <Button
+                  type={
+                    selectedฺButtonInOutDefault === "OUT" ? "primary" 
+                    : selectedฺButtonInOutDefault === "IN" ? "default" : "default"
+                  }
+                  onClick={() => {
+                    setSelectedฺButtonInOutDefault("OUT");
+                    handleReset();
+                  }}
+                >
+                  Car OUT
+                </Button>
+              </Space>
+            </Row>
+            <Row
+              style={{ margin: "16px" }}
+              justify={"center"}
+              gutter={{ xs: 24, sm: 24, md: 24 }}
             >
-              Reset
-            </Button>
-          </Row>
-        </Col>
-
+              <Table
+                columns={selectedฺButtonInOutDefault === "OUT" ? columnsCarOut : selectedฺButtonInOutDefault === "IN" ? columnsCarIn : columnsCarIn}
+                dataSource={
+                  searchValue
+                    ? filteredData.filter(
+                        (card) => card.StatusCard?.Status === selectedฺButtonInOutDefault
+                      )
+                    : cards.filter(
+                        (card) => card.StatusCard?.Status === selectedฺButtonInOutDefault
+                      )
+                }
+                loading={loading}
+                style={{
+                  fontSize: "30px",
+                  textAlignLast: "center",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+                  animation: "ease-in-out",
+                }}
+                className="table-card"
+                rowKey="ID"
+                scroll={{ x: "max-content" }}
+              />
+            </Row>
+            <Row justify={"center"}>
+              <Button
+                onClick={handleReset}
+                type="default"
+                style={{ marginBottom: "16px" }}
+              >
+                Reset
+              </Button>
+            </Row>
+          </Col>
+        </Card>
         <IN
           selectedCard={selectedCard}
           setSelectedCard={setSelectedCard}
@@ -544,7 +650,7 @@ const CarPark: React.FC = () => {
           cards={cards}
           getParkingCards={getParkingCards}
           selectedCard={selectedCard}
-          selectedฺButtonInOut={selectedฺButtonInOut}
+          selectedฺButtonInOutDefault={selectedฺButtonInOutDefault}
           carLicensePlate={carLicensePlate}
           setCarLicensePlate={setCarLicensePlate}
           selectedCardIndex={selectedCardIndex}
@@ -556,6 +662,12 @@ const CarPark: React.FC = () => {
           setIsModalOutVisible={setIsModalOutVisible}
           isModalOutVisible={isModalOutVisible}
           handleCancel={handleCancel}
+        />
+        <AddCardModal
+          visible={isAddCardModalVisible}
+          onCancel={handleCancel}
+          onAddCard={handleAddCard}
+          getParkingCards={getParkingCards}
         />
       </ConfigProvider>
     </>

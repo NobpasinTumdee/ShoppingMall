@@ -27,13 +27,18 @@
   text-align: center;
   font-family: "Dongle", sans-serif;
   font-size: 80px;
-  font-weight: 400; /* regular */
-  color: #62501a;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* เงาของข้อความ */
-  margin: 0% 0;
+  font-weight: 700; 
+  color: #C9AF62;
+ /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); *//* เงาของข้อความ */
   line-height: 70px;
-  flex: 1; /* ใช้พื้นที่มากที่สุดที่เป็นไปได้ */
-  text-align: center; /* จัดให้อยู่ตรงกลาง */
+}
+
+.line-after-header {
+  width: 70%;
+  height: 2px;
+  background-color: #C9AF62;
+  margin: 5 auto;
+  left: 50%;
 }
 
 .text-id-card {
@@ -55,6 +60,60 @@
 .custom-form-item {
   font-family: "Dongle", sans-serif !important;
   font-size: 24px !important;
+}
+
+.AddCardBtn{ 
+  position: fixed;
+  width: 60px;
+  height: 40px;
+  background-color: #E8D196;
+  border-radius: 5px;
+  right: 10px;
+  bottom: 60px;
+  border-right: 5px solid #452d04;
+  transition: 0.8s ease-in-out;
+
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;    
+  text-align: center;
+
+  animation-duration: 4s;
+  animation-name: AddCardBtn;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+
+  z-index: 9999;
+}
+
+@keyframes AddCardBtn{
+  0%   {box-shadow: 0 0 30px #ffffff;}
+  50%  {box-shadow: 0 0 30px #d59f17;}
+  100% {box-shadow: 0 0 30px #ffffff;}
+}
+.AddCardBtn p{
+  visibility: hidden;
+  opacity: 0;
+  margin-left: 20px;
+  font-size: 24px;
+  font-family: 'Dongle', sans-serif;
+}
+.AddCardBtn:hover p{
+  visibility: visible;opacity: 1;
+}
+.AddCardBtn:hover {
+  width: 140px;
+}
+.AddCardBtn span{
+  position: absolute;
+}
+.AddCardBtn:hover span{
+  right: 15px;
+}
+.AddCardBtn img{
+  margin-left: 10px;
+  margin-top: 12px;
+  width: 35px;
 }
 
 

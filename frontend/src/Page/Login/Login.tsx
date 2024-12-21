@@ -46,7 +46,7 @@ const Login: React.FC = () => {
             <div className='backgroud'></div>
             <div className='Logincontanner'>
                 <div className='Loginsub'>
-                <span className='LoginLeft'><p><img style={{width: '100px'}} src={LOGOS} alt="LOGOS" />ICONIC</p><p>Relaxing Your Mind From Madness Your Mind From</p><div className='gotocarpark'>Go to Car Parking</div></span>
+                <span className='LoginLeft'><p><img style={{width: '100px'}} src={LOGOS} alt="LOGOS" />ICONIC</p><p>Relaxing Your Mind From Madness Your Mind From</p><div className='gotocarpark'><a href="/CarPark">Go to Car Parking</a></div></span>
                 <span className='Loginrigth'>
                     <div className='formLogin'>
                         <div style={{color: '#1d1d1d'}}>Login</div>

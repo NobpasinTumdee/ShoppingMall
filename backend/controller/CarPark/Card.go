@@ -172,7 +172,7 @@ func GetParkingCardByID(c *gin.Context) {
 
 	db := config.DB()
 
-	if err := db.Preload("TypePark").Preload("ParkingTransaction").First(&parkingCard, "id = ?", id).Error; err != nil {
+	if err := db.Preload("StatusCard").Preload("TypePark").Preload("ParkingTransaction").First(&parkingCard, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
 		return
 	}
@@ -213,4 +213,24 @@ func GetIdCardZone(c *gin.Context) {
 		// "zones": zones,
 		// "cardzone": cardzone,
 	})
+}
+
+
+func DeleteParkingCard(c *gin.Context) {
+
+	id := c.Param("id")
+	fmt.Println("id: ", id)
+	db := config.DB()
+	
+	
+	if err := db.Where("parking_cards_id = ?", id).Delete(&entity.ParkingCardZone{}).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Card not found"})
+		return
+	}
+	if tx := db.Exec("DELETE FROM parking_cards WHERE id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
 }

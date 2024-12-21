@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Table, message, Spin } from "antd";
+import { Card, Row, Col, Table, message, Spin, Modal } from "antd";
 import {
   ParkingCardInterface,
   ParkingTransactionInterface,
 } from "../../../../interfaces/Carpark";
 import { GetParkingCardByID } from "../../../../services/https"; // ฟังก์ชันที่ใช้ดึงข้อมูลการ์ดและประวัติ
-import { NavBar } from "../../../Component/NavBar";
+import { NavBar } from "../../../Component/NavBarCarPark";
 
 const HistoryCard: React.FC = () => {
   const cardID = localStorage.getItem("CardParkID"); // ดึง cardID จาก localStorage
@@ -14,7 +14,9 @@ const HistoryCard: React.FC = () => {
     ParkingTransactionInterface[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  
   useEffect(() => {
     console.log("cardID", cardID);
     const fetchCardData = async () => {
@@ -56,6 +58,25 @@ const HistoryCard: React.FC = () => {
       title: "Image",
       dataIndex: "Image",
       key: "Image",
+      render: (image: string) =>
+        image ? (
+          <img
+            src={image}
+            alt="Car"
+            style={{
+              width: "100px",
+              height: "60px",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setSelectedImage(image);
+              setIsModalVisible(true);
+            }}
+          />
+        ) : (
+          "No Image"
+        ),
     },
     {
       title: "License Plate",
@@ -105,7 +126,7 @@ const HistoryCard: React.FC = () => {
       <NavBar />
       <div style={{ height: "110px" }}></div>
       <div className="route">
-        <a href="/Main">Home /</a> <a href="/CarPark/">Car Parking /</a> History
+        <a href="/Main">Home /</a> <a href="/CarPark/Main">Car Parking /</a> History
         Card{" "}
       </div>
       <Row justify={"center"} style={{ marginTop: "30px" }}>
@@ -119,7 +140,7 @@ const HistoryCard: React.FC = () => {
               <Row>
                 <Col span={12}>
                   <p>Card Type: {card?.TypePark?.Type || "N/A"}</p>
-                  <p>Status: {card?.IsActive ? "Active" : "Inactive"}</p>
+                  <p>Status: {card?.StatusCard?.Status === "IN" ? "IN" : card?.StatusCard?.Status === "OUT" ? "OUT" : "Default"}</p>
                 </Col>
               </Row>
               <Table
@@ -133,6 +154,21 @@ const HistoryCard: React.FC = () => {
           </Col>
         </Row>
       </div>
+
+      <Modal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={() => setIsModalVisible(false)}
+        centered
+      >
+        {selectedImage && (
+          <img
+            src={selectedImage}
+            alt="Car Large"
+            style={{ width: "100%", height: "auto" }}
+          />
+        )}
+      </Modal>
     </>
   );
 };

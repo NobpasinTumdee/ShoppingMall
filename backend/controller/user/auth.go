@@ -143,13 +143,13 @@ func SignUp(c *gin.Context) {
 
 		ProfileBackground: "",
 
-		FirstName: "",
+		FirstName: payload.FirstName,
 
-		LastName: "",
+		LastName: payload.LastName,
 
 		Age: 0,
 
-		Status: "User",
+		Status: payload.Status,
 	}
 
 	// Save the user to the database

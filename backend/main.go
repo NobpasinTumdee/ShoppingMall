@@ -93,7 +93,8 @@ func main() {
 		router.GET("/get-card-zone/:id", CarPark.GetIdCardZone)
 		router.PUT("/update-parkingzone/:id",CarPark.UpdateParkingZone)
 		router.PUT("/update-parkingcard-zone/:cid/:zid",CarPark.UpdateParkingCardAndZone)
-		
+		router.DELETE("/delete-parkingcard/:id",CarPark.DeleteParkingCard)
+
 		
 		//ระบบ จองรถ payment
 

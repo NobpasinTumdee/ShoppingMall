@@ -27,6 +27,7 @@ import {
 import { ParkingCardInterface } from "../../../../../interfaces/Carpark";
 
 import Tesseract from "tesseract.js";
+import ImgCrop from "antd-img-crop";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -58,8 +59,8 @@ const IN: React.FC<InProps> = ({
   const [carColor, setCarColor] = useState("");
   const [carMake, setCarMake] = useState("");
   const [image, setImage] = useState<string | null>(null); // กำหนดให้รองรับทั้ง string หรือ null
-  const [imageUrl, setImageUrl] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
     console.log("Requesting with ID:", selectedCard?.ID);
@@ -109,12 +110,15 @@ const IN: React.FC<InProps> = ({
       return;
     }
 
+    const imageUrl = fileList[0]?.thumbUrl || null; // Ensure imageUrl is valid or null
+
     const CardTransData = {
       EntryTime: new Date().toISOString(),
       LicensePlate: carLicensePlate,
+      Image: imageUrl || "", // Send imageUrl or empty string
       Color: carColor,
       Make: carMake,
-      TransmissionImage: image, // Include transmission image here
+      TransmissionImage: imageUrl, // Include transmission image here
       UserID: Number(localStorage.getItem("id")),
       ParkingCardID: selectedCard?.ID,
       StatusPaymentID: 1,
@@ -220,26 +224,18 @@ const IN: React.FC<InProps> = ({
     }
   };*/
 
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
   const onChangeUpload: UploadProps["onChange"] = ({
     fileList: newFileList,
   }) => {
     setFileList(newFileList);
-    const file = newFileList[0]?.originFileObj as File;
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-      //ocrImage(file);
-    }
   };
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
-    if (!src && file.originFileObj) {
+    if (!src) {
       src = await new Promise((resolve) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as File);
+        reader.readAsDataURL(file.originFileObj as FileType);
         reader.onload = () => resolve(reader.result as string);
       });
     }
@@ -247,6 +243,28 @@ const IN: React.FC<InProps> = ({
     image.src = src;
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
+  };
+
+  const handleUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setImage(result.imageUrl); // URL ถาวรจากเซิร์ฟเวอร์
+        message.success("Image uploaded successfully!");
+      } else {
+        message.error("Image upload failed!");
+      }
+    } catch (error) {
+      message.error("Server error occurred!");
+    }
   };
 
   return (
@@ -382,23 +400,6 @@ const IN: React.FC<InProps> = ({
             ))}
         </div>
         <div>
-          <Upload
-            fileList={fileList}
-            onChange={onChangeUpload}
-            onPreview={onPreview}
-            beforeUpload={(file) => {
-              setFileList([...fileList, file]);
-              return false;
-            }}
-            maxCount={4}
-            multiple={false}
-            listType="picture-card"
-          >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>อัพโหลด</div>
-            </div>
-          </Upload>
           {/* 
           {image && (
             <img
@@ -429,6 +430,27 @@ const IN: React.FC<InProps> = ({
             marginTop: 16,
           }}
         >
+          <Form.Item label="Image Car" name="Image" valuePropName="fileList">
+          <ImgCrop rotationSlider>
+                  <Upload
+                    fileList={fileList}
+                    onChange={onChangeUpload}
+                    onPreview={onPreview}
+                    beforeUpload={(file) => {
+                      setFileList([...fileList, file]);
+                      return false;
+                    }}
+                    maxCount={1}
+                    multiple={false}
+                    listType="picture-card"
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>อัพโหลด</div>
+                    </div>
+                  </Upload>
+                </ImgCrop>
+                </Form.Item>
           <Form.Item
             name="LicensePlate"
             label="License Plate"
