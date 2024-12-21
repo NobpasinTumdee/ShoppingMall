@@ -210,7 +210,6 @@ export const AdminEvent: React.FC = () => {
             const res = await AddEvent(values);
             if (res.status === 201) {
                 await fetchEvent();
-                setEvent((prev) => [...prev, res.data]);
             }
         } catch (error) {
             console.error("Error adding event:", error);
