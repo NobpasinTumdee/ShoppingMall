@@ -14,12 +14,12 @@ import Computer from "../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 import st from "../../assets/icon/ForPage/Store/Store3.jpg"
 
 //New
-import Newtest from "../../assets/icon/ForPage/MainIcon/TestNew.png"
 //import axios from 'axios';
 import './Main.css';
 
-import { GetStoreByFloor } from '../../services/https';
+import { GetStoreByFloor , GetEvent } from '../../services/https';
 import { StoreInterface } from '../../interfaces/StoreInterface';
+import { EventInterface } from '../../interfaces/UsersInterface';
 import STMB from '../../assets/Audio/SwayToMyBest.mp3'
 import STMBpic from '../../assets/Audio/SwayToMyBeat.jpg'
 const Main: React.FC = () => {
@@ -38,30 +38,7 @@ const Main: React.FC = () => {
 
         return () => clearInterval(interval);
     }, []);
-
-    const testdata = [
-        {
-            id: 1,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        {
-            id: 2,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        {
-            id: 3,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        {
-            id: 4,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-    ]
-
+    //==============================================ดึงข้อมูลร้านค้า========================================
     const [Store, setStore] = useState<StoreInterface[]>([]);
     useEffect(() => {
         if (1) {
@@ -84,8 +61,23 @@ const Main: React.FC = () => {
     const Openpopup = () => {
         setpopup(!popup)
     };
-    //main && branch halooo
-    //main && branch and maindata1 test
+    //=================================================ดึงข้อมูลevent=====================================
+    const [Event, setEvent] = useState<EventInterface[]>([]);
+    useEffect(() => {
+        fetchEvent()
+    }, []);
+    const fetchEvent = async () => {
+        try {
+            const res = await GetEvent();
+            if (res.status === 200 && res.data) {
+                setEvent(res.data);
+            }else{
+                setEvent([]);
+            }
+        } catch (error) {
+            setEvent([]);
+        }
+    }
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -97,12 +89,17 @@ const Main: React.FC = () => {
             <div className='AdvertisingMain'>
                 <img src={images[currentImageIndex]} alt="Product" className={`fade ${fade ? 'visible' : 'hidden'}`}  />
                 <span className='advertisingtext'>
-                    <h1>Product advertising</h1>
-                    loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse 
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt  
-                    mollit anim id est laborum.
+                    {Event ? (
+                        <>
+                            <h1>{Event[0]?.event_topic || "Discover the Ultimate"}</h1>
+                            {Event[0]?.event_description || "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda quia consequuntur, eos dolor officiis mollitia quae, molestiae numquam quisquam voluptatum dignissimos, fugit modi veniam. Consectetur error commodi voluptatem quam! Quas, commodi ad, harum consequatur tenetur esse ullam quisquam amet atque, veritatis vel odio magnam sunt provident aspernatur officia ipsa sed!"} 
+                        </>
+                    ) : (
+                        <>
+                            <h1>Product advertising</h1>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda quia consequuntur, eos dolor officiis mollitia quae, molestiae numquam quisquam voluptatum dignissimos, fugit modi veniam. Consectetur error commodi voluptatem quam! Quas, commodi ad, harum consequatur tenetur esse ullam quisquam amet atque, veritatis vel odio magnam sunt provident aspernatur officia ipsa sed!
+                        </>
+                    )}
                 </span>
             </div>
             {/* <div onClick={handleSubmit}>Gmail</div> */}
@@ -155,13 +152,13 @@ const Main: React.FC = () => {
                 <span></span>
             </div>
             <div className='NewInfo'>
-                {testdata.length > 0 ? (
-                    testdata.map((data) => (
-                        <div className='SubInfo' key={data.id}>
-                            <img src={Newtest} alt="Newtest" />
+                {Event.length > 0 ? (
+                    Event.map((data,index) => (
+                        <div className='SubInfo' key={index}>
+                            <img src={data.event_pic} alt="Newtest" width={350} height={200} />
                             <span>
-                                <h4>{data.Name}</h4>
-                                <p>{data.id} {data.info} </p>
+                                <h4>{data.event_topic}</h4>
+                                <p>{data.ID} {data.event_description || 'No description'}</p>
                             </span>
                         </div>
                     ))
