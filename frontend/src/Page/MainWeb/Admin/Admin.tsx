@@ -110,3 +110,17 @@ const Admin: React.FC = () => {
 };
 
 export default Admin;
+
+
+
+
+
+export const AdminEvent: React.FC = () => {
+    return(
+        <>
+            <div style={{height: '110px',zIndex: '0'}}></div>
+            <h1 className='H1Management'>Event</h1>
+        </>
+    );
+
+};

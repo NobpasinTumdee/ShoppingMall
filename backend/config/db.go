@@ -29,6 +29,7 @@ func SetupDatabase() {
 		&entity.MessageBoard{},
 		&entity.TaxUser{},
 		&entity.InfoUserStore{},
+		&entity.Event{},
 
 		//ระบบจองร้าน
 		&entity.Store{}, 

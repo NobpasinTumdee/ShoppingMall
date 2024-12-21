@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-route
 import Login from './Page/Login/Login';
 import Main from './Page/MainWeb/Main';
 import Admin from './Page/MainWeb/Admin/Admin';
+import { AdminEvent } from './Page/MainWeb/Admin/Admin';
 import AdminStore from './Page/MainWeb/Admin/AdminStore';
 import Store from './Page/MainWeb/Store/Store';
 import StorePayment from './Page/MainWeb/Store/StorePayment';
@@ -22,7 +23,7 @@ import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Login />} />
         <Route path="/Main" element={<Main />} />
         <Route path="/Admin" element={<Admin />} />
+        <Route path="/AdminEvent" element={<AdminEvent />} />
         <Route path="/AdminStore" element={<AdminStore />} />
         <Route path="/BackUpStore" element={<BackUpStore />} />
         <Route path="/Store" element={<Store />} />

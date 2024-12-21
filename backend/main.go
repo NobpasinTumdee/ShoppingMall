@@ -33,6 +33,7 @@ func main() {
     r.PUT("/ResetPasswordUser", user.ResetPasswordUser) //Sign in == login 
 
 	r.GET("/user" , user.ListUsers)
+	r.GET("/event" , user.ListEvent)
 	r.GET("/store/:id",Store.GetStoresByProductTypeID)
 	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
@@ -56,6 +57,8 @@ func main() {
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 		router.GET("/job/:status",user.GetListUserByStatus)
+		router.POST("/event",user.CreateEvent)
+		router.DELETE("/event/:id", user.DeleteEvent)
 		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
