@@ -1,7 +1,7 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
-import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
+import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -228,6 +228,18 @@ async function BackUpStore(data: BackupStoreInterface) {
     .catch((e) => e.response);
 
 }
+// get backUp by id
+async function GetBackUpByid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/backupstore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 // get Membership by id
 async function GetMembershipByid(id: string) {
 
@@ -421,42 +433,146 @@ async function GetStoreWaiting(status: string) {
     .catch((e) => e.response);
 
 }
-//=============================อุปกรณ์=====================================
-// get Inventory
-async function ListInventory() {
+// get Event
+async function GetEvent() {
 
   return await axios
 
-    .get(`${apiUrl}/inventory`, requestOptions)
+    .get(`${apiUrl}/event`, requestOptions)
 
     .then((res) => res)
 
     .catch((e) => e.response);
+
+}
+// Create AddEvent
+async function AddEvent(data: EventInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/event`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete Event
+async function DeleteEvent(id: string) {
+  return await axios
+    .delete(`${apiUrl}/event/${id}`, requestOptions)
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => e.response);
+}
+//=============================อุปกรณ์=====================================
+// get Inventory
+async function ListInventory() {
+  return await axios
+
+  .get(`${apiUrl}/inventory`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
 
 }
 // get CategoryInventory
 async function ListCategoryInventory() {
 
-  return await axios
+return await axios
 
-    .get(`${apiUrl}/CategoryInventory`, requestOptions)
+  .get(`${apiUrl}/CategoryInventory`, requestOptions)
 
-    .then((res) => res)
+  .then((res) => res)
 
-    .catch((e) => e.response);
+  .catch((e) => e.response);
 
 }
 // get Inventory by id
 async function GetInventoryById(id: string) {
 
+return await axios
+
+  .get(`${apiUrl}/inventory/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+
+
+}
+
+
+//===========================Hall==========================================
+//Get ListHall
+async function ListHall() {
+  
   return await axios
 
-    .get(`${apiUrl}/inventory/${id}`, requestOptions)
+  .get(`${apiUrl}/hall`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetHallByID(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function CreateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function UpdateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function DeleteBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetBookinghall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+
+async function ListBookingHall() {
+  return await axios
+
+    .get(`${apiUrl}/bookings`, requestOptions)
 
     .then((res) => res)
-
+    
     .catch((e) => e.response);
-
 }
 
 export {
@@ -475,10 +591,14 @@ export {
     
     GetStoreWaiting,//admin
     ListUser,
+    GetEvent,
+    AddEvent,
+    DeleteEvent,
 
     GetStoreByFloor,//store
     UpdateStoreByid,
     BackUpStore,
+    GetBackUpByid,
     GetStoreById,
     GetMembershipByid,
     GetCommentByStore,//rating
@@ -496,7 +616,16 @@ export {
     GetBillByPayidPreload,//bill
     CreateBill,
 
+    ListHall,
+    GetHallByID,
+    CreateBookingHall,
+    UpdateBookingHall,
+    DeleteBookingHall,
+    GetBookinghall,
+    ListBookingHall,
+
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,
     GetInventoryById,
+
 }

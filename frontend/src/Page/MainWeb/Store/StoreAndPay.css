@@ -243,25 +243,30 @@
 }
 .total {
     display: flex;
-    justify-content:space-between;
+    justify-content:flex-end;
     font-size: 30px;
 }
 .total p:nth-child(1){
-    width: 60%;
+    width: 70%;
 }
 .total p:nth-child(2){
-    width: 40%;
+    width: 30%;
     font-weight: 700;
+    text-align: end;
 }
 
 .listPayR{
     width: 30%;
     background-color: #F6F6F6;
     box-shadow: 0 0 5px #acacac;
-    height: 680px;
+    max-height: 750px;
+    min-height: auto;
     border-radius: 10px;
     margin-right: 20px;
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .listPayRSub{
     margin: 20px;
@@ -284,11 +289,76 @@
     height: 30px;
     margin: 10px;
 }
-.PayNow {
+
+.QRCODE{
     position: absolute;
+    width: 15%;
     text-align: center;
-    bottom: 40px;
-    width: 26%;
+    margin-top: 14px;
+    background-color: #fff;
+    margin: 10px 5%;
+}
+.QRCODE.Method{
+    visibility: visible;
+}
+.QRCODE.NoMethod{
+    visibility: hidden;
+}
+.QRCODESub1{
+    height: 40px;
+    background-color: #084370;
+    font-size: 30px;
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+}
+.QRCODESub2{
+    height: 20px;
+    background-color: #084370;
+    font-size: 30px;
+    color: #fff;
+    border-radius:0 0 10px 10px ;
+}
+
+.extractedText{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    background-color: #fff;
+    padding: 0 50px;
+    box-shadow: 0 0 5px #484848;
+    z-index: 1020;
+}
+.backgroundextractedText{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #00000043;
+    z-index: 1010;
+}
+.AttachSlip{
+    margin: 10px 5% ;
+    text-align: center;
+    width: 90%;
+    height: 20px;
+    background-color: transparent;
+    border: 2px solid #C9AF62;
+    font-size: 20px;
+    padding:10px 0 ;
+    color: #C9AF62;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.AttachSlip.Method{
+    visibility: visible;
+}
+.AttachSlip.NoMethod{
+    visibility: hidden;
+}
+.PayNow {
+    margin: 0 5%;
+    text-align: center;
+    width: 90%;
     height: 30px;
     background-color: #C9AF62;
     font-size: 30px;
@@ -296,6 +366,7 @@
     color: #fff;
     border-radius: 10px;
     cursor: pointer;
+    
 }
 
 .PayNow.NoMethod {
@@ -330,8 +401,12 @@
 .Slip img{
     width: 150px;
     position: absolute;
-    top: 0;
+    top: 10px;
     right: 0;
+}
+.Slip h1{
+    font-size: 24px;
+    margin-bottom: 35px;
 }
 .Adress{
     transform: translateY(-20px);
@@ -362,7 +437,7 @@
 .bottoninfo{
     font-size: 10px;
     position: absolute;
-    bottom: 10px;
+    bottom: 20px;
 }
 .backtopayment{
     position: fixed;
@@ -389,4 +464,39 @@
     cursor: pointer;
     box-shadow: 0 0 10px #C9AF62;
     color: #fff;
+}
+
+.succ {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+    box-shadow: 0 0 5px #4848485b;
+    border-radius: 10px;
+
+    animation: Succ 0.8s ease-in-out;
+}
+@keyframes Succ {
+    0%{
+        opacity: 0;
+        transform: translate(-50% , -150%) scale(0);
+    }
+}
+
+.Completed{
+    position: fixed;
+    bottom: 20px;
+    left: 50px;
+    padding: 5px 10px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+    border: 3px solid #27b720;
+    color: #27b720;
+    border-radius: 20px;
 }

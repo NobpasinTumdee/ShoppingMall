@@ -23,3 +23,14 @@ npm i react-router-dom
 npm i antd
 
 npm install axios
+
+Gen PDF
+npm install jspdf
+npm install html2canvas
+
+ตรวจสอบภาพ
+npm install tesseract.js
+
+
+ระบบ hall
+npm i date-fns

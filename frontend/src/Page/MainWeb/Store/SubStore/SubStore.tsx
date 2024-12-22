@@ -41,6 +41,7 @@ const SubStore: React.FC = () => {
             fetchStoreData(String(ID));
             fetchComment(String(ID));
             fetchRating(String(ID));
+            fetchUserWatching();
     }, []);
 
     const fetchStoreData = async (Storeid: string ) => {
@@ -64,10 +65,15 @@ const SubStore: React.FC = () => {
                 setUser(res.data);
                 //message.success("พบข้อมูลUser");
             }
+        } catch (error) {
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+        }
+    };
+    const fetchUserWatching = async () => {
+        try {
             const resWatch = await GetUserById(String(userIdstr));
             if (resWatch.status === 200) {
                 setUserWatch(resWatch.data);
-                //message.success("พบข้อมูลUser");
             }
         } catch (error) {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
@@ -131,12 +137,12 @@ const SubStore: React.FC = () => {
     //=========================ตรวจสอบStatusStore============================================
     const [statusCanbook,setStatus] = useState(false);
     useEffect(() => {
-        if (Store?.StatusStore == 'This store is available for reservation.') {
-            setStatus(true);
+        if (Store?.StatusStore === 'This store is available for reservation.' && (userWatch?.Status === 'Admin' || userWatch?.Status === 'Member' || userWatch?.Status === 'Employee')) {
+                setStatus(true);
         }else{
             setStatus(false);
         }
-    }, [Store?.StatusStore]);
+    }, [Store?.StatusStore, userWatch?.Status]);
 
     //========================================review=========================================
     const [RatingAvg, setRatingAvg] = useState<AverageRatingInterface | null>(null);

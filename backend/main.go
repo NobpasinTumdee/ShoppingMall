@@ -3,11 +3,14 @@ package main
 import (
 	"example.com/ProjectSeG13/config"
 	"github.com/gin-gonic/gin"
+
 	//"example.com/ProjectSeG13/controller"
-  	"net/http"
-	"example.com/ProjectSeG13/middlewares"
-	"example.com/ProjectSeG13/controller/user"
+	"net/http"
+
+	"example.com/ProjectSeG13/controller/Hall"
 	"example.com/ProjectSeG13/controller/Store"
+	"example.com/ProjectSeG13/controller/user"
+	"example.com/ProjectSeG13/middlewares"
 	"example.com/ProjectSeG13/controller/Inventory"
 )
 
@@ -30,6 +33,7 @@ func main() {
     r.PUT("/ResetPasswordUser", user.ResetPasswordUser) //Sign in == login 
 
 	r.GET("/user" , user.ListUsers)
+	r.GET("/event" , user.ListEvent)
 	r.GET("/store/:id",Store.GetStoresByProductTypeID)
 	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
@@ -53,6 +57,8 @@ func main() {
 		//Admin
 		router.GET("/storeWaiting/:status",Store.GetStoreWaiting)
 		router.GET("/job/:status",user.GetListUserByStatus)
+		router.POST("/event",user.CreateEvent)
+		router.DELETE("/event/:id", user.DeleteEvent)
 		
 		//ระบบ store
 		router.PUT("/store/:id",Store.UpdateStoreByid)
@@ -64,6 +70,7 @@ func main() {
 		router.POST("/comment",Store.CreateRating)
 		router.DELETE("/comment/:id",Store.DeleteComment)
 		router.GET("/average-rating/:id",Store.GetAverageRatingByStoreID)
+		router.GET("/backupstore/:id",Store.GetHistoryById)//backupStore
 		//ระบบ store payment
 		router.GET("/PaymentStore/:id", Store.GetPaymentStoreByid)
 		router.GET("/PaymentMethod", Store.ListPaymentMethodStore)
@@ -86,7 +93,14 @@ func main() {
 
 
 		//ระบบ hall
-
+		router.GET("/hall",Hall.ListHall)
+		router.GET("/hall/:id",Hall.GetHall)
+		router.POST("/hall/bookinghall", Hall.CreateBooking) //Create Booking
+		router.GET("/hall/bookinghall/:id", Hall.GetBookingByID) //Get Booking by ID
+		router.PUT("/hall/bookinghall/:id", Hall.UpdateBooking) //Update Booking
+		router.DELETE("/hall/bookinghall/:id", Hall.DeleteBooking) //Delete Booking
+		router.GET("/bookings", Hall.ListBookingHall) // List all bookings
+		
 		//ระบบ hall payment
 
 

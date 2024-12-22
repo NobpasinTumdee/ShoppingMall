@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { useLocation } from 'react-router-dom';
 import { GetBillByPayidPreload , GetTaxById} from '../../../services/https';
 import { ReceiptInterface , TaxUserInterface} from '../../../interfaces/StoreInterface';
 import {message} from 'antd'
 import { useNavigate } from 'react-router-dom';
+
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import Logo from '../../../assets/icon/LOGOS.png';
 const BillStore: React.FC = () => {
@@ -60,6 +63,32 @@ const BillStore: React.FC = () => {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลTax");
         }
     };
+    //======================================PDF==============================================
+    const receiptRef = useRef<HTMLDivElement>(null);
+
+    // ฟังก์ชันสำหรับดาวน์โหลด PDF
+    const downloadPDF = async () => {
+        if (receiptRef.current) {
+        try {
+            const canvas = await html2canvas(receiptRef.current, {
+            scale: 3,
+            useCORS: true,
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a5');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight - 20);
+            pdf.save('Receipt/Tax invoice.pdf');
+        } catch (error) {
+            message.error('ไม่สามารถดาวน์โหลด PDF ได้: ' + error);
+        }
+        } else {
+        message.error('ไม่พบใบเสร็จที่ต้องการดาวน์โหลด');
+        }
+    };
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>  
@@ -67,7 +96,8 @@ const BillStore: React.FC = () => {
             
             {Bill ? (
                 <div className='Slip'>
-                    <h1>receipt</h1>
+                    <div ref={receiptRef}>
+                    <h1>Receipt / Tax invoice</h1>
                     <img src={Logo} alt="" />
                     <div className='Adress'>
                         <p className='P1'>FROM</p>
@@ -116,15 +146,20 @@ const BillStore: React.FC = () => {
                         ICONIC <br />
                         If you want to issue a tax invoice Please fill out your tax information before choosing to request a tax invoice.
                     </div>
+                    </div>
                 </div>
             ) : (
                 <div className='Slip'>กำลังโหลดข้อมูล...</div>
             )}
             {haveTax !== 0 && 
-                <div className='Print'>Print tax invoice</div>
+                <div className='Print' onClick={downloadPDF}>Print tax invoice</div>
             }
             <div className='backtopayment' onClick={() => Return()}>◀ Return to Inbox</div>
         </>
     );
 };
 export default BillStore;
+
+
+
+

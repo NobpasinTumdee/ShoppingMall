@@ -17,6 +17,7 @@ type Store struct {
 	LastDay  			time.Time 	`json:"LastDay"`
 	DescribtionStore  	string 		`json:"DescribtionStore"`
 	StatusStore  		string 		`json:"StatusStore"`
+	StatusService  		string 		`json:"StatusService"`
 	
 	MembershipID 		uint 		`json:"MembershipID"`
 	Membership   		Membership 	`gorm:"foreignKey:MembershipID"`

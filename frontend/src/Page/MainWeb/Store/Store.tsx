@@ -22,15 +22,6 @@ import {UpdateStoreByid , DeleteCommentFromStore} from '../../../services/https/
 
 
 const Store: React.FC = () => {
-    // const testdata = [
-    //     {id: 1,Rating: 2},{id: 2,Rating: 5},{id: 3,Rating: 0},{id: 4,Rating: 3},
-    //     {id: 5,Rating: 1},{id: 1,Rating: 1},{id: 2,Rating: 2},{id: 3,Rating: 2},
-    //     {id: 4,Rating: 5},{id: 5,Rating: 2},{id: 1,Rating: 4},{id: 2,Rating: 5},
-    //     {id: 3,Rating: 3},{id: 4,Rating: 4},{id: 5,Rating: 2},{id: 5,Rating: 4},
-    // ]
-
-    
-
     const renderStars = (rating: number) => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
@@ -191,11 +182,11 @@ const Store: React.FC = () => {
                     <span style={{width: "20%"}}></span>
                     <span style={{width: "100%"}} className='Store'>
                         {Store.length > 0 ? (
-                            Store.map((data) => {
+                            Store.map((data,index) => {
                                 const status = CheckExpiration(data);
                                 if (status !== 'Expired') {
                                     return (
-                                        <span key={data.ID} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
+                                        <span key={index} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
                                             <div onClick={() => handleStoreClick(data)}>
                                                 <div><img src={data.pic_store || PicNoStore} alt="PicNoStore" /></div>
                                                 <div><p style={{fontSize: '28px' , color: '#000'}}>{data.name_store}</p></div>
@@ -206,7 +197,9 @@ const Store: React.FC = () => {
                                                     <div className='rating' style={{fontSize: '20px'}}>No Rating...</div>
                                                 )}
                                                 <div className='lineStore'></div>
-                                                <div className='DescribtionStore'>{data.booking_date ? new Date(data.booking_date).toLocaleDateString() : 'No Date'}<br />{data.last_day ? new Date(data.last_day).toLocaleDateString() : 'No Date'}</div>
+                                                <div className='DescribtionStore'>{data.booking_date ? new Intl.DateTimeFormat('en-GB').format(new Date(data.booking_date)) : 'No Date'}
+                                                <br />{data.last_day ? new Intl.DateTimeFormat('en-GB').format(new Date(data.last_day)) : 'No Date'}
+                                                </div>
                                             </div>
                                             <div className={`ViewStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >{data.status_store}  --</div>
                                         </span>
@@ -215,7 +208,7 @@ const Store: React.FC = () => {
                                 return null
                             })
                         ) : (
-                            <h1 style={{textAlign: 'center'}}>No Store On This Floor.</h1>
+                            <h1 style={{textAlign: 'center',width: '800px'}}>No Store On This Floor.</h1>
                         )}
                     </span>
                     <span style={{width: "20%"}}></span>
