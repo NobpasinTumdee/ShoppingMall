@@ -5,13 +5,13 @@ import (
 	"github.com/gin-gonic/gin"
 
 	//"example.com/ProjectSeG13/controller"
-	"net/http"
-
-	"example.com/ProjectSeG13/controller/Hall"
-	"example.com/ProjectSeG13/controller/Store"
-	"example.com/ProjectSeG13/controller/user"
+  	"net/http"
 	"example.com/ProjectSeG13/middlewares"
+	"example.com/ProjectSeG13/controller/user"
+	"example.com/ProjectSeG13/controller/Store"
 	"example.com/ProjectSeG13/controller/Inventory"
+	"example.com/ProjectSeG13/controller/Cleaning"
+	"example.com/ProjectSeG13/controller/Hall"
 )
 
 const PORT = "8000"
@@ -117,7 +117,11 @@ func main() {
 		
 
 		//ระบบ แม่บ้าน
-
+		router.GET("/Area", Cleaning.ListArea)
+		router.POST("/CleaningRecord", Cleaning.CreateCleaningRecord)
+		router.GET("/Schedules", Cleaning.ListSchedules)
+		router.GET("/CleaningRecordsByArea/:id", Cleaning.GetCleaningRecordsByArea)
+		router.GET("/SchedulesByArea/:id", Cleaning.GetSchedulesByArea)
 		//ระบบ อุปการณ์แม่บ้าน
 
 	}
