@@ -10,9 +10,9 @@ type ParkingCard struct {
 	gorm.Model
 	ID         string    `gorm:"primaryKey" json:"ID"`
 	ExpiryDate time.Time `json:"ExpiryDate"`
-	IsActive   bool      `json:"IsActive"`
-	TypeParkID uint      `json:"TypeParkID"`
-	TypePark   TypePark  `gorm:"foreignKey:TypeParkID"`
+
+	TypeParkID uint     `json:"TypeParkID"`
+	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
 
 	StoreID uint  `json:"StoreID"`
 	Store   Store `gorm:"foreignKey:StoreID"`
@@ -46,8 +46,8 @@ type ParkingCardZone struct {
 type ParkingZone struct {
 	gorm.Model
 	Name          string `json:"Name"`
-	Capacity      uint   `json:"Capacity"`
-	AvailableZone uint   `json:"AvailableZone"`
+	Capacity      int    `json:"Capacity"`
+	AvailableZone int    `json:"AvailableZone"`
 	Image         string `gorm:"type:longtext" json:"Image"`
 
 	TypeParkID uint     `json:"TypeParkID"`
@@ -60,17 +60,10 @@ type ParkingTransaction struct {
 	gorm.Model
 	EntryTime    time.Time `json:"EntryTime"`
 	ExitTime     time.Time `json:"ExitTime"`
-	Hourly_Rate  float64   `json:"Hourly_Rate"`
-	Fee          float64   `json:"Fee"`
-	Image        string    `gorm:"type:longtext" json:"Image"`
+	Hourly_Rate int       `json:"Hourly_Rate"`
 	LicensePlate string    `json:"LicensePlate"`
+	Image        string    `gorm:"type:longtext" json:"Image"`
 	Color        string    `json:"Color"`
-	Make         string    `json:"Make"`
-	IsLostCard   bool      `json:"IsLostCard"`
-	IsCash       bool      `json:"IsCash"`
-
-	StatusPaymentID uint          `json:"StatusPaymentID"`
-	StatusPayment   StatusPayment `gorm:"foreignKey:StatusPaymentID"`
 
 	ParkingCardID string      `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
@@ -101,16 +94,15 @@ type StatusPayment struct {
 	gorm.Model
 	Status string `json:"Status"`
 
-	ParkingTransaction []ParkingTransaction `gorm:"foreignKey:StatusPaymentID"`
+	ParkingPayment []ParkingPayment `gorm:"foreignKey:StatusPaymentID"`
 }
 
 type ParkingFeePolicy struct {
 	gorm.Model
-	FreeHours      float64   `json:"FreeHours"`
-	AddBase_Fee    float64   `json:"AddBase_Fee"`
+	FreeHours      int       `json:"FreeHours"`
+	AddBase_Fee    int       `json:"AddBase_Fee"`
 	Time_Increment time.Time `json:"Time_Increment"`
-	Discount       float64   `json:"Discount"`
-	LostCard       float64   `json:"LostCard"`
+	Discount       int       `json:"Discount"`
 	IsExempt       bool      `json:"IsExempt"`
 
 	TypeParkID uint     `json:"TypeParkID"`

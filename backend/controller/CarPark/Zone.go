@@ -10,6 +10,20 @@ import (
 	"net/http"
 )
 
+
+func GetListZone(c *gin.Context) {
+	var zones []entity.ParkingZone
+	
+	db := config.DB()
+
+	if err := db.Preload("ParkingCard").Preload("TypePark").Find(&zones).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, zones)
+}
+
 func UpdateParkingZone(c *gin.Context) {
 	var zone entity.ParkingZone
 	ZoneID := c.Param("id")

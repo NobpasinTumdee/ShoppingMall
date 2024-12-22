@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import './Login.css'
 import { Button, Form, Input ,message, Select } from 'antd';
 import {SignInInterface} from "../../interfaces/SignIn";
-import { GetUserById, SignIn, CreateUser } from '../../services/https';
+import { GetUserById, SignIn, CreateUser, ListUser } from '../../services/https';
 import Arrow from '../../assets/icon/ForPage/LoginIcon/Arrow.png';
 import User from '../../assets/icon/ForPage/LoginIcon/User.png';
 import Lock from '../../assets/icon/ForPage/LoginIcon/Lock.png';
@@ -35,12 +35,13 @@ export const LoginCarPark: React.FC = () => {
     const [userID, setUserID] = useState<string>("");
 
     const introToMain = async () => {
-        const res = await GetUserById(userID);
         setIntro(true);
+        const res = await GetUserById(userID);
+        localStorage.setItem("role", res.data.Status);
         setTimeout(() => {
             if (res.data.Status === 'ParkingAttendant') { 
                 location.href = "/CarPark/Attendant/Main";
-            } else if (res.data.Status === 'Customer') { 
+            } else if (res.data.Status === 'MembershipCustomer' || res.data.Status === 'Customer') { 
                 location.href = "/Customer/Main";
             } else {
                 location.href = "/Main"; 
@@ -49,11 +50,12 @@ export const LoginCarPark: React.FC = () => {
     };
     
     const close = async () => {
-        const res = await GetUserById(userID);
         setIntro(false);
+        const res = await GetUserById(userID);
+        localStorage.setItem("role", res.data.Status);
         if (res.data.Status === 'ParkingAttendant') { 
             location.href = "/CarPark/Attendant/Main";
-        } else if (res.data.Status === 'Customer') { 
+        } else if (res.data.Status === 'MembershipCustomer' || res.data.Status === 'Customer') { 
             location.href = "/Customer/Main";
         } else {
             location.href = "/Main"; 
@@ -116,6 +118,7 @@ export const LoginCarPark: React.FC = () => {
 
 export const SignUpCarPark: React.FC = () => {
     const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState<string>('');
 
     const onFinish = async (values: any) => {
         setLoading(true);
@@ -134,6 +137,22 @@ export const SignUpCarPark: React.FC = () => {
         }
     };
 
+    const getListUser = async () => {
+        try {
+            const res = await ListUser();
+            if (res.status === 200) {
+                setStatus(res.data[10]?.Status);
+            } else {
+                message.error(res.data.error);
+            }
+          } catch (error) {
+            message.error('Something went wrong!');
+          }
+        };
+
+    useEffect(() => {
+        getListUser();
+    }, []);
     return (
         <>
             <div className='backgroudCarPark'></div>
@@ -206,8 +225,7 @@ export const SignUpCarPark: React.FC = () => {
                                     rules={[{ required: true, message: 'Please select your role!' }]}
                                 >
                                     <Select placeholder="Select your role">
-                                        <Option value="Customer">Customer</Option>
-                                        <Option value="ParkingAttendant">Parking Attendant</Option>
+                                        <Option value="Customer">{status}</Option>
                                     </Select>
                                 </Form.Item>
 

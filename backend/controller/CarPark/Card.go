@@ -21,7 +21,7 @@ func GetListCard(c *gin.Context) {
 	db := config.DB()
 
 	// เรียกใช้การ Preload สำหรับการโหลดข้อมูลอื่น ๆ และ Joins สำหรับ ParkingTransaction
-	if err := db.Preload("MembershipCustomer").Preload("MembershipCustomer.HistoryMembership").
+	if err := db.Preload("MembershipCustomer").
 		Preload("Store").Preload("ParkingFeePolicy").
 		Preload("TypePark").Preload("StatusCard").
 		Preload("ParkingZone").
@@ -69,17 +69,14 @@ func CreateParkingTransaction(c *gin.Context) {
 
 	// Create a new ParkingTransaction (ParkingCard)
 	newTransaction := entity.ParkingTransaction{
-		EntryTime:       trans.EntryTime,
-		ExitTime:        trans.ExitTime,
-		Image:           trans.Image,
-		LicensePlate:    trans.LicensePlate,
-		Color:           trans.Color,
-		Make:            trans.Make,
-		UserID:          trans.UserID,
-		StatusPaymentID: trans.StatusPaymentID,
-		Hourly_Rate:     trans.Hourly_Rate,
-		Fee:             trans.Fee,
-		ParkingCardID:   trans.ParkingCardID, // Using ParkingCard ID
+		EntryTime:     trans.EntryTime,
+		ExitTime:      trans.ExitTime,
+		Hourly_Rate:   trans.Hourly_Rate,
+		Image:         trans.Image,
+		LicensePlate:  trans.LicensePlate,
+		Color:         trans.Color,
+		UserID:        trans.UserID,
+		ParkingCardID: trans.ParkingCardID, // Using ParkingCard ID
 	}
 
 	// Save ParkingTransaction
@@ -215,14 +212,12 @@ func GetIdCardZone(c *gin.Context) {
 	})
 }
 
-
 func DeleteParkingCard(c *gin.Context) {
 
 	id := c.Param("id")
 	fmt.Println("id: ", id)
 	db := config.DB()
-	
-	
+
 	if err := db.Where("parking_cards_id = ?", id).Delete(&entity.ParkingCardZone{}).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Card not found"})
 		return

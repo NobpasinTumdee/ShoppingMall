@@ -49,7 +49,6 @@ func SetupDatabase() {
 		&entity.StatusCard{},
 		&entity.StatusPayment{},
 		&entity.MembershipCustomer{},
-		&entity.HistoryMembership{},
 		&entity.ParkingCard{},
 		&entity.ParkingZone{},
 		&entity.ParkingCardZone{},
@@ -351,39 +350,23 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.TypePark{Type: pkg.Type})
 	}
 
-	//MembershipCustomer
+	// MembershipCustomer
 	MembershipCustomers := []entity.MembershipCustomer{
-		{FirstName: "Kittisorn", LastName: "Ngandee", DOB: time.Date(1998, 5, 23, 0, 0, 0, 0, time.UTC), Tel: "0811981663"},
-		{FirstName: "Pachnida", LastName: "Wamakarn", DOB: time.Date(1998, 5, 24, 0, 0, 0, 0, time.UTC), Tel: "0811981664"},
-		{FirstName: "Jedsadaporn", LastName: "Pinjai", DOB: time.Date(1998, 5, 25, 0, 0, 0, 0, time.UTC), Tel: "0811981665"},
-		{FirstName: "Tortakul", LastName: "Subka", DOB: time.Date(1998, 5, 26, 0, 0, 0, 0, time.UTC), Tel: "0811981666"},
-		{FirstName: "Jularat", LastName: "Piangthaisong", DOB: time.Date(1998, 5, 27, 0, 0, 0, 0, time.UTC), Tel: "0811981667"},
-		{FirstName: "Nattawut", LastName: "Srisung", DOB: time.Date(1998, 5, 28, 0, 0, 0, 0, time.UTC), Tel: "0811981668"},
-		{FirstName: "Sutthipong", LastName: "Kittiwattanawong", DOB: time.Date(1998, 5, 29, 0, 0, 0, 0, time.UTC), Tel: "0811981669"},
-		{FirstName: "Chayanon", LastName: "Boonchud", DOB: time.Date(1998, 5, 30, 0, 0, 0, 0, time.UTC), Tel: "0811981670"},
-		{FirstName: "Sakda", LastName: "Rattanawong", DOB: time.Date(1998, 5, 31, 0, 0, 0, 0, time.UTC), Tel: "0811981671"},
-		{FirstName: "Narissara", LastName: "Sutthiwong", DOB: time.Date(1998, 6, 1, 0, 0, 0, 0, time.UTC), Tel: "0811981672"},
+    	{FirstName: "Kittisorn", LastName: "Ngandee", DOB: time.Date(1998, 5, 23, 0, 0, 0, 0, time.UTC), Tel: "0811981663", IssueDate: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Pachnida", LastName: "Wamakarn", DOB: time.Date(1998, 5, 24, 0, 0, 0, 0, time.UTC), Tel: "0811981664", IssueDate: time.Date(2004, 1, 2, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 2, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Jedsadaporn", LastName: "Pinjai", DOB: time.Date(1998, 5, 25, 0, 0, 0, 0, time.UTC), Tel: "0811981665", IssueDate: time.Date(2004, 1, 3, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 3, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Tortakul", LastName: "Subka", DOB: time.Date(1998, 5, 26, 0, 0, 0, 0, time.UTC), Tel: "0811981666", IssueDate: time.Date(2004, 1, 4, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 4, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Jularat", LastName: "Piangthaisong", DOB: time.Date(1998, 5, 27, 0, 0, 0, 0, time.UTC), Tel: "0811981667", IssueDate: time.Date(2004, 1, 5, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 5, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Nattawut", LastName: "Srisung", DOB: time.Date(1998, 5, 28, 0, 0, 0, 0, time.UTC), Tel: "0811981668", IssueDate: time.Date(2004, 1, 6, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 6, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Sutthipong", LastName: "Kittiwattanawong", DOB: time.Date(1998, 5, 29, 0, 0, 0, 0, time.UTC), Tel: "0811981669", IssueDate: time.Date(2004, 1, 7, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 7, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Chayanon", LastName: "Boonchud", DOB: time.Date(1998, 5, 30, 0, 0, 0, 0, time.UTC), Tel: "0811981670", IssueDate: time.Date(2004, 1, 8, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 8, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Sakda", LastName: "Rattanawong", DOB: time.Date(1998, 5, 31, 0, 0, 0, 0, time.UTC), Tel: "0811981671", IssueDate: time.Date(2004, 1, 9, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 9, 0, 0, 0, 0, time.UTC)},
+    	{FirstName: "Narissara", LastName: "Sutthiwong", DOB: time.Date(1998, 6, 1, 0, 0, 0, 0, time.UTC), Tel: "0811981672", IssueDate: time.Date(2004, 1, 10, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC)},
 	}
 	for _, customer := range MembershipCustomers {
-		db.FirstOrCreate(&customer, entity.MembershipCustomer{FirstName: customer.FirstName, LastName: customer.LastName})
+    	db.FirstOrCreate(&customer, entity.MembershipCustomer{FirstName: customer.FirstName, LastName: customer.LastName})
 	}
 
-	//HistoryMembership
-	historyMemberships := []entity.HistoryMembership{
-		{IssueDate: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 1},
-		{IssueDate: time.Date(2004, 1, 2, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 2, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 2},
-		{IssueDate: time.Date(2004, 1, 3, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 3, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 3},
-		{IssueDate: time.Date(2004, 1, 4, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 4, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 4},
-		{IssueDate: time.Date(2004, 1, 5, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 5, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 5},
-		{IssueDate: time.Date(2004, 1, 6, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 6, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 6},
-		{IssueDate: time.Date(2004, 1, 7, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 7, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 7},
-		{IssueDate: time.Date(2004, 1, 8, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 8, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 8},
-		{IssueDate: time.Date(2004, 1, 9, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 9, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 9},
-		{IssueDate: time.Date(2004, 1, 10, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC), MembershipCustomerID: 10},
-	}
-	for _, history := range historyMemberships {
-		db.FirstOrCreate(&history, entity.HistoryMembership{IssueDate: history.IssueDate, ExpiryDate: history.ExpiryDate, MembershipCustomerID: history.MembershipCustomerID})
-	}
 
 	// ParkingZone
 	ParkingZones := []entity.ParkingZone{
@@ -414,7 +397,6 @@ func SetupDatabase() {
 				ID:                 newID,
 				StoreID:            store.ID,
 				ExpiryDate:         store.LastDay,
-				IsActive:           false,
 				StatusCardID:       1,
 				TypeParkID:         2,
 				ParkingFeePolicyID: 2,
@@ -437,7 +419,6 @@ func SetupDatabase() {
 				ID:                 newID,
 				StoreID:            store.ID,
 				ExpiryDate:         store.LastDay,
-				IsActive:           false,
 				StatusCardID:       1,
 				TypeParkID:         2,
 				ParkingFeePolicyID: 2,
@@ -449,9 +430,6 @@ func SetupDatabase() {
 
 	// สร้าง ParkingCard สำหรับ MembershipCustomer
 	for _, membershipCustomer := range membershipCustomers {
-		var historyMembership entity.HistoryMembership
-		db.First(&historyMembership, membershipCustomer.ID)
-
 		var lastCard entity.ParkingCard
 		result := db.Last(&lastCard)
 
@@ -475,8 +453,7 @@ func SetupDatabase() {
 		parkingCard := entity.ParkingCard{
 			ID:                   newID,
 			MembershipCustomerID: membershipCustomer.ID,
-			ExpiryDate:           historyMembership.ExpiryDate,
-			IsActive:             false,
+			ExpiryDate:           membershipCustomer.ExpiryDate,
 			StatusCardID:         1,
 			TypeParkID:           1,
 			ParkingFeePolicyID:   1,
@@ -566,9 +543,9 @@ func SetupDatabase() {
 
 	//ParkingFeePolicy
 	feePolicy := []entity.ParkingFeePolicy{
-		{FreeHours: 3.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 0, LostCard: 50.0, IsExempt: false, TypeParkID: 1},
-		{FreeHours: 4.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, LostCard: 50.0, IsExempt: false, TypeParkID: 2},
-		{FreeHours: 4.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, LostCard: 50.0, IsExempt: false, TypeParkID: 3},
+		{FreeHours: 3.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 0, IsExempt: false, TypeParkID: 1},
+		{FreeHours: 4.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, IsExempt: false, TypeParkID: 2},
+		{FreeHours: 4.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, IsExempt: false, TypeParkID: 3},
 	}
 	for _, pkg := range feePolicy {
 		db.FirstOrCreate(&pkg, entity.ParkingFeePolicy{TypeParkID: pkg.TypeParkID})

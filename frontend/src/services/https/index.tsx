@@ -416,6 +416,15 @@ async function GetListTransaction() {
       return e.response;
     });
 }
+async function GetListZone() {
+  return await axios
+    .get(`${apiUrl}/get-list-parking-zone`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
 /* async function GetListLastTransaction() {
   return await axios
     .get(`${apiUrl}/get-list-last-parkingtransaction`, requestOptions)
@@ -676,6 +685,7 @@ export {
       // Car Parking
   GetListCard,
   GetListTransaction,
+  GetListZone,
   //GetListLastTransaction,
   CreateParkingCard,
   CreateParkingTransaction,

@@ -140,15 +140,8 @@ export interface MembershipCustomerInterface {
   LastName?: string;
   DOB?: string; // ใช้ string แทน time
   Tel?: string;
-  HistoryMembership?: HistoryMembershipInterface[];
-}
-
-export interface HistoryMembershipInterface {
-  ID?: number;
   IssueDate?: string; // ใช้ string แทน time
   ExpiryDate?: string; // ใช้ string แทน time
-  MembershipCustomerID?: number;
-  MembershipCustomer?: MembershipCustomerInterface;
 }
 
 /* export interface BackupCardInterface {

@@ -9,14 +9,16 @@ type ParkingPayment struct {
 	gorm.Model
 	TaxID       string    `json:"TaxID"`
 	PaymentDate time.Time `json:"PaymentDate"`
-	IsLostCard  bool      `json:"IsLostCard"`
-	IsCash      bool      `json:"IsCash"`
+	Amount      int       `json:"Amount"`
 
 	ParkingCardID string      `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
 
-	ParkingTransactionID uint                `json:"ParkingTransactionID"`
+	ParkingTransactionID uint               `json:"ParkingTransactionID"`
 	ParkingTransaction   ParkingTransaction `gorm:"foreignKey:ParkingTransactionID"`
+
+	StatusPaymentID uint          `json:"StatusPaymentID"`
+	StatusPayment   StatusPayment `gorm:"foreignKey:StatusPaymentID"`
 
 	UserID uint `json:"UserID"`
 	User   User `gorm:"foreignKey:UserID"`
