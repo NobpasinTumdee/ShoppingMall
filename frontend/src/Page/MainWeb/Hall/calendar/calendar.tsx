@@ -5,6 +5,7 @@ import SideBar from "../../../Component/SideBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { BookingHallInterface } from "../../../../interfaces/HallInterface";
 import { GetBookingByHallID } from "../../../../services/https"; // สร้าง service ใหม่สำหรับ API นี้
+import { NavBar } from "../../../Component/NavBar";
 
 const { Content, Sider } = Layout;
 
@@ -84,6 +85,7 @@ const CalendarPage: React.FC = () => {
 
     return (
         <>
+        <NavBar />
             <div style={{ height: "110px", zIndex: "0" }}></div>
             <Layout style={{ minHeight: "750px" }}>
                 <Sider width={250} theme="dark">

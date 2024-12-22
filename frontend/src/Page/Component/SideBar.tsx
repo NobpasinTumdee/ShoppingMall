@@ -8,7 +8,7 @@ const SideBar: React.FC = () => {
     return (
       <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
         <Menu.Item key="1" icon={<CalendarOutlined />}>
-            <Link to="/celendar">ปฏิทินการใช้ห้อง</Link>
+            <Link to="/bookings/hall">ปฏิทินการใช้ห้อง</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<BookOutlined />}>
             <Link to="/booking-status">สถานะการจองห้อง</Link>

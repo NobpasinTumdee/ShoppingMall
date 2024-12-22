@@ -6,6 +6,7 @@ import './HallBookingPage.css';
 import { BookingHallInterface } from '../../../../interfaces/HallInterface';
 import { HallInterface } from '../../../../interfaces/HallInterface';
 import { useParams } from "react-router-dom";
+import { NavBar } from '../../../Component/NavBar';
 
 const { Sider, Content } = Layout;
 const { Option } = Select;
@@ -19,15 +20,6 @@ const BookingHall: React.FC = () => {
     // ฟังก์ชันดึงข้อมูลห้องประชุมจาก API
     useEffect(() => {
         const fetchHalls = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8000/bookinghall`); // URL API
-                setHall(response.data); // เก็บข้อมูลห้องประชุมใน state
-                setLoading(false); // ปิดสถานะการโหลด
-            } catch (error) {
-                console.error(error);
-                message.error('ไม่สามารถโหลดข้อมูลห้องประชุมได้');
-                setLoading(false); // ปิดสถานะการโหลดในกรณีเกิดข้อผิดพลาด
-            }
         };
 
         fetchHalls();
@@ -47,6 +39,7 @@ const BookingHall: React.FC = () => {
 
     return (
         <>
+        <NavBar />
             <div style={{ height: '110px', zIndex: '0' }}></div>
             <Layout style={{ minHeight: '750px' }}>
                 {/* Sidebar */}
@@ -104,16 +97,14 @@ const BookingHall: React.FC = () => {
                                 <Input placeholder="ที่อยู่" />
                             </Form.Item>
 
-
                             {/* วันที่เริ่มต้น */}
                             <Form.Item
                                 label="วันที่เริ่มต้น"
                                 name="StartDateTime"
-                                rules={[{ required: true, message: 'กรุณาเลือกวันที่และเวลาเริ่มต้น' }]}
+                                rules={[{ required: true, message: 'กรุณาเลือกวันที่และเวลาสิ้นสุด' }]}
                             >
                                 <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
                             </Form.Item>
-
                             {/* วันที่สิ้นสุด */}
                             <Form.Item
                                 label="วันที่สิ้นสุด"

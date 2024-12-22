@@ -42,7 +42,6 @@ type BookingHall struct {
 	CustomerEmail   string          `json:"CustomerEmail"`
 	CustomerPhone   string          `json:"CustomerPhone"`
 	CustomerAddress string          `json:"CustomerAddress"`
-	CancelDate      *time.Time      `json:"CancelDate,omitempty"` // ใช้ pointer ถ้าอนุญาตให้ null
 	TotalCost       int             `json:"TotalCost"`     // เพิ่มฟิลด์นี้
 	PaymentHall     []PaymentHall   `gorm:"foreignKey:BookingHallID"`
 }

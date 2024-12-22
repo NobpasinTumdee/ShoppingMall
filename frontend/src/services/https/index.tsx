@@ -485,7 +485,7 @@ async function GetHallByID(id: string) {
 async function CreateBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
+  .post(`${apiUrl}/bookings/${id}`, requestOptions)
 
   .then((res) => res)
 
@@ -494,7 +494,7 @@ async function CreateBookingHall(id: string) {
 async function UpdateBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+  .put(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
 
   .then((res) => res)
 

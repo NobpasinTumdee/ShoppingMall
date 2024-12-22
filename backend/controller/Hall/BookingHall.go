@@ -7,30 +7,41 @@ import (
 	"example.com/ProjectSeG13/config"
 	"github.com/gin-gonic/gin"
 	
+	
 )
 
 func CreateBooking(c *gin.Context) {
 	var booking entity.BookingHall
+
 	if err := c.ShouldBindJSON(&booking); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	db := config.DB()
 
-	// ตรวจสอบสถานะของห้องประชุม
 	var hall entity.Hall
-	if err := db.Where("id = ?", booking.HallID).First(&hall).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Hall not found"})
-		return
-	}
-	// สร้างการจองใหม่
-	if err := db.Create(&booking).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	var facilities entity.FacilityList
+	db.First(&facilities, hall.HallFacilities)
+	if facilities.ID == 0{
+		c.JSON(http.StatusNotFound, gin.H{"error": "facility not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, booking)
+	b := entity.BookingHall{
+		StartDateTime: booking.StartDateTime,
+		EndDateTime: booking.EndDateTime,
+		Status: booking.Status,
+		CustomerName: booking.CustomerName,
+		CustomerEmail: booking.CustomerEmail,
+		CustomerPhone: booking.CustomerPhone,
+		CustomerAddress: booking.CustomerAddress,
+	}
+	if err := db.Create(&b).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Created success","data": b})
 }
 
 
