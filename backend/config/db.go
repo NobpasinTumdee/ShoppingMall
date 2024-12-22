@@ -127,32 +127,32 @@ func SetupDatabase() {
     	db.FirstOrCreate(&area, entity.Area{AreaName: area.AreaName})
 	}
 
-	// ดึงวันสุดท้ายจากฐานข้อมูล
-	var lastSchedule entity.Schedule
-	db.Order("schedule_date desc").First(&lastSchedule)
+	// ดึงข้อมูล StartTime ล่าสุดจากฐานข้อมูล
+	var lastSchedule entity.Schedule 
+	db.Order("start_time desc").First(&lastSchedule)
 
 	// กำหนดวันเริ่มต้น
 	var startDate time.Time
 	if lastSchedule.ID == 0 {
-    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้
-    	startDate = time.Now().UTC().Truncate(24 * time.Hour)
+    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้ เวลา 08:00
+    	startDate = time.Now().UTC().Truncate(24 * time.Hour).Add(8 * time.Hour)
 	} else {
-    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไปของวันสุดท้าย
-    	startDate = lastSchedule.ScheduleDate.AddDate(0, 0, 1)
+    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไป เวลา 08:00
+    	startDate = lastSchedule.StartTime.AddDate(0, 0, 1).Truncate(24 * time.Hour).Add(8 * time.Hour)
 	}
 
-	// สร้างข้อมูลใหม่จนถึงวันนี้หรืออนาคต
-	currentDate := time.Now().UTC().Truncate(24 * time.Hour)
+	// สร้างข้อมูลใหม่จนถึงล่วงหน้า 3 วัน
+	currentDate := time.Now().UTC().Truncate(24 * time.Hour).AddDate(0, 0, 3).Add(8 * time.Hour)
+
 	for date := startDate; !date.After(currentDate); date = date.AddDate(0, 0, 1) {
     	schedule := entity.Schedule{
-        	StartTime:    time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
-        	EndTime:      time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
-        	ScheduleDate: date,
-        	AreaID:       uint((date.Day() % 4) + 1), // แปลงเป็น uint // หมุนเวียน AreaID (1 ถึง 4)
+        	StartTime: time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
+        	EndTime:   time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
+        	AreaID:    uint((date.Day() % 4) + 1), // หมุนเวียน AreaID (1 ถึง 4)
     	}
 
     	// เพิ่มข้อมูลลงในฐานข้อมูล
-    	db.FirstOrCreate(&schedule, entity.Schedule{ScheduleDate: schedule.ScheduleDate, AreaID: schedule.AreaID})
+    	db.FirstOrCreate(&schedule, entity.Schedule{StartTime: schedule.StartTime, AreaID: schedule.AreaID})
 	}
 
 
@@ -193,57 +193,7 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Inventory{InventoryName: pkg.InventoryName})
 	}
 
-	halls := []entity.Hall{
-		{
-			HallName:     "Grand Hall",
-			Capacity:     500,
-			Location:     "ชั้น 1 อาคาร A",
-			ImageHall:    "https://example.com/images/grand_hall.jpg",
-			Description:  "ห้องโถงขนาดใหญ่สำหรับจัดงานประชุมและสัมมนา",
-			PricePerHour: 15000,
-		},
-		{
-			HallName:     "Conference Room 101",
-			Capacity:     50,
-			Location:     "ชั้น 2 อาคาร B",
-			ImageHall:    "https://example.com/images/conference_101.jpg",
-			Description:  "ห้องประชุมขนาดเล็ก เหมาะสำหรับการประชุมทีมและอบรม",
-			PricePerHour: 3000,
-		},
-		{
-			HallName:     "Ballroom 202",
-			Capacity:     300,
-			Location:     "ชั้น 2 อาคาร C",
-			ImageHall:    "https://example.com/images/ballroom_202.jpg",
-			Description:  "ห้องบอลรูมสุดหรูสำหรับงานแต่งงานและงานเลี้ยงสังสรรค์",
-			PricePerHour: 12000,
-		},
-		{
-			HallName:     "Training Room 305",
-			Capacity:     40,
-			Location:     "ชั้น 3 อาคาร D",
-			ImageHall:    "https://example.com/images/training_room_305.jpg",
-			Description:  "ห้องฝึกอบรมพร้อมอุปกรณ์มัลติมีเดีย",
-			PricePerHour: 2500,
-		},
-	}
-	for _, pkg := range halls {
-		db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
-	}
-	
-	//Event
-	event := []entity.Event{
-		{EventPic: "https://media.themall.co.th/media/items/9f61a880dfb5e8d2d25f897ef37bce3e4353e69f.jpg",EventTopic: "Discover the Ultimate Shopping Destination!",EventDate: time.Now(),UserID: 3,EventDescription: "Experience the perfect blend of style, convenience, and entertainment at The Mall. Explore exclusive collections, indulge in culinary delights, and enjoy events crafted for you. Whether you're shopping for fashion, electronics, or gifts, we've got everything you need—all under one roof."},
-		{EventPic: "https://iconsiam-s3-prod.s3.ap-southeast-1.amazonaws.com/assets/1732785904W.jpg",EventTopic: "MIRACLE OF GIFTS 2024",EventDate: time.Now(),UserID: 3,EventDescription: "Experience the perfect blend of style, convenience, and entertainment at The Mall. Explore exclusive collections, indulge in culinary delights, and enjoy events crafted for you. Whether you're shopping for fashion, electronics, or gifts, we've got everything you need—all under one roof."},
-		{EventPic: "https://media.themall.co.th/media/items/147c701366a791b830325340b154ac7d325a0e7b.jpg",EventTopic: "🎄 Celebrate the Magic of Christmas at ICONIC! 🎁",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
-		{EventPic: "https://media.themall.co.th/media/events/34246945c3bf4efc2dfc0a642be90316896207e2.jpg",EventTopic: "Toy Giving 🎁",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
-		{EventPic: "https://media.themall.co.th/media/items/30bed3755944fca6226d8a23c18f8abbe73a3813.jpg",EventTopic: "THE GREAT HAPPY NEW YEAR 2025",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
-		{EventPic: "https://iconsiam-s3-prod.s3.ap-southeast-1.amazonaws.com/assets/1723177377X.jpg",EventTopic: "The Conjuring Universe Tour",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
-		{EventPic: "https://media.themall.co.th/media/items/44e94bacd916dc3f018fdeec741f600422bb6c38.jpg",EventTopic: "CASH COUPON",EventDate: time.Now(),UserID: 3,EventDescription: "Step into a world of festive wonder and joy! Explore dazzling holiday decorations, exclusive Christmas deals, and gifts for everyone on your list.✨ Highlights include:🎅 Meet Santa and capture magical moments🎶 Live caroling and holiday performances🎁 Limited-time offers on your favorite brandsMake this Christmas unforgettable at The Mall, where holiday dreams come true.Shop. Celebrate. Share the Joy."},
-	}
-	for _, pkg := range event {
-		db.FirstOrCreate(&pkg,entity.Event{EventTopic: pkg.EventTopic})
-	}
+
 
 	//Store
 	/*

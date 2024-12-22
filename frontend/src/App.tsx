@@ -15,12 +15,11 @@ import AdminJob from './Page/MainWeb/Admin/AdminJob';
 import BackUpStore from './Page/MainWeb/Admin/BackUpStore';
 import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
+import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
+import Cleaning from './Page/MainWeb/Clearning/TaskOverview';
 
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
-import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
-
-import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent"].includes(location.pathname);
