@@ -2,6 +2,7 @@ import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
+import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -412,14 +413,6 @@ async function CreateBill(data: ReceiptInterface) {
 
 }
 
-
-
-
-
-
-
-
-
 //============================Admin========================================
 // get Store WaitingForApproval
 async function GetStoreWaiting(status: string) {
@@ -574,6 +567,57 @@ async function ListBookingHall() {
     
     .catch((e) => e.response);
 }
+//=============================Cleaning=====================================
+// get Area
+async function ListAreas() {
+
+  return await axios
+
+    .get(`${apiUrl}/Area`, requestOptions)
+
+    //.then((res) => res)//ดึงมาทั้งหมด
+    .then((res) => res.data) // ดึงเฉพาะข้อมูลที่เป็น Area
+
+    .catch((e) => e.response);
+
+}
+
+async function CreateCleaningRecord(data: CleaningRecordInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/CleaningRecord`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
+async function GetCleaningRecordsByArea(id: number) {
+
+  return await axios
+
+    .get(`${apiUrl}/CleaningRecordsByArea/${id}`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
+
+async function GetSchedulesByArea(id: number) {
+
+  return await axios
+
+    .get(`${apiUrl}/SchedulesByArea/${id}`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
+
 
 export {
     SignIn,//user
@@ -628,4 +672,8 @@ export {
     ListCategoryInventory,
     GetInventoryById,
 
+    ListAreas,
+    CreateCleaningRecord,
+    GetCleaningRecordsByArea,
+    GetSchedulesByArea
 }

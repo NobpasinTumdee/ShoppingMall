@@ -127,32 +127,38 @@ func SetupDatabase() {
     	db.FirstOrCreate(&area, entity.Area{AreaName: area.AreaName})
 	}
 
-	// ดึงข้อมูล StartTime ล่าสุดจากฐานข้อมูล
-	var lastSchedule entity.Schedule 
-	db.Order("start_time desc").First(&lastSchedule)
+	//ใส่ข้อมูลเริ่มต้นของ Schedule
+	// กำหนดวันเริ่มต้นและสิ้นสุดของเดือนนี้
+	currentYear, currentMonth, _ := time.Now().Date()
+	startDate := time.Date(currentYear, currentMonth, 1, 8, 0, 0, 0, time.UTC)
+	endDate := startDate.AddDate(0, 1, -1) // วันสุดท้ายของเดือนนี้
 
-	// กำหนดวันเริ่มต้น
-	var startDate time.Time
-	if lastSchedule.ID == 0 {
-    	// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้ เวลา 08:00
-    	startDate = time.Now().UTC().Truncate(24 * time.Hour).Add(8 * time.Hour)
-	} else {
-    	// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไป เวลา 08:00
-    	startDate = lastSchedule.StartTime.AddDate(0, 0, 1).Truncate(24 * time.Hour).Add(8 * time.Hour)
+	// ดึงข้อมูล Area ทั้งหมดจากฐานข้อมูล
+	var Areas []entity.Area
+	if err := db.Find(&Areas).Error; err != nil {
+    	fmt.Println("Error fetching areas:", err)
+    	return
 	}
 
-	// สร้างข้อมูลใหม่จนถึงล่วงหน้า 3 วัน
-	currentDate := time.Now().UTC().Truncate(24 * time.Hour).AddDate(0, 0, 3).Add(8 * time.Hour)
+	if len(Areas) == 0 {
+    	fmt.Println("No areas found in the database")
+    	return
+	}
 
-	for date := startDate; !date.After(currentDate); date = date.AddDate(0, 0, 1) {
-    	schedule := entity.Schedule{
-        	StartTime: time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
-        	EndTime:   time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
-        	AreaID:    uint((date.Day() % 4) + 1), // หมุนเวียน AreaID (1 ถึง 4)
+	// วนลูปแต่ละ Area
+	for _, area := range Areas {
+    	// สร้างตารางทำความสะอาดสำหรับแต่ละวันในเดือนนี้
+    	for day := startDate; !day.After(endDate); day = day.AddDate(0, 0, 1) {
+        	schedule := entity.Schedule{
+            	StartTime: time.Date(day.Year(), day.Month(), day.Day(), 8, 0, 0, 0, time.UTC),
+            	EndTime:   time.Date(day.Year(), day.Month(), day.Day(), 10, 0, 0, 0, time.UTC),
+            	AreaID:    area.ID,
+        	}
+
+        	// บันทึกข้อมูลลงในฐานข้อมูล
+        	db.FirstOrCreate(&schedule, entity.Schedule{StartTime: schedule.StartTime, AreaID: schedule.AreaID})
+        	//fmt.Printf("Assigned AreaID %d on %s\n", area.ID, day.Format("2006-01-02"))
     	}
-
-    	// เพิ่มข้อมูลลงในฐานข้อมูล
-    	db.FirstOrCreate(&schedule, entity.Schedule{StartTime: schedule.StartTime, AreaID: schedule.AreaID})
 	}
 
 

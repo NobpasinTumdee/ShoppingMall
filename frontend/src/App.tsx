@@ -22,7 +22,7 @@ import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
