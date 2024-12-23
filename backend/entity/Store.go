@@ -7,25 +7,25 @@ import (
 
 type Store struct {
 	gorm.Model
-	PicStore  			string 		`json:"PicStore"`
+	PicStore  			string 		`json:"PicStore" valid:"required~Photo Store is required"`
 
 	SubPicOne  			string 		`json:"SubPicOne"`
 	SubPicTwo  			string 		`json:"SubPicTwo"`
 	SubPicThree  		string 		`json:"SubPicThree"`
-	NameStore  			string 		`json:"NameStore"`
+	NameStore  			string 		`json:"NameStore" valid:"required~NameStore is required"`
 	BookingDate  		time.Time 	`json:"BookingDate"`
 	LastDay  			time.Time 	`json:"LastDay"`
-	DescribtionStore  	string 		`json:"DescribtionStore"`
+	DescribtionStore  	string 		`json:"DescribtionStore" valid:"required~DescribtionStore is required"`
 	StatusStore  		string 		`json:"StatusStore"`
 	StatusService  		string 		`json:"StatusService"`
 	
-	MembershipID 		uint 		`json:"MembershipID"`
+	MembershipID 		uint 		`json:"MembershipID" valid:"required~MembershipID is required"`
 	Membership   		Membership 	`gorm:"foreignKey:MembershipID"`
 
-	UserID 				uint 		`json:"UserID"`
+	UserID 				uint 		`json:"UserID" valid:"required~User ID is required"`
 	User   				User 		`gorm:"foreignKey:UserID"`
 
-	ProductTypeID 		uint 		`json:"ProductTypeID"`
+	ProductTypeID 		uint 		`json:"ProductTypeID" valid:"required~ProductTypeID is required"`
 	ProductType   		ProductType `gorm:"foreignKey:ProductTypeID"`
 
 	//ServiceRequest 		[]ServiceRequest `gorm:"foreignKey:StoreID"`
