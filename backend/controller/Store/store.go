@@ -127,7 +127,7 @@ func GetStoreByid(c *gin.Context) {
 
 	db := config.DB()
 
-	results := db.Where("id = ?", ID).Find(&Stores)
+	results := db.Preload("User").Preload("Membership").Preload("ProductType").Where("id = ?", ID).Find(&Stores)
 	if results.Error != nil {
 		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
