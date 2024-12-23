@@ -230,15 +230,53 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Hall{HallName: pkg.HallName})
 	}
 	bookings := []entity.BookingHall{
-		{HallID: 1, StartDateTime: time.Date(2024, 12, 20, 9, 0, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 20, 12, 0, 0, 0, time.UTC), Status: "Confirmed", CustomerName: "John Doe", CustomerEmail: "johndoe@example.com", CustomerPhone: "123456789", CustomerAddress: "123 Main St, City A", TotalCost: 3000},
-		{HallID: 2, StartDateTime: time.Date(2024, 12, 21, 14, 0, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 21, 16, 0, 0, 0, time.UTC), Status: "Pending", CustomerName: "Jane Smith", CustomerEmail: "janesmith@example.com", CustomerPhone: "987654321", CustomerAddress: "456 Elm St, City B", TotalCost: 2000},
-		{HallID: 3, StartDateTime: time.Date(2024, 12, 23, 15, 0, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 23, 18, 0, 0, 0, time.UTC), Status: "Confirmed", CustomerName: "Bob White", CustomerEmail: "bobw@example.com", CustomerPhone: "111222333", CustomerAddress: "321 Pine St, City D", TotalCost: 4500},
-		{HallID: 2, StartDateTime: time.Date(2024, 12, 24, 9, 30, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 24, 11, 30, 0, 0, time.UTC), Status: "Confirmed", CustomerName: "Chris Green", CustomerEmail: "chrisg@example.com", CustomerPhone: "888999000", CustomerAddress: "654 Birch St, City E", TotalCost: 2500},
+		{HallID: 1, StartDateTime: time.Date(2024, 12, 20, 9, 0, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 21, 12, 0, 0, 0, time.UTC), Status: "Confirmed", CustomerName: "John Doe", CustomerEmail: "johndoe@example.com", CustomerPhone: "123456789", CustomerAddress: "123 Main St, City A", TotalCost: 3000},
+		{HallID: 2, StartDateTime: time.Date(2024, 12, 21, 14, 0, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 22, 16, 0, 0, 0, time.UTC), Status: "Pending", CustomerName: "Jane Smith", CustomerEmail: "janesmith@example.com", CustomerPhone: "987654321", CustomerAddress: "456 Elm St, City B", TotalCost: 2000},
+		{HallID: 3, StartDateTime: time.Date(2024, 12, 23, 15, 0, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 24, 18, 0, 0, 0, time.UTC), Status: "Confirmed", CustomerName: "Bob White", CustomerEmail: "bobw@example.com", CustomerPhone: "111222333", CustomerAddress: "321 Pine St, City D", TotalCost: 4500},
+		{HallID: 2, StartDateTime: time.Date(2024, 12, 24, 9, 30, 0, 0, time.UTC), EndDateTime: time.Date(2024, 12, 25, 11, 30, 0, 0, time.UTC), Status: "Confirmed", CustomerName: "Chris Green", CustomerEmail: "chrisg@example.com", CustomerPhone: "888999000", CustomerAddress: "654 Birch St, City E", TotalCost: 2500},
 	}
 	for _, pkg := range bookings {
 		db.FirstOrCreate(&pkg,entity.BookingHall{StartDateTime: pkg.StartDateTime})
 	}
 
+	facilityLists := []entity.FacilityList{
+		{
+			FacilityName: "Projector",
+			Description:  "เครื่องฉายภาพคุณภาพสูง",
+		},
+		{
+			FacilityName: "Microphone",
+			Description:  "ไมโครโฟนไร้สาย",
+		},
+		{
+			FacilityName: "Whiteboard",
+			Description:  "กระดานไวท์บอร์ดพร้อมปากกา",
+		},
+		{
+			FacilityName: "Sound System",
+			Description:  "ระบบเสียงคุณภาพสูง",
+		},
+		{
+			FacilityName: "Laptop",
+			Description:  "แล็ปท็อปสำหรับงานนำเสนอ",
+		},
+	}
+	for _, pkg := range facilityLists  {
+		db.FirstOrCreate(&pkg,entity.FacilityList{FacilityName: pkg.FacilityName})
+	}
+	facilities := []entity.Facilities{
+		{HallID: 1, FacilityListID: 1, Quantity: 1}, // Grand Hall มี Projector 1 เครื่อง
+		{HallID: 1, FacilityListID: 4, Quantity: 1}, // Grand Hall มี Sound System 1 ชุด
+		{HallID: 2, FacilityListID: 3, Quantity: 2}, // Conference Room 101 มี Whiteboard 2 อัน
+		{HallID: 3, FacilityListID: 2, Quantity: 4}, // Ballroom 202 มี Microphone 4 ตัว
+		{HallID: 4, FacilityListID: 5, Quantity: 2}, // Training Room 305 มี Laptop 2 เครื่อง
+	}
+	for _, pkg := range facilities {
+		db.FirstOrCreate(&pkg, entity.Facilities{
+			HallID:         pkg.HallID,
+			FacilityListID: pkg.FacilityListID,
+		})
+	}
 	//Store
 	
 	Store := []entity.Store{

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Calendar, Modal, Button, List } from "antd";
-import { format, isSameDay } from "date-fns";
+import { Layout, Calendar, Button } from "antd";
+import { isSameDay } from "date-fns";
 import SideBar from "../../../Component/SideBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { BookingHallInterface } from "../../../../interfaces/HallInterface";
@@ -11,8 +11,6 @@ const { Content, Sider } = Layout;
 
 const CalendarPage: React.FC = () => {
     const [bookings, setBookings] = useState<BookingHallInterface[]>([]);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [visible, setVisible] = useState(false);
 
     const { hallId } = useParams<{ hallId: string }>(); // รับ hallID จาก URL
     const navigate = useNavigate();
@@ -38,54 +36,49 @@ const CalendarPage: React.FC = () => {
         );
     };
 
-    const onSelectDate = (date: Date) => {
-        setSelectedDate(date);
-        setVisible(true);
-    };
-
     const handleBookingClick = () => {
         navigate(`/bookings/${hallId}`);
     };
 
     const dateCellRender = (date: Date) => {
+        const isDateInRange = bookings.some(
+            (booking) =>
+                new Date(booking.StartDateTime) <= date &&
+                date <= new Date(booking.EndDateTime)
+        );
+
         const dailyBookings = getBookingsByDate(date);
 
         return (
-            <ul style={{ padding: 0, position: "relative" }}>
-                {dailyBookings.map((booking) => (
-                    <li
-                        key={booking.ID}
-                        style={{
-                            listStyle: "none",
-                            color: "green",
-                            fontSize: "12px",
-                        }}
-                    >
-                        {booking.CustomerName} -{" "}
-                        {booking.Hall?.HallName || "ไม่มีห้องประชุม"}
-                    </li>
-                ))}
-                {dailyBookings.length > 0 && (
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: 5,
-                            left: 5,
-                            right: 5,
-                            bottom: 5,
-                            backgroundColor: "red",
-                            borderRadius: "50%",
-                            opacity: 0.4,
-                        }}
-                    />
-                )}
-            </ul>
+            <div
+                style={{
+                    position: "relative",
+                    backgroundColor: isDateInRange ? "rgba(255, 0, 0, 0.3)" : undefined,
+                    borderRadius: "10px",
+                    padding: "5px",
+                }}
+            >
+                <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
+                    {dailyBookings.map((booking) => (
+                        <li
+                            key={booking.ID}
+                            style={{
+                                color: "green",
+                                fontSize: "12px",
+                            }}
+                        >
+                            {booking.CustomerName} -{" "}
+                            {booking.Hall?.HallName || "ไม่มีห้องประชุม"}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         );
     };
 
     return (
         <>
-        <NavBar />
+            <NavBar />
             <div style={{ height: "110px", zIndex: "0" }}></div>
             <Layout style={{ minHeight: "750px" }}>
                 <Sider width={250} theme="dark">
@@ -93,44 +86,18 @@ const CalendarPage: React.FC = () => {
                 </Sider>
                 <Layout style={{ padding: "10px" }}>
                     <Content style={{ padding: 24, margin: 0, background: "#fff" }}>
-                        <h2>ปฏิทินการจองห้องประชุม (Hall ID: {hallId})</h2>
+                        <h2>ปฏิทินการจองห้องประชุม </h2>
                         <Calendar
-                            onSelect={(date) => onSelectDate(date.toDate())}
                             dateCellRender={dateCellRender}
                             style={{ borderRadius: "10px" }}
                         />
-                        <Modal
-                            title={`รายละเอียดการจอง (${selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""})`}
-                            visible={visible}
-                            onCancel={() => setVisible(false)}
-                            footer={[
-                                <Button key="book" type="primary" onClick={handleBookingClick}>
-                                    จองห้องประชุม
-                                </Button>,
-                                <Button key="close" onClick={() => setVisible(false)}>
-                                    ปิด
-                                </Button>,
-                            ]}
+                        <Button
+                            type="primary"
+                            onClick={handleBookingClick}
+                            style={{ marginTop: "20px" }}
                         >
-                            {getBookingsByDate(selectedDate || new Date()).length > 0 ? (
-                                <List
-                                    dataSource={getBookingsByDate(selectedDate || new Date())}
-                                    renderItem={(item) => (
-                                        <List.Item>
-                                            <List.Item.Meta
-                                                title={`ห้อง: ${item.Hall?.HallName || "ไม่พบข้อมูลห้อง"}`}
-                                                description={`ผู้จอง: ${item.CustomerName}, เวลา: ${format(
-                                                    new Date(item.StartDateTime),
-                                                    "HH:mm"
-                                                )} - ${format(new Date(item.EndDateTime), "HH:mm")}`}
-                                            />
-                                        </List.Item>
-                                    )}
-                                />
-                            ) : (
-                                <p>ไม่มีการจองในวันที่เลือก</p>
-                            )}
-                        </Modal>
+                            จองห้องประชุม
+                        </Button>
                     </Content>
                 </Layout>
             </Layout>
