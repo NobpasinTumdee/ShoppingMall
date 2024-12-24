@@ -33,6 +33,7 @@ type (
 		FirstName         string `json:"FirstName"`
 		LastName          string `json:"LastName"`
 		Age               int    `json:"Age"`
+		Tel 			  string `json:"Tel"`
 		Status            string `json:"Status"`
 	}
 
@@ -139,7 +140,7 @@ func SignUp(c *gin.Context) {
 
 		Password: hashedPassword,
 
-		Profile: "",
+		Profile: payload.Profile,
 
 		ProfileBackground: "",
 
@@ -147,9 +148,11 @@ func SignUp(c *gin.Context) {
 
 		LastName: payload.LastName,
 
-		Age: 0,
+		Age: payload.Age,
 
-		Status: payload.Status,
+		Tel: payload.Tel,
+
+		Status: "User",
 	}
 
 	// Save the user to the database

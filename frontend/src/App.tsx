@@ -20,13 +20,13 @@ import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 
-import { LoginCarPark, SignUpCarPark } from './Page/Login/LoginCarPark';
+import SignUp from './Page/Login/SignUp';
 import CarPark from './Page/MainWeb/CarPark/ParkingEmployee/CarPark';
 import CarParkIN from './Page/MainWeb/CarPark/CarParkIN';
 import CarParkINZone from './Page/MainWeb/CarPark/IN/CarParkINZone';
 import HistoryCard from './Page/MainWeb/CarPark/ParkingEmployee/HistoryCard'
-import CustomerParkingBooking from './Page/MainWeb/CarPark/Customer/Book'
-
+import CarParkCustomerMain from './Page/MainWeb/CarPark/Customer/Main'
+import CarParkCustomerBook from './Page/MainWeb/CarPark/Customer/Booking'
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
@@ -35,6 +35,7 @@ const App: React.FC = () => {
       {Navbar && <NavBar />}
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/Main" element={<Main />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/AdminStore" element={<AdminStore />} />
@@ -57,10 +58,9 @@ const App: React.FC = () => {
         <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
         
-        <Route path="/CarPark" element={<LoginCarPark />} />
-        <Route path="/signup" element={<SignUpCarPark />} />
-        <Route path="/CarPark/Attendant/Main" element={<CarPark />} />
-        <Route path="/Customer/Main" element={<CustomerParkingBooking />} />
+        <Route path="/CarPark" element={<CarParkCustomerMain />} />
+        <Route path="/CarPark/Booking" element={<CarParkCustomerBook />} />
+        <Route path="/CarPark-Attendant" element={<CarPark />} />
         <Route path="/CarPark/HistoryCard" element={<HistoryCard />} />
         <Route path="/CarParking-In" element={<CarParkIN />} />
         <Route path="/CarParking-In-Zone" element={<CarParkINZone />} />

@@ -20,12 +20,12 @@ func GetListCard(c *gin.Context) {
 
 	db := config.DB()
 
-	// เรียกใช้การ Preload สำหรับการโหลดข้อมูลอื่น ๆ และ Joins สำหรับ ParkingTransaction
 	if err := db.Preload("MembershipCustomer").
 		Preload("Store").Preload("ParkingFeePolicy").
 		Preload("TypePark").Preload("StatusCard").
 		Preload("ParkingZone").
 		Preload("ParkingTransaction").
+		Preload("ParkingPayment").
 		Find(&cards).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -34,52 +34,31 @@ func GetListCard(c *gin.Context) {
 	c.JSON(http.StatusOK, cards)
 }
 
-/*
-func GetListLastTransaction(c *gin.Context) {
-	var cards []entity.ParkingCard
-
-	db := config.DB()
-
-	// ดึงบัตรที่มีการทำธุรกรรมล่าสุด
-	if err := db.
-		Preload("ParkingTransaction").
-		Joins("JOIN parking_transactions ON parking_transactions.parking_card_id = parking_cards.id").
-		Order("parking_transactions.created_at DESC").
-		Find(&cards).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, cards)
-} */
-
 // POST ParkingTransaction
 func CreateParkingTransaction(c *gin.Context) {
-	//var zone entity.ParkingZone
 	var trans entity.ParkingTransaction
 
-	// Binding JSON request to ParkingCard
 	if err := c.ShouldBindJSON(&trans); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Get the DB connection
 	db := config.DB()
 
-	// Create a new ParkingTransaction (ParkingCard)
 	newTransaction := entity.ParkingTransaction{
-		EntryTime:     trans.EntryTime,
-		ExitTime:      trans.ExitTime,
-		Hourly_Rate:   trans.Hourly_Rate,
-		Image:         trans.Image,
-		LicensePlate:  trans.LicensePlate,
-		Color:         trans.Color,
-		UserID:        trans.UserID,
-		ParkingCardID: trans.ParkingCardID, // Using ParkingCard ID
+		ReservationDate: trans.ReservationDate,
+		EntryTime:       trans.EntryTime,
+		ExitTime:        trans.ExitTime,
+		Hourly_Rate:     trans.Hourly_Rate,
+		Image:           trans.Image,
+		LicensePlate:    trans.LicensePlate,
+		Color:           trans.Color,
+		Make:            trans.Make,
+		UserID:          trans.UserID,
+		ParkingCardID:   trans.ParkingCardID, // Using ParkingCard ID
+		ParkingZoneID:   trans.ParkingZoneID,
 	}
 
-	// Save ParkingTransaction
 	if err := db.Create(&newTransaction).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -112,6 +91,72 @@ func UpdateParkingCard(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "ParkingCard updated successfully"})
 }
 
+func GetParkingCardByID(c *gin.Context) {
+	id := c.Param("id")
+	var parkingCard entity.ParkingCard
+
+	db := config.DB()
+
+	if err := db.Preload("StatusCard").Preload("TypePark").Preload("ParkingTransaction").Preload("ParkingPayment").First(&parkingCard, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+		return
+	}
+	c.JSON(http.StatusOK, parkingCard)
+}
+
+func GetParkingCardByUserID(c *gin.Context) {
+    userID := c.Param("id") 
+    var parkingCards []entity.ParkingCard 
+
+    db := config.DB()
+
+    // ค้นหาบัตรจอดรถที่มี MembershipCustomerID ตรงกับ userID ที่ได้รับ
+    if err := db.Preload("StatusCard").
+        Preload("TypePark").
+        Preload("ParkingTransaction").
+        Preload("ParkingPayment").Preload("User").
+        Where("membership_customer_id = ?", userID).
+        Find(&parkingCards).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+        return
+    }
+
+    // ส่งข้อมูลบัตรจอดรถ
+    c.JSON(http.StatusOK, parkingCards)
+}
+
+func GetParkingCardWithZoneByID(c *gin.Context) {
+	id := c.Param("id")
+	var parkingCard entity.ParkingCard
+
+	db := config.DB()
+
+	if err := db.Preload("ParkingZone").First(&parkingCard, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+		return
+	}
+	c.JSON(http.StatusOK, parkingCard)
+}
+
+func DeleteParkingCard(c *gin.Context) {
+
+	id := c.Param("id")
+
+	db := config.DB()
+
+	if err := db.Where("parking_cards_id = ?", id).Delete(&entity.ParkingCardZone{}).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Card not found"})
+		return
+	}
+	if tx := db.Exec("DELETE FROM parking_cards WHERE id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
+}
+
+/*************************************** Not Used ***********************************************/
 func UpdateParkingCardAndZone(c *gin.Context) {
 
 	var payload struct {
@@ -121,7 +166,6 @@ func UpdateParkingCardAndZone(c *gin.Context) {
 
 	db := config.DB()
 
-	// ตรวจสอบว่า payload ถูกส่งมาถูกต้องหรือไม่
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
 		return
@@ -163,32 +207,6 @@ func UpdateParkingCardAndZone(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Parking card and zone updated successfully"})
 }
 
-func GetParkingCardByID(c *gin.Context) {
-	id := c.Param("id")
-	var parkingCard entity.ParkingCard
-
-	db := config.DB()
-
-	if err := db.Preload("StatusCard").Preload("TypePark").Preload("ParkingTransaction").First(&parkingCard, "id = ?", id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
-		return
-	}
-	c.JSON(http.StatusOK, parkingCard)
-}
-
-func GetParkingCardWithZoneByID(c *gin.Context) {
-	id := c.Param("id")
-	var parkingCard entity.ParkingCard
-
-	db := config.DB()
-
-	if err := db.Preload("ParkingZone").First(&parkingCard, "id = ?", id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
-		return
-	}
-	c.JSON(http.StatusOK, parkingCard)
-}
-
 func GetIdCardZone(c *gin.Context) {
 	ID := c.Param("id")
 	var cards entity.ParkingCard
@@ -210,22 +228,4 @@ func GetIdCardZone(c *gin.Context) {
 		// "zones": zones,
 		// "cardzone": cardzone,
 	})
-}
-
-func DeleteParkingCard(c *gin.Context) {
-
-	id := c.Param("id")
-	fmt.Println("id: ", id)
-	db := config.DB()
-
-	if err := db.Where("parking_cards_id = ?", id).Delete(&entity.ParkingCardZone{}).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Card not found"})
-		return
-	}
-	if tx := db.Exec("DELETE FROM parking_cards WHERE id = ?", id); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
-
 }

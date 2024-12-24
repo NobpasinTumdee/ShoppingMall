@@ -1,28 +1,8 @@
-/* CarPark.module.css */ 
-/*.ant-card,
-.ant-modal,
-.ant-btn,
-.ant-table,
-.ant-col,
-.ant-input,
-.ant-form-item-required {
-  font-family: "Dongle", sans-serif !important;
-  font-size: 24px !important;
+.font-all {
+  font-family: "Dongle", sans-serif;
+  font-size: 22px;
 }
 
-.ant-btn {
-  background-color: #c9af62;
-}
-
-.ant-table-wrapper .ant-table-tbody > tr > td,
-.ant-table-wrapper .ant-table-tbody > tr > th,
-.ant-table-wrapper .ant-table-thead > tr > th {
-  justify-content: center;
-  font-weight: lighter;
-  text-align: center; /* จัดตัวอักษรแนวนอน *//*
-  vertical-align: middle; /* จัดตัวอักษรแนวตั้ง *//*
-}
-*/
 .header-title {
   text-align: center;
   font-family: "Dongle", sans-serif;
@@ -116,6 +96,10 @@
   width: 35px;
 }
 
+.custom-paragraph-history {
+  margin-bottom: 1px;
+  line-height: 1;
+}
 
 /* .sub-title {
   text-align: center;

@@ -88,8 +88,6 @@ func SetupDatabase() {
 		{UserName: "Repairman", Password: hashedPassword, Email: "Repairman@g.sut.ac.th", FirstName: "Repairman", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "Repairman"},
 		{UserName: "ParkingAttendant", Password: hashedPassword, Email: "ParkingAttendant@g.sut.ac.th", FirstName: "Parking Attendant", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "ParkingAttendant"},
 		{UserName: "MembershipCustomer", Password: hashedPassword, Email: "MembershipCustomer@g.sut.ac.th", FirstName: "Membership Customer", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "MembershipCustomer"},
-		{UserName: "Customer", Password: hashedPassword, Email: "Customer@g.sut.ac.th", FirstName: "Customer", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "Customer"},
-
 	}
 	for _, pkg := range User {
 		db.FirstOrCreate(&pkg, entity.User{UserName: pkg.UserName})
@@ -334,7 +332,7 @@ func SetupDatabase() {
 
 	// StatusCard
 	NameStatusCard := []entity.StatusCard{
-		{Status: "IN"}, {Status: "OUT"}, {Status: "Un Used"}, {Status: "Expired"},
+		{Status: "IN"}, {Status: "OUT"}, {Status: "Inactive"}, {Status: "Reserved"}, {Status: "Expired"},
 	}
 	for _, pkg := range NameStatusCard {
 		db.FirstOrCreate(&pkg, entity.StatusCard{Status: pkg.Status})

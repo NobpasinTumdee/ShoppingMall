@@ -31,7 +31,7 @@ import "./../CarPark.css";
 import PicFloor from "./../../../../assets/icon/ForPage/Store/Reserve.png";
 import IN from "./Modal/In";
 import OUT from "./Modal/Out";
-import { NavBar } from "../../../Component/NavBarCarPark";
+import { NavBar } from "../../../Component/NavBar";
 import AddCardModal from "./Modal/AddCard";
 
 //import "./../Store/StoreAndPay.css";
@@ -173,7 +173,7 @@ const CarPark: React.FC = () => {
         return latestTransaction?.Color || "";
       },
     },
-    {
+/*     {
       title: "Car Make",
       dataIndex: "ParkingTransaction.Make",
       key: "Make",
@@ -184,7 +184,7 @@ const CarPark: React.FC = () => {
         )[0];
         return latestTransaction?.Make || "";
       },
-    },
+    }, */
     {
       title: "EntryTime",
       dataIndex: "ParkingTransaction.EntryTime",
@@ -240,7 +240,7 @@ const CarPark: React.FC = () => {
           const hours = calculateHourlyRate(entryTime);
           return `${hours} Hour${hours > 1 ? "s" : ""}`;
         }
-        return "N/A";
+        return "";
       },
     },
     {
@@ -307,10 +307,6 @@ const CarPark: React.FC = () => {
 
     // ถ้านาทีเกิน 0 ให้เพิ่ม 1 ชั่วโมง
     return remainingMinutes > 0 ? diffHours + 1 : diffHours;
-  };
-
-  const handleLostCardFee = (policy: ParkingFeePolicyInterface) => {
-    return policy.LostCard!;
   };
 
   const calculateParkingFee = (
@@ -453,7 +449,7 @@ const CarPark: React.FC = () => {
   const handleGeneralCardClick = async () => {
     try {
       const availableCards = cards.filter(
-        (card: ParkingCardInterface) => card.IsActive === false
+        (card: ParkingCardInterface) => card.StatusCard === IN
       );
 
       if (availableCards.length > 0) {
@@ -466,7 +462,7 @@ const CarPark: React.FC = () => {
         const filtered = cards.filter(
           (item) =>
             item.ID?.toLowerCase().includes(randomCard.ID.toLowerCase()) &&
-            item.IsActive === false
+            item.StatusCard === IN
         );
         setFilteredData(filtered);
       } else {

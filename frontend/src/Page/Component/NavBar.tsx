@@ -669,7 +669,7 @@ export const NavBar: React.FC = () => {
                             <div className={`dropboxMenu ${isMenuOpen ? 'fade-in' : 'fade-out'}`}>
                                 <a onClick={OpenProfile} ><p className='dropboxMenuP'>Your Profile</p></a>
                                 <a href="/Recruitment" ><p className='dropboxMenuP'>Recruitment</p></a>
-                                <a href="/CarPark/Employee/Main" ><p className='dropboxMenuP'>Car Parking</p></a>
+                                <a href="" ><p className='dropboxMenuP'>Car Parking</p></a>
                                 {user?.Status === 'Admin' && 
                                     <a href="/Admin" ><p className='dropboxMenuP'>Management</p></a>
                                 }
@@ -684,6 +684,7 @@ export const NavBar: React.FC = () => {
                     <div>
                         <a href="/Main" ><span className={`MenuHover ${location.pathname === "/Main" ? "active" : ""}`}>NEWS</span></a>
                         <a href="/Store" ><span className={`MenuHover ${location.pathname === "/Store" ? "active" : ""}`}>STORE</span></a>
+                        <a href="/CarPark" ><span className={`MenuHover ${location.pathname === "/CarPark" ? "active" : ""}`}>CAR PARKING</span></a>
                         {(user?.Status === 'Admin' || user?.Status === 'Employee') && 
                             <a href="/Hall" ><span className={`MenuHover ${location.pathname === "/Hall" ? "active" : ""}`}>BOOK A HALL</span></a>
                         }
@@ -691,10 +692,13 @@ export const NavBar: React.FC = () => {
                             <a href="#" ><span className='MenuHover'>SERVICEREQUEST</span></a>
                         }
                         {(user?.Status === 'Cleaning' || user?.Status === 'Admin'|| user?.Status === 'Employee') &&
-                            <a href="#" ><span className='MenuHover'>CLEANING</span></a>
+                            <a href="Cleaning" ><span className='MenuHover'>CLEANING</span></a>
                         }
                         {(user?.Status === 'Repairman' || user?.Status === 'Cleaning' || user?.Status === 'Admin'|| user?.Status === 'Employee') &&
                             <a href="/Inventory" ><span className={`MenuHover ${location.pathname === "/Inventory" ? "active" : ""}`}>INVENTORY</span></a>
+                        }
+                        {(user?.Status === 'ParkingAttendant' || user?.Status === 'Admin' || user?.Status === 'Employee') &&
+                            <a href="/CarPark-Attendant" ><span className={`MenuHover ${location.pathname === "/CarPark-Attendant" ? "active" : ""}`}>CAR PARKING</span></a>
                         }
                     </div>
                     <div></div>

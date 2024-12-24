@@ -5,7 +5,6 @@ import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersIn
 import {
   ParkingCardInterface,
   ParkingTransactionInterface,
-  UsageCardInterface,
   ParkingZoneInterface,
 } from "../../interfaces/Carpark";
 import axios from "axios";
@@ -416,15 +415,6 @@ async function GetListTransaction() {
       return e.response;
     });
 }
-async function GetListZone() {
-  return await axios
-    .get(`${apiUrl}/get-list-parking-zone`, requestOptions)
-    .then((res) => res)
-    .catch((e) => {
-      console.error("Error fetching data:", e);
-      return e.response;
-    });
-}
 /* async function GetListLastTransaction() {
   return await axios
     .get(`${apiUrl}/get-list-last-parkingtransaction`, requestOptions)
@@ -482,6 +472,12 @@ async function GetParkingCardByID(id: string) {
     .get(`${apiUrl}/get-parking-card/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
+}	
+async function GetParkingCardByUserID(id: string) {
+  return await axios
+    .get(`${apiUrl}/get-parking-card-by-user/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }
 async function GetParkingCardWithZoneByID(id: string) {
   return await axios
@@ -489,7 +485,24 @@ async function GetParkingCardWithZoneByID(id: string) {
     .then((res) => res)
     .catch((e) => e.response);
 }
-
+async function GetListZone() {
+  return await axios
+    .get(`${apiUrl}/get-list-parking-zone`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
+async function GetZoneByTypePark(type: string) {
+  return await axios
+    .get(`${apiUrl}/get-parking-zone-by-type-park/${type}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
 async function GetIdCardZone(id: string) {
   return await axios
     .get(`${apiUrl}/get-card-zone/${id}`, requestOptions)
@@ -686,6 +699,7 @@ export {
   GetListCard,
   GetListTransaction,
   GetListZone,
+  GetZoneByTypePark,
   //GetListLastTransaction,
   CreateParkingCard,
   CreateParkingTransaction,
@@ -693,6 +707,7 @@ export {
   UpdateParkingZone,
   UpdateParkingCardAndZone,
   GetParkingCardByID,
+  GetParkingCardByUserID,
   GetParkingCardWithZoneByID,
   GetIdCardZone,
   DeleteParkingCard,

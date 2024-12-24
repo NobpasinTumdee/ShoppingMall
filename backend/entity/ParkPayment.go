@@ -7,9 +7,11 @@ import (
 
 type ParkingPayment struct {
 	gorm.Model
-	TaxID       string    `json:"TaxID"`
-	PaymentDate time.Time `json:"PaymentDate"`
-	Amount      int       `json:"Amount"`
+	TaxID          string    `json:"TaxID"`
+	PaymentDate    time.Time `json:"PaymentDate"`
+	Amount         int       `json:"Amount"`
+	DiscountAmount int       `json:"DiscountAmount"`
+	NetAmount      int       `json:"NetAmount"`
 
 	ParkingCardID string      `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`

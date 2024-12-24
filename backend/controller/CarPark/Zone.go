@@ -2,6 +2,8 @@ package CarPark
 
 import (
 	//"errors" // เพิ่ม import สำหรับ package errors
+	"strings"
+
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
 	"github.com/gin-gonic/gin"
@@ -43,4 +45,35 @@ func UpdateParkingZone(c *gin.Context) {
 		return
 	}
     c.JSON(http.StatusOK, gin.H{"message": "ParkingZone updated successfully"})
+}
+
+func GetZoneByTypePark(c *gin.Context) {
+    var zones []entity.ParkingZone
+    typePark := c.Param("type")
+
+    // แยกค่าของ typePark โดยใช้เครื่องหมายคอมม่า
+    typeParks := strings.Split(typePark, ",")
+
+    db := config.DB()
+
+    // ค้นหา TypePark ตามที่แยกมา
+    var typeParkRecords []entity.TypePark
+    if err := db.Where("Type IN (?)", typeParks).Find(&typeParkRecords).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "TypePark not found"})
+        return
+    }
+
+    // ค้นหาทุกๆ ParkingZones ที่เชื่อมโยงกับ TypePark ที่พบ
+    for _, typeParkRecord := range typeParkRecords {
+        var zone []entity.ParkingZone
+        if err := db.Where("type_park_id = ?", typeParkRecord.ID).First(&zone).Error; err != nil {
+            c.JSON(http.StatusNotFound, gin.H{"error": "Parking zones not found"})
+            return
+        }
+        // ใช้ append เพื่อเพิ่มผลลัพธ์ใน zones
+        zones = append(zones, zone...)
+    }
+
+    // ส่งผลลัพธ์
+    c.JSON(http.StatusOK, &zones)
 }

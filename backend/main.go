@@ -90,6 +90,8 @@ func main() {
 		router.POST("/create-parkingtransaction",CarPark.CreateParkingTransaction)
 		router.PUT("/update-parkingcard/:id",CarPark.UpdateParkingCard)
 		router.GET("/get-parking-card/:id", CarPark.GetParkingCardByID)
+		router.GET("/get-parking-card-by-user/:id", CarPark.GetParkingCardByUserID)
+		router.GET("/get-parking-zone-by-type-park/:type", CarPark.GetZoneByTypePark)
 		router.GET("/get-parking-card-with-zone/:id", CarPark.GetParkingCardWithZoneByID)
 		router.GET("/get-card-zone/:id", CarPark.GetIdCardZone)
 		router.PUT("/update-parkingzone/:id",CarPark.UpdateParkingZone)

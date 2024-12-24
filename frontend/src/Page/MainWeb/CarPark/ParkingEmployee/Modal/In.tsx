@@ -58,8 +58,8 @@ const IN: React.FC<InProps> = ({
   const [carLicensePlate, setCarLicensePlate] = useState("");
   const [carColor, setCarColor] = useState("");
   const [carMake, setCarMake] = useState("");
-  const [image, setImage] = useState<string | null>(null); // กำหนดให้รองรับทั้ง string หรือ null
-  const [loading, setLoading] = useState(false);
+  /*const [image, setImage] = useState<string | null>(null); // กำหนดให้รองรับทั้ง string หรือ null
+  const [loading, setLoading] = useState(false); */
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
@@ -82,11 +82,13 @@ const IN: React.FC<InProps> = ({
   };
 
   const handleCancel = () => {
-    form.resetFields();
-    setSelectedCard(null);
     setCarLicensePlate("");
+    setCarColor("");
+    setSelectedCard(null);
     setSelectedCardIndex(null);
     setIsModalInVisible(false);
+    setFileList([]);
+    form.resetFields();
   };
 
   const handleOk = async () => {
@@ -97,9 +99,9 @@ const IN: React.FC<InProps> = ({
       return;
     }
 
-    if (selectedCardIndex === null || !carLicensePlate) {
+    if (selectedCardIndex === null || !carLicensePlate || !carColor || !carMake) {
       message.error(
-        "Please select a parking card and input the license plate!"
+        "Please select a parking zone and input all!"
       );
       return;
     }
@@ -113,15 +115,16 @@ const IN: React.FC<InProps> = ({
     const imageUrl = fileList[0]?.thumbUrl || null; // Ensure imageUrl is valid or null
 
     const CardTransData = {
+      ReservationDate: new Date().toISOString(),
       EntryTime: new Date().toISOString(),
       LicensePlate: carLicensePlate,
-      Image: imageUrl || "", // Send imageUrl or empty string
+      Image: imageUrl || "",
       Color: carColor,
       Make: carMake,
-      TransmissionImage: imageUrl, // Include transmission image here
       UserID: Number(localStorage.getItem("id")),
       ParkingCardID: selectedCard?.ID,
       StatusPaymentID: 1,
+      ParkingZoneID: zone.ID,
     };
 
     const updateCardData = {
@@ -162,80 +165,17 @@ const IN: React.FC<InProps> = ({
     }
   };
 
-  const handleImageOk = async () => {
-    try {
-      await form.validateFields();
-    } catch {
-      message.error("Please fill in all required fields!");
-      return;
-    }
-
-    // Validation for license plate
-    if (!carLicensePlate) {
-      message.error("Please input the license plate!");
-      return;
-    }
-
-    // Proceed with other operations...
-  };
-
-  /*   const ocrImage = (image: any) => {
-    Tesseract.recognize(image, "eng", {
-      logger: (m: any) => console.log(m),
-      pageSegMode: 6, // Assume a single uniform block of text (might improve accuracy)
-    } as any).then(({ data: { text } }) => {
-      const licensePlate = extractLicensePlate(text.trim().replace(/\s+/g, " "));
-      setCarLicensePlate(licensePlate);
-    
-      // Process color detection
-      const color = extractCarColor(text);
-      setCarColor(color);
-    });    
-  };
-  
-  const extractCarColor = (text: string) => {
-    const colorRegex = /\b(white|black|red|blue|green|gray|silver|yellow|brown|orange)\b/i; // Expanded color set
-    const match = text.match(colorRegex);
-    return match ? match[0] : "Unknown"; // Return 'Unknown' if no color is detected
-  };
-  
-
-  const extractLicensePlate = (text: string) => {
-    // Update regex to capture the expected license plate format, e.g., P 688 CC
-    const regex = /([A-Z0-9]{1,3}[\s\-]?[0-9]{1,4}[\s\-]?[A-Z]{1,2})/g;
-    const match = text.match(regex);
-    if (match && match[0]) {
-      console.log("Detected License Plate:", match[0]);
-      return match[0]; // Return the detected license plate
-    } else {
-      message.error("License plate could not be detected.");
-      return "";
-    }
-  }; 
-  
-  const handleImageChange = (event: any) => {
-    const file = event?.target?.files?.[0]; // เพิ่มการตรวจสอบว่า event.target และ files ไม่ใช่ undefined
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-      //ocrImage(file);
-    } else {
-      message.error("No file selected!");
-    }
-  };*/
-
   const onChangeUpload: UploadProps["onChange"] = ({
     fileList: newFileList,
   }) => {
     setFileList(newFileList);
   };
-
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
-    if (!src) {
+    if (!src && file.originFileObj) {
       src = await new Promise((resolve) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as FileType);
+        reader.readAsDataURL(file.originFileObj as File);
         reader.onload = () => resolve(reader.result as string);
       });
     }
@@ -243,28 +183,6 @@ const IN: React.FC<InProps> = ({
     image.src = src;
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
-  };
-
-  const handleUpload = async (file: File) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        setImage(result.imageUrl); // URL ถาวรจากเซิร์ฟเวอร์
-        message.success("Image uploaded successfully!");
-      } else {
-        message.error("Image upload failed!");
-      }
-    } catch (error) {
-      message.error("Server error occurred!");
-    }
   };
 
   return (
@@ -365,8 +283,8 @@ const IN: React.FC<InProps> = ({
                       </div>
                       <div
                         style={{
-                          fontFamily: "Dongle, sans-serif", // fontFamily สำหรับ Capacity
-                          fontSize: "16px", // fontSize สำหรับ Capacity
+                          fontFamily: "Dongle, sans-serif",
+                          fontSize: "16px",
                           color: "#757575",
                           lineHeight: "1.5",
                         }}
@@ -430,27 +348,23 @@ const IN: React.FC<InProps> = ({
             marginTop: 16,
           }}
         >
-          <Form.Item label="Image Car" name="Image" valuePropName="fileList">
-          <ImgCrop rotationSlider>
-                  <Upload
-                    fileList={fileList}
-                    onChange={onChangeUpload}
-                    onPreview={onPreview}
-                    beforeUpload={(file) => {
-                      setFileList([...fileList, file]);
-                      return false;
-                    }}
-                    maxCount={1}
-                    multiple={false}
-                    listType="picture-card"
-                  >
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>อัพโหลด</div>
-                    </div>
-                  </Upload>
-                </ImgCrop>
-                </Form.Item>
+          <Upload
+            fileList={fileList}
+            onChange={onChangeUpload}
+            onPreview={onPreview}
+            beforeUpload={(file) => {
+              setFileList([...fileList, file]);
+              return false;
+            }}
+            maxCount={1}
+            multiple={false}
+            listType="picture-card"
+          >
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          </Upload>
           <Form.Item
             name="LicensePlate"
             label="License Plate"

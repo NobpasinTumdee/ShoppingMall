@@ -53,20 +53,26 @@ type ParkingZone struct {
 	TypeParkID uint     `json:"TypeParkID"`
 	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
 
-	ParkingCard []ParkingCard `gorm:"many2many:ParkingCardZone;"`
+	ParkingTransaction []ParkingTransaction `gorm:"foreignKey:ParkingZoneID"`
+	ParkingCard        []ParkingCard        `gorm:"many2many:ParkingCardZone;"`
 }
 
 type ParkingTransaction struct {
 	gorm.Model
-	EntryTime    time.Time `json:"EntryTime"`
-	ExitTime     time.Time `json:"ExitTime"`
-	Hourly_Rate int       `json:"Hourly_Rate"`
-	LicensePlate string    `json:"LicensePlate"`
-	Image        string    `gorm:"type:longtext" json:"Image"`
-	Color        string    `json:"Color"`
+	ReservationDate string     `json:"ReservationDate"`
+	EntryTime       *time.Time  `json:"EntryTime"`
+	ExitTime        *time.Time `json:"ExitTime"`
+	Hourly_Rate     *int       `json:"Hourly_Rate"`
+	LicensePlate    string     `json:"LicensePlate"`
+	Image           string     `gorm:"type:longtext" json:"Image"`
+	Color           string     `json:"Color"`
+	Make            string     `json:"Make"`
 
 	ParkingCardID string      `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
+
+	ParkingZoneID uint        `json:"ParkingZoneID"`
+	ParkingZone   ParkingZone `gorm:"foreignKey:ParkingZoneID"`
 
 	UserID uint `json:"UserID"`
 	User   User `gorm:"foreignKey:UserID"`
@@ -109,4 +115,16 @@ type ParkingFeePolicy struct {
 	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
 
 	ParkingCard []ParkingCard `gorm:"foreignKey:ParkingFeePolicyID"`
+}
+
+type MembershipCustomer struct {
+	gorm.Model
+	FirstName  string    `json:"FirstName"`
+	LastName   string    `json:"LastName"`
+	DOB        time.Time `json:"DOB"`
+	Tel        string    `json:"Tel"`
+	IssueDate  time.Time `json:"IssueDate"`
+	ExpiryDate time.Time `json:"ExpiryDate"`
+
+	ParkingCard *ParkingCard `gorm:"foreignKey:MembershipCustomerID"`
 }
