@@ -20,7 +20,7 @@ func GetStoreByFloor(c *gin.Context) {
 
 
 	// Query the user by ID
-	results := db.Where("product_type_id = ?", ID).Find(&Stores)
+	results := db.Preload("User").Preload("Membership").Preload("ProductType").Where("product_type_id = ?", ID).Find(&Stores)
 	if results.Error != nil {
 		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
@@ -31,6 +31,20 @@ func GetStoreByFloor(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, Stores)
+}
+// GET /membership
+func ListMembership(c *gin.Context) {
+	var Membership []entity.Membership
+	db := config.DB()
+
+	results := db.Select("id, package_name, day, pwa, pea, rental_fee, parking_card_count").Find(&Membership)
+
+	if results.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, Membership)
 }
 
 func GetStoreDetails(c *gin.Context) {

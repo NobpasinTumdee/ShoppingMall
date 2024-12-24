@@ -197,9 +197,57 @@
     height: 40px;
     margin-bottom: 10px;
 }
-
-
-
+/* ===========================================================Booking for admin=========================================================== */
+.BookingStoreAdminicon{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    z-index: 1001;
+}
+.BookingStoreAdminicon:hover{
+    animation: Bookingicon 0.7s ease-in-out;
+}
+@keyframes Bookingicon {
+    0%{rotate: 360deg;}
+    50%{rotate: -160deg;}
+}
+.BookingStoreAdmin{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 1000;
+    animation: BookingStoreAdmin 0.8s ease-in-out;
+}
+@keyframes BookingStoreAdmin {
+    0%{transform: translateY(100%) scale(0.3);}
+}
+.FloorStoreAdmin{
+    margin:0 auto 40px;
+    width: 80%;
+    text-align: center;
+}
+.FloorStoreAdmin span{
+    margin: 0 5px;
+    background-color: #eadcb2;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.addBookingpopup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    width: 600px;
+    height: auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 4px solid #eadcb2;
+    box-shadow: 0 0 15px #00000016;
+}
 /*====================================================================================================================================*/
 
 

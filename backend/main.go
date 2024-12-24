@@ -35,6 +35,7 @@ func main() {
 	r.GET("/user" , user.ListUsers)
 	r.GET("/event" , user.ListEvent)
 	r.GET("/store/:id",Store.GetStoresByProductTypeID)
+	r.GET("/store-preload/:id",Store.GetStoreByFloor)
 	r.POST("/send-email", user.SendEmailHandler)
 	router := r.Group("")
 	{
@@ -65,6 +66,7 @@ func main() {
 		router.POST("/backup",Store.CreateBackUpStore)
 		router.GET("/storeid/:id",Store.GetStoreByid)
 		router.GET("/Membership/:id",Store.GetMembership)
+		router.GET("/Membership",Store.ListMembership)
 		router.GET("/commentbystore/:id",Store.ListCommentByStoreId)//rating
 		router.GET("/commentbyuser/:id",Store.ListCommentByUserId)
 		router.POST("/comment",Store.CreateRating)

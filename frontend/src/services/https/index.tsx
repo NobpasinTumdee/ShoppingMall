@@ -48,6 +48,18 @@ async function GetUserById(id: string) {
     .catch((e) => e.response);
 
 }
+// get user all
+async function GetUserAll() {
+
+  return await axios
+
+    .get(`${apiUrl}/user`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 // update User
 async function UpdateUserByid(id: string, data: UsersInterface) {
 
@@ -187,6 +199,30 @@ async function GetStoreByFloor(id: string) {
   return await axios
 
     .get(`${apiUrl}/store/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Store by Floor-preload
+async function GetStoreByFloorPreload(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/store-preload/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Membership
+async function GetMembership() {
+
+  return await axios
+
+    .get(`${apiUrl}/Membership`, requestOptions)
 
     .then((res) => res)
 
@@ -622,6 +658,7 @@ async function GetSchedulesByArea(id: number) {
 export {
     SignIn,//user
     GetUserById,
+    GetUserAll,
     UpdateUserByid,
     AddStore,
     UserStoreByid,
@@ -640,6 +677,8 @@ export {
     DeleteEvent,
 
     GetStoreByFloor,//store
+    GetStoreByFloorPreload,
+    GetMembership,
     UpdateStoreByid,
     BackUpStore,
     GetBackUpByid,
