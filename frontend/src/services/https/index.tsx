@@ -5,6 +5,7 @@ import { UsersInterface , MessageBoardInterface, EventInterface } from "../../in
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 
 import axios from 'axios';
+import { ServiceInterface } from "../../interfaces/ServiceInterface";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
 
@@ -653,7 +654,52 @@ async function GetSchedulesByArea(id: number) {
     .catch((e) => e.response);
 
 }
+//=======================================Service============================================
+//listService by status
+async function ListService(Status: string) {
 
+  return await axios
+
+    .get(`${apiUrl}/Service/${Status}`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
+async function ListStoreService() {
+
+  return await axios
+
+    .get(`${apiUrl}/StoreService`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
+async function ListRepairman() {
+
+  return await axios
+
+    .get(`${apiUrl}/Repairman`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
+async function CreateService(data: ServiceInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Service`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 export {
     SignIn,//user
@@ -710,6 +756,11 @@ export {
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,
     GetInventoryById,
+
+    ListService,//ServiceRq
+    ListStoreService,
+    ListRepairman,
+    CreateService,
 
     ListAreas,
     CreateCleaningRecord,
