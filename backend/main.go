@@ -12,6 +12,7 @@ import (
 	"example.com/ProjectSeG13/controller/Inventory"
 	"example.com/ProjectSeG13/controller/Cleaning"
 	"example.com/ProjectSeG13/controller/Hall"
+	"example.com/ProjectSeG13/controller/ServiceRequest"
 )
 
 const PORT = "8000"
@@ -112,7 +113,10 @@ func main() {
 		router.GET("/inventory/:id", Inventory.GetInventoryByCategory)
 		router.GET("/CategoryInventory", Inventory.ListCategoryInventory)
 		//ระบบ แจ้งซ่อม
-
+		router.GET("/Service/:Status", servicerequest.ListService)
+		router.GET("/StoreService", servicerequest.ListStoreService)
+		router.GET("/Repairman", servicerequest.ListRepairman)
+		router.POST("/Service", servicerequest.CreateService)
 		//ระบบ เช็คอุปกรณ์ช่าง
 
 
