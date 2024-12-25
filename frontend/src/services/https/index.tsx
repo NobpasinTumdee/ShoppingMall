@@ -662,7 +662,7 @@ async function ListService(Status: string) {
 
     .get(`${apiUrl}/Service/${Status}`, requestOptions)
 
-    .then((res) => res.data)
+    .then((res) => res)
 
     .catch((e) => e.response);
 
@@ -673,7 +673,7 @@ async function ListStoreService() {
 
     .get(`${apiUrl}/StoreService`, requestOptions)
 
-    .then((res) => res.data)
+    .then((res) => res)
 
     .catch((e) => e.response);
 
@@ -684,7 +684,7 @@ async function ListRepairman() {
 
     .get(`${apiUrl}/Repairman`, requestOptions)
 
-    .then((res) => res.data)
+    .then((res) => res)
 
     .catch((e) => e.response);
 

@@ -17,12 +17,13 @@ import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
 import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
 import Cleaning from './Page/MainWeb/Clearning/TaskOverview';
+import ServicePage from './Page/MainWeb/ServiceRequest/ServicePage';
 
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning","/service"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -51,6 +52,7 @@ const App: React.FC = () => {
         <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
         
+        <Route path="/service" element={<ServicePage />} />
 
       </Routes>
     </>
