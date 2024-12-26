@@ -415,6 +415,19 @@ async function GetListTransaction() {
       return e.response;
     });
 }
+async function GetListCardAndUser() {
+  return await axios
+    .get(`${apiUrl}/get-list-card-and-user`, requestOptions)
+    .then((res) => {
+      const { cards, users } = res.data;
+      return { cards, users };
+    })
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
+
 /* async function GetListLastTransaction() {
   return await axios
     .get(`${apiUrl}/get-list-last-parkingtransaction`, requestOptions)
@@ -429,7 +442,7 @@ async function CreateParkingCard(data: ParkingCardInterface) {
     .post(`${apiUrl}/create-parkingcard`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
-}		
+}
 async function CreateParkingTransaction(data: ParkingTransactionInterface) {
   return await axios
     .post(`${apiUrl}/create-parkingtransaction`, data, requestOptions)
@@ -698,6 +711,7 @@ export {
       // Car Parking
   GetListCard,
   GetListTransaction,
+  GetListCardAndUser,
   GetListZone,
   GetZoneByTypePark,
   //GetListLastTransaction,

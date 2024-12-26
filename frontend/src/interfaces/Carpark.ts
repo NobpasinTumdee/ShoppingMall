@@ -1,10 +1,10 @@
 export interface ParkingCardInterface {
-  ID: string;
+  ID?: string;
   ExpiryDate?: string;
   UpdatedAt?: string;
   TypePark?: {
-    ID: number;
-    Type: string;
+    ID?: number;
+    Type?: string;
   };
   StoreID?: number;
   MembershipCustomerID?: number;
@@ -12,6 +12,9 @@ export interface ParkingCardInterface {
     ID?: number;
     Status?: string;
   };
+  UserID?: number;
+  TypeParkID?: number;
+  StatusCardID?: number;
   ParkingFeePolicyID?: number;
   User?: {
     ID?: number;

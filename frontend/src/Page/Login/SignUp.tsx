@@ -28,7 +28,7 @@ const SignUp: React.FC = () => {
         } else {
               messageApi.open({
                 type: "error",
-                content: "เกิดข้อผิดพลาด !",
+                content: "กรุณาเปลี่ยนชื่อ ชื่อนี้ถูกใช้แล้ว!",
             });
         }
     };

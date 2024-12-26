@@ -38,8 +38,9 @@ type User struct {
 
 	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
 
-	ParkingTransaction []ParkingTransaction `gorm:"foreignKey:UserID"`
-	ParkingPayment     []ParkingPayment     `gorm:"foreignKey:UserID"`
+	ParkingTransaction 	[]ParkingTransaction `gorm:"foreignKey:UserID"`
+	ParkingCard 		[]ParkingCard `gorm:"foreignKey:UserID"`
+	ParkingPayment     	[]ParkingPayment     `gorm:"foreignKey:UserID"`
 }
 
 type MessageBoard struct {

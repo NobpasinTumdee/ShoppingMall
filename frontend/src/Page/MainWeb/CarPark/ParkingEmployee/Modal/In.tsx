@@ -75,7 +75,7 @@ const IN: React.FC<InProps> = ({
       }
     };
     if (isModalInVisible) fetchData();
-  }, [isModalInVisible]);
+  }, [isModalInVisible,]);
 
   const handleCardClick = (index: any) => {
     setSelectedCardIndex(index === selectedCardIndex ? null : index);
@@ -99,7 +99,7 @@ const IN: React.FC<InProps> = ({
       return;
     }
 
-    if (selectedCardIndex === null || !carLicensePlate || !carColor || !carMake) {
+    if (selectedCardIndex === null ) {
       message.error(
         "Please select a parking zone and input all!"
       );
@@ -113,6 +113,13 @@ const IN: React.FC<InProps> = ({
     }
 
     const imageUrl = fileList[0]?.thumbUrl || null; // Ensure imageUrl is valid or null
+    
+    if ( !carLicensePlate || imageUrl === null || !carColor || !carMake) {
+      message.error(
+        "Please select a parking zone and input all!"
+      );
+      return;
+    }
 
     const CardTransData = {
       ReservationDate: new Date().toISOString(),

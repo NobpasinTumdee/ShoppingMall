@@ -33,6 +33,7 @@ import IN from "./Modal/In";
 import OUT from "./Modal/Out";
 import { NavBar } from "../../../Component/NavBar";
 import AddCardModal from "./Modal/AddCard";
+import { QrReader } from "react-qr-reader";
 
 //import "./../Store/StoreAndPay.css";
 
@@ -57,6 +58,8 @@ const CarPark: React.FC = () => {
   const [isModalInVisible, setIsModalInVisible] = useState<boolean>(false);
   const [isModalOutVisible, setIsModalOutVisible] = useState<boolean>(false);
   const [isAddCardModalVisible, setIsAddCardModalVisible] = useState(false);
+  const [data, setData] = useState("No result");
+  const [isCameraActive, setIsCameraActive] = useState<boolean>(true);
 
   const columnsCarIn = [
     { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
@@ -79,12 +82,19 @@ const CarPark: React.FC = () => {
       render: (_: any, record: ParkingCardInterface) => (
         <Button
           type="primary"
-          onClick={() => handleStatusClick(record.StatusCard?.Status || "", record)}
+          onClick={() =>
+            handleStatusClick(record.StatusCard?.Status || "", record)
+          }
         >
-          {record.StatusCard?.Status === "IN" ? "IN" 
-          : record.StatusCard?.Status === "OUT" ? "OUT"
-          : record.StatusCard?.Status === "Expired" ? "Expired"
-          : "Un Used"}
+          {record.StatusCard?.Status === "IN"
+            ? "IN"
+            : record.StatusCard?.Status === "OUT"
+            ? "OUT"
+            : record.StatusCard?.Status === "Expired"
+            ? "Expired"
+            : record.StatusCard?.Status === "Reserved"
+            ? "IN"
+            : "Un Used"}
         </Button>
       ),
     },
@@ -173,7 +183,7 @@ const CarPark: React.FC = () => {
         return latestTransaction?.Color || "";
       },
     },
-/*     {
+    /*     {
       title: "Car Make",
       dataIndex: "ParkingTransaction.Make",
       key: "Make",
@@ -250,12 +260,89 @@ const CarPark: React.FC = () => {
       render: (_: any, record: ParkingCardInterface) => (
         <Button
           type="primary"
-          onClick={() => handleStatusClick(record.StatusCard?.Status || "", record)}
+          onClick={() =>
+            handleStatusClick(record.StatusCard?.Status || "", record)
+          }
         >
-          {record.StatusCard?.Status === "IN" ? "IN" 
-          : record.StatusCard?.Status === "OUT" ? "OUT"
-          : record.StatusCard?.Status === "Expired" ? "Expired"
-          : "Un Used"}
+          {record.StatusCard?.Status === "IN"
+            ? "IN"
+            : record.StatusCard?.Status === "OUT"
+            ? "OUT"
+            : record.StatusCard?.Status === "Expired"
+            ? "Expired"
+            : "Un Used"}
+        </Button>
+      ),
+    },
+    {
+      title: "History",
+      key: "history",
+      fixed: "right" as const,
+      render: (_: any, record: ParkingCardInterface) => (
+        <Link to="/CarPark/HistoryCard">
+          <Button onClick={() => handleHistoryClick(record)}>History</Button>
+        </Link>
+      ),
+    },
+    {
+      title: "",
+      key: "delete",
+      fixed: "right" as const,
+      render: (_: any, record: ParkingCardInterface) => (
+        <Popconfirm
+          title="Sure to delete?"
+          onConfirm={() => handleDeleteCard(record.ID)}
+        >
+          <DeleteOutlined />
+        </Popconfirm>
+      ),
+    },
+  ];
+  const columnsReserved = [
+    { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
+    {
+      title: "Card Type",
+      key: "TypePark.Type",
+      render: (_: any, record: any) => record.TypePark?.Type || "",
+    },
+    {
+      title: "ExpiryDate",
+      dataIndex: "ExpiryDate",
+      key: "ExpiryDate",
+      render: (_: any, record: any) =>
+        formatDate(new Date(record.ExpiryDate)) || "",
+    },
+    {
+      title: "ReservationDate",
+      dataIndex: "ParkingTransaction.ReservationDate",
+      key: "ReservationDate",
+      render: (_: any, record: any) => {
+        const parkingTransactions = record.ParkingTransaction || [];
+        const latestTransaction =
+          parkingTransactions.length > 0
+            ? parkingTransactions.sort(
+                (a: any, b: any) =>
+                  new Date(b.EntryTime).getTime() -
+                  new Date(a.EntryTime).getTime()
+              )[0]
+            : null;
+
+        const reservationDate = latestTransaction?.ReservationDate;
+        return reservationDate ? formatDate(new Date(reservationDate)) : "";
+      },
+    },
+    {
+      title: "Status",
+      key: "StatusCard.Status",
+      fixed: "right" as const,
+      render: (_: any, record: ParkingCardInterface) => (
+        <Button
+          type="primary"
+          onClick={() =>
+            handleStatusClick(record.StatusCard?.Status || "", record)
+          }
+        >
+          {record.StatusCard?.Status === "Reserved" ? "Reserved" : "IN"}
         </Button>
       ),
     },
@@ -376,7 +463,15 @@ const CarPark: React.FC = () => {
 
     if (filtered.length > 0) {
       const currentStatus = filtered[0].StatusCard?.Status;
-      setSelectedฺButtonInOutDefault(currentStatus === "IN" ? "IN" : currentStatus === "OUT" ? "OUT" : "Expired");
+      setSelectedฺButtonInOutDefault(
+        currentStatus === "IN"
+          ? "IN"
+          : currentStatus === "OUT"
+          ? "OUT"
+          : currentStatus === "Reserved"
+          ? "Reserved"
+          : "Expired"
+      );
     }
   };
 
@@ -395,7 +490,7 @@ const CarPark: React.FC = () => {
         item.IsActive === selectedฺButtonInOut
     );
     setFilteredData(filtered); */
-  }, []);
+}, []);
 
   const handleStatusClick = (status: string, record: ParkingCardInterface) => {
     const updatedCards = cards.map((card) =>
@@ -405,12 +500,12 @@ const CarPark: React.FC = () => {
     setCards(updatedCards);
     setSelectedCard(record);
     setSelectedฺButtonInOutDefault(status);
-
-    if (status === "IN") {
+    console.log("status: ", status)
+    if (status === "IN" || status === "Reserved") {
       setIsModalInVisible(true);
-    } else {
+    } else if (status === "OUT") {
       setIsModalOutVisible(true);
-    }
+    } else {}
 
     const filtered = updatedCards.filter(
       (item) =>
@@ -446,10 +541,28 @@ const CarPark: React.FC = () => {
     }, 500);
   };
 
+  const toggleCamera = () => {
+    setIsCameraActive((prev) => !prev); // Toggle camera on/off
+  };
+
+  const handleCamera = () => {
+    try {
+      const filtered = cards.filter((item) =>
+        item.ID?.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredData(filtered);
+      console.log("Filtered Data: ", filtered); // ตรวจสอบผลลัพธ์ที่กรอง
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      message.error("An error occurred while fetching data.");
+    }
+  };
+  
   const handleGeneralCardClick = async () => {
     try {
+      // ตรวจสอบว่า StatusCard.Status เป็น 'IN' หรือไม่
       const availableCards = cards.filter(
-        (card: ParkingCardInterface) => card.StatusCard === IN
+        (card: ParkingCardInterface) => card.StatusCard?.Status === "IN"
       );
 
       if (availableCards.length > 0) {
@@ -462,7 +575,7 @@ const CarPark: React.FC = () => {
         const filtered = cards.filter(
           (item) =>
             item.ID?.toLowerCase().includes(randomCard.ID.toLowerCase()) &&
-            item.StatusCard === IN
+            item.StatusCard?.Status === "IN"
         );
         setFilteredData(filtered);
       } else {
@@ -530,6 +643,28 @@ const CarPark: React.FC = () => {
             style={{ gap: "16px", marginTop: "30px" }}
           >
             <Col>
+              <Button onClick={toggleCamera}>
+                {isCameraActive ? "Turn Off" : "Scan QR Code"}
+              </Button>
+              {!isCameraActive && (
+                <QrReader
+                  onResult={(result: any, error: any) => {
+                    if (result) {
+                      const scannedText = result.text;
+                      setOtp(scannedText); // ตั้งค่า OTP จาก QR code
+                      setSearchValue(scannedText); // อัพเดต searchValue ตาม OTP ที่แสกน
+                      handleCamera(); // ทำการกรองข้อมูล
+                    }
+
+                    if (error) {
+                      console.info(error);
+                    }
+                  }}
+                  style={{ width: "100%" }}{...sharedProps}
+                />
+              )}
+            </Col>
+            <Col>
               <Card>
                 <Flex justify="space-between" gap={"16px"}>
                   <div className="text-id-card">ID CARD</div>
@@ -566,12 +701,12 @@ const CarPark: React.FC = () => {
               <Space>
                 <Button
                   type={
-                    selectedฺButtonInOutDefault === "IN" 
-                      ? "primary" 
-                      : selectedฺButtonInOutDefault === "OUT" 
-                      ? "default"  
-                      : "default"   
-                  }                  
+                    selectedฺButtonInOutDefault === "IN"
+                      ? "primary"
+                      : selectedฺButtonInOutDefault === "OUT"
+                      ? "default"
+                      : "default"
+                  }
                   onClick={() => {
                     setSelectedฺButtonInOutDefault("IN");
                     handleReset();
@@ -581,8 +716,11 @@ const CarPark: React.FC = () => {
                 </Button>
                 <Button
                   type={
-                    selectedฺButtonInOutDefault === "OUT" ? "primary" 
-                    : selectedฺButtonInOutDefault === "IN" ? "default" : "default"
+                    selectedฺButtonInOutDefault === "OUT"
+                      ? "primary"
+                      : selectedฺButtonInOutDefault === "IN"
+                      ? "default"
+                      : "default"
                   }
                   onClick={() => {
                     setSelectedฺButtonInOutDefault("OUT");
@@ -590,6 +728,21 @@ const CarPark: React.FC = () => {
                   }}
                 >
                   Car OUT
+                </Button>
+                <Button
+                  type={
+                    selectedฺButtonInOutDefault === "Reserved"
+                      ? "primary"
+                      : selectedฺButtonInOutDefault === "IN" && "OUT"
+                      ? "default"
+                      : "default"
+                  }
+                  onClick={() => {
+                    setSelectedฺButtonInOutDefault("Reserved");
+                    handleReset();
+                  }}
+                >
+                  Reserved
                 </Button>
               </Space>
             </Row>
@@ -599,14 +752,26 @@ const CarPark: React.FC = () => {
               gutter={{ xs: 24, sm: 24, md: 24 }}
             >
               <Table
-                columns={selectedฺButtonInOutDefault === "OUT" ? columnsCarOut : selectedฺButtonInOutDefault === "IN" ? columnsCarIn : columnsCarIn}
+                columns={
+                  selectedฺButtonInOutDefault === "OUT"
+                    ? columnsCarOut
+                    : selectedฺButtonInOutDefault === "IN"
+                    ? columnsCarIn
+                    : selectedฺButtonInOutDefault === "Reserved"
+                    ? columnsReserved
+                    : columnsCarIn
+                }
                 dataSource={
                   searchValue
                     ? filteredData.filter(
-                        (card) => card.StatusCard?.Status === selectedฺButtonInOutDefault
+                        (card) =>
+                          card.StatusCard?.Status ===
+                          selectedฺButtonInOutDefault
                       )
                     : cards.filter(
-                        (card) => card.StatusCard?.Status === selectedฺButtonInOutDefault
+                        (card) =>
+                          card.StatusCard?.Status ===
+                          selectedฺButtonInOutDefault
                       )
                 }
                 loading={loading}

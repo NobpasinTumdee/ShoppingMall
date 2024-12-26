@@ -2,7 +2,7 @@ package CarPark
 
 import (
 	//"errors" // เพิ่ม import สำหรับ package errors
-	"strings"
+	//"strings"
 
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
@@ -49,16 +49,13 @@ func UpdateParkingZone(c *gin.Context) {
 
 func GetZoneByTypePark(c *gin.Context) {
     var zones []entity.ParkingZone
-    typePark := c.Param("type")
-
-    // แยกค่าของ typePark โดยใช้เครื่องหมายคอมม่า
-    typeParks := strings.Split(typePark, ",")
+    typePark := c.Param("type") // รับค่า type จาก URL params
 
     db := config.DB()
 
-    // ค้นหา TypePark ตามที่แยกมา
+    // ค้นหาบันทึก TypePark ที่ตรงกับค่า type ที่ส่งมา
     var typeParkRecords []entity.TypePark
-    if err := db.Where("Type IN (?)", typeParks).Find(&typeParkRecords).Error; err != nil {
+    if err := db.Where("Type = ?", typePark).Find(&typeParkRecords).Error; err != nil {
         c.JSON(http.StatusNotFound, gin.H{"error": "TypePark not found"})
         return
     }
@@ -66,7 +63,7 @@ func GetZoneByTypePark(c *gin.Context) {
     // ค้นหาทุกๆ ParkingZones ที่เชื่อมโยงกับ TypePark ที่พบ
     for _, typeParkRecord := range typeParkRecords {
         var zone []entity.ParkingZone
-        if err := db.Where("type_park_id = ?", typeParkRecord.ID).First(&zone).Error; err != nil {
+        if err := db.Where("type_park_id = ?", typeParkRecord.ID).Find(&zone).Error; err != nil {
             c.JSON(http.StatusNotFound, gin.H{"error": "Parking zones not found"})
             return
         }
@@ -75,5 +72,5 @@ func GetZoneByTypePark(c *gin.Context) {
     }
 
     // ส่งผลลัพธ์
-    c.JSON(http.StatusOK, &zones)
+    c.JSON(http.StatusOK, zones)
 }

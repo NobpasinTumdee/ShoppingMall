@@ -48,7 +48,7 @@ func SetupDatabase() {
 		&entity.TypePark{},
 		&entity.StatusCard{},
 		&entity.StatusPayment{},
-		&entity.MembershipCustomer{},
+		//&entity.MembershipCustomer{},
 		&entity.ParkingCard{},
 		&entity.ParkingZone{},
 		&entity.ParkingCardZone{},
@@ -86,8 +86,6 @@ func SetupDatabase() {
 		{UserName: "Member", Password: hashedPassword, Email: "Member@g.sut.ac.th", FirstName: "Member", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
 		{UserName: "Cleaning", Password: hashedPassword, Email: "Cleaning@g.sut.ac.th", FirstName: "Cleaning", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/kokomijpg.png", ProfileBackground: "", Status: "Cleaning"},
 		{UserName: "Repairman", Password: hashedPassword, Email: "Repairman@g.sut.ac.th", FirstName: "Repairman", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "Repairman"},
-		{UserName: "ParkingAttendant", Password: hashedPassword, Email: "ParkingAttendant@g.sut.ac.th", FirstName: "Parking Attendant", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "ParkingAttendant"},
-		{UserName: "MembershipCustomer", Password: hashedPassword, Email: "MembershipCustomer@g.sut.ac.th", FirstName: "Membership Customer", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "MembershipCustomer"},
 	}
 	for _, pkg := range User {
 		db.FirstOrCreate(&pkg, entity.User{UserName: pkg.UserName})
@@ -348,116 +346,32 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.TypePark{Type: pkg.Type})
 	}
 
-	// MembershipCustomer
-	MembershipCustomers := []entity.MembershipCustomer{
-    	{FirstName: "Kittisorn", LastName: "Ngandee", DOB: time.Date(1998, 5, 23, 0, 0, 0, 0, time.UTC), Tel: "0811981663", IssueDate: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Pachnida", LastName: "Wamakarn", DOB: time.Date(1998, 5, 24, 0, 0, 0, 0, time.UTC), Tel: "0811981664", IssueDate: time.Date(2004, 1, 2, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 2, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Jedsadaporn", LastName: "Pinjai", DOB: time.Date(1998, 5, 25, 0, 0, 0, 0, time.UTC), Tel: "0811981665", IssueDate: time.Date(2004, 1, 3, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 3, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Tortakul", LastName: "Subka", DOB: time.Date(1998, 5, 26, 0, 0, 0, 0, time.UTC), Tel: "0811981666", IssueDate: time.Date(2004, 1, 4, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 4, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Jularat", LastName: "Piangthaisong", DOB: time.Date(1998, 5, 27, 0, 0, 0, 0, time.UTC), Tel: "0811981667", IssueDate: time.Date(2004, 1, 5, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 5, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Nattawut", LastName: "Srisung", DOB: time.Date(1998, 5, 28, 0, 0, 0, 0, time.UTC), Tel: "0811981668", IssueDate: time.Date(2004, 1, 6, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 6, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Sutthipong", LastName: "Kittiwattanawong", DOB: time.Date(1998, 5, 29, 0, 0, 0, 0, time.UTC), Tel: "0811981669", IssueDate: time.Date(2004, 1, 7, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 7, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Chayanon", LastName: "Boonchud", DOB: time.Date(1998, 5, 30, 0, 0, 0, 0, time.UTC), Tel: "0811981670", IssueDate: time.Date(2004, 1, 8, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 8, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Sakda", LastName: "Rattanawong", DOB: time.Date(1998, 5, 31, 0, 0, 0, 0, time.UTC), Tel: "0811981671", IssueDate: time.Date(2004, 1, 9, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 9, 0, 0, 0, 0, time.UTC)},
-    	{FirstName: "Narissara", LastName: "Sutthiwong", DOB: time.Date(1998, 6, 1, 0, 0, 0, 0, time.UTC), Tel: "0811981672", IssueDate: time.Date(2004, 1, 10, 0, 0, 0, 0, time.UTC), ExpiryDate: time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC)},
-	}
-	for _, customer := range MembershipCustomers {
-    	db.FirstOrCreate(&customer, entity.MembershipCustomer{FirstName: customer.FirstName, LastName: customer.LastName})
-	}
-
-
 	// ParkingZone
-	ParkingZones := []entity.ParkingZone{
-		{Name: "VIP", Capacity: 150, AvailableZone: 150, Image: "https://scontent.fbkk29-5.fna.fbcdn.net/v/t1.6435-9/69634816_3284945448183041_5929657803344969728_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH7aZEh79aE3GrCMxEycVazK-Qi7lmfAMkr5CLuWZ8AyQdP4deNxQ9TxWEA_xaEXJJ1bkMeLxaK6l0IguiF1ScP&_nc_ohc=HHwdlMsqInMQ7kNvgHcBK4q&_nc_zt=23&_nc_ht=scontent.fbkk29-5.fna&_nc_gid=AysvpZXPyfWOMR0V7BbkNjS&oh=00_AYB86cIxoXTgtujJm4Oha2iNfyQ5ADMaB1vD-Rp38dbzaw&oe=676FFD02", TypeParkID: 1},
-		{Name: "STORE", Capacity: 150, AvailableZone: 150, Image: "https://scontent.fbkk29-1.fna.fbcdn.net/v/t1.15752-9/467472946_1244156386684689_3812533161216721348_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEf-7GCGOcBEkWwVtPsZDA7Mo9cV6lZQjgyj1xXqVlCOLp0Vo2D3380RKH459Xq0reVeWE0GjRPuNp0Aygtng54&_nc_ohc=L7HrMPnJMlQQ7kNvgGUUJe-&_nc_zt=23&_nc_ht=scontent.fbkk29-1.fna&oh=03_Q7cD1QEtF_SJWRQn9oIsRDoLWWJ-2xOq50VV9Ah_4oY5q3HPJw&oe=676FFEEF", TypeParkID: 2},
-		{Name: "GENERAL", Capacity: 500, AvailableZone: 500, Image: "https://image.makewebeasy.net/makeweb/m_1920x0/ODn1Yn6Lo/CARPARK/%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%88%E0%B8%AD_2565_01_31_%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%B2_14_00_35.png?v=202012190947", TypeParkID: 3},
-	}
-	for _, zone := range ParkingZones {
-		db.FirstOrCreate(&zone, entity.ParkingZone{Name: zone.Name, Capacity: zone.Capacity, AvailableZone: zone.AvailableZone, Image: zone.Image})
+	var countZone int64
+	db.Model(&entity.ParkingZone{}).Count(&countZone)
+	if countZone > 3 {
+		fmt.Println("Cannot create more than 3 parking zones.")
+	} else {
+		// หากจำนวน ParkingZone ไม่เกิน 3 ก็สามารถสร้างได้
+		ParkingZones := []entity.ParkingZone{
+			{Name: "VIP", Capacity: 150, AvailableZone: 150, Image: "https://scontent.fbkk29-5.fna.fbcdn.net/v/t1.6435-9/69634816_3284945448183041_5929657803344969728_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH7aZEh79aE3GrCMxEycVazK-Qi7lmfAMkr5CLuWZ8AyQdP4deNxQ9TxWEA_xaEXJJ1bkMeLxaK6l0IguiF1ScP&_nc_ohc=HHwdlMsqInMQ7kNvgHcBK4q&_nc_zt=23&_nc_ht=scontent.fbkk29-5.fna&_nc_gid=AysvpZXPyfWOMR0V7BbkNjS&oh=00_AYB86cIxoXTgtujJm4Oha2iNfyQ5ADMaB1vD-Rp38dbzaw&oe=676FFD02", TypeParkID: 1},
+			{Name: "STORE", Capacity: 150, AvailableZone: 150, Image: "https://scontent.fbkk29-1.fna.fbcdn.net/v/t1.15752-9/467472946_1244156386684689_3812533161216721348_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEf-7GCGOcBEkWwVtPsZDA7Mo9cV6lZQjgyj1xXqVlCOLp0Vo2D3380RKH459Xq0reVeWE0GjRPuNp0Aygtng54&_nc_ohc=L7HrMPnJMlQQ7kNvgGUUJe-&_nc_zt=23&_nc_ht=scontent.fbkk29-1.fna&oh=03_Q7cD1QEtF_SJWRQn9oIsRDoLWWJ-2xOq50VV9Ah_4oY5q3HPJw&oe=676FFEEF", TypeParkID: 2},
+			{Name: "GENERAL", Capacity: 500, AvailableZone: 500, Image: "https://www.livinginsider.com/upload/topic1660/648a696420bb4_71335.jpeg", TypeParkID: 3},
+		}
+		for _, zone := range ParkingZones {
+			db.FirstOrCreate(&zone, entity.ParkingZone{Name: zone.Name, Capacity: zone.Capacity, AvailableZone: zone.AvailableZone, Image: zone.Image})
+		}
 	}
 
 	// ParkingCard
-	var stores []entity.Store
-	var membershipCustomers []entity.MembershipCustomer
-	db.Find(&stores)
-	db.Find(&membershipCustomers)
 
-	// สร้าง ParkingCard สำหรับ Store
-	for _, store := range stores {
-		var lastCard entity.ParkingCard
-		result := db.Last(&lastCard)
-
-		// ตรวจสอบว่า Last() พบข้อมูลหรือไม่
-		if result.Error != nil && result.Error.Error() == "record not found" {
-			// ถ้าไม่มีข้อมูลในตาราง parking_cards
-			newID := "0001" // กำหนดเป็น 0001 หรือค่าเริ่มต้นอื่น ๆ
-			parkingCard := entity.ParkingCard{
-				ID:                 newID,
-				StoreID:            store.ID,
-				ExpiryDate:         store.LastDay,
-				StatusCardID:       1,
-				TypeParkID:         2,
-				ParkingFeePolicyID: 2,
-			}
-			db.Create(&parkingCard) // สร้างบันทึกใหม่
-		} else if result.Error != nil {
-			// ถ้ามีข้อผิดพลาดอื่น ๆ
-			fmt.Println("Error fetching last parking card:", result.Error)
-			return
-		} else {
-			// ถ้าพบข้อมูลในตาราง
-			lastID, err := strconv.Atoi(lastCard.ID)
-			if err != nil {
-				fmt.Println("Error converting ID:", err)
-				return
-			}
-			newID := fmt.Sprintf("%04d", lastID+1)
-
-			parkingCard := entity.ParkingCard{
-				ID:                 newID,
-				StoreID:            store.ID,
-				ExpiryDate:         store.LastDay,
-				StatusCardID:       1,
-				TypeParkID:         2,
-				ParkingFeePolicyID: 2,
-			}
-
-			db.FirstOrCreate(&parkingCard, entity.ParkingCard{StoreID: parkingCard.StoreID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
-		}
+	cards := []entity.ParkingCard{
+		{ID: "0001", ExpiryDate: time.Now().AddDate(1, 0, 0), UserID: 1, StoreID: 0, StatusCardID: 1, TypeParkID: 3, ParkingFeePolicyID: 3},
+		{ID: "0002", ExpiryDate: time.Now().AddDate(1, 0, 0), UserID: 2, StoreID: 0, StatusCardID: 1, TypeParkID: 3, ParkingFeePolicyID: 3},
+		{ID: "0003", ExpiryDate: time.Now().AddDate(1, 0, 0), UserID: 5, StoreID: 0, StatusCardID: 1, TypeParkID: 1, ParkingFeePolicyID: 1},
 	}
-
-	// สร้าง ParkingCard สำหรับ MembershipCustomer
-	for _, membershipCustomer := range membershipCustomers {
-		var lastCard entity.ParkingCard
-		result := db.Last(&lastCard)
-
-		if result.Error != nil && result.Error.Error() != "record not found" {
-			fmt.Println("Error fetching last parking card:", result.Error)
-			return
-		}
-
-		var newID string
-		if result.RowsAffected == 0 {
-			newID = "0001"
-		} else {
-			lastID, err := strconv.Atoi(lastCard.ID)
-			if err != nil {
-				fmt.Println("Error converting ID:", err)
-				return
-			}
-			newID = fmt.Sprintf("%04d", lastID+1)
-		}
-
-		parkingCard := entity.ParkingCard{
-			ID:                   newID,
-			MembershipCustomerID: membershipCustomer.ID,
-			ExpiryDate:           membershipCustomer.ExpiryDate,
-			StatusCardID:         1,
-			TypeParkID:           1,
-			ParkingFeePolicyID:   1,
-		}
-
-		db.FirstOrCreate(&parkingCard, entity.ParkingCard{MembershipCustomerID: parkingCard.MembershipCustomerID, ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
+	for _, card := range cards {
+		db.FirstOrCreate(&card, entity.ParkingCard{ID: card.ID})
 	}
 
 	// เพิ่ม ParkingCard สำหรับ GENERAL
@@ -465,7 +379,10 @@ func SetupDatabase() {
 	var existingGeneralCards int64
 	db.First(&generalZone, "name = ?", "GENERAL")
 
-	db.Model(&entity.ParkingCard{}).Where("membership_customer_id = 0 AND store_id = 0").Count(&existingGeneralCards)
+	db.Model(&entity.ParkingCard{}).
+		Joins("JOIN type_parks ON type_parks.id = parking_cards.type_park_id").
+		Where("type_parks.type = ?", "GENERAL").
+		Count(&existingGeneralCards)
 
 	generalZoneCapacity := int(generalZone.Capacity)
 	cardsToCreate := generalZoneCapacity - int(existingGeneralCards)
@@ -517,12 +434,13 @@ func SetupDatabase() {
 		var zonesToAssign []entity.ParkingZone
 
 		// ตรวจสอบเพื่อกำหนด TypeCard
-		if card.StoreID != 0 {
+		if card.TypeParkID == 2 { // 2 = STORE
 			zonesToAssign = append(zonesToAssign, zoneMap["STORE"], zoneMap["GENERAL"])
-		} else if card.MembershipCustomerID != 0 {
+		} else if card.TypeParkID == 1 { // 1 = VIP
 			zonesToAssign = append(zonesToAssign, zoneMap["VIP"], zoneMap["GENERAL"])
-		} else {
+		} else if card.TypeParkID == 3 {
 			zonesToAssign = append(zonesToAssign, zoneMap["GENERAL"])
+		} else {
 		}
 
 		// สร้าง ParkingCardZone
@@ -539,7 +457,7 @@ func SetupDatabase() {
 		}
 	}
 
-	//ParkingFeePolicy
+	// ParkingFeePolicy
 	feePolicy := []entity.ParkingFeePolicy{
 		{FreeHours: 3.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 0, IsExempt: false, TypeParkID: 1},
 		{FreeHours: 4.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, IsExempt: false, TypeParkID: 2},

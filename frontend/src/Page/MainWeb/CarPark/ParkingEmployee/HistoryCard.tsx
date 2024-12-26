@@ -108,12 +108,6 @@ const HistoryCard: React.FC = () => {
       render: (text: string) => (text ? formatDate(text) : " "),
     },
     {
-      title: "Exit Time",
-      dataIndex: "ExitTime",
-      key: "ExitTime",
-      render: (text: string) => (text ? formatDate(text) : " "),
-    },
-    {
       title: "Amount",
       dataIndex: "Amount",
       key: "Amount",
