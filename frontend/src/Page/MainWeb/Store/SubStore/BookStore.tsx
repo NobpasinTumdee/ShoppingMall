@@ -445,7 +445,7 @@ const BookStore: React.FC = () => {
                                 />
                                 <label htmlFor="picStore">Preview Store</label>
                                 <p style={{fontSize: '20px',margin: '0px'}}>You can upload up to 4 sample images of your store.</p>
-                                <Upload fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
+                                <Upload id="Pic" fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
                                     maxCount={4} multiple={false} listType="picture-card" >
                                     <div><PlusOutlined /><div style={{ marginTop: 8 }}>อัพโหลด</div></div>
                                 </Upload>
@@ -459,6 +459,7 @@ const BookStore: React.FC = () => {
                                     rows={10}
                                     value={formData.description}
                                     onChange={handleChange}
+                                    required={true}
                                 />
                             </div>
                     </div>

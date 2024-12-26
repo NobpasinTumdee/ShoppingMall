@@ -1,21 +1,22 @@
 package entity
 
 import (
+	"time"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	UserName          string `json:"UserName"`
-	Password          string `json:"Password"`
-	Email             string `json:"Email"`
-	Profile           string `json:"Profile"`
-	ProfileBackground string `json:"ProfileBackground"`
-	FirstName         string `json:"FirstName"`
-	LastName          string `json:"LastName"`
-	Age               int    `json:"Age"`
-	Tel               string `json:"Tel"`
-	Status            string `json:"Status"`
+	UserName  				string 		`json:"UserName"`// valid:"required~User Name is required"
+	Password     			string 		`json:"Password"`// valid:"required~Password is required"
+	Email     				string 		`json:"Email"`// valid:"required~Email is required, email~Email is invalid"
+	Profile     			string 		`json:"Profile"`
+	ProfileBackground     	string 		`json:"ProfileBackground"`
+	FirstName     			string 		`json:"FirstName"`
+	LastName     			string 		`json:"LastName"`
+	Age     				int 		`json:"Age"`
+	Tel     				string 		`json:"Tel"`
+	Status     				string 		`json:"Status"`
 
 
 
@@ -33,6 +34,7 @@ type User struct {
 
 	InfoUserStore []InfoUserStore	`gorm:"foreignKey:UserID"`
 	TaxUser []TaxUser	`gorm:"foreignKey:UserID"`
+	Event []Event	`gorm:"foreignKey:UserID"`
 
 	CleaningRecords []CleaningRecord	`gorm:"foreignKey:UserID"` //บันทึกการทำความสะอาด
 
@@ -75,4 +77,14 @@ type TaxUser struct {
 	User   					User 		`gorm:"foreignKey:UserID"`
 
 	Receipt 				[]Receipt 	`gorm:"foreignKey:UserTaxID"`
+}
+type Event struct {
+	gorm.Model
+	EventPic				string 		`json:"event_pic"`
+	EventTopic				string 		`json:"event_topic"`
+	EventDescription		string 		`json:"event_description"`
+	EventDate				time.Time 		`json:"event_date"`
+	
+	UserID 					uint 		`json:"UserID"`
+	User   					User 		`gorm:"foreignKey:UserID"`
 }

@@ -18,3 +18,13 @@ export interface MessageBoardInterface {
 	DescribtionNews?: 	string;
 	UserID?:			number;
 }
+export interface EventInterface {
+    ID?: 				number;
+	event_pic?: 		string;
+	event_topic?: 		string;
+	event_description?: string;
+	event_date?: 		Date;
+
+	User?: 				UsersInterface;
+	UserID?:			number;
+}

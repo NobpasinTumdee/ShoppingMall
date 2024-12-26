@@ -17,5 +17,5 @@ type CategoryInventory struct {
 	gorm.Model
 	CategoryName string    `json:"CategoryName"`
 
-	InventoryRequests []InventoryRequest `gorm:"many2many:RequestDetails;joinForeignKey:InventoryID;joinReferences:RequestID"`
+	Inventorys []Inventory `gorm:"foreignKey:CategoryID"`
 } 

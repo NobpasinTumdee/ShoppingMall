@@ -1,13 +1,15 @@
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
-import { UsersInterface , MessageBoardInterface } from "../../interfaces/UsersInterface";
+import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
+import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 import {
   ParkingCardInterface,
   ParkingTransactionInterface,
   ParkingZoneInterface,
 } from "../../interfaces/Carpark";
-import axios from "axios";
+
+import axios from 'axios';
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
 
@@ -48,6 +50,18 @@ async function GetUserById(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
+}
+// get user all
+async function GetUserAll() {
+
+  return await axios
+
+    .get(`${apiUrl}/user`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
 }
 // update User
 async function UpdateUserByid(id: string, data: UsersInterface) {
@@ -192,6 +206,30 @@ async function GetStoreByFloor(id: string) {
 
     .catch((e) => e.response);
 }
+// get Store by Floor-preload
+async function GetStoreByFloorPreload(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/store-preload/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Membership
+async function GetMembership() {
+
+  return await axios
+
+    .get(`${apiUrl}/Membership`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 // get Store by id
 async function GetStoreById(id: string) {
 
@@ -223,6 +261,18 @@ async function BackUpStore(data: BackupStoreInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
+}
+// get backUp by id
+async function GetBackUpByid(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/backupstore/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
 }
 // get Membership by id
 async function GetMembershipByid(id: string) {
@@ -396,6 +446,210 @@ async function CreateBill(data: ReceiptInterface) {
 
 }
 
+//============================Admin========================================
+// get Store WaitingForApproval
+async function GetStoreWaiting(status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/storeWaiting/${status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// get Event
+async function GetEvent() {
+
+  return await axios
+
+    .get(`${apiUrl}/event`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+// Create AddEvent
+async function AddEvent(data: EventInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/event`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete Event
+async function DeleteEvent(id: string) {
+  return await axios
+    .delete(`${apiUrl}/event/${id}`, requestOptions)
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => e.response);
+}
+//=============================อุปกรณ์=====================================
+// get Inventory
+async function ListInventory() {
+  return await axios
+
+  .get(`${apiUrl}/inventory`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+
+}
+// get CategoryInventory
+async function ListCategoryInventory() {
+
+return await axios
+
+  .get(`${apiUrl}/CategoryInventory`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+
+}
+// get Inventory by id
+async function GetInventoryById(id: string) {
+
+return await axios
+
+  .get(`${apiUrl}/inventory/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+
+
+}
+
+
+//===========================Hall==========================================
+//Get ListHall
+async function ListHall() {
+  
+  return await axios
+
+  .get(`${apiUrl}/hall`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetHallByID(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function CreateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function UpdateBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+  
+}
+async function DeleteBookingHall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+async function GetBookinghall(id: string) {
+  return await axios
+
+  .get(`${apiUrl}/bookinghall/${id}`,requestOptions)
+
+  .then((res) => res)
+
+  .catch((e) => e.response);
+}
+
+async function ListBookingHall() {
+  return await axios
+
+    .get(`${apiUrl}/bookings`, requestOptions)
+
+    .then((res) => res)
+    
+    .catch((e) => e.response);
+}
+//=============================Cleaning=====================================
+// get Area
+async function ListAreas() {
+
+  return await axios
+
+    .get(`${apiUrl}/Area`, requestOptions)
+
+    //.then((res) => res)//ดึงมาทั้งหมด
+    .then((res) => res.data) // ดึงเฉพาะข้อมูลที่เป็น Area
+
+    .catch((e) => e.response);
+
+}
+
+async function CreateCleaningRecord(data: CleaningRecordInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/CleaningRecord`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
+async function GetCleaningRecordsByArea(id: number) {
+
+  return await axios
+
+    .get(`${apiUrl}/CleaningRecordsByArea/${id}`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
+
+async function GetSchedulesByArea(id: number) {
+
+  return await axios
+
+    .get(`${apiUrl}/SchedulesByArea/${id}`, requestOptions)
+
+    .then((res) => res.data)
+
+    .catch((e) => e.response);
+
+}
 //============================ Car Park ========================================
 async function GetListCard() {
   return await axios
@@ -531,137 +785,11 @@ async function DeleteParkingCard(id: string) {
     .catch((e) => e.response);
 }
 
-
-
-
-
-
-//============================Admin========================================
-// get Store WaitingForApproval
-async function GetStoreWaiting(status: string) {
-
-  return await axios
-
-    .get(`${apiUrl}/storeWaiting/${status}`, requestOptions)
-
-    .then((res) => res)
-
-    .catch((e) => e.response);
-
-}
-//=============================อุปกรณ์=====================================
-// get Inventory
-async function ListInventory() {
-  return await axios
-
-  .get(`${apiUrl}/inventory`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-
-}
-// get CategoryInventory
-async function ListCategoryInventory() {
-
-return await axios
-
-  .get(`${apiUrl}/CategoryInventory`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-
-}
-// get Inventory by id
-async function GetInventoryById(id: string) {
-
-return await axios
-
-  .get(`${apiUrl}/inventory/${id}`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-
-
-}
-
-
-//===========================Hall==========================================
-//Get ListHall
-async function ListHall() {
-  
-  return await axios
-
-  .get(`${apiUrl}/hall`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-}
-async function GetHallByID(id: string) {
-  return await axios
-
-  .get(`${apiUrl}/hall/${id}`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-  
-}
-async function CreateBookingHall(id: string) {
-  return await axios
-
-  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-}
-async function UpdateBookingHall(id: string) {
-  return await axios
-
-  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-  
-}
-async function DeleteBookingHall(id: string) {
-  return await axios
-
-  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-}
-async function GetBookinghall(id: string) {
-  return await axios
-
-  .get(`${apiUrl}/bookinghall/${id}`,requestOptions)
-
-  .then((res) => res)
-
-  .catch((e) => e.response);
-}
-
-async function ListBookingHall() {
-  return await axios
-
-    .get(`${apiUrl}/bookings`, requestOptions)
-
-    .then((res) => res)
-    
-    .catch((e) => e.response);
-}
-
 export {
     SignIn,//user
     CreateUser,//user
     GetUserById,
+    GetUserAll,
     UpdateUserByid,
     AddStore,
     UserStoreByid,
@@ -675,10 +803,16 @@ export {
     
     GetStoreWaiting,//admin
     ListUser,
+    GetEvent,
+    AddEvent,
+    DeleteEvent,
 
     GetStoreByFloor,//store
+    GetStoreByFloorPreload,
+    GetMembership,
     UpdateStoreByid,
     BackUpStore,
+    GetBackUpByid,
     GetStoreById,
     GetMembershipByid,
     GetCommentByStore,//rating
@@ -708,22 +842,26 @@ export {
     ListCategoryInventory,
     GetInventoryById,
 
-      // Car Parking
-  GetListCard,
-  GetListTransaction,
-  GetListCardAndUser,
-  GetListZone,
-  GetZoneByTypePark,
-  //GetListLastTransaction,
-  CreateParkingCard,
-  CreateParkingTransaction,
-  UpdateParkingCard,
-  UpdateParkingZone,
-  UpdateParkingCardAndZone,
-  GetParkingCardByID,
-  GetParkingCardByUserID,
-  GetParkingCardWithZoneByID,
-  GetIdCardZone,
-  DeleteParkingCard,
-}
+    ListAreas,
+    CreateCleaningRecord,
+    GetCleaningRecordsByArea,
+    GetSchedulesByArea,
 
+    // Car Parking
+    GetListCard,
+    GetListTransaction,
+    GetListCardAndUser,
+    GetListZone,
+    GetZoneByTypePark,
+    //GetListLastTransaction,
+    CreateParkingCard,
+    CreateParkingTransaction,
+    UpdateParkingCard,
+    UpdateParkingZone,
+    UpdateParkingCardAndZone,
+    GetParkingCardByID,
+    GetParkingCardByUserID,
+    GetParkingCardWithZoneByID,
+    GetIdCardZone,
+    DeleteParkingCard,
+}

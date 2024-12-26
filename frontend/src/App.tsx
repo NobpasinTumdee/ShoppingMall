@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-route
 import Login from './Page/Login/Login';
 import Main from './Page/MainWeb/Main';
 import Admin from './Page/MainWeb/Admin/Admin';
+import { AdminEvent } from './Page/MainWeb/Admin/Admin';
 import AdminStore from './Page/MainWeb/Admin/AdminStore';
 import Store from './Page/MainWeb/Store/Store';
 import StorePayment from './Page/MainWeb/Store/StorePayment';
@@ -11,14 +12,14 @@ import Inbox from './Page/MainWeb/Inbox/Inbox';
 import BillStore from './Page/MainWeb/Store/BillStore';
 import Recruitment from './Page/Recruitment/Recruitment';
 import AdminJob from './Page/MainWeb/Admin/AdminJob';
+import BackUpStore from './Page/MainWeb/Admin/BackUpStore';
 import Inventory from './Page/MainWeb/Inventory/Inventory';
 import { NavBar } from './Page/Component/NavBar';
+import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
+import Cleaning from './Page/MainWeb/Clearning/TaskOverview';
 
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
-import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
-
-import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 
 import SignUp from './Page/Login/SignUp';
 import CarPark from './Page/MainWeb/CarPark/ParkingEmployee/CarPark';
@@ -29,7 +30,7 @@ import CarParkCustomerMain from './Page/MainWeb/CarPark/Customer/Main'
 import CarParkCustomerBook from './Page/MainWeb/CarPark/Customer/Booking'
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning"].includes(location.pathname);
   return (
     <>
       {Navbar && <NavBar />}
@@ -38,7 +39,9 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/Main" element={<Main />} />
         <Route path="/Admin" element={<Admin />} />
+        <Route path="/AdminEvent" element={<AdminEvent />} />
         <Route path="/AdminStore" element={<AdminStore />} />
+        <Route path="/BackUpStore" element={<BackUpStore />} />
         <Route path="/Store" element={<Store />} />
         <Route path="/StorePayment" element={<StorePayment />} />
         <Route path="/SubStore" element={<SubStore />} />

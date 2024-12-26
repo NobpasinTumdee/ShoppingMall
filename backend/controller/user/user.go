@@ -319,3 +319,57 @@ func GetListUserByStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, User)
 }
+
+// GET /event
+func ListEvent(c *gin.Context) {
+	var users []entity.Event
+	db := config.DB()
+
+	results := db.Preload("User").Select("id, event_pic, event_topic, event_description, event_date, user_id").Find(&users)
+
+	if results.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+// POST event
+func CreateEvent(c *gin.Context) {
+	var Event entity.Event
+
+	if err := c.ShouldBindJSON(&Event); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	u := entity.Event{
+		EventPic: Event.EventPic,
+		EventTopic: Event.EventTopic,
+		EventDescription: Event.EventDescription,
+		EventDate: Event.EventDate,
+	}
+
+	// บันทึก
+	if err := db.Create(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Save your Event success", "data": u})
+}
+// DELETE /event/:id
+func DeleteEvent(c *gin.Context) {
+
+	id := c.Param("id")
+	db := config.DB()
+	if tx := db.Exec("DELETE FROM events WHERE id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
+}

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './SubStore.css';
 import { useLocation } from 'react-router-dom';
-import {message} from 'antd'
+import {message,Upload} from 'antd'
+import type {  UploadFile, UploadProps } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from 'react-router-dom';
 
 //import { NavBar } from '../../../../Page/Component/NavBar';
@@ -11,7 +13,7 @@ import PicNoStore from '../../../../assets/icon/ForPage/Store/Store3.jpg';
 //API
 import { UsersInterface } from "../../../../interfaces/UsersInterface";
 import { RatingInterface , AverageRatingInterface , StoreInterface} from '../../../../interfaces/StoreInterface';
-import { GetUserById , GetCommentByStore , CreateComment , GetAvgCommentByStore , GetStoreById} from '../../../../services/https';
+import { GetUserById , GetCommentByStore , CreateComment , GetAvgCommentByStore , GetStoreById , UpdateStoreByid} from '../../../../services/https';
 
 const SubStore: React.FC = () => {
     const location = useLocation();
@@ -41,6 +43,7 @@ const SubStore: React.FC = () => {
             fetchStoreData(String(ID));
             fetchComment(String(ID));
             fetchRating(String(ID));
+            fetchUserWatching();
     }, []);
 
     const fetchStoreData = async (Storeid: string ) => {
@@ -64,10 +67,15 @@ const SubStore: React.FC = () => {
                 setUser(res.data);
                 //message.success("พบข้อมูลUser");
             }
+        } catch (error) {
+            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+        }
+    };
+    const fetchUserWatching = async () => {
+        try {
             const resWatch = await GetUserById(String(userIdstr));
             if (resWatch.status === 200) {
                 setUserWatch(resWatch.data);
-                //message.success("พบข้อมูลUser");
             }
         } catch (error) {
             message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
@@ -131,12 +139,18 @@ const SubStore: React.FC = () => {
     //=========================ตรวจสอบStatusStore============================================
     const [statusCanbook,setStatus] = useState(false);
     useEffect(() => {
-        if (Store?.StatusStore == 'This store is available for reservation.') {
-            setStatus(true);
+        if (Store?.StatusStore === 'This store is available for reservation.' && (userWatch?.Status === 'Admin' || userWatch?.Status === 'Member' || userWatch?.Status === 'Employee')) {
+                setStatus(true);
         }else{
             setStatus(false);
         }
-    }, [Store?.StatusStore]);
+        if (Store?.StatusStore !== 'This store is available for reservation.' && (userWatch?.Status === 'Admin' || userWatch?.UserName === Store?.User?.UserName)) {
+            setStatusEdit(true);
+        }else{
+            setStatusEdit(false);
+        }
+    }, [Store?.StatusStore, userWatch?.Status]);
+    const [statusCanEdit,setStatusEdit] = useState(false);
 
     //========================================review=========================================
     const [RatingAvg, setRatingAvg] = useState<AverageRatingInterface | null>(null);
@@ -152,6 +166,89 @@ const SubStore: React.FC = () => {
 
         }
     };
+    //=======================================Edit Store=====================================
+    const [isPopup, setPopup] = useState(false);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src && file.originFileObj) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as File);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+    const getImageURL = async (file?: File): Promise<string> => {
+        if (!file) return '';
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+        });
+    };
+    const [formData, setFormData] = useState({
+        store_name: '',
+        store_pic: '',
+        sub_pic_one: '',
+        sub_pic_two: '',
+        sub_pic_three: '',
+        store_description: '',
+    });
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+    const handleSubmitEdit = async (e: any) => {
+        e.preventDefault();
+        formData.store_pic = await getImageURL(fileList[0]?.originFileObj);
+        formData.sub_pic_one = await getImageURL(fileList[1]?.originFileObj);
+        formData.sub_pic_two = await getImageURL(fileList[2]?.originFileObj);
+        formData.sub_pic_three = await getImageURL(fileList[3]?.originFileObj);
+        console.log('Form data submitted:', formData);
+        EditStore(formData);
+        setPopup(false);
+    };
+    const EditStore = async (formData: any) => {
+        if (formData.store_pic) {
+            const valuesWithpic: StoreInterface = {
+                NameStore: formData.store_name,
+                PicStore: formData.store_pic,
+                SubPicOne: formData.sub_pic_one,
+                SubPicTwo: formData.sub_pic_two,
+                SubPicThree: formData.sub_pic_three,
+                DescribtionStore: formData.store_description,
+            };
+            try {
+                const res = await UpdateStoreByid(String(Store?.ID),valuesWithpic);
+                if (res.status === 200) {
+                    await fetchStoreData(String(Store?.ID));
+                }
+            } catch (error) {
+                console.error("Error Edit:", error);
+            }
+        }else{
+            const values: StoreInterface = {
+                NameStore: formData.store_name,
+                DescribtionStore: formData.store_description,
+            };
+            try {
+                const res = await UpdateStoreByid(String(Store?.ID),values);
+                if (res.status === 200) {
+                    await fetchStoreData(String(Store?.ID));
+                }
+            } catch (error) {
+                console.error("Error Edit:", error);
+            }
+        }
+    }
     return (
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -172,9 +269,9 @@ const SubStore: React.FC = () => {
                     <p>Rating : {renderStars(Number(RatingAvg?.averageRating.toFixed(2)))}</p>
                 </div>
                 <div className='picstoresub' style={{justifyContent: 'center',margin: '0 10%' ,display: 'flex'}}>
-                    <img style={{margin: '0 10px'}} src={Store?.SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
-                    <img style={{margin: '0 10px'}} src={Store?.SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
-                    <img style={{margin: '0 10px'}} src={Store?.SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                    <img style={{margin: '0 10px'}} src={Store?.SubPicOne || 'https://theecommmanager.com/wp-content/uploads/sites/6/2022/11/what-is-a-shopping-cart-in-ecommerce-featured-image-01-1200x630.png'} alt="PicStore" />
+                    <img style={{margin: '0 10px'}} src={Store?.SubPicTwo || 'https://theecommmanager.com/wp-content/uploads/sites/6/2022/11/what-is-a-shopping-cart-in-ecommerce-featured-image-01-1200x630.png'} alt="PicStore" />
+                    <img style={{margin: '0 10px'}} src={Store?.SubPicThree || 'https://theecommmanager.com/wp-content/uploads/sites/6/2022/11/what-is-a-shopping-cart-in-ecommerce-featured-image-01-1200x630.png'} alt="PicStore" />
                 </div>
                 <div className='infoSubStore'>
                     <h1>Store information</h1>
@@ -182,11 +279,12 @@ const SubStore: React.FC = () => {
                     <p>{Store?.DescribtionStore}</p>
                     <p>The store's contract starts on {new Date(String(Store?.BookingDate)).toLocaleDateString()}</p>
                     <p>The contract will end on {new Date(String(Store?.LastDay)).toLocaleDateString()}</p>
-                    <p>Status Store {Store?.StatusStore} <br /> from id user: {Store?.UserID}<br /> on the floor: {Store?.ProductTypeID}<br /> Membership: {Store?.MembershipID}</p>
+                    <p style={{fontSize: '36px'}}>Shop owner information</p>
+                    <p>Owner : {Store?.User?.FirstName || "Not specified"} {Store?.User?.LastName || "Not specified"}<br />Email : {Store?.User?.Email || "Not specified"}<br />Tel : {Store?.User?.Tel || "Not specified"}<br />Floor : F{Store?.ProductTypeID}{Store?.ID || "Not specified"}<br />Membership : {Store?.Membership?.PackageName || "Not specified"} <br />Status Store : {Store?.StatusStore || "Not specified"} <br /> </p>
                     
                     <div className='picstoresub'>
                         <span className='infoPicStore'>
-                            <img src={Store?.SubPicOne || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                            <img src={Store?.SubPicOne || 'https://theecommmanager.com/wp-content/uploads/sites/6/2022/11/what-is-a-shopping-cart-in-ecommerce-featured-image-01-1200x630.png'} alt="PicStore" />
                             <div>
                                 <p style={{fontSize: '30px',fontWeight: '800'}}>Preview Product!</p>
                                 <p style={{fontSize: '20px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
@@ -197,10 +295,10 @@ const SubStore: React.FC = () => {
                                 <p style={{fontSize: '30px',fontWeight: '800',textAlign: 'right'}}>Preview Product!</p>
                                 <p style={{fontSize: '20px',textAlign: 'right'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
                             </div>
-                            <img src={Store?.SubPicTwo || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                            <img src={Store?.SubPicTwo || 'https://theecommmanager.com/wp-content/uploads/sites/6/2022/11/what-is-a-shopping-cart-in-ecommerce-featured-image-01-1200x630.png'} alt="PicStore" />
                         </span>
                         <span className='infoPicStore'>
-                            <img src={Store?.SubPicThree || 'https://habibza.in/wp-content/uploads/2021/08/404.png'} alt="PicStore" />
+                            <img src={Store?.SubPicThree || 'https://theecommmanager.com/wp-content/uploads/sites/6/2022/11/what-is-a-shopping-cart-in-ecommerce-featured-image-01-1200x630.png'} alt="PicStore" />
                             <div>
                                 <p style={{fontSize: '30px',fontWeight: '800'}}>Preview Product!</p>
                                 <p style={{fontSize: '20px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil expedita sunt sequi, corporis impedit magni cupiditate maxime optio fuga necessitatibus natus, similique consequatur laboriosam fugiat praesentium! Quo tenetur debitis quos velit aperiam consequuntur odit sunt rerum itaque magnam adipisci quae, culpa iusto sit doloremque, nisi dicta repellendus error eveniet in. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni soluta tenetur impedit ratione est nobis placeat esse, eaque totam provident?</p>
@@ -261,6 +359,55 @@ const SubStore: React.FC = () => {
                         
                     </div>
                 </div>
+                {statusCanEdit &&
+                    <div onClick={() => setPopup(true)} style={{position: 'fixed' , bottom: '100px', right: '10px',padding: '10px 5px',backgroundColor:'#E8D196',margin:'10px 0',borderRadius: '5px 0 0 5px',borderRight: '5px solid #000',fontFamily:'"Abel", sans-serif',fontWeight:'500',cursor:'pointer'}}>
+                        EDITING
+                    </div>
+                }
+                {isPopup &&
+                    <>
+                        <div className='EditStore'>
+                            EDITING YOUR STORE
+                            <div>
+                                <form onSubmit={handleSubmitEdit}>
+                                    <div>
+                                        <label style={{fontSize: '18px', margin: '0px',fontWeight: '100'}}>Name</label>
+                                    </div>
+                                    <input
+                                        style={{borderRadius:'20px',border:'2px solid #C9AF62',padding: '5px 10px'}}
+                                        type="text"
+                                        id="store_name"
+                                        name="store_name"
+                                        value={formData.store_name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <div>
+                                        <label style={{fontSize: '18px', margin: '0px',fontWeight: '100'}}>Upload Photo</label>
+                                    </div>
+                                    <Upload id="Pic" fileList={fileList} onChange={onChange} onPreview={onPreview} beforeUpload={(file) => { setFileList([...fileList, file]); return false;}} 
+                                        maxCount={4} multiple={false} listType="picture-card" >
+                                        <div><PlusOutlined /><div style={{ marginTop: 8 , fontWeight: '100'}}>Upload</div></div>
+                                    </Upload>
+                                    <div>
+                                        <label style={{fontSize: '18px', margin: '0px',fontWeight: '100'}}>Description</label>
+                                    </div>
+                                    <textarea
+                                        style={{borderRadius:'10px',border:'2px solid #C9AF62', height: '100px',width:'500px',padding: '5px 10px'}}
+                                        id="store_description"
+                                        name="store_description"
+                                        value={formData.store_description}
+                                        onChange={handleChange}
+                                        required={true}
+                                    />
+                                    <button className='SubmitEdit' style={{backgroundColor:'#E8D196'}}>Confirm</button>
+                                    <button className='SubmitEdit' onClick={() => setPopup(false)}>Close</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div className='backgroundevent' onClick={() => setPopup(false)}></div>
+                    </>
+                }
             </div>
         </>
     );

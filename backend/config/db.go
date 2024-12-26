@@ -30,6 +30,7 @@ func SetupDatabase() {
 		&entity.MessageBoard{},
 		&entity.TaxUser{},
 		&entity.InfoUserStore{},
+		&entity.Event{},
 
 		//ระบบจองร้าน
 		&entity.Store{},
@@ -131,32 +132,38 @@ func SetupDatabase() {
 		db.FirstOrCreate(&area, entity.Area{AreaName: area.AreaName})
 	}
 
-	// ดึงวันสุดท้ายจากฐานข้อมูล
-	var lastSchedule entity.Schedule
-	db.Order("schedule_date desc").First(&lastSchedule)
+	//ใส่ข้อมูลเริ่มต้นของ Schedule
+	// กำหนดวันเริ่มต้นและสิ้นสุดของเดือนนี้
+	currentYear, currentMonth, _ := time.Now().Date()
+	startDate := time.Date(currentYear, currentMonth, 1, 8, 0, 0, 0, time.UTC)
+	endDate := startDate.AddDate(0, 1, -1) // วันสุดท้ายของเดือนนี้
 
-	// กำหนดวันเริ่มต้น
-	var startDate time.Time
-	if lastSchedule.ID == 0 {
-		// ถ้ายังไม่มีข้อมูลในฐานข้อมูล ให้เริ่มจากวันนี้
-		startDate = time.Now().UTC().Truncate(24 * time.Hour)
-	} else {
-		// ถ้ามีข้อมูลแล้ว ให้เริ่มจากวันถัดไปของวันสุดท้าย
-		startDate = lastSchedule.ScheduleDate.AddDate(0, 0, 1)
+	// ดึงข้อมูล Area ทั้งหมดจากฐานข้อมูล
+	var Areas []entity.Area
+	if err := db.Find(&Areas).Error; err != nil {
+    	fmt.Println("Error fetching areas:", err)
+    	return
 	}
 
-	// สร้างข้อมูลใหม่จนถึงวันนี้หรืออนาคต
-	currentDate := time.Now().UTC().Truncate(24 * time.Hour)
-	for date := startDate; !date.After(currentDate); date = date.AddDate(0, 0, 1) {
-		schedule := entity.Schedule{
-			StartTime:    time.Date(date.Year(), date.Month(), date.Day(), 8, 0, 0, 0, time.UTC),
-			EndTime:      time.Date(date.Year(), date.Month(), date.Day(), 10, 0, 0, 0, time.UTC),
-			ScheduleDate: date,
-			AreaID:       uint((date.Day() % 4) + 1), // แปลงเป็น uint // หมุนเวียน AreaID (1 ถึง 4)
-		}
+	if len(Areas) == 0 {
+    	fmt.Println("No areas found in the database")
+    	return
+	}
 
-		// เพิ่มข้อมูลลงในฐานข้อมูล
-		db.FirstOrCreate(&schedule, entity.Schedule{ScheduleDate: schedule.ScheduleDate, AreaID: schedule.AreaID})
+	// วนลูปแต่ละ Area
+	for _, area := range Areas {
+    	// สร้างตารางทำความสะอาดสำหรับแต่ละวันในเดือนนี้
+    	for day := startDate; !day.After(endDate); day = day.AddDate(0, 0, 1) {
+        	schedule := entity.Schedule{
+            	StartTime: time.Date(day.Year(), day.Month(), day.Day(), 8, 0, 0, 0, time.UTC),
+            	EndTime:   time.Date(day.Year(), day.Month(), day.Day(), 10, 0, 0, 0, time.UTC),
+            	AreaID:    area.ID,
+        	}
+
+        	// บันทึกข้อมูลลงในฐานข้อมูล
+        	db.FirstOrCreate(&schedule, entity.Schedule{StartTime: schedule.StartTime, AreaID: schedule.AreaID})
+        	//fmt.Printf("Assigned AreaID %d on %s\n", area.ID, day.Format("2006-01-02"))
+    	}
 	}
 
 	//CategoryInventory
@@ -194,65 +201,94 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.Inventory{InventoryName: pkg.InventoryName})
 	}
 
-	halls := []entity.Hall{
-		{
-			HallName:     "Grand Hall",
-			Capacity:     500,
-			Location:     "ชั้น 1 อาคาร A",
-			ImageHall:    "https://example.com/images/grand_hall.jpg",
-			Description:  "ห้องโถงขนาดใหญ่สำหรับจัดงานประชุมและสัมมนา",
-			PricePerHour: 15000,
-		},
-		{
-			HallName:     "Conference Room 101",
-			Capacity:     50,
-			Location:     "ชั้น 2 อาคาร B",
-			ImageHall:    "https://example.com/images/conference_101.jpg",
-			Description:  "ห้องประชุมขนาดเล็ก เหมาะสำหรับการประชุมทีมและอบรม",
-			PricePerHour: 3000,
-		},
-		{
-			HallName:     "Ballroom 202",
-			Capacity:     300,
-			Location:     "ชั้น 2 อาคาร C",
-			ImageHall:    "https://example.com/images/ballroom_202.jpg",
-			Description:  "ห้องบอลรูมสุดหรูสำหรับงานแต่งงานและงานเลี้ยงสังสรรค์",
-			PricePerHour: 12000,
-		},
-		{
-			HallName:     "Training Room 305",
-			Capacity:     40,
-			Location:     "ชั้น 3 อาคาร D",
-			ImageHall:    "https://example.com/images/training_room_305.jpg",
-			Description:  "ห้องฝึกอบรมพร้อมอุปกรณ์มัลติมีเดีย",
-			PricePerHour: 2500,
-		},
-	}
-	for _, pkg := range halls {
-		db.FirstOrCreate(&pkg, entity.Hall{HallName: pkg.HallName})
-	}
 
 	Store := []entity.Store{
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro1", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro2", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro3", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro4", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro5", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro6", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro7", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro8", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro9", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro10", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro11", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro12", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro13", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro14", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro15", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro16", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro17", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro18", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro19", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
-		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 1, NameStore: "Unicro20", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is available for reservation.", UserID: 0, ProductTypeID: 1},
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro1",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "Request",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro2",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro3",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro4",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro5",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro6",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro7",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro8",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro9",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro10",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro11",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro12",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro13",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro14",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro15",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro16",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro17",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro18",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro19",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		{PicStore: "https://t4.ftcdn.net/jpg/05/02/34/81/360_F_502348111_jYZObrgLLrKgcYlf1gNgm8cJNbUo8DoA.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 1,NameStore: "Unicro20",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is available for reservation.",StatusService: "NoRequest",UserID: 0,ProductTypeID: 1 },
+		
+		
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro21",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro22",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro23",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro24",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro25",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro26",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro27",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro28",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro29",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro30",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro31",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro32",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro33",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro34",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro35",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro36",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro37",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro38",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro39",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 2,NameStore: "Unicro40",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 2 },
+		
+		
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro41",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro42",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro43",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro44",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro45",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro46",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro47",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro48",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro49",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro50",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro51",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro52",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro53",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro54",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro55",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro56",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro57",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro58",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro59",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		{PicStore: "https://images.ctfassets.net/wdjnw2prxlw8/7fC7srWuSrTZmTqoNkRSDC/297fdf60e5ba04edc297be23f4ca06ba/macerich-queens-center-mall.jpg",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro60",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 3 },
+		
+		
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro61",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro62",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro63",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro64",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro65",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro66",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro67",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro68",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro69",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro70",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro71",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro72",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro73",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro74",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro75",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro76",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro77",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro78",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro79",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
+		{PicStore: "https://www.theakyra.com/files/5615/2510/0430/Terminal_21_Shopping_Mall_in_Bangkok.png",SubPicOne: "",SubPicTwo: "",SubPicThree: "",MembershipID: 3,NameStore: "Unicro80",BookingDate: time.Now(),LastDay: time.Now().AddDate(0, 0, 365),DescribtionStore: "test Test test",StatusStore: "This store is already taken.",StatusService: "NoRequest",UserID: 1,ProductTypeID: 4 },
 
 		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 2, NameStore: "Unicro21", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is already taken.", UserID: 1, ProductTypeID: 2},
 		{PicStore: "https://www.chapmantaylor.com/uploads/Futureland-Shopping-Mall-at-Tianjin.jpg", SubPicOne: "", SubPicTwo: "", SubPicThree: "", MembershipID: 2, NameStore: "Unicro22", BookingDate: time.Now(), LastDay: time.Now().AddDate(0, 0, 365), DescribtionStore: "test Test test", StatusStore: "This store is already taken.", UserID: 1, ProductTypeID: 2},
