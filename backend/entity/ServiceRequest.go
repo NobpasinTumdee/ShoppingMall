@@ -7,16 +7,16 @@ import (
 
 type ServiceRequest struct {
 	gorm.Model
-	Location 				string    	`json:"Location"` 
-	Describtion 			string    	`json:"Describtion"` 
-	RequestDate 			time.Time   `json:"RequestDate"` 
+	Location 				string    	`json:"Location" valid:"required~Location is required"` 
+	Describtion 			string    	`json:"Describtion" valid:"required~Describtion is required"` 
+	RequestDate 			time.Time   `json:"RequestDate" valid:"required~RequestDate is required"` 
 	StatusService 			string    	`json:"StatusService"` 
 	
 
-	StoreID       			uint      	`json:"StoreID"`
+	StoreID       			uint      	`json:"StoreID" valid:"required~StoreID is required"`
 	Store         			Store      	`gorm:"foreignKey:StoreID"`
 
-	UserID       			uint      	`json:"UserID"`
+	UserID       			uint      	`json:"UserID" valid:"required~UserID is required"`
 	User         			User      	`gorm:"foreignKey:UserID"`
 
 	EquipmentRequest []EquipmentRequest `gorm:"foreignKey:ServiceRequestID"`
