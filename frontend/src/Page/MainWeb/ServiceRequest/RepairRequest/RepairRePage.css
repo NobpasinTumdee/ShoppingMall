@@ -1,86 +1,118 @@
-.headerRepairRe h1{
-    font-family: "Dongle", sans-serif;
+/* RepairRePage.css */
+
+/* ตั้งค่าพื้นฐาน */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: 20px auto;
+    max-width: 900px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* หัวข้อ */
+h1 {
+    font-size: 2.5rem;
+    color: #333333;
+    margin-bottom: 10px;
     text-align: center;
-    color: #C9AF62;
-    font-size: 40px;
-
-    animation: headerH2 1s ease-in-out ;
-}
-.tableRepairRe{
-    background-color: #ffffff;
-    width: 80%;
-    height: 500px;
-    margin: 0 10%;
-    border: 0px solid #C9AF62;
-    box-shadow: 0 0px 10px #acacac2d;
-
-    animation: tableInventory 1s ease-in-out ;
-}
-@keyframes tableInventory {
-    0%{
-        opacity: 0;
-        transform: translateY(130%);
-    }
 }
 
-.Mode{
-    display: flex;
-    justify-content: center;
+h2 {
+    font-size: 1.8rem;
+    color: #555555;
+    margin-bottom: 20px;
+    text-align: center;
 }
-.Mode p{
-    margin: 10px 10px;
-    padding: 5px;
+
+/* ตาราง */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* ปุ่ม Accept */
+.btn-link {
+    color: #007bff;
+    text-decoration: none;
     cursor: pointer;
-    font-family: "Parkinsans", sans-serif;
-    font-weight: 500;
-    border-radius: 20px;
-    color: #C9AF62;
-    border: 2px solid #C9AF62;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
 }
 
-.RepairRecolumntable {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
-    height: 50px;
-    border-bottom: 0px solid #C9AF62;
-    box-shadow: 0 5px 5px #c9af622d;
-    background-color: #fbe8af;
+.btn-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
 }
 
-.RepairRecolumntable p{
-    width: 25%;
-    text-align: start;
-    padding-left: 15px;
-    font-family: "Parkinsans", sans-serif;
-    font-weight: 500;
+/* ตัวอักษรสี */
+.text-primary {
+    color: #007bff;
+    font-weight: bold;
 }
 
-.RepairRecontanerRow {
-    overflow-y: scroll;
-    height: 450px;
+/* ปุ่ม Back */
+.btn-back {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
 }
 
-.RepairRecolumntableSub {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
-    height: 50px;
-    border-bottom: 0.1px solid #e5e5e5;
-    border-top: 0.1px solid #e5e5e5;
-    transition: 0.5s;
+.btn-back:hover {
+    background-color: #0056b3;
 }
 
-.RepairRecolumntableSub:hover {
-    background-color: #FAFAFA;
+/* การจัดรูปแบบเพิ่มเติม */
+.text-center {
+    text-align: center;
 }
 
-.RepairRecolumntableSub p{
-    width: 25%;
-    text-align: start;
-    padding-left: 15px;
-    font-family: "Parkinsans", sans-serif;
-    font-weight: 100;
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
 }

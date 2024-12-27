@@ -14,7 +14,7 @@ type ServiceRequest struct {
 	StatusService string 		`json:"StatusService"`
 	RequestforRepair string 	`json:"RequestforRepair"` 
 
-	EquipmentRequests []EquipmentRequest `gorm:"foreignKey:ServiceRequstID"`
+	EquipmentRequests []EquipmentRequest `gorm:"foreignKey:ServiceRequestID"`
 
 	StoreID      uint      	`json:"StoreID"`     
 	Store        Store  	`gorm:"foreignKey:StoreID"`

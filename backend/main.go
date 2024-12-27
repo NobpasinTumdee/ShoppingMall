@@ -114,6 +114,8 @@ func main() {
 		router.PUT("/service-requests/create-service-request/:id", Repair.UpdateServiceRequestStatus) 
 		router.DELETE("/service-requests/create-service-request/:id", Repair.DeleteServiceRequest) 
 		router.PUT("/service-requests", Repair.UpdateServiceRequestToComplete)
+		// router.GET("/service-requests",Repair.GetServiceRequests)
+
 		//ระบบ เช็คอุปกรณ์ช่าง
 
 

@@ -594,6 +594,18 @@ async function UpdateServiceRequestToComplete(id: string, data: ServiceInterface
 
 }
 
+// async function GetServiceRequests() {
+
+//   return await axios
+
+//     .get(`${apiUrl}/service-requests/`, requestOptions)
+
+//     .then((res) => res)
+
+//     .catch((e) => e.response);
+
+// }
+
 export {
     SignIn,//user
     GetUserById,
@@ -649,5 +661,6 @@ export {
     UpdateServiceRequestStatus,
     DeleteServiceRequest,
     UpdateServiceRequestToComplete,
+    // GetServiceRequests,
 
 }

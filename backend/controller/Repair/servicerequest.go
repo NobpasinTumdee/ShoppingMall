@@ -151,3 +151,15 @@ func UpdateServiceRequestToComplete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Repair request status updated to 'complete' successfully", "data": request})
 }
+
+// func GetServiceRequests(c *gin.Context) {
+//     var requests []entity.ServiceRequest
+
+// 	db := config.DB()
+
+//     if err := db.Find(&requests).Error; err != nil {
+//         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+//         return
+//     }
+//     c.JSON(http.StatusOK, requests)
+// }

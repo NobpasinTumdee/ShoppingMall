@@ -15,7 +15,7 @@ type EquipmentRequest struct {
 	InventoryID      uint      	`json:"InventoryID"`     
 	Inventory        Inventory  `gorm:"foreignKey:InventoryID"`
 
-	ServiceRequestID      uint      		`json:"ServiceRequestID"`      // FK ไปยัง Schedule
-	ServiceRequest        ServiceRequest  	`gorm:"foreignKey:ServiceRequestID"` // ความสัมพันธ์ไปยัง Schedule
+	ServiceRequestID      uint      		`json:"ServiceRequestID"`
+	ServiceRequest        ServiceRequest  	`gorm:"foreignKey:ServiceRequestID"`
 
 }

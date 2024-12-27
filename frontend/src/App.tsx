@@ -20,14 +20,14 @@ import Inventory from "./Page/MainWeb/Inventory/Inventory";
 import { NavBar } from "./Page/Component/NavBar";
 
 import BookingHall from "./Page/MainWeb/Hall/BookingHall/HallBookingPage";
-import Hall from "./Page/MainWeb/Hall/selectHall/SelectHall";
+import Hall from "./Page/MainWeb/Hall/SelectHall/SelectHall";
 import CalendarPage from "./Page/MainWeb/Hall/calendar/calendar";
 
 import Cleaning from "./Page/MainWeb/Clearning/Cleaningpage";
 
-import ServiceRequest from "./Page/MainWeb/ServiceRequest/Request/ServicePage";
-import RepairRePage from "./Page/MainWeb/ServiceRequest/RepairRequest/RepairRePage";
-import HistoryRequest from "./Page/MainWeb/ServiceRequest/HistoryRequest/HistoryReqPage";
+import ServicePage from "./Page/MainWeb/ServiceRequest/Request/ServicePage";
+import HistoryReqPage from "./Page/MainWeb/ServiceRequest/HistoryRequest/HistoryReqPage"
+import RepairRePage from "./Page/MainWeb/ServiceRequest/RepairRequest/RepairRePage"
 import HistoryRepairPage from "./Page/MainWeb/ServiceRequest/RepairRequest/HistoryRepirPage"
 
 const App: React.FC = () => {
@@ -49,9 +49,9 @@ const App: React.FC = () => {
     "/AdminJob",
     "/Inventory",
     "/ServiceRequest",
-    // "/RepairRePage",
-    // "/HistoryRequest",
-    // "/HistoryRepair",
+    "/RepairRequest",
+    "/HistoryRequest",
+    "/HistoryRepair",
   ].includes(location.pathname);
   return (
     <>
@@ -79,10 +79,10 @@ const App: React.FC = () => {
         <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
 
-        <Route path="/ServiceRequest" element={<ServiceRequest />} />
-        {/* <Route path="/RepairRequest" element={<RepairRePage />} />
-        <Route path="/HistoryRequest" element={<HistoryRequest />} />
-        <Route path="/HistoryRepair" element={<HistoryRepairPage />} /> */}
+        <Route path="/ServiceRequest" element={<ServicePage />} />
+        <Route path="/RepairRequest" element={<RepairRePage />} />
+        <Route path="/HistoryRequest" element={<HistoryReqPage />} />
+        <Route path="/HistoryRepair" element={<HistoryRepairPage />} />
       </Routes>
     </>
   );

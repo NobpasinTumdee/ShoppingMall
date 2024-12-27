@@ -272,7 +272,7 @@ func SetupDatabase() {
 		db.FirstOrCreate(&request, entity.ServiceRequest{RequestDate: request.RequestDate})
 	}
 
-	// ข้อมูลตัวอย่าง
+	// ข้อมูลตัวอย่าง Repair Request
 	serviceList := []entity.ServiceRequest{
 		{RequestDate: parseDate("2024-07-05"), ProblemDescription: "ไฟ LED ชำรุด", Location: "Zone A Area B105", StatusService: "pending", RequestforRepair: "Accept"},
 		{RequestDate: parseDate("2024-06-29"), ProblemDescription: "แอร์เสีย", Location: "Zone A Area A404", StatusService: "pending", RequestforRepair: "Accept"},
@@ -284,6 +284,20 @@ func SetupDatabase() {
 	// เพิ่มข้อมูลตัวอย่างในฐานข้อมูล
 	for _, req := range serviceList {
 		db.Create(&req)
+	}
+	// ข้อมูลตัวอย่าง บันทึกการซ่อม
+	records := []entity.ServiceRequest{
+		{RequestDate: parseDate("2024-07-05"), ProblemDescription: "ไฟ LED ชำรุด", Location: "Zone A Area B105", StatusService: "completed", RequestforRepair: "Accepted"},
+		{RequestDate: parseDate("2024-06-30"), ProblemDescription: "แอร์ เสีย", Location: "Zone A Area A404", StatusService: "completed", RequestforRepair: "Accepted"},
+		{RequestDate: parseDate("2024-06-27"), ProblemDescription: "เครื่องรูดบัตรไม่ทำงาน", Location: "Zone F Area C201", StatusService: "completed", RequestforRepair: "Accepted"},
+		{RequestDate: parseDate("2024-06-22"), ProblemDescription: "ป้ายไฟโฆษณาพัง", Location: "Zone B Area B109", StatusService: "completed", RequestforRepair: "Accepted"},
+		{RequestDate: parseDate("2024-06-10"), ProblemDescription: "โต๊ะชำรุด", Location: "Zone A Area A105", StatusService: "completed", RequestforRepair: "Accepted"},
+	}
+
+	// Print the data
+	for _, record := range records {
+		fmt.Printf("Date: %s, Problem: %s, Location: %s, Status: %s, Repair: %s\n",
+			record.RequestDate.Format("2006-01-02"), record.ProblemDescription, record.Location, record.StatusService, record.RequestforRepair)
 	}
 
 	//Store

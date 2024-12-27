@@ -2,22 +2,43 @@ import React from "react";
 import { Layout, Form, Input, Button, Select, message, DatePicker } from "antd";
 import "./ServicePage.css";
 import { ServiceInterface } from "../../../../interfaces/ServiceInterface";
+import { GetUserById } from "../../../../services/https";
 
 const { Content } = Layout;
 
 const ServicePage: React.FC = () => {
   const [form] = Form.useForm();
-  // const [Service, setService] = useState<ServiceInterface[]>([]);
+  // const 
 
-  const onFinish = (values: ServiceInterface) => {
-    console.log("Success:", values);
-    message.success("Request successfully");
-    form.resetFields();
+  // เมื่อฟอร์มสำเร็จ
+  const onFinish = async (values: ServiceInterface) => {
+    try {
+      // ส่งคำขอ POST ไปยัง backend
+      const response = await fetch("/api/service-requests/create-service-request/id", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        message.success("Request successfully submitted!");
+        form.resetFields(); // ล้างฟอร์ม
+      } else {
+        const errorData = await response.json();
+        message.error(`Request failed: ${errorData.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error submitting request:", error);
+      message.error("Request failed! Please try again.");
+    }
   };
 
+  // เมื่อฟอร์มล้มเหลว
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
-    message.error("Request failed!");
+    message.error("Please check the form for errors!");
   };
 
   return (
