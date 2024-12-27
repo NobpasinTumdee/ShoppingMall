@@ -3,6 +3,7 @@ import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,Ta
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
+import { ServiceInterface } from "../../interfaces/ServiceInterface";
 
 import axios from 'axios';
 const apiUrl = "http://localhost:8000";
@@ -654,6 +655,53 @@ async function GetSchedulesByArea(id: number) {
 
 }
 
+//=======================================Service============================================
+//listService by status
+async function ListService(Status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Service/${Status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function ListStoreService() {
+
+  return await axios
+
+    .get(`${apiUrl}/StoreService`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function ListRepairman() {
+
+  return await axios
+
+    .get(`${apiUrl}/Repairman`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function CreateService(data: ServiceInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Service`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
 
 export {
     SignIn,//user
@@ -714,5 +762,11 @@ export {
     ListAreas,
     CreateCleaningRecord,
     GetCleaningRecordsByArea,
-    GetSchedulesByArea
+    GetSchedulesByArea,
+
+    ListService,//แจ้งซ่อม
+    ListStoreService,
+    ListRepairman,
+    CreateService,
+
 }
