@@ -5,7 +5,8 @@ import { UsersInterface , MessageBoardInterface, EventInterface } from "../../in
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 
 import axios from 'axios';
-import { ServiceInterface } from "../../interfaces/ServiceInterface";
+import { EquipmentInterface, ServiceInterface } from "../../interfaces/ServiceInterface";
+import { InventoryInterface } from "../../interfaces/InventoryInterface";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
 
@@ -700,6 +701,61 @@ async function CreateService(data: ServiceInterface) {
     .catch((e) => e.response);
 
 }
+//=======================================EquipmentRequest============================================
+async function EquipmentByServiceID(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Equipment/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function CreateEquipment(data: EquipmentInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Equipment`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function UpdateInventory(id: string, data: InventoryInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Inventory/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete Equipment
+async function DeleteEquipment(id: string) {
+  return await axios
+
+    .delete(`${apiUrl}/Equipment/${id}`, requestOptions)
+
+    .then((res) => { return res; })
+    
+    .catch((e) => e.response);
+}
+async function UpdateService(id: string, data: ServiceInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Service/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 
 export {
     SignIn,//user
@@ -761,6 +817,11 @@ export {
     ListStoreService,
     ListRepairman,
     CreateService,
+    EquipmentByServiceID,//Equipment
+    CreateEquipment,
+    UpdateInventory,
+    DeleteEquipment,
+    UpdateService,
 
     ListAreas,
     CreateCleaningRecord,

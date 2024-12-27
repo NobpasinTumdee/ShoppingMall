@@ -118,6 +118,11 @@ func main() {
 		router.GET("/Repairman", servicerequest.ListRepairman)
 		router.POST("/Service", servicerequest.CreateService)
 		//ระบบ เช็คอุปกรณ์ช่าง
+		router.GET("/Equipment/:id", servicerequest.GetEquipmentRequest)
+		router.POST("/Equipment", servicerequest.CreateEquipment)
+		router.PUT("/Inventory/:id", servicerequest.UpdateInventoryByid)
+		router.DELETE("/Equipment/:id", servicerequest.DeleteEquipment)
+		router.PUT("/Service/:id", servicerequest.UpdateServiceByid)
 
 
 		
