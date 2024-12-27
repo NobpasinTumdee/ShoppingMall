@@ -43,7 +43,8 @@ func SetupDatabase() {
 		&entity.PaymentMethodStore{},
 
 		//ระบบแจ้งซ่อมและอุปการณ์
-
+		&entity.ServiceRequest{},
+		&entity.EquipmentRequest{},
 
 
 		//ระบบจองHall
