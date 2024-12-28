@@ -3,9 +3,10 @@ import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,Ta
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
-import { ServiceInterface } from "../../interfaces/ServiceInterface";
+import { EquipmentInterface, ServiceInterface } from "../../interfaces/ServiceInterface";
 
 import axios from 'axios';
+import { InventoryInterface } from "../../interfaces/InventoryInterface";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
 
@@ -702,6 +703,62 @@ async function CreateService(data: ServiceInterface) {
 
 }
 
+//=======================================EquipmentRequest============================================
+async function EquipmentByServiceID(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Equipment/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function CreateEquipment(data: EquipmentInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Equipment`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function UpdateInventory(id: string, data: InventoryInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Inventory/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete Equipment
+async function DeleteEquipment(id: string) {
+  return await axios
+
+    .delete(`${apiUrl}/Equipment/${id}`, requestOptions)
+
+    .then((res) => { return res; })
+    
+    .catch((e) => e.response);
+}
+async function UpdateService(id: string, data: ServiceInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Service/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
 
 export {
     SignIn,//user
@@ -768,5 +825,11 @@ export {
     ListStoreService,
     ListRepairman,
     CreateService,
+
+    EquipmentByServiceID,//อุปกรณ์ช่างซ่อม
+    CreateEquipment,
+    UpdateInventory,
+    DeleteEquipment,
+    UpdateService,
 
 }

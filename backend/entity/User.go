@@ -7,9 +7,9 @@ import (
 
 type User struct {
 	gorm.Model
-	UserName  				string 		`json:"UserName"`// valid:"required~User Name is required"
-	Password     			string 		`json:"Password"`// valid:"required~Password is required"
-	Email     				string 		`json:"Email"`// valid:"required~Email is required, email~Email is invalid"
+	UserName  				string 		`json:"UserName" valid:"required~User Name is required"`//
+	Password     			string 		`json:"Password" valid:"required~Password is required"` //
+	Email     				string 		`json:"Email" valid:"required~Email is required, email~Email is invalid"` //
 	Profile     			string 		`json:"Profile"`
 	ProfileBackground     	string 		`json:"ProfileBackground"`
 	FirstName     			string 		`json:"FirstName"`

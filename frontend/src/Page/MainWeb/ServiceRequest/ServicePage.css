@@ -44,3 +44,65 @@
     color: #fff;
     cursor: pointer;
 }
+
+
+.PopupService{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 50%;
+    height: 60%;
+    background-color: #ffffff;
+    z-index: 1010;
+    padding: 20px;
+    border-radius: 10px;
+    animation: Popup 0.5s ease-in-out;
+}
+.overlay{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+    height: 100%;
+    background-color: #00000038;
+    z-index: 1005;
+    animation: Popup 0.3s ease-in-out;
+}
+@keyframes Popup {
+    0%{opacity: 0;}
+}
+.ListEquipment{
+    margin: 10px 0;
+    height: 300px;
+    overflow-y: scroll;
+}
+.Equipment{
+    margin: 0px 0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+}
+.Equipment p{
+    width: 20%;
+}
+.CompleteButton{
+    background-color: #ffffff;
+    width: 80px;
+    text-align: center;
+    padding: 5px 10px;
+    border: 2px solid #bea66a;
+    border-radius: 20px;
+    font-family: "Abel", sans-serif;
+    font-weight: 800;
+    color: #bea66a;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+.CompleteButton:hover{
+    background-color: #bea66a;
+    color: #fff;
+    box-shadow: 0 0 15px #bea66a;
+}
