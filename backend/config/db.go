@@ -42,21 +42,10 @@ func SetupDatabase() {
 		&entity.Membership{},
 		&entity.Rating{},
 		&entity.PaymentMethodStore{},
-
+		
 		//ระบบแจ้งซ่อมและอุปการณ์
-
-		//ระบบจองที่จอดรถและชำระเงิน
-		&entity.TypePark{},
-		&entity.StatusCard{},
-		&entity.StatusPayment{},
-		//&entity.MembershipCustomer{},
-		&entity.ParkingCard{},
-		&entity.ParkingZone{},
-		&entity.ParkingCardZone{},
-		&entity.ParkingFeePolicy{},
-		&entity.ParkingPayment{},
-		&entity.Vehicle{},
-		&entity.ParkingTransaction{},
+		&entity.ServiceRequest{},
+		&entity.EquipmentRequest{},
 
 		//ระบบจองHall
 		&entity.Hall{},
@@ -76,6 +65,18 @@ func SetupDatabase() {
 
 		//ระบบเบิกอุปกรณ์การทำความสะอาด
 		&entity.InventoryRequest{},
+
+		//ระบบจองที่จอดรถและชำระเงิน
+		&entity.TypePark{},
+		&entity.StatusCard{},
+		&entity.StatusPayment{},
+		&entity.ParkingCard{},
+		&entity.ParkingZone{},
+		&entity.ParkingCardZone{},
+		&entity.ParkingFeePolicy{},
+		&entity.ParkingPayment{},
+		&entity.Vehicle{},
+		&entity.ParkingTransaction{},
 	)
 
 	//User

@@ -12,6 +12,7 @@ import (
 	"example.com/ProjectSeG13/controller/Inventory"
 	"example.com/ProjectSeG13/controller/Cleaning"
 	"example.com/ProjectSeG13/controller/Hall"
+	"example.com/ProjectSeG13/controller/ServiceRequest"
 	"example.com/ProjectSeG13/controller/CarPark"
 )
 
@@ -134,8 +135,16 @@ func main() {
 		router.GET("/inventory/:id", Inventory.GetInventoryByCategory)
 		router.GET("/CategoryInventory", Inventory.ListCategoryInventory)
 		//ระบบ แจ้งซ่อม
-
+		router.GET("/Service/:Status", servicerequest.ListService)
+		router.GET("/StoreService", servicerequest.ListStoreService)
+		router.GET("/Repairman", servicerequest.ListRepairman)
+		router.POST("/Service", servicerequest.CreateService)
 		//ระบบ เช็คอุปกรณ์ช่าง
+		router.GET("/Equipment/:id", servicerequest.GetEquipmentRequest)
+		router.POST("/Equipment", servicerequest.CreateEquipment)
+		router.PUT("/Inventory/:id", servicerequest.UpdateInventoryByid)
+		router.DELETE("/Equipment/:id", servicerequest.DeleteEquipment)
+		router.PUT("/Service/:id", servicerequest.UpdateServiceByid)
 
 
 		

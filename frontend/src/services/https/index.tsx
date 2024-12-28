@@ -11,6 +11,8 @@ import {
 } from "../../interfaces/Carpark";
 
 import axios from 'axios';
+import { EquipmentInterface, ServiceInterface } from "../../interfaces/ServiceInterface";
+import { InventoryInterface } from "../../interfaces/InventoryInterface";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
 
@@ -651,6 +653,107 @@ async function GetSchedulesByArea(id: number) {
     .catch((e) => e.response);
 
 }
+//=======================================Service============================================
+//listService by status
+async function ListService(Status: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Service/${Status}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function ListStoreService() {
+
+  return await axios
+
+    .get(`${apiUrl}/StoreService`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function ListRepairman() {
+
+  return await axios
+
+    .get(`${apiUrl}/Repairman`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function CreateService(data: ServiceInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Service`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//=======================================EquipmentRequest============================================
+async function EquipmentByServiceID(id: string) {
+
+  return await axios
+
+    .get(`${apiUrl}/Equipment/${id}`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function CreateEquipment(data: EquipmentInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/Equipment`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function UpdateInventory(id: string, data: InventoryInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Inventory/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+//Delete Equipment
+async function DeleteEquipment(id: string) {
+  return await axios
+
+    .delete(`${apiUrl}/Equipment/${id}`, requestOptions)
+
+    .then((res) => { return res; })
+    
+    .catch((e) => e.response);
+}
+async function UpdateService(id: string, data: ServiceInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/Service/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
 //============================ Car Park ========================================
 async function GetUserDetails(id: number) {
   return await axios
@@ -872,6 +975,16 @@ export {
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,
     GetInventoryById,
+
+    ListService,//ServiceRq
+    ListStoreService,
+    ListRepairman,
+    CreateService,
+    EquipmentByServiceID,//Equipment
+    CreateEquipment,
+    UpdateInventory,
+    DeleteEquipment,
+    UpdateService,
 
     ListAreas,
     CreateCleaningRecord,
