@@ -17,7 +17,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import { NavBar } from "../../../Component/NavBar";
 import { GetListCard, GetListZone } from "../../../../services/https";
 import {
-  MembershipCustomerInterface,
   ParkingCardInterface,
   ParkingZoneInterface,
 } from "../../../../interfaces/Carpark";

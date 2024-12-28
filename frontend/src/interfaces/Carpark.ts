@@ -1,5 +1,6 @@
 export interface ParkingCardInterface {
   ID?: string;
+  IsPermanent?: boolean;
   ExpiryDate?: string;
   UpdatedAt?: string;
   TypePark?: {
@@ -35,10 +36,14 @@ export interface ParkingCardInterface {
     Image?: string;
     Capacity?: number;
     AvailableZone?: number;
+    ReservedCapacity?: number;
+    ReservedAvailable?: number;
     TypeParkID?: number;
   }[];
   ParkingTransaction?: {
+    ID(ID: any, updateTransactionData: { LicensePlate: string; Image: string; Color: string; Make: string; ParkingCardID: string | undefined; StatusPaymentID: number; ParkingZoneID: number | undefined; UserID: number; }): unknown;
     ReservationDate?: string;
+    IsReservedPass?: boolean;
     EntryTime?: string;
     ExitTime?: string;
     Hourly_Rate?: number;
@@ -53,6 +58,8 @@ export interface ParkingCardInterface {
       Image?: string;
       Capacity?: number;
       AvailableZone?: number;
+      ReservedCapacity?: number;
+      ReservedAvailable?: number;
       TypeParkID?: number;
     }[];
     UserID?: number;
@@ -84,6 +91,8 @@ export interface ParkingZoneInterface {
   Image?: string;
   Capacity?: number;
   AvailableZone?: number;
+  ReservedCapacity?: number;
+  ReservedAvailable?: number;
   TypeParkID?: number;
   TypePark?: TypeParkInterface;
   ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
@@ -91,6 +100,7 @@ export interface ParkingZoneInterface {
 
 export interface ParkingTransactionInterface {
   ReservationDate?: string;
+  IsReservedPass?: boolean;
   EntryTime?: string;
   ExitTime?: string;
   Hourly_Rate?: number;
@@ -107,6 +117,8 @@ export interface ParkingTransactionInterface {
     Image?: string;
     Capacity?: number;
     AvailableZone?: number;
+    ReservedCapacity?: number;
+    ReservedAvailable?: number;
     TypeParkID?: number;
   }[];
   ParkingCardID?: string;
@@ -146,16 +158,6 @@ export interface ParkingFeePolicyInterface {
   ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
 }
 
-export interface MembershipCustomerInterface {
-  ID?: number;
-  FirstName?: string;
-  LastName?: string;
-  DOB?: string; // ใช้ string แทน time
-  Tel?: string;
-  IssueDate?: string; // ใช้ string แทน time
-  ExpiryDate?: string; // ใช้ string แทน time
-}
-
 export interface ParkingPaymentInterface {
   ID?: number;
   TaxID?: string;
@@ -165,6 +167,7 @@ export interface ParkingPaymentInterface {
   NetAmount?: number;
   ParkingTransaction?: {
     ReservationDate?: string;
+    IsReservedPass?: boolean;
     EntryTime?: string;
     ExitTime?: string;
     Hourly_Rate?: number;
@@ -186,3 +189,21 @@ export interface ParkingPaymentInterface {
   }[];
   UserID?: number;
 }
+export interface VehicleInterface {
+  ID?: number;
+  LicensePlate?: string;
+  Image?: string;
+  Color?: string;
+  Make?: string;
+  UserID?: number;
+}
+
+/* export interface MembershipCustomerInterface {
+  ID?: number;
+  FirstName?: string;
+  LastName?: string;
+  DOB?: string; // ใช้ string แทน time
+  Tel?: string;
+  IssueDate?: string; // ใช้ string แทน time
+  ExpiryDate?: string; // ใช้ string แทน time
+} */

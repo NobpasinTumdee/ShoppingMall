@@ -8,7 +8,7 @@
   font-family: "Dongle", sans-serif;
   font-size: 80px;
   font-weight: 700; 
-  color: #C9AF62;
+  color: #C9AF62; 
  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); *//* เงาของข้อความ */
   line-height: 70px;
 }
@@ -100,6 +100,17 @@
   margin-bottom: 1px;
   line-height: 1;
 }
+
+.line-in-modal {
+  width: 100%;
+  height: 1.5px;
+  background-color: #C9AF62;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  left: 50%;
+  justify-self: center;
+}
+
 
 /* .sub-title {
   text-align: center;

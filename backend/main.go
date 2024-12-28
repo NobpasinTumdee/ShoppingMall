@@ -89,12 +89,15 @@ func main() {
 
 
 		//ระบบ จองรถ	
+		router.GET("/get-user-details/:id", CarPark.GetUserDetails)	
 		router.GET("/get-list-parking-card", CarPark.GetListCard)	
 		router.GET("/get-list-parking-zone", CarPark.GetListZone)
 		router.GET("/get-list-card-and-user", CarPark.GetListCardAndUser)
 		//router.GET("/get-list-last-parkingtransaction", CarPark.GetListLastTransaction)	
 		router.POST("/create-parkingcard",CarPark.CreateParkingCard)
 		router.POST("/create-parkingtransaction",CarPark.CreateParkingTransaction)
+		//router.POST("/create-parkingcard-and-vehical",CarPark.CreateParkingCardAndVehical)
+		router.POST("/create-vehicle",CarPark.CreateVehicle)
 		router.PUT("/update-parkingcard/:id",CarPark.UpdateParkingCard)
 		router.GET("/get-parking-card/:id", CarPark.GetParkingCardByID)
 		router.GET("/get-parking-card-by-user/:id", CarPark.GetParkingCardByUserID)
@@ -102,6 +105,8 @@ func main() {
 		router.GET("/get-parking-card-with-zone/:id", CarPark.GetParkingCardWithZoneByID)
 		router.GET("/get-card-zone/:id", CarPark.GetIdCardZone)
 		router.PUT("/update-parkingzone/:id",CarPark.UpdateParkingZone)
+		router.PUT("/update-vehicle/:id",CarPark.UpdateVehicle)
+		router.PUT("/update-parkingtransaction/:id",CarPark.UpdateParkingTransaction)
 		router.PUT("/update-parkingcard-zone/:cid/:zid",CarPark.UpdateParkingCardAndZone)
 		router.DELETE("/delete-parkingcard/:id",CarPark.DeleteParkingCard)
 

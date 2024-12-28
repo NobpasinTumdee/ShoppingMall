@@ -21,11 +21,11 @@ import Cleaning from './Page/MainWeb/Clearning/TaskOverview';
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
 
-import SignUp from './Page/Login/SignUp';
-import CarPark from './Page/MainWeb/CarPark/ParkingEmployee/CarPark';
+import SignUp from './Page/SignUp/SignUp';
+import CarPark from './Page/MainWeb/CarPark/Employee/CarPark';
 import CarParkIN from './Page/MainWeb/CarPark/CarParkIN';
 import CarParkINZone from './Page/MainWeb/CarPark/IN/CarParkINZone';
-import HistoryCard from './Page/MainWeb/CarPark/ParkingEmployee/HistoryCard'
+import HistoryCard from './Page/MainWeb/CarPark/Employee/HistoryCard'
 import CarParkCustomerMain from './Page/MainWeb/CarPark/Customer/Main'
 import CarParkCustomerBook from './Page/MainWeb/CarPark/Customer/Booking'
 const App: React.FC = () => {

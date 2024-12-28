@@ -22,25 +22,32 @@ import { NavBar } from "../../../Component/NavBar";
 import {
   CreateParkingCard,
   CreateParkingTransaction,
+  CreateVehicle,
   GetListCard,
   GetListZone,
   GetParkingCardByUserID,
   GetUserById,
+  GetUserDetails,
   GetZoneByTypePark,
   UpdateParkingCard,
   UpdateParkingZone,
+  UpdateVehicle,
 } from "../../../../services/https";
 import {
   ParkingCardInterface,
   ParkingZoneInterface,
+  VehicleInterface,
 } from "../../../../interfaces/Carpark";
 import dayjs from "dayjs";
 import { CardInterface } from "antd/es/card";
 import { UsersInterface } from "../../../../interfaces/UsersInterface";
+import create from "@ant-design/icons/lib/components/IconFont";
 
 const { Title } = Typography;
 const { Option } = Select;
 const userid = localStorage.getItem("id");
+const today = dayjs();
+const todayformat = dayjs().format("YYYY-MM-DD");
 
 const CustomerParkingBooking: React.FC = () => {
   const [form] = Form.useForm();
@@ -50,91 +57,31 @@ const CustomerParkingBooking: React.FC = () => {
   const [listcards, setListCards] = useState<ParkingCardInterface[]>([]);
   const [cards, setCards] = useState<ParkingCardInterface>();
   const [user, setUser] = useState<UsersInterface>();
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [vehicles, setVehicles] = useState<VehicleInterface>();
+  const [selectedDate, setSelectedDate] = useState<string | null>(todayformat);
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
-  const [licensePlate, setLicensePlate] = useState<string>("");
-  const [carColor, setCarColor] = useState<string>("");
-  const [carMake, setCarMake] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [carLicensePlate, setCarLicensePlate] = useState<string>();
+  const [carColor, setCarColor] = useState<string>();
+  const [carMake, setCarMake] = useState<string>();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [carLicensePlate, setCarLicensePlate] = useState<string>("");
-  /*   const [card, setCard] = useState<ParkingCardInterface | null>(
-    null
-  ); */
+
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
     null
   );
   const imageUrl = fileList[0]?.thumbUrl || null;
   const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
 
-  //const role = localStorage.getItem("status");
-
-  /*   useEffect(() => {
-    console.log("userid: ", userid); // ตรวจสอบค่า userid
-    const fetchData = async () => {
-      setLoading(true);
-      await GetUser();
-      await checkUserBooking();
-      await getCardByID();
-      await GetZone();
-      setLoading(false);
-    };
-    fetchData();
-  }, []); */
   useEffect(() => {
-    fetchAllData();
-  }, [reload]);
+    //fetchAllData();
+    fetchUserDetails();
+    console.log("selectedDate: ", selectedDate);
+  }, [reload, selectedDate]);
 
-  /*   const GetZone = async () => {
-    try {
-      const typePark = cards?.TypePark?.Type ? cards.TypePark.Type : "No Type Found";
-      console.log("typePark:", typePark);      
-      const res = await GetZoneByTypePark(typePark || "");
-      //const res = await GetZoneByTypePark(getTypeParkByStatus());
-      if (res.status === 200) {
-        localStorage.setItem("zoneid", res.data.ID);
-        setZones(res.data);
-        console.log("zone: ", res.data);
-      } else {
-        messageApi.error("Failed to fetch parking zones.");
-      }
-    } catch (error) {
-      console.error("Error fetching zones:", error);
-      messageApi.error("An error occurred while fetching zones.");
-    } finally {
-      setLoading(false); // Set loading to false after fetching data
-    }
-  };
- */
-  /*   const getCard = async () => {
-    setLoading(true);
-    try {
-      const resCard = await GetListCard();
-
-      // ตรวจสอบการตอบกลับจาก API
-      if (resCard.status === 200) {
-      } else {
-        messageApi.error("Failed to fetch parking cards.");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      messageApi.error("An error occurred while fetching data.");
-    } finally {
-      setLoading(false);
-    }
-  }; */
-
-  const checkUserBooking = async () => {
+  /*   const checkUserBooking = async () => {
     try {
       // เรียกข้อมูลการจองทั้งหมดของผู้ใช้จาก API
       const res = await GetListCard();
       if (res.status === 200) {
-        //const today = dayjs().format("YYYY-MM-DD");
-        /*  const userBookingsToday = res.data.filter(
-          (booking: any) =>
-            booking.UserID === Number(userid) &&
-            booking.ReservationDate === selectedDate
-        ); */
         console.log("booking.ReservationDate: ", res.data.ReservationDate);
         // ถ้าพบว่ามีการจองในวันนี้แล้ว
         if (res.data.ParkingTransaction.ReservationDate === selectedDate) {
@@ -149,17 +96,27 @@ const CustomerParkingBooking: React.FC = () => {
       console.error("Error checking user booking:", error);
       return false;
     }
-  };
+  }; */
+  const renderReservedForm = () => (
+    <div
+      style={{
+        padding: "20px",
+        backgroundColor: "#f0f2f5",
+        borderRadius: "8px",
+      }}
+    >
+      <h2>This parking spot is already reserved.</h2>
+      <p>You cannot make a reservation for this spot.</p>
+    </div>
+  );
 
-  const fetchAllData = async () => {
+  const fetchUserDetails = async () => {
     setLoading(true); // เริ่มโหลดข้อมูล
     try {
-      const [listCardRes, userRes, cardByIdRes] = await Promise.all([
+      const [listCardRes, userdetailRes] = await Promise.all([
         GetListCard(),
-        GetUserById(userid || ""),
-        GetParkingCardByUserID(userid || ""),
+        GetUserDetails(Number(userid)),
       ]);
-
       if (listCardRes.status === 200) {
         setListCards(listCardRes.data);
         console.log("ListCard:", listCardRes.data);
@@ -167,63 +124,104 @@ const CustomerParkingBooking: React.FC = () => {
         message.error("Failed to fetch list card.");
       }
 
-      if (userRes.status === 200) {
-        localStorage.setItem("status", userRes.data.Status);
-        setUser(userRes.data);
-        console.log("User data:", userRes.data);
+      if (userdetailRes.status === 200) {
+        const { user, vehicle, parkingCard } = userdetailRes.data;
+
+        setUser(user);
+        setCards(parkingCard);
+        setVehicles(vehicle);
+        setCarLicensePlate(vehicle.LicensePlate);
+        setCarColor(vehicle.Color);
+        setCarMake(vehicle.Make);
+        console.log("carLicensePlate: ", carLicensePlate);
+        console.log("carColor: ", carColor);
+        console.log("carMake: ", carMake);
+        //console.log("Setting fileList with image: ", vehicle.Image);
+        setFileList([
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: vehicle.Image, // ที่นี่จะต้องเป็น base64 string ที่มาจากฐานข้อมูล
+          },
+        ]);
       } else {
-        message.error("Failed to fetch user.");
-      }
-
-      if (cardByIdRes.status === 200) {
-        setCards(cardByIdRes.data);
-        console.log("Cards by ID:", cardByIdRes.data);
-      } else {
-        console.log("No parking card found, creating one...");
-
-        const listcards = listCardRes.data;
-        if (listcards && listcards.length > 0) {
-          const newCardData = {
-            ID: String(Number(listcards[listcards.length - 1].ID) + 1),
-            TypeParkID: 1,
-            UserID: Number(userid),
-            ExpiryDate: new Date(
-              new Date().setFullYear(new Date().getFullYear() + 1)
-            ).toISOString(),
-            StatusCardID: 1,
-            ParkingFeePolicyID: 1,
-          };
-
-          const rescreatecard = await CreateParkingCard(newCardData);
-          if (rescreatecard.status === 201) {
-            console.log("Parking card created successfully.");
-            setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
-          } else {
-            message.error("Failed to create parking card.");
-          }
-        } else {
-          console.error("listcards is empty or undefined.");
-          message.error(
-            "Cannot create parking card. No data available in listcards."
-          );
-        }
+        setIsModalCreateCardVisible(true);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
-      message.error("An error occurred while fetching data.");
+      console.error("Error fetching user details:", error);
+      message.error("An error occurred while fetching user details.");
     } finally {
       setLoading(false); // หยุดโหลดข้อมูล
     }
   };
 
+  /***************************    สร้างบัตรจอดรถใหม่    ******************************** */
+  const [isModalCreateCardVisible, setIsModalCreateCardVisible] =
+    useState(false);
+  const handleCreateCardOk = async () => {
+    // ข้อมูลสำหรับสร้าง ParkingCard
+    const newCardData = {
+      ID: (Number(listcards[listcards.length - 1].ID) + 1).toString().padStart(4, '0'),
+      IsPermanent: true,
+      UserID: Number(userid),
+      ExpiryDate: new Date(
+        new Date().setFullYear(new Date().getFullYear() + 1)
+      ).toISOString(),
+      StatusCardID: 1,
+    };
+
+    try {
+      // สร้าง ParkingCard
+      const resCreateCard = await CreateParkingCard(newCardData);
+      if (resCreateCard.status === 201) {
+        // ข้อมูลสำหรับสร้าง Vehicle (ใช้ cardID จาก ParkingCard)
+        const vehicleData = {
+          LicensePlate: carLicensePlate,
+          Image: imageUrl || "",
+          Color: carColor,
+          Make: carMake,
+          UserID: Number(userid),
+        };
+
+        // สร้าง Vehicle
+        const resCreateVehicle = await CreateVehicle(vehicleData);
+        if (resCreateVehicle.status === 200) {
+          console.log("Parking card and vehicle created successfully.");
+          setIsModalCreateCardVisible(false);
+          setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
+        } else {
+          message.error("Failed to create vehicle.");
+        }
+      } else {
+        message.error("Failed to create parking card.");
+      }
+    } catch (error) {
+      message.error(
+        "An error occurred while creating the parking card and vehicle."
+      );
+      console.error(error);
+    }
+  };
+
   const handleCancel = () => {
+    setSelectedZone(null);
+    setSelectedCardIndex(null);
+    setIsModalEditVisible(false);
+    setIsModalVisible(false);
+    setIsModalCreateCardVisible(false);
+    setUser(user);
     setCarLicensePlate("");
     setCarColor("");
-    setSelectedZone(null);
-    //setCards(null);
-    setSelectedCardIndex(null);
-    setFileList([]);
-    form.resetFields();
+    setCarMake("");
+    setFileList([
+      {
+        uid: "-1",
+        name: "image.png",
+        status: "done",
+        url: vehicles?.Image, // ที่นี่จะต้องเป็น base64 string ที่มาจากฐานข้อมูล
+      },
+    ]);
   };
 
   const handleDateChange = (value: string) => {
@@ -234,16 +232,20 @@ const CustomerParkingBooking: React.FC = () => {
     setSelectedZone(index === selectedZone ? null : index);
   };
 
+  /***************************    บันทึก Transaction    ******************************** */
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const handlePreOk = async () => {
-    if (await checkUserBooking()) {
+    /* if (await checkUserBooking()) {
       return; // ถ้าผู้ใช้จองแล้วไม่สามารถจองใหม่ได้
-    }
+    } */
     console.log("selectedDate: ", selectedDate);
     console.log("selectedZone: ", selectedZone);
     console.log("carLicensePlate: ", carLicensePlate);
     console.log("carColor: ", carColor);
     console.log("carMake: ", carMake);
     console.log("imageUrl: ", imageUrl);
+    console.log("fileList: ", fileList);
+    console.log("fileList.length: ", fileList.length);
 
     if (
       !selectedDate ||
@@ -251,30 +253,15 @@ const CustomerParkingBooking: React.FC = () => {
       !carLicensePlate ||
       !carColor ||
       !carMake ||
-      imageUrl === null
+      (imageUrl === null && fileList.length === 0)
     ) {
       messageApi.error("Please fill in all required fields.");
       return;
     }
 
     setIsModalVisible(true);
-
-    if (cards?.StatusCard?.Status === "Reserved") {
-      message.error(
-        "This parking card is already reserved. Please select another one."
-      );
-      return;
-    }
   };
-
   const handleOk = async () => {
-    try {
-      await form.validateFields();
-    } catch {
-      message.error("Please fill in all required fields!");
-      return;
-    }
-
     // ตรวจสอบว่ามีการเลือก zone หรือยัง
     if (selectedZone === null) {
       message.error("Please select a parking zone!");
@@ -288,48 +275,38 @@ const CustomerParkingBooking: React.FC = () => {
 
     const CardTransData = {
       ReservationDate: selectedDate,
+      IsReservedPass: false,
       LicensePlate: carLicensePlate,
-      Image: imageUrl || "",
+      Image: imageUrl === null ? fileList[0].url : imageUrl,
       Color: carColor,
       Make: carMake,
-      UserID: Number(localStorage.getItem("id")),
+      UserID: Number(userid),
       ParkingCardID: cards?.ID,
       StatusPaymentID: 1,
       ParkingZoneID:
         (cards?.ParkingZone && cards.ParkingZone[selectedZone]?.ID) || "",
     };
 
-    const updateCardData = {
-      ID: cards?.ID,
-      IsActive: true,
-      StatusCardID: 4,
-    };
-
     const updateZoneData = {
-      ID: selectedZone,
-      AvailableZone:
+      ReservedAvailable:
         ((cards?.ParkingZone &&
-          cards?.ParkingZone[selectedZone].AvailableZone) ||
+          cards?.ParkingZone[selectedZone].ReservedAvailable) ||
           0) - 1,
     };
 
     try {
-      const resCard = await UpdateParkingCard(cards?.ID || "", updateCardData);
       const resZone = await UpdateParkingZone(
         (cards?.ParkingZone && cards?.ParkingZone[selectedZone].ID) || 0,
         updateZoneData
       );
       const resTrans = await CreateParkingTransaction(CardTransData);
 
-      if (
-        resCard.status === 200 &&
-        resZone.status === 200 &&
-        resTrans.status === 201
-      ) {
+      if (resZone.status === 200 && resTrans.status === 201) {
         messageApi.success("Parking booking successful!");
         setIsModalVisible(false); // ปิด modal เมื่อสำเร็จ
-        checkUserBooking();
+        /* checkUserBooking(); */
         handleCancel();
+        setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
       } else {
         throw new Error("Update failed");
       }
@@ -339,9 +316,38 @@ const CustomerParkingBooking: React.FC = () => {
     }
   };
 
-  // สร้างรายการของวันที่ที่สามารถเลือกได้ (3 วันข้างหน้า)
+  /***************************    แก้ไขข้อมูล Vehical    ******************************** */
+  const [isModalEditVisible, setIsModalEditVisible] = useState(false);
+  const [formEditCar] = Form.useForm();
+  const handleOpenModalEdit = () => {
+    setIsModalEditVisible(true);
+  };
+
+  
+  const handleEditCarOk = async () => {
+    let updatedVehicle = {
+      LicensePlate: carLicensePlate,
+      Image: imageUrl === null ? fileList[0].url : imageUrl,
+      Color: carColor,
+      Make: carMake,
+      UserID: Number(userid) || 0,
+    };
+    const res = await UpdateVehicle(Number(userid), updatedVehicle);
+    if (res.status == 200) {
+      setIsModalEditVisible(false);
+      messageApi.open({
+        type: "success",
+        content: res.data.message,
+      });
+    } else {
+      messageApi.open({
+        type: "error",
+        content: res.data.error,
+      });
+    }
+  };
+  /***************************    Select วันที่    ******************************** */
   const generateAvailableDates = () => {
-    const today = dayjs();
     const availableDates = [
       today.format("YYYY-MM-DD"),
       today.add(1, "day").format("YYYY-MM-DD"),
@@ -350,6 +356,7 @@ const CustomerParkingBooking: React.FC = () => {
     return availableDates;
   };
 
+  /***************************    Upload รูปภาพ    ******************************** */
   const onChangeUpload: UploadProps["onChange"] = ({
     fileList: newFileList,
   }) => {
@@ -370,19 +377,6 @@ const CustomerParkingBooking: React.FC = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  const renderReservedForm = () => (
-    <div
-      style={{
-        padding: "20px",
-        backgroundColor: "#f0f2f5",
-        borderRadius: "8px",
-      }}
-    >
-      <h2>This parking spot is already reserved.</h2>
-      <p>You cannot make a reservation for this spot.</p>
-    </div>
-  );
-
   return (
     <>
       <NavBar />
@@ -396,9 +390,14 @@ const CustomerParkingBooking: React.FC = () => {
             fontSize: 22,
             fontWeightStrong: 5,
             boxShadow: "0 2px 0 rgba(5, 145, 255, 0.1)",
+            colorText: "#000000",
           },
           components: {
             Button: {
+              colorTextLightSolid: "#000000",
+
+              textTextHoverColor: "#000000",
+              textTextColor: "#000000",
               primaryShadow: "0 2px 0 rgba(5, 145, 255, 0.1)",
               colorBgContainer: "#fbe8af",
             },
@@ -452,6 +451,7 @@ const CustomerParkingBooking: React.FC = () => {
                         onChange={handleDateChange}
                         value={selectedDate}
                         style={{ width: "100%" }}
+                        defaultValue={selectedDate}
                       >
                         {generateAvailableDates().map((date) => (
                           <Option key={date} value={date}>
@@ -463,12 +463,25 @@ const CustomerParkingBooking: React.FC = () => {
                   </Form>
                 </Col>
               </Row>
-              {cards?.StatusCard?.Status === "Reserved" &&
-              cards.ParkingTransaction?.[cards.ParkingTransaction.length - 1]
-                ?.ReservationDate === selectedDate ? (
-                renderReservedForm() // แสดงฟอร์มนี้เมื่อสถานะเป็น reserved
+              {cards?.StatusCard?.Status === "IN" &&
+              cards.ParkingTransaction &&
+              cards.ParkingTransaction.some((transaction) => {
+                const reservationDate = transaction.ReservationDate
+                  ? new Date(transaction.ReservationDate).toLocaleDateString()
+                  : null;
+                const selected = selectedDate
+                  ? new Date(selectedDate).toLocaleDateString()
+                  : null;
+
+                const isReservedPass = transaction.IsReservedPass === false;
+                return reservationDate === selected && isReservedPass;
+              }) ? (
+                renderReservedForm() // แสดงฟอร์มเมื่อเงื่อนไขทั้งหมดตรง
               ) : (
                 <div>
+                  <Button type="primary" onClick={() => handleOpenModalEdit()}>
+                    Edit Car Information
+                  </Button>
                   <div
                     style={{
                       display: "flex",
@@ -516,8 +529,8 @@ const CustomerParkingBooking: React.FC = () => {
                                     lineHeight: "1.5",
                                   }}
                                 >
-                                  <div>Capacity: {zone.Capacity}</div>
-                                  <div>Available: {zone.AvailableZone}</div>
+                                  <div>Capacity: {zone?.ReservedCapacity}</div>
+                                  <div>Available: {zone.ReservedAvailable}</div>
                                 </div>
                               </div>
                             </Col>
@@ -532,8 +545,8 @@ const CustomerParkingBooking: React.FC = () => {
                                 strokeColor="#E8D196"
                                 size={80}
                                 percent={
-                                  ((zone.AvailableZone || 0) /
-                                    (zone.Capacity || 0)) *
+                                  ((zone.ReservedAvailable || 0) /
+                                    (zone.ReservedCapacity || 0)) *
                                   100
                                 }
                                 format={(percent) =>
@@ -560,6 +573,7 @@ const CustomerParkingBooking: React.FC = () => {
                             setFileList([...fileList, file]);
                             return false;
                           }}
+                          disabled
                           maxCount={1}
                           multiple={false}
                           listType="picture-card"
@@ -582,11 +596,12 @@ const CustomerParkingBooking: React.FC = () => {
                         >
                           <Input
                             value={carLicensePlate}
+                            defaultValue={carLicensePlate}
                             onChange={(e) => setCarLicensePlate(e.target.value)}
                             placeholder="Enter license plate"
+                            disabled
                           />
                         </Form.Item>
-
                         <Form.Item
                           name="CarColor"
                           label="Car Color"
@@ -600,8 +615,10 @@ const CustomerParkingBooking: React.FC = () => {
                         >
                           <Input
                             value={carColor}
+                            defaultValue={carColor}
                             onChange={(e) => setCarColor(e.target.value)}
                             placeholder="Enter car color"
+                            disabled
                           />
                         </Form.Item>
 
@@ -618,8 +635,10 @@ const CustomerParkingBooking: React.FC = () => {
                         >
                           <Input
                             value={carMake}
+                            defaultValue={carMake}
                             onChange={(e) => setCarMake(e.target.value)}
                             placeholder="Enter car make"
+                            disabled
                           />
                         </Form.Item>
                         <Button
@@ -637,6 +656,8 @@ const CustomerParkingBooking: React.FC = () => {
             </div>
           )}{" "}
         </div>
+
+        {/**************************     ยืนยันการจอง     ***************************/}
         <Modal
           open={isModalVisible}
           title="Confirm Reservation"
@@ -662,10 +683,18 @@ const CustomerParkingBooking: React.FC = () => {
                   margin: "20px auto",
                 }}
               />
+            ) : fileList.length > 0 ? (
+              <img
+                src={fileList[0].url} // ดึง URL จากไฟล์ใน fileList
+                alt="Uploaded"
+                style={{
+                  width: "100%",
+                  maxWidth: "300px",
+                  margin: "20px auto",
+                }}
+              />
             ) : (
-              <Typography.Text type="secondary">
-                No image uploaded
-              </Typography.Text>
+              <div>No image selected</div> // ถ้าไม่มี image หรือ fileList ว่าง
             )}
           </p>
           <p>
@@ -687,9 +716,259 @@ const CustomerParkingBooking: React.FC = () => {
             <strong>Car Make:</strong> {carMake}
           </p>
         </Modal>
+
+        {/**************************     สมัครบัตรจอดรถ     ***************************/}
+        <Modal
+          open={isModalCreateCardVisible}
+          title="Card Registration"
+          onOk={handleCreateCardOk}
+          onCancel={() => setIsModalVisible(false)}
+        >
+          <div>
+            The parking card is valid for one year from the date of issuance. It
+            provides access to the parking facility, allowing users to reserve
+            parking spaces easily through the online system.
+          </div>
+          <div className="line-in-modal"></div>
+          <Form layout="horizontal" form={form}>
+            <div>Please provide details of your car</div>
+            <Upload
+              fileList={fileList}
+              onChange={onChangeUpload}
+              onPreview={onPreview}
+              beforeUpload={(file) => {
+                setFileList([...fileList, file]);
+                return false;
+              }}
+              maxCount={1}
+              multiple={false}
+              listType="picture-card"
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+            <Form.Item
+              name="LicensePlate"
+              label="License Plate"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the license plate!",
+                },
+              ]}
+              className="custom-form-item"
+            >
+              <Input
+                value={carLicensePlate}
+                onChange={(e) => setCarLicensePlate(e.target.value)}
+                placeholder="Enter license plate"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="CarColor"
+              label="Car Color"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the car color!",
+                },
+              ]}
+              className="custom-form-item"
+            >
+              <Input
+                value={carColor}
+                onChange={(e) => setCarColor(e.target.value)}
+                placeholder="Enter car color"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="CarMake"
+              label="Car Make"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the car make!",
+                },
+              ]}
+              className="custom-form-item"
+            >
+              <Input
+                value={carMake}
+                onChange={(e) => setCarMake(e.target.value)}
+                placeholder="Enter car make"
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {/****************************   แก้ไขข้อมูลรถ   ********************************/}
+        <Modal
+          title="Edit Car Information"
+          open={isModalEditVisible}
+          onOk={handleEditCarOk}
+          onCancel={handleCancel}
+          okText="Save"
+          cancelText="Cancel"
+        >
+          <Form form={formEditCar} layout="vertical">
+            <div>Car Picture</div>
+            <Upload
+              fileList={fileList}
+              onChange={onChangeUpload}
+              onPreview={onPreview}
+              beforeUpload={(file) => {
+                setFileList([...fileList, file]);
+                return false;
+              }}
+              maxCount={1}
+              multiple={false}
+              listType="picture-card"
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+            <Form.Item
+              name="LicensePlate"
+              label="License Plate"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the license plate!",
+                },
+              ]}
+              className="custom-form-item"
+            >
+              <Input
+                value={carLicensePlate}
+                defaultValue={carLicensePlate}
+                onChange={(e) => setCarLicensePlate(e.target.value)}
+                placeholder="Enter license plate"
+              />
+            </Form.Item>
+            <Form.Item
+              name="CarColor"
+              label="Car Color"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the car color!",
+                },
+              ]}
+              className="custom-form-item"
+            >
+              <Input
+                value={carColor}
+                defaultValue={carColor}
+                onChange={(e) => setCarColor(e.target.value)}
+                placeholder="Enter car color"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="CarMake"
+              label="Car Make"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the car make!",
+                },
+              ]}
+              className="custom-form-item"
+            >
+              <Input
+                value={carMake}
+                defaultValue={carMake}
+                onChange={(e) => setCarMake(e.target.value)}
+                placeholder="Enter car make"
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
       </ConfigProvider>
     </>
   );
 };
 
 export default CustomerParkingBooking;
+/*   const fetchAllData = async () => {
+    setLoading(true); // เริ่มโหลดข้อมูล
+    try {
+      const [listCardRes, userRes, cardByIdRes] = await Promise.all([
+        GetListCard(),
+        GetUserById(userid || ""),
+        GetParkingCardByUserID(userid || ""),
+      ]);
+
+      if (listCardRes.status === 200) {
+        setListCards(listCardRes.data);
+        console.log("ListCard:", listCardRes.data);
+      } else {
+        message.error("Failed to fetch list card.");
+      }
+
+      if (userRes.status === 200) {
+        localStorage.setItem("status", userRes.data.Status);
+        setUser(userRes.data);
+        console.log("User data:", userRes.data);
+      } else {
+        message.error("Failed to fetch user.");
+      }
+
+      if (cardByIdRes.status === 200) {
+        setCards(cardByIdRes.data);
+        console.log("Cards by ID:", cardByIdRes.data);
+      } else {
+        setIsModalCreateCardVisible(true);
+        console.log("No parking card found, creating one...");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      message.error("An error occurred while fetching data.");
+    } finally {
+      setLoading(false); // หยุดโหลดข้อมูล
+    }
+  }; */
+/*   const GetZone = async () => {
+    try {
+      const typePark = cards?.TypePark?.Type ? cards.TypePark.Type : "No Type Found";
+      console.log("typePark:", typePark);      
+      const res = await GetZoneByTypePark(typePark || "");
+      //const res = await GetZoneByTypePark(getTypeParkByStatus());
+      if (res.status === 200) {
+        localStorage.setItem("zoneid", res.data.ID);
+        setZones(res.data);
+        console.log("zone: ", res.data);
+      } else {
+        messageApi.error("Failed to fetch parking zones.");
+      }
+    } catch (error) {
+      console.error("Error fetching zones:", error);
+      messageApi.error("An error occurred while fetching zones.");
+    } finally {
+      setLoading(false); // Set loading to false after fetching data
+    }
+  };
+ */
+/*   const getCard = async () => {
+    setLoading(true);
+    try {
+      const resCard = await GetListCard();
+
+      // ตรวจสอบการตอบกลับจาก API
+      if (resCard.status === 200) {
+      } else {
+        messageApi.error("Failed to fetch parking cards.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      messageApi.error("An error occurred while fetching data.");
+    } finally {
+      setLoading(false);
+    }
+  }; */

@@ -6,10 +6,22 @@ import (
 	"gorm.io/gorm"
 )
 
+type Vehicle struct {
+	gorm.Model
+	LicensePlate string `json:"LicensePlate"`
+	Color        string `json:"Color"`
+	Make         string `json:"Make"`
+	Image        string `gorm:"type:longtext" json:"Image"`
+
+	UserID uint `json:"UserID"`
+	User   User `gorm:"foreignKey:UserID"`
+}
+
 type ParkingCard struct {
 	gorm.Model
-	ID         string    `gorm:"primaryKey" json:"ID"`
-	ExpiryDate time.Time `json:"ExpiryDate"`
+	ID          string    `gorm:"primaryKey" json:"ID"`
+	ExpiryDate  time.Time `json:"ExpiryDate"`
+	IsPermanent bool      `json:"IsPermanent"`
 
 	TypeParkID uint     `json:"TypeParkID"`
 	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
@@ -49,10 +61,12 @@ type ParkingCardZone struct {
 
 type ParkingZone struct {
 	gorm.Model
-	Name          string `json:"Name"`
-	Capacity      int    `json:"Capacity"`
-	AvailableZone int    `json:"AvailableZone"`
-	Image         string `gorm:"type:longtext" json:"Image"`
+	Name              string `json:"Name"`
+	Capacity          int    `json:"Capacity"`
+	AvailableZone     int    `json:"AvailableZone"`
+	ReservedCapacity  int    `json:"ReservedCapacity"`
+	ReservedAvailable int    `json:"ReservedAvailable"`
+	Image             string `gorm:"type:longtext" json:"Image"`
 
 	TypeParkID uint     `json:"TypeParkID"`
 	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
@@ -67,6 +81,7 @@ type ParkingTransaction struct {
 	EntryTime       *time.Time `json:"EntryTime"`
 	ExitTime        *time.Time `json:"ExitTime"`
 	Hourly_Rate     *int       `json:"Hourly_Rate"`
+	IsReservedPass  *bool      `json:"IsReservedPass"` // ที่จองไปแล้วผ่านยัง ยัง false ผ่านเข้าห้างแล้ว true
 	LicensePlate    string     `json:"LicensePlate"`
 	Image           string     `gorm:"type:longtext" json:"Image"`
 	Color           string     `json:"Color"`

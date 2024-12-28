@@ -7,6 +7,7 @@ import {
   ParkingCardInterface,
   ParkingTransactionInterface,
   ParkingZoneInterface,
+  VehicleInterface,
 } from "../../interfaces/Carpark";
 
 import axios from 'axios';
@@ -651,6 +652,12 @@ async function GetSchedulesByArea(id: number) {
 
 }
 //============================ Car Park ========================================
+async function GetUserDetails(id: number) {
+  return await axios
+    .get(`${apiUrl}/get-user-details/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
 async function GetListCard() {
   return await axios
     .get(`${apiUrl}/get-list-parking-card`, requestOptions)
@@ -703,15 +710,39 @@ async function CreateParkingTransaction(data: ParkingTransactionInterface) {
     .then((res) => res)
     .catch((e) => e.response);
 }
+async function CreateVehicle(data: VehicleInterface) {
+  return await axios
+    .post(`${apiUrl}/create-vehicle`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+/* async function CreateParkingCardAndVehical(data: ParkingTransactionInterface) {
+  return await axios
+    .post(`${apiUrl}/create-parkingcard-and-vehical`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}	 */
 async function UpdateParkingCard(id: string, data: ParkingCardInterface) {
   return await axios
     .put(`${apiUrl}/update-parkingcard/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
-}
+}	
 async function UpdateParkingZone(id: number, data: ParkingZoneInterface) {
   return await axios
     .put(`${apiUrl}/update-parkingzone/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+async function UpdateVehicle(id: number, data: ParkingCardInterface) {
+  return await axios
+    .put(`${apiUrl}/update-vehicle/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}	
+async function UpdateParkingTransaction(id: number, data: ParkingCardInterface) {
+  return await axios
+    .put(`${apiUrl}/update-parkingtransaction/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -848,16 +879,21 @@ export {
     GetSchedulesByArea,
 
     // Car Parking
+    GetUserDetails,
     GetListCard,
     GetListTransaction,
+    /* CreateParkingCardAndVehical, */
     GetListCardAndUser,
     GetListZone,
     GetZoneByTypePark,
     //GetListLastTransaction,
     CreateParkingCard,
     CreateParkingTransaction,
+    CreateVehicle,
     UpdateParkingCard,
     UpdateParkingZone,
+    UpdateVehicle,
+    UpdateParkingTransaction,
     UpdateParkingCardAndZone,
     GetParkingCardByID,
     GetParkingCardByUserID,
