@@ -92,7 +92,7 @@ func main() {
 		router.GET("/hall",Hall.ListHall)
 		router.GET("/hall/:id",Hall.GetHall)
 
-		router.POST("/booking", Hall.CreateBooking) //Create Booking
+		router.POST("/bookings/:id", Hall.CreateBooking) //Create Booking
 		router.GET("/booking/:id", Hall.GetBookingByID) //Get Booking by ID
 		router.PUT("booking/:id", Hall.UpdateBooking) //Update Booking
 		router.DELETE("/booking/:id", Hall.DeleteBooking) //Delete Booking

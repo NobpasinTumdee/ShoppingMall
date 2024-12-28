@@ -35,7 +35,9 @@ func CreateBooking(c *gin.Context) {
 		CustomerEmail: booking.CustomerEmail,
 		CustomerPhone: booking.CustomerPhone,
 		CustomerAddress: booking.CustomerAddress,
+		TotalCost: booking.TotalCost,
 	}
+
 	if err := db.Create(&b).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

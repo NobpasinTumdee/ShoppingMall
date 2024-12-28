@@ -1,3 +1,4 @@
+import { BookingHallInterface } from "../../interfaces/HallInterface";
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
@@ -482,10 +483,10 @@ async function GetHallByID(id: string) {
   .catch((e) => e.response);
   
 }
-async function CreateBookingHall(id: string) {
+async function CreateBookingHall(data:BookingHallInterface, id:string) {
   return await axios
 
-  .post(`${apiUrl}/bookings/${id}`, requestOptions)
+  .post(`${apiUrl}/bookings/${id}`,data, requestOptions)
 
   .then((res) => res)
 

@@ -7,6 +7,7 @@ import { BookingHallInterface } from '../../../../interfaces/HallInterface';
 import { HallInterface } from '../../../../interfaces/HallInterface';
 import { useParams } from "react-router-dom";
 import { NavBar } from '../../../Component/NavBar';
+import { CreateBookingHall } from '../../../../services/https';
 
 const { Sider, Content } = Layout;
 const { Option } = Select;
@@ -26,10 +27,16 @@ const BookingHall: React.FC = () => {
     }, []);
 
     // ฟังก์ชันเมื่อมีการส่งฟอร์ม
-    const onFinish = (values: BookingHallInterface) => {
-        console.log('Success:', values);
-        message.success('Booking successfully submitted!');
-        form.resetFields();
+    const onFinish = async (values: BookingHallInterface) => {
+        
+        try {
+            const response = await CreateBookingHall(values,id || "")
+            message.success("การจองสำเร็จ!");
+            console.log(id)
+            form.resetFields();
+        } catch (error) {
+            message.error("การจองล้มเหลว: " + (error.response?.data?.message || "ไม่ทราบข้อผิดพลาด"));
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {
