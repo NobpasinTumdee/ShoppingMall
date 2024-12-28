@@ -18,21 +18,28 @@ import {
 } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import {
-  GetParkingCardWithZoneByID,
+  //GetParkingCardWithZoneByID,
   CreateParkingTransaction,
   UpdateParkingCard,
   UpdateParkingZone,
   GetParkingCardByID,
   UpdateParkingTransaction,
+  GetZoneDailyByZoneID,
+  UpdateZoneDailyByZoneID,
+  CreateZoneDaily,
 } from "../../../../../services/https";
 //import "./../Carpark.css";
-import { ParkingCardInterface } from "../../../../../interfaces/Carpark";
+import {
+  ParkingCardInterface,
+  ParkingZoneDailyInterface,
+} from "../../../../../interfaces/Carpark";
 
 import Tesseract from "tesseract.js";
 import ImgCrop from "antd-img-crop";
 import dayjs from "dayjs";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+const today = dayjs();
 
 interface InProps {
   getParkingCards: () => Promise<void>;
@@ -44,6 +51,9 @@ interface InProps {
   setOtp: React.Dispatch<React.SetStateAction<string>>;
   isModalInVisible: boolean;
   setIsModalInVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedButtonInOutDefault: React.Dispatch<React.SetStateAction<string>>;
+  setFilteredData: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
+  cards: ParkingCardInterface[];
 }
 
 const IN: React.FC<InProps> = ({
@@ -54,6 +64,9 @@ const IN: React.FC<InProps> = ({
   setSelectedCard,
   isModalInVisible,
   setIsModalInVisible,
+  setSelectedButtonInOutDefault,
+  setFilteredData,
+  cards,
 }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -64,46 +77,55 @@ const IN: React.FC<InProps> = ({
   /*const [image, setImage] = useState<string | null>(null); // กำหนดให้รองรับทั้ง string หรือ null
   const [loading, setLoading] = useState(false); */
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-
+  const [zoneDaily, setZoneDaily] = useState<ParkingZoneDailyInterface>();
+  const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
   useEffect(() => {
     console.log("Requesting with ID:", selectedCard?.ID);
     const fetchData = async () => {
       try {
-        const response = await GetParkingCardByID(selectedCard?.ID || "");
-        setSelectedCard(response.data);
-        
-        if (selectedCard) {
-          const today = dayjs().format("YYYY-MM-DD");
-          const existingTransaction = selectedCard.ParkingTransaction?.find(
-            (transaction) =>
-              transaction.IsReservedPass === false &&
-              transaction.ReservationDate === today
-          );
-          // ถ้ามีการทำรายการที่ตรงกับเงื่อนไข
-          if (existingTransaction) {
-            setCarLicensePlate(existingTransaction.LicensePlate || "");
-            setCarColor(existingTransaction.Color || "");
-            setCarMake(existingTransaction.Make || "");
-            console.log("carLicensePlate: ", carLicensePlate);
-            console.log("carColor: ", carColor);
-            console.log("carMake: ", carMake);
-            setFileList([
-              {
-                uid: "-1",
-                name: "image.png",
-                status: "done",
-                url: existingTransaction.Image, 
-              },
-            ]);
+        const rescard = await GetParkingCardByID(selectedCard?.ID || "");
+        setSelectedCard(rescard.data);
+
+        console.log("ParkingTransaction: ", rescard.data.ParkingTransaction);
+        console.log("IsPermanent: ", rescard.data.IsPermanent);
+        console.log("ParkingZone: ", rescard.data.ParkingZone);
+        const existingTransaction = rescard.data.ParkingTransaction?.find(
+          (transaction: any) => {
+            console.log("Transaction: ", transaction);
+            return (
+              transaction?.IsReservedPass === false &&
+              transaction?.ReservationDate === String(today) &&
+              rescard.data.ParkingTransaction?.length > 0 &&
+              rescard.data.IsPermanent === true
+            );
           }
-          console.log("fileList: ", fileList);
+        );
+        console.log("existingTransaction: ", existingTransaction);
+
+        if (existingTransaction !== undefined && existingTransaction === true) {
+          setCarLicensePlate(existingTransaction.LicensePlate || "");
+          setCarColor(existingTransaction.Color || "");
+          setCarMake(existingTransaction.Make || "");
+          setFileList([
+            {
+              uid: "-1",
+              name: "image.png",
+              status: "done",
+              url: existingTransaction.Image,
+            },
+          ]);
         }
       } catch (error) {
         message.error("Failed to fetch parking card data.");
       }
     };
     if (isModalInVisible) fetchData();
-  }, [isModalInVisible, carLicensePlate, carColor, carMake]);
+    console.log("carLicensePlate: ", carLicensePlate);
+    console.log("carColor: ", carColor);
+    console.log("carMake: ", carMake);
+    console.log("fileList: ", fileList);
+    console.log("fileList.length: ", fileList.length);
+  }, [isModalInVisible, reload]);
 
   const handleCardClick = (index: any) => {
     setSelectedCardIndex(index === selectedCardIndex ? null : index);
@@ -121,130 +143,204 @@ const IN: React.FC<InProps> = ({
   };
 
   const handleOk = async () => {
-    try {
-      await form.validateFields();
-    } catch {
-      message.error("Please fill in all required fields!");
-      return;
-    }
-
+    // ตรวจสอบว่าเลือกโซนจอดรถหรือยัง
     if (selectedCardIndex === null) {
       message.error("Please select a parking zone and input all!");
       return;
     }
 
     const zone = selectedCard?.ParkingZone?.[selectedCardIndex];
-    if (!zone || zone.AvailableZone === 0) {
-      message.error("This parking zone is full. Cannot update card!");
+
+    // ตรวจสอบว่าโซนจอดรถที่เลือกมีอยู่จริงหรือไม่
+    if (!zone) {
+      message.error("This parking zone is not found.");
       return;
     }
 
-    const imageUrl = fileList[0]?.thumbUrl || null; // Ensure imageUrl is valid or null
+    const imageUrl = fileList[0]?.thumbUrl || null;
 
-    if (!carLicensePlate || imageUrl === null || !carColor || !carMake) {
+    // ตรวจสอบว่ากรอกข้อมูลทั้งหมด (ป้ายทะเบียน สีรถ ยี่ห้อรถ และรูปภาพ) หรือยัง
+    if (
+      !carLicensePlate ||
+      !carColor ||
+      !carMake ||
+      (imageUrl === null && fileList.length === 0)
+    ) {
       message.error("Please select a parking zone and input all!");
       return;
     }
 
-    const today = dayjs().format("YYYY-MM-DD");
-
-    // ค้นหาการทำรายการที่ IsReservedPass == false และ ReservationDate == today
+    // ค้นหา Transaction ที่มีวันที่ตรงกับวันนี้และยังไม่ได้ผ่านการจอง
     const existingTransaction = selectedCard?.ParkingTransaction?.find(
       (transaction) =>
         transaction.IsReservedPass === false &&
-        transaction.ReservationDate === today
+        transaction.ReservationDate === String(today)
     );
 
-    // หากพบการทำรายการที่ตรงเงื่อนไข, ทำการอัปเดตการจอด
-    if (existingTransaction) {
-      // ตรวจสอบว่า ID ของ existingTransaction เป็น number หรือไม่
-      const transactionID = Number(existingTransaction.ID);
+    // เตรียมข้อมูลสำหรับอัปเดตสถานะบัตรจอดรถ
+    const updateCardData = {
+      StatusCardID: 2, // เปลี่ยนสถานะบัตรให้เป็นใช้งานอยู่
+    };
 
-      if (isNaN(transactionID)) {
-        message.error("Invalid transaction ID.");
-        return;
-      }
-
-      const updateTransactionData = {
-        LicensePlate: carLicensePlate,
-        Image: imageUrl || "",
-        Color: carColor,
-        Make: carMake,
-        ParkingCardID: selectedCard?.ID,
-        StatusPaymentID: 1,
-        ParkingZoneID: zone.ID,
-        UserID: Number(localStorage.getItem("id")),
-      };
-
+    try {
+      // **ส่วนที่ 1: ดึงข้อมูล ZoneDaily เพื่อเช็คว่ามีข้อมูลอยู่แล้วหรือไม่**
+      let zoneDaily;
       try {
-        const resTrans = await UpdateParkingTransaction(
-          transactionID,
-          updateTransactionData
-        ); // ใช้ transactionID ที่ตรวจสอบแล้ว
-        if (resTrans.status === 200) {
-          messageApi.success("Parking transaction updated successfully!");
-          getParkingCards();
-          handleCancel();
-          onChange("");
-          setOtp("");
+        const resZoneDaily = await GetZoneDailyByZoneID(zone.ID || 0);
+
+        if (resZoneDaily.status === 200 && resZoneDaily.data && Array.isArray(resZoneDaily.data) && resZoneDaily.data.length > 0) {
+          zoneDaily = resZoneDaily.data;
+          console.log("zoneDailypass: ", zoneDaily)
         } else {
-          throw new Error("Update failed");
+          zoneDaily = undefined;
+          console.log("zoneDailyfail: ", zoneDaily)
         }
       } catch (error) {
-        message.error("Error updating parking transaction.");
-        console.error("Error details:", error);
+        console.error("Error fetching Zone Daily:", error);
       }
-    } else {
-      // หากไม่มี transaction ที่ IsReservedPass == false, สร้าง ParkingTransaction ใหม่
-      const CardTransData = {
-        ReservationDate: new Date().toISOString(),
-        EntryTime: new Date().toISOString(),
-        LicensePlate: carLicensePlate,
-        Image: imageUrl || "",
-        Color: carColor,
-        Make: carMake,
-        ParkingCardID: selectedCard?.ID,
-        StatusPaymentID: 1,
-        ParkingZoneID: zone.ID,
-        UserID: Number(localStorage.getItem("id")),
+
+      // **ส่วนที่ 2: เตรียมข้อมูลสำหรับอัปเดตหรือสร้าง ZoneDaily**
+      const updateZoneDailyData = {
+        Date: today.toISOString(), // วันที่ปัจจุบัน
+        TotalVisitors: (zoneDaily?.TotalVisitors || 0) + 1, // เพิ่มจำนวนผู้เข้าพื้นที่จอด
+        AvailableZone:
+          ((zoneDaily?.AvailableZone ?? zone?.MaxCapacity) || 0) - 1, // ลดจำนวนที่จอดรถที่ว่าง
+        ReservedAvailable:
+          ((zoneDaily?.ReservedAvailable ?? zone?.MaxReservedCapacity) || 0) + 1, // เพิ่มจำนวนที่จอง
+        ParkingZoneID: zone.ID, // ID ของโซนจอด
       };
 
-      const updateCardData = {
-        IsActive: true,
-        StatusCardID: 2,
-      };
+      
+      console.log("zone: ",zone);   
+      console.log("zoneDaily?.TotalVisitors: ",zoneDaily?.TotalVisitors);
+      console.log("zone?.Capacity: ",zone?.MaxCapacity);
+      console.log("zoneDaily?.AvailableZone: ",zoneDaily?.AvailableZone);
+      console.log("zone?.ReservedCapacity: ",zone.MaxCapacity);
+      console.log("zoneDaily?.ReservedAvailable: ",zoneDaily?.ReservedAvailable);
+      console.log("zoneDaily?.AvailableZone ?? zone?.Capacity: ",zoneDaily?.AvailableZone ?? zone?.MaxCapacity);
+      console.log("zoneDaily?.ReservedAvailable ?? zone?.ReservedCapacity: ",zoneDaily?.ReservedAvailable ?? zone?.MaxReservedCapacity);
 
-      const updateZoneData = {
-        AvailableZone: (zone.AvailableZone || 0) - 1,
-      };
+      // **ส่วนที่ 3: หากมี Transaction ที่ตรงเงื่อนไข (กรณีมีการจองแล้ว)**
+      if (existingTransaction) {
+        const transactionID = Number(existingTransaction.ID);
 
-      try {
-        const resCard = await UpdateParkingCard(
-          selectedCard?.ID || "",
-          updateCardData
-        );
-        const resZone = await UpdateParkingZone(zone.ID || 0, updateZoneData);
-        const resTrans = await CreateParkingTransaction(CardTransData); // สร้างการจอดใหม่
+        // ตรวจสอบว่า Transaction ID เป็นตัวเลขที่ถูกต้อง
+        if (isNaN(transactionID)) {
+          message.error("Invalid transaction ID.");
+          return;
+        }
 
-        if (
-          resCard.status === 200 &&
-          resZone.status === 200 &&
-          resTrans.status === 201
-        ) {
-          messageApi.success(
-            "Parking card, zone, and transaction updated successfully!"
+        // เตรียมข้อมูลสำหรับอัปเดต Transaction
+        const updateTransactionData = {
+          LicensePlate: carLicensePlate,
+          Image: imageUrl || "",
+          Color: carColor,
+          Make: carMake,
+          ParkingCardID: selectedCard?.ID,
+          ParkingZoneID: zone.ID,
+          UserID: Number(localStorage.getItem("id")),
+        };
+
+        // เตรียมข้อมูลสำหรับอัปเดตโซนจอด
+        const updateZoneData = {
+          AvailableZone: (zone.AvailableZone || 0) - 1,
+        };
+
+        try {
+          // อัปเดตข้อมูล Transaction, Card, Zone และ ZoneDaily
+          const resTrans = await UpdateParkingTransaction(
+            transactionID,
+            updateTransactionData
           );
-          getParkingCards();
-          handleCancel();
-          onChange("");
-          setOtp("");
-        } else {
-          throw new Error("Update failed");
+          const resCard = await UpdateParkingCard(
+            selectedCard?.ID || "",
+            updateCardData
+          );
+          const resZone = await UpdateParkingZone(zone.ID || 0, updateZoneData);
+
+          const resZoneDaily =
+            zoneDaily?.Date === String(today)
+              ? await UpdateZoneDailyByZoneID(zone.ID || 0, updateZoneDailyData) // หากมี ZoneDaily แล้ว อัปเดต
+              : await CreateZoneDaily(updateZoneDailyData); // หากไม่มี ให้สร้างใหม่
+
+          // ตรวจสอบว่าทุก API สำเร็จ
+          if (
+            resCard.status === 200 &&
+            resZone.status === 200 &&
+            resTrans.status === 200 &&
+            resZoneDaily.status === 200
+          ) {
+            messageApi.success("Parking transaction updated successfully!");
+            getParkingCards(); // โหลดข้อมูลบัตรจอดรถใหม่
+            handleCancel(); // ปิด Modal
+            onChange(""); // รีเซ็ตค่า input
+            setOtp(""); // ลบ OTP
+            setReload(!reload); // โหลดข้อมูลใหม่
+          } else {
+            throw new Error("Update failed");
+          }
+        } catch (error) {
+          message.error("Error updating parking transaction.");
+          console.error("Error details:", error);
         }
-      } catch (error) {
-        message.error("Error updating parking card or zone.");
-        console.error("Error details:", error);
+      } else {
+        // **ส่วนที่ 4: หากไม่มี Transaction ที่ตรงกับเงื่อนไข (กรณีใหม่ทั้งหมด)**
+        const CardTransData = {
+          ReservationDate: new Date().toISOString(),
+          EntryTime: new Date().toISOString(),
+          LicensePlate: carLicensePlate,
+          Image: imageUrl || "",
+          Color: carColor,
+          Make: carMake,
+          ParkingCardID: selectedCard?.ID,
+          ParkingZoneID: zone.ID,
+          UserID: Number(localStorage.getItem("id")),
+        };
+
+        const updateZoneData = {
+          AvailableZone: (zone.AvailableZone || 0) - 1,
+        };
+
+        try {
+          // สร้าง Transaction ใหม่ และอัปเดตข้อมูลอื่นๆ
+          const resCard = await UpdateParkingCard(
+            selectedCard?.ID || "",
+            updateCardData
+          );
+          const resTrans = await CreateParkingTransaction(CardTransData);
+          const resZone = await UpdateParkingZone(zone.ID || 0, updateZoneData);
+
+          const resZoneDaily =
+            zoneDaily?.Date === String(today)
+              ? await UpdateZoneDailyByZoneID(zone.ID || 0, updateZoneDailyData) // หากมี ZoneDaily แล้ว อัปเดต
+              : await CreateZoneDaily(updateZoneDailyData); // หากไม่มี ให้สร้างใหม่
+
+          // ตรวจสอบว่าทุก API สำเร็จ
+          if (
+            resCard.status === 200 &&
+            resTrans.status === 201 &&
+            resZone.status === 200 &&
+            resZoneDaily.status === 200
+          ) {
+            messageApi.success(
+              "Parking card, zone, and transaction updated successfully!"
+            );
+            getParkingCards();
+            handleCancel();
+            onChange("");
+            setOtp("");
+            setReload(!reload);
+          } else {
+            throw new Error("Update failed");
+          }
+        } catch (error) {
+          message.error("Error updating parking card or zone.");
+          console.error("Error details:", error);
+        }
       }
+    } catch (error) {
+      message.error("Error processing parking transaction.");
+      console.error("Error details:", error);
     }
   };
 
@@ -372,7 +468,7 @@ const IN: React.FC<InProps> = ({
                           lineHeight: "1.5",
                         }}
                       >
-                        <div>Capacity: {zone.Capacity}</div>
+                        <div>Capacity: {zone.MaxCapacity}</div>
                         <div>Available: {zone.AvailableZone}</div>
                       </div>
                     </div>
@@ -388,7 +484,8 @@ const IN: React.FC<InProps> = ({
                       strokeColor="#E8D196"
                       size={80}
                       percent={
-                        ((zone.AvailableZone || 0) / (zone.Capacity || 0)) * 100
+                        ((zone.AvailableZone || 0) / (zone.MaxCapacity || 0)) *
+                        100
                       }
                       format={(percent) => `${(percent ?? 0).toFixed(2)}%`}
                       style={{
@@ -458,7 +555,7 @@ const IN: React.FC<InProps> = ({
           >
             <Input
               value={carLicensePlate}
-              defaultValue={carLicensePlate}
+              //defaultValue={carLicensePlate}
               onChange={(e) => setCarLicensePlate(e.target.value)}
               placeholder="Enter license plate"
             />
@@ -472,7 +569,7 @@ const IN: React.FC<InProps> = ({
           >
             <Input
               value={carColor}
-              defaultValue={carColor}
+              //defaultValue={carColor}
               onChange={(e) => setCarColor(e.target.value)}
               placeholder="Enter car color"
             />
@@ -486,7 +583,7 @@ const IN: React.FC<InProps> = ({
           >
             <Input
               value={carMake}
-              defaultValue={carMake}
+              //defaultValue={carMake}
               onChange={(e) => setCarMake(e.target.value)}
               placeholder="Enter car make"
             />

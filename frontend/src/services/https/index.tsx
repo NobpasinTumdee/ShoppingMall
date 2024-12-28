@@ -6,6 +6,7 @@ import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 import {
   ParkingCardInterface,
   ParkingTransactionInterface,
+  ParkingZoneDailyInterface,
   ParkingZoneInterface,
   VehicleInterface,
 } from "../../interfaces/Carpark";
@@ -819,6 +820,12 @@ async function CreateVehicle(data: VehicleInterface) {
     .then((res) => res)
     .catch((e) => e.response);
 }
+async function CreateZoneDaily(data: ParkingZoneDailyInterface) {
+  return await axios
+    .post(`${apiUrl}/create-parkingzone-daily`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
 /* async function CreateParkingCardAndVehical(data: ParkingTransactionInterface) {
   return await axios
     .post(`${apiUrl}/create-parkingcard-and-vehical`, data, requestOptions)
@@ -849,6 +856,12 @@ async function UpdateParkingTransaction(id: number, data: ParkingCardInterface) 
     .then((res) => res)
     .catch((e) => e.response);
 }
+async function UpdateZoneDailyByZoneID(id: number, data: ParkingZoneDailyInterface) {
+  return await axios
+    .put(`${apiUrl}/update-parkingzone-daily/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}/* 
 async function UpdateParkingCardAndZone(
   cid: string,
   zid: number,
@@ -867,22 +880,29 @@ async function UpdateParkingCardAndZone(
     )
     .then((res) => res)
     .catch((e) => e.response);
-}		
+}	 */	
 async function GetParkingCardByID(id: string) {
   return await axios
     .get(`${apiUrl}/get-parking-card/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }	
+
 async function GetParkingCardByUserID(id: string) {
   return await axios
     .get(`${apiUrl}/get-parking-card-by-user/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
-async function GetParkingCardWithZoneByID(id: string) {
+/* async function GetParkingCardWithZoneByID(id: string) {
   return await axios
     .get(`${apiUrl}/get-parking-card-with-zone/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+} */
+async function GetZoneDailyByZoneID(id: number) {
+  return await axios
+    .get(`${apiUrl}/get-parkingzone-daily/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -895,7 +915,7 @@ async function GetListZone() {
       return e.response;
     });
 }
-async function GetZoneByTypePark(type: string) {
+/* async function GetZoneByTypePark(type: string) {
   return await axios
     .get(`${apiUrl}/get-parking-zone-by-type-park/${type}`, requestOptions)
     .then((res) => res)
@@ -903,7 +923,7 @@ async function GetZoneByTypePark(type: string) {
       console.error("Error fetching data:", e);
       return e.response;
     });
-}
+} */
 async function GetIdCardZone(id: string) {
   return await axios
     .get(`${apiUrl}/get-card-zone/${id}`, requestOptions)
@@ -998,19 +1018,22 @@ export {
     /* CreateParkingCardAndVehical, */
     GetListCardAndUser,
     GetListZone,
-    GetZoneByTypePark,
+    //GetZoneByTypePark,
     //GetListLastTransaction,
     CreateParkingCard,
     CreateParkingTransaction,
     CreateVehicle,
+    CreateZoneDaily,
     UpdateParkingCard,
     UpdateParkingZone,
     UpdateVehicle,
     UpdateParkingTransaction,
-    UpdateParkingCardAndZone,
+    //UpdateParkingCardAndZone,
+    UpdateZoneDailyByZoneID,
     GetParkingCardByID,
     GetParkingCardByUserID,
-    GetParkingCardWithZoneByID,
+    //GetParkingCardWithZoneByID,
+    GetZoneDailyByZoneID,
     GetIdCardZone,
     DeleteParkingCard,
 }

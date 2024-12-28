@@ -34,14 +34,26 @@ export interface ParkingCardInterface {
     ID?: number;
     Name?: string;
     Image?: string;
-    Capacity?: number;
+    MaxCapacity?: number;
     AvailableZone?: number;
-    ReservedCapacity?: number;
+    MaxReservedCapacity?: number;
     ReservedAvailable?: number;
     TypeParkID?: number;
   }[];
   ParkingTransaction?: {
-    ID(ID: any, updateTransactionData: { LicensePlate: string; Image: string; Color: string; Make: string; ParkingCardID: string | undefined; StatusPaymentID: number; ParkingZoneID: number | undefined; UserID: number; }): unknown;
+    ID(
+      ID: any,
+      updateTransactionData: {
+        LicensePlate: string;
+        Image: string;
+        Color: string;
+        Make: string;
+        ParkingCardID: string | undefined;
+        StatusPaymentID: number;
+        ParkingZoneID: number | undefined;
+        UserID: number;
+      }
+    ): unknown;
     ReservationDate?: string;
     IsReservedPass?: boolean;
     EntryTime?: string;
@@ -56,9 +68,9 @@ export interface ParkingCardInterface {
       ID?: number;
       Name?: string;
       Image?: string;
-      Capacity?: number;
+      MaxCapacity?: number;
       AvailableZone?: number;
-      ReservedCapacity?: number;
+      MaxReservedCapacity?: number;
       ReservedAvailable?: number;
       TypeParkID?: number;
     }[];
@@ -89,13 +101,32 @@ export interface ParkingZoneInterface {
   ID?: number;
   Name?: string;
   Image?: string;
-  Capacity?: number;
+  MaxCapacity?: number;
   AvailableZone?: number;
-  ReservedCapacity?: number;
+  MaxReservedCapacity?: number;
   ReservedAvailable?: number;
   TypeParkID?: number;
   TypePark?: TypeParkInterface;
-  ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCard
+  ParkingCard?: ParkingCardInterface[]; // หลายๆ ParkingCar
+}
+
+export interface ParkingZoneDailyInterface {
+  ID?: number;
+  Date?: string;
+  TotalVisitors?: number;
+  AvailableZone?: number;
+  ReservedAvailable?: number;
+  ParkingZoneID?: number;
+  ParkingZone?: {
+    ID?: number;
+    Name?: string;
+    Image?: string;
+    MaxCapacity?: number;
+    AvailableZone?: number;
+    MaxReservedCapacity?: number;
+    ReservedAvailable?: number;
+    TypeParkID?: number;
+  }[];
 }
 
 export interface ParkingTransactionInterface {
@@ -115,9 +146,9 @@ export interface ParkingTransactionInterface {
     ID?: number;
     Name?: string;
     Image?: string;
-    Capacity?: number;
+    MaxCapacity?: number;
     AvailableZone?: number;
-    ReservedCapacity?: number;
+    MaxReservedCapacity?: number;
     ReservedAvailable?: number;
     TypeParkID?: number;
   }[];

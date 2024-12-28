@@ -399,8 +399,8 @@ func UpdateParkingCardAndZone(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("ParkingZone ID:", payload.ParkingZone.ID)
-	fmt.Println("ParkingZone AvailableZone:", payload.ParkingZone.AvailableZone)
+	/* fmt.Println("ParkingZone ID:", payload.ParkingZone.ID)
+	fmt.Println("ParkingZone AvailableZone:", payload.ParkingZone.AvailableZone) */
 
 	if err := db.First(&payload.ParkingZone, c.Param("zid")).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Parking zone not found"})

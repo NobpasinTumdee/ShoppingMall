@@ -28,7 +28,6 @@ import {
   GetParkingCardByUserID,
   GetUserById,
   GetUserDetails,
-  GetZoneByTypePark,
   UpdateParkingCard,
   UpdateParkingZone,
   UpdateVehicle,
@@ -186,7 +185,7 @@ const CustomerParkingBooking: React.FC = () => {
 
         // สร้าง Vehicle
         const resCreateVehicle = await CreateVehicle(vehicleData);
-        if (resCreateVehicle.status === 200) {
+        if (resCreateVehicle.status === 201) {
           console.log("Parking card and vehicle created successfully.");
           setIsModalCreateCardVisible(false);
           setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
@@ -255,7 +254,7 @@ const CustomerParkingBooking: React.FC = () => {
       !carMake ||
       (imageUrl === null && fileList.length === 0)
     ) {
-      messageApi.error("Please fill in all required fields.");
+      messageApi.error("Please choose a zone.");
       return;
     }
 
@@ -529,7 +528,7 @@ const CustomerParkingBooking: React.FC = () => {
                                     lineHeight: "1.5",
                                   }}
                                 >
-                                  <div>Capacity: {zone?.ReservedCapacity}</div>
+                                  <div>Capacity: {zone?.MaxReservedCapacity}</div>
                                   <div>Available: {zone.ReservedAvailable}</div>
                                 </div>
                               </div>
@@ -546,7 +545,7 @@ const CustomerParkingBooking: React.FC = () => {
                                 size={80}
                                 percent={
                                   ((zone.ReservedAvailable || 0) /
-                                    (zone.ReservedCapacity || 0)) *
+                                    (zone.MaxReservedCapacity || 0)) *
                                   100
                                 }
                                 format={(percent) =>

@@ -305,6 +305,37 @@ const CarPark: React.FC = () => {
     },
   ];
 
+  const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
+  useEffect(() => {
+    console.log("useEffect called");
+    getParkingCards();
+  }, []);
+
+  const getParkingCards = async () => {
+    setLoading(true);
+    try {
+      const resCard = await GetListCard();
+      if (resCard.status === 200) {
+        const data = resCard.data;
+        setCards(data);
+        console.log("card: ", data);
+
+        setSelectedButtonInOutDefault("IN");
+        const filtered = data.filter(
+          (card: any) => card.StatusCard?.Status === "IN"
+        );
+        setFilteredData(filtered);
+      } else {
+        messageApi.error("Failed to fetch parking cards.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      messageApi.error("An error occurred while fetching data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const [otp, setOtp] = useState<string>(""); // ใช้เก็บค่าของ OTP
   const [isActive, setIsActive] = useState(false);
 
@@ -355,23 +386,6 @@ const CarPark: React.FC = () => {
     return totalFee > 0 ? totalFee : 0;
   };
 
-  const getParkingCards = async () => {
-    setLoading(true);
-    try {
-      const resCard = await GetListCard();
-      if (resCard.status === 200) {
-        setCards(resCard.data);
-      } else {
-        messageApi.error("Failed to fetch parking cards.");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      messageApi.error("An error occurred while fetching data.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDeleteCard = async (cardID: string) => {
     try {
       const response = await DeleteParkingCard(cardID);
@@ -411,16 +425,6 @@ const CarPark: React.FC = () => {
     onChange,
     value: otp,
   };
-
-  useEffect(() => {
-    getParkingCards();
-    //setSelectedฺButtonInOut(false);
-    const filtered = cards.filter(
-      (card) => card.StatusCard?.Status === "IN" 
-    );
-    setFilteredData(filtered);
-    setSelectedButtonInOutDefault("IN");
-  }, [selectedButtonInOutDefault]);
 
   const handleStatusClick = (status: string, record: ParkingCardInterface) => {
     const updatedCards = cards.map((card) =>
@@ -704,6 +708,7 @@ const CarPark: React.FC = () => {
                   textAlignLast: "center",
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
                   animation: "ease-in-out",
+                  width: "100%",
                 }}
                 className="table-card"
                 rowKey="ID"
@@ -767,6 +772,9 @@ const CarPark: React.FC = () => {
           setIsModalInVisible={setIsModalInVisible}
           isModalInVisible={isModalInVisible}
           getParkingCards={getParkingCards}
+          setSelectedButtonInOutDefault={setSelectedButtonInOutDefault}
+          setFilteredData={setFilteredData}
+          cards={cards}
         ></IN>
         <OUT
           setCards={setCards}
