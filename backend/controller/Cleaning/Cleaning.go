@@ -139,11 +139,19 @@ func GetCleaningRecordsByArea(c *gin.Context) {
 
     // คิวรีข้อมูลพร้อมเช็ค area_id
     results := db.Raw(`
-    SELECT cleaning_records.*
-	FROM cleaning_records
-	JOIN schedules ON cleaning_records.schedule_id = schedules.id
-	JOIN areas ON areas.id = schedules.area_id
-	WHERE areas.id = ?;
+    SELECT 
+            cleaning_records.id,
+            cleaning_records.actual_start_time,
+            cleaning_records.actual_end_time,
+            cleaning_records.notes,
+            cleaning_records.schedule_id,
+            cleaning_records.user_id,
+            users.user_name AS user_name
+        FROM cleaning_records
+        JOIN schedules ON cleaning_records.schedule_id = schedules.id
+        JOIN areas ON areas.id = schedules.area_id
+        JOIN users ON users.id = cleaning_records.user_id
+        WHERE areas.id = ?;
 	`, areaID).Scan(&records)
 
     // ตรวจสอบข้อผิดพลาด
@@ -155,16 +163,13 @@ func GetCleaningRecordsByArea(c *gin.Context) {
         }
         return
     }
-
     // ส่ง JSON กลับไปยัง Client
     c.JSON(http.StatusOK, records)
 }
 
 // GET /GetSchedulesByArea
 func GetSchedulesByArea(c *gin.Context) {
-    // รับค่า 'id' จากพารามิเตอร์ URL
     areaID := c.Param("id")
-
     var records []entity.Schedule
 
     // เรียกใช้งานฐานข้อมูลผ่าน config
