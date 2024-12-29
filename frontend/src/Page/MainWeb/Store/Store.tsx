@@ -392,6 +392,7 @@ export const BookingStoreAdmin: React.FC = () => {
             formData.sub_pic_three = await getImageURL(fileList[3]?.originFileObj);
             console.log('Form data submitted:', formData);
             BookStore(formData);
+            setAddBookingpopup(false);
         };
         //คำนวนวัน
         const BDate = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
@@ -460,6 +461,7 @@ export const BookingStoreAdmin: React.FC = () => {
                     </div>
                     <Table<StoreInterface> columns={columns} dataSource={Store} size="middle" style={{width:"80%",margin:'auto',border: '3px solid #eadcb2'}} />
                     {addBookingpopup && 
+                    <>
                         <div className='addBookingpopup'>
                             <p style={{fontSize:'25px',textAlign: 'center'}}>Booking</p>
                             <form onSubmit={handleSubmitEdit}>
@@ -523,6 +525,8 @@ export const BookingStoreAdmin: React.FC = () => {
                                 </div>
                             </form>
                         </div>
+                        <div className='backgroundevent' onClick={() => setAddBookingpopup(false)}></div>
+                    </>
                     }
                 </div>
             }
