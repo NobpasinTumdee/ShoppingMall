@@ -21,35 +21,39 @@ import ServicePage from './Page/MainWeb/ServiceRequest/ServicePage';
 
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
+
+import { ProtectedRoute } from './ProtectedRoute';
+import { ProtectedRouteAdmin } from './ProtectedRoute';
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning","/service"].includes(location.pathname);
+  const isAuthenticated = !!localStorage.getItem('token'); // ตรวจสอบการเข้าสู่ระบบ
   return (
     <>
       {Navbar && <NavBar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/Main" element={<Main />} />
-        <Route path="/Admin" element={<Admin />} />
-        <Route path="/AdminEvent" element={<AdminEvent />} />
-        <Route path="/AdminStore" element={<AdminStore />} />
-        <Route path="/BackUpStore" element={<BackUpStore />} />
-        <Route path="/Store" element={<Store />} />
-        <Route path="/StorePayment" element={<StorePayment />} />
-        <Route path="/SubStore" element={<SubStore />} />
-        <Route path="/BookStore" element={<BookStore />} /> 
-        <Route path="/Inbox" element={<Inbox />} /> 
 
-        <Route path="/BillStore" element={<BillStore />} />
+        <Route path="/Admin" element={<ProtectedRouteAdmin isAuthenticated={isAuthenticated}><Admin /></ProtectedRouteAdmin>} />
+        <Route path="/AdminEvent" element={<ProtectedRouteAdmin isAuthenticated={isAuthenticated}><AdminEvent /></ProtectedRouteAdmin>} />
+        <Route path="/AdminStore" element={<ProtectedRouteAdmin isAuthenticated={isAuthenticated}><AdminStore /></ProtectedRouteAdmin>} />
+        <Route path="/AdminJob" element={<ProtectedRouteAdmin isAuthenticated={isAuthenticated}><AdminJob /></ProtectedRouteAdmin>} />
+        <Route path="/Recruitment" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Recruitment /></ProtectedRoute>} />
+
+        <Route path="/Store" element={<Store />} />
+        <Route path="/SubStore" element={<SubStore />} />
+        <Route path="/BookStore" element={<ProtectedRoute isAuthenticated={isAuthenticated}><BookStore /></ProtectedRoute>} /> 
+        <Route path="/BackUpStore" element={<ProtectedRoute isAuthenticated={isAuthenticated}><BackUpStore /></ProtectedRoute>} />
+        <Route path="/Inbox" element={<Inbox />} /> 
+        <Route path="/StorePayment" element={<StorePayment />} />
+        <Route path="/BillStore" element={<ProtectedRoute isAuthenticated={isAuthenticated}><BillStore /></ProtectedRoute>} />
+
         <Route path="/Hall" element={<Hall />} />
         <Route path="/bookinghall" element={<BookingHall />} />
         <Route path="/celendar" element={<CalendarPage />} />
 
-        <Route path="/BillStore" element={<BillStore />} /> 
-        <Route path="/Recruitment" element={<Recruitment />} />
-        <Route path="/AdminJob" element={<AdminJob />} />
         <Route path="/Inventory" element={<Inventory />} />
-        <Route path="/Hall" element={<Hall />} />
         <Route path="/Cleaning" element={<Cleaning />} />
         
         <Route path="/service" element={<ServicePage />} />
