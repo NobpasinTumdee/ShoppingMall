@@ -146,11 +146,15 @@ const SubStore: React.FC = () => {
         }
         if (Store?.StatusStore !== 'This store is available for reservation.' && (userWatch?.Status === 'Admin' || userWatch?.UserName === Store?.User?.UserName)) {
             setStatusEdit(true);
+            setServicePopup(true);
         }else{
             setStatusEdit(false);
+            setServicePopup(false);
         }
     }, [Store?.StatusStore, userWatch?.Status]);
     const [statusCanEdit,setStatusEdit] = useState(false);
+    const [ServicePopup,setServicePopup] = useState(false);
+    const [Service,setService] = useState(false);
 
     //========================================review=========================================
     const [RatingAvg, setRatingAvg] = useState<AverageRatingInterface | null>(null);
@@ -248,6 +252,37 @@ const SubStore: React.FC = () => {
                 console.error("Error Edit:", error);
             }
         }
+    }
+    //============================================Service=====================================
+    const ServiceRQ = async (data: string) => {
+        if (data === "Request") {
+            const valuesStoreUpdate: StoreInterface = {
+                StatusService: 'Request',
+            };
+            try {
+                const res = await UpdateStoreByid(String(ID),valuesStoreUpdate);
+                if (res.status === 200) {
+                    message.success("Store Request.");
+                    await fetchStoreData(String(ID));;
+                }
+            } catch (error) {
+                message.error("Send error.");
+            }
+        }else if (data === "NoRequest") {
+            const valuesStoreUpdate: StoreInterface = {
+                StatusService: 'NoRequest',
+            };
+            try {
+                const res = await UpdateStoreByid(String(ID),valuesStoreUpdate);
+                if (res.status === 200) {
+                    message.success("Store NoRequest.");
+                    await fetchStoreData(String(ID));;
+                }
+            } catch (error) {
+                message.error("Send error.");
+            }
+        }
+        
     }
     return (
         <>
@@ -406,6 +441,35 @@ const SubStore: React.FC = () => {
                             </div>
                         </div>
                         <div className='backgroundevent' onClick={() => setPopup(false)}></div>
+                    </>
+                }
+                {ServicePopup &&
+                    <>
+                        <div onClick={() => setService(true)} style={{cursor:"pointer",fontFamily:'"Abel", sans-serif',position:'fixed',right:'10px',bottom:'160px',backgroundColor:'#E8D196',padding:"10px 10px",borderRadius:'5px 0 0 5px',borderRight:"5px solid #000",fontWeight:'500'}}>
+                            SERVICE
+                        </div>
+                        {Service &&
+                            <>
+                                <div className='servicestore' style={{fontFamily:'"Abel", sans-serif'}}>
+                                    <h2 style={{textAlign:'center'}}>ServiceRequest</h2>
+                                    <div style={{backgroundColor:'#fff',display:'flex',justifyContent:'start',boxShadow:"0 0 10px #e0e0e0",margin:'0 10px'}}>
+                                        <img src={Store?.PicStore||PicNoStore} alt="PicStore" width={150} />
+                                        <div style={{lineHeight:'5px'}}>
+                                            <p style={{fontWeight:'800'}}>{Store?.NameStore}</p>
+                                            <p>UserName: {Store?.User?.UserName} Name: {Store?.User?.FirstName || "Not set"} {Store?.User?.LastName}</p>
+                                            <p>Gmail: {Store?.User?.Email || "No data."}</p>
+                                            <p>Tel: {Store?.User?.Tel || "No data."}</p>
+                                        </div>
+                                        <p style={{margin:'auto',backgroundColor:"#E8D196",padding:'5px 10px',borderRadius:'20px',fontWeight:'700',color:"#fff",boxShadow:"0 0 10px #E8D196"}}>{Store?.StatusService}</p>
+                                    </div>
+                                    <div style={{margin:"20px 10px"}}>
+                                        <button onClick={() => ServiceRQ('Request')} style={{marginRight:'10px'}} className='buttonConfirm'>REQUEST</button>
+                                        <button onClick={() => ServiceRQ('NoRequest')}className='buttonConfirm'>NOT REQUEST</button>
+                                    </div>
+                                </div>
+                                <div className='backgroundevent' onClick={() => setService(false)}></div>
+                            </>
+                        }
                     </>
                 }
             </div>
