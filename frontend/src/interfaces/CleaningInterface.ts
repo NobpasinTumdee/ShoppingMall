@@ -11,6 +11,7 @@ export interface CleaningRecordInterface {
     Notes?: string;
     ScheduleID?: number;
     UserID?: number;
+    UserName?: string;//ยังไม่เสร็จ
     AreaID?: number;
 }
 

@@ -36,7 +36,6 @@ const TaskOverview: React.FC = () => {
 
   const openCleanPopup = (day: number) => { 
     
-
     if (!selectedArea) {
       message.info("กรุณาเลือกสถานที่ทำความสะอาดก่อน");
       return;
@@ -60,7 +59,7 @@ const TaskOverview: React.FC = () => {
         recordDate.getFullYear() === currentYear
       );
     });
-  
+    //console.log("Filtered Records:", filteredRecords); // แสดงข้อมูลใน Console
     // เซ็ตข้อมูลที่กรองแล้วใน State
     setPopupCleaningRecords(filteredRecords);
     setPopupMessage(
@@ -168,9 +167,6 @@ const TaskOverview: React.FC = () => {
   };
 
   const closePopup = () => setIsPopupOpen(false);
-  //const closeTaskPopup = () => setIsPopupOpenTask(false);
-  //const closeCleanPopup = () => setIsPopupOpenClean(false);
-
 
   // ดึงข้อมูล Areas
   useEffect(() => {
@@ -191,7 +187,7 @@ const TaskOverview: React.FC = () => {
       const fetchUser = async (userid: string) => {
         try {
           const Userdata = await GetUserById(userid);
-          console.log(Userdata.data);
+          //console.log(Userdata.data);
           setUserFormData(Userdata.data); // สมมติว่าคุณมี setUser อยู่แล้ว
           setUserFormData((prev: any) => ({
             ...prev,
@@ -216,6 +212,10 @@ const TaskOverview: React.FC = () => {
   useEffect(() => {
     if (selectedArea) fetchSchedules(selectedArea);
   }, [selectedArea]);
+
+  useEffect(() => {
+    console.log("Cleaning Records:", cleaningRecords);
+  }, [cleaningRecords]);
 
   // Helper functions for calendar generation
   const getDaysInMonth = (month: number, year: number) =>
@@ -257,8 +257,9 @@ const TaskOverview: React.FC = () => {
   // ฟังก์ชันเรียกข้อมูลการทำความสะอาด
   const fetchCleaningRecords = async (areaId: number) => {
     try {
-      const data = await GetCleaningRecordsByArea((areaId)); // เรียก API
+      const data = await GetCleaningRecordsByArea(areaId);
       setCleaningRecords(data); // เก็บข้อมูลใน State
+      //console.log(cleaningRecords)
     } catch (error) {
       console.error('Error fetching cleaning records:', error);
     }
@@ -468,6 +469,7 @@ const TaskOverview: React.FC = () => {
                 <p>เวลาเริ่มต้น {record.ActualStartTime ? new Date(record.ActualStartTime).toLocaleTimeString('th-TH') : '-'}</p>
                 <p>เวลาสิ้นสุด {record.ActualEndTime ? new Date(record.ActualEndTime).toLocaleTimeString('th-TH') : '-'}</p>
                 <p>หมายเหตุ: {record.Notes || '-'}</p>
+                <p>ผู้บันทึก: {record.UserName || '-'}</p>
               </li>
             ))}
           </ul>
