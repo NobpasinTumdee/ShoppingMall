@@ -17,6 +17,7 @@ import Award2 from "../../assets/icon/ForPage/MainIcon/Award2.png"
 import Award3 from "../../assets/icon/ForPage/MainIcon/Award3.png"
 import Award4 from "../../assets/icon/ForPage/MainIcon/Award4.png"
 import Award5 from "../../assets/icon/ForPage/MainIcon/Award5.png"
+import promotion from "../../assets/icon/ForPage/MainIcon/promotion.png"
 
 //New
 //import axios from 'axios';
@@ -151,6 +152,23 @@ const Main: React.FC = () => {
                         </div>
                 </>
             }
+            <div className="marquee-section">
+                <div className="marquee-div">
+                    <div className="marquee">
+                        94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑
+                    </div>
+                </div>
+            </div>
+            <div className='PreviewProduct'>
+                <img src={promotion} alt="promotion" />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889534_100244_m" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889534_100244_a" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4314237_100313_m" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4314237_100313_a" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889559_100106_m" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889559_100106_a" alt="Product" width={250} />
+            </div>
+
             <div className='NEWS'>
                 <span></span>
                 <p>NEWS</p>
