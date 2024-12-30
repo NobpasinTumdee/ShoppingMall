@@ -708,30 +708,31 @@ export const NavBar: React.FC = () => {
 
 
 export const IntroWeb: React.FC = () => {
-    const [user, setUser] = useState<UsersInterface | null>(null); // State to store user data
-    const userIdstr = localStorage.getItem("id");
-    useEffect(() => {
-        if (userIdstr) {
-            fetchUserData(userIdstr);
-        } else {
+    // const [user, setUser] = useState<UsersInterface | null>(null); // State to store user data
+    // const userIdstr = localStorage.getItem("id");
+    const user_name = localStorage.getItem("user_name");
+    // useEffect(() => {
+    //     if (userIdstr) {
+    //         fetchUserData(userIdstr);
+    //     } else {
             
-        }
-    }, [userIdstr]);
+    //     }
+    // }, [userIdstr]);
 
-    const fetchUserData = async (userIdstr: string ) => {
-        try {
-            const res = await GetUserById(userIdstr);
-            if (res.status === 200) {
-                setUser(res.data);
-                //message.success("พบข้อมูลUser");
-            } else {
+    // const fetchUserData = async (userIdstr: string ) => {
+    //     try {
+    //         const res = await GetUserById(userIdstr);
+    //         if (res.status === 200) {
+    //             setUser(res.data);
+    //             //message.success("พบข้อมูลUser");
+    //         } else {
                 
-            }
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
-        }
-    };
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching user data:", error);
+    //         message.error("เกิดข้อผิดพลาดในการดึงข้อมูลUser");
+    //     }
+    // };
 
     const [intro, setIntro] = useState(true);
     useEffect(() => {
@@ -745,7 +746,7 @@ export const IntroWeb: React.FC = () => {
             {intro && 
                 <div className='introMainWeb'>
                     <img src={LOGOSQ} alt="LOGOSQ" />
-                    <h1>Hello! {user?.UserName}</h1>
+                    <h1>Hello! {user_name}</h1>
                     <h2>WELCOME TO ICONIC</h2>
                     <p>Press anywhere to skip</p>
                 </div>
