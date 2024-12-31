@@ -14,11 +14,11 @@ const TaskOverview: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isPopupOpenTask, setIsPopupOpenTask] = useState(false); // ป็อปอัปสำหรับ "รายละเอียดงาน"
-  const [isPopupOpenClean, setIsPopupOpenClean] = useState(false); // ป็อปอัปสำหรับ "รายละเอียดการทำความสะอาด"
-  const [popupMessage, setPopupMessage] = useState(''); // สำหรับแสดงข้อความ
+  const [isPopupOpenTask, setIsPopupOpenTask] = useState(false);
+  const [isPopupOpenClean, setIsPopupOpenClean] = useState(false); 
+  const [popupMessage, setPopupMessage] = useState(''); 
   const [areas, setAreas] = useState<AreaInterface[]>([]);
-  const [selectedArea, setSelectedArea] = useState<number | undefined>(undefined);//เลือกพื้นที่ทำความสะอาด
+  const [selectedArea, setSelectedArea] = useState<number | undefined>(undefined);
   const [cleaningRecords, setCleaningRecords] = useState<CleaningRecordInterface[]>([]);
   const [schedule, setschedule] = useState<SchedulesInterface[]>([]);
   const [popupCleaningRecords, setPopupCleaningRecords] = useState<CleaningRecordInterface[]>([]);
@@ -57,16 +57,18 @@ const TaskOverview: React.FC = () => {
       return;
     }
   
-    // กรองข้อมูล CleaningRecords เฉพาะที่ตรงกับวันที่ที่เลือก
     const filteredRecords = cleaningRecords.filter((record) => {
-      if (!record.ActualStartTime) return false; // ข้ามกรณี undefined
-      const recordDate = new Date(record.ActualStartTime);
-      return (
-        recordDate.getDate() === day &&
-        recordDate.getMonth() === currentMonth &&
-        recordDate.getFullYear() === currentYear
-      );
+      if (record && typeof record.ActualStartTime === "string") {
+          const recordDate = new Date(record.ActualStartTime);
+          return (
+              recordDate.getDate() === day &&
+              recordDate.getMonth() === currentMonth &&
+              recordDate.getFullYear() === currentYear
+          );
+      }
+      return false;
     });
+
     //console.log("Filtered Records:", filteredRecords); // แสดงข้อมูลใน Console
     // เซ็ตข้อมูลที่กรองแล้วใน State
     setPopupCleaningRecords(filteredRecords);
@@ -109,9 +111,24 @@ const TaskOverview: React.FC = () => {
     setErrors((prevErrors) => ({...prevErrors,[name]: "",}));
   };
 
+  const validateForm = (formData: any) => {
+    const errors: Record<string, string> = {};
+  
+    if (!selectedArea) {
+      errors.selectedArea = "กรุณาเลือกสถานที่ก่อนทำการบันทึกการทำความสะอาด";
+    }
+    if (!formData.ActualStartTime) {
+      errors.ActualStartTime = "กรุณากรอกเวลาเริ่มต้นจริง";
+    }
+    if (!formData.ActualEndTime) {
+      errors.ActualEndTime = "กรุณากรอกเวลาสิ้นสุดจริง";
+    }
+  
+    return errors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = {};
 
     // เช็คสถานที่ที่เลือก
     if (!selectedArea) {
@@ -119,21 +136,13 @@ const TaskOverview: React.FC = () => {
       return;
     }
 
-    // เช็คเวลาว่าง
-    if (!formData.ActualStartTime) {
-      validationErrors.ActualStartTime = "กรุณากรอกเวลาเริ่มต้นจริง";
-    }
-    if (!formData.ActualEndTime) {
-      validationErrors.ActualEndTime = "กรุณากรอกเวลาสิ้นสุดจริง";
-    }
-
-    // ตรวจสอบว่ามี error หรือไม่
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors); // อัปเดต errors state
+    const errors = validateForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
       return;
     }
-    
-    setErrors({}); // เคลียร์ errors
+
+    setErrors({});
 
     // ฟังก์ชันแปลงเวลาให้เป็น UTC และมี timezone
     const formatDateToBackend = (isoDate: string | number | Date) => {
@@ -288,11 +297,14 @@ const TaskOverview: React.FC = () => {
   // ฟังก์ชันเรียกข้อมูลการทำความสะอาด
   const fetchCleaningRecords = async (areaId: number) => {
     try {
-      const data = await GetCleaningRecordsByArea(areaId);
-      setCleaningRecords(data); // เก็บข้อมูลใน State
-      //console.log(cleaningRecords)
+        const data: CleaningRecordInterface[] = await GetCleaningRecordsByArea(areaId);
+        if (Array.isArray(data)) {
+            setCleaningRecords(data);
+        } else {
+            console.error("API response format is incorrect");
+        }
     } catch (error) {
-      console.error('Error fetching cleaning records:', error);
+        console.error('Error fetching cleaning records:', error);
     }
   };
 
