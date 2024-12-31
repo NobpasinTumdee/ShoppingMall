@@ -317,12 +317,12 @@
 .H1 {
     text-align: center;
     font-size: 64px;
-    font-family: 'Dongle', sans-serif;
-    color: #C9AF62;
+    font-family: "Trirong", serif;
+    color: #B0946F;
 }
 .Package {
-    font-size: 64px;
-    font-family: 'Dongle', sans-serif;
+    font-size: 50px;
+    font-family: "Trirong", serif;
     display: flex;
     align-items: center;
     text-align: center;
@@ -333,12 +333,12 @@
 }
 .Package p {
     margin: 40px;
-    font-size: 34px;
+    font-size: 24px;
     text-align: left;
     line-height: 10px;
 }
 .Package span{
-    border-radius: 20px;
+    border-radius: 10px;
 
     width: 350px;
     height: auto;
@@ -361,17 +361,18 @@
 .Packagespan{
     scale: 1;
     transition: 0.5s;
+    color: #5e482c;
 }
 .Packagespan:hover{
     scale: 1.05;
-    background-color: #C9AF62;
+    background-color: #B0946F;
     color: #ffffff;
 }
 .PromotionBtn{
-    font-size: 34px;
+    font-size: 30px;
     color: #ffffff;
-    background-color: #C9AF62;
-    border-radius: 0 0 18px 18px;
+    background-color: #B0946F;
+    border-radius: 0 0 8px 8px;
     transition: 0.8s ease-in-out;
     cursor: pointer;
 }
@@ -418,7 +419,7 @@
     width: 150px;
     padding: 10px;
     border-radius: 5px;
-    background-color: #b99d55;
+    background-color: #B0946F;
     cursor: pointer;
 }
 

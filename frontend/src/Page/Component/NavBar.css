@@ -101,6 +101,12 @@
     text-align: right;
     cursor: pointer;
 }
+.box:hover{
+    animation: box 0.6s ease-in-out ;
+}
+@keyframes box {
+    0%{}25%{rotate: 20deg;}50%{rotate: -20deg;}75%{rotate: 20deg;}100%{rotate: 0deg;}
+}
 
 .NavComponentMenu {
     width: 100%;
@@ -168,7 +174,7 @@
 
 @keyframes dropboxMenu{
     0%{
-        transform: translate(100px,-60px)scale(0.5);
+        transform: translate(50px,-60px)scale(0.5);
         opacity: 0;
     }100%{
         transform: translate(0px);
@@ -176,7 +182,7 @@
 }
 @keyframes dropboxMenuOut{
     0%{
-        transform: translate(100px,-60px)scale(0.5);
+        transform: translate(50px,-60px)scale(0.5);
         opacity: 0;
     }100%{
         transform: translateX(0px);
