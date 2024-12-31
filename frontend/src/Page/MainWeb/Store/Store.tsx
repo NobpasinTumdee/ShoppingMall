@@ -201,7 +201,7 @@ const Store: React.FC = () => {
                     </span>
                     <span onClick={Floor4} className={`buttonFloor ${isFloor4 ? "active" : ""}`}>
                         <div><img src={Computer} alt="market" /></div>
-                        <div>COMPUTER EQUIPMENT</div>
+                        <div>COMPUTER</div>
                     </span>
                     <span style={{width: "40%",backgroundColor: "#ffffff"}}></span>
                 </div>
@@ -216,7 +216,7 @@ const Store: React.FC = () => {
                                         <span key={index} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
                                             <div onClick={() => handleStoreClick(data)}>
                                                 <div><img src={data.pic_store || PicNoStore} alt="PicNoStore" /></div>
-                                                <div><p style={{fontSize: '28px' , color: '#000'}}>{data.name_store}</p></div>
+                                                <div><p style={{fontSize: '24px' , color: '#000',fontWeight:'600'}}>{data.name_store}</p></div>
                                                 <div className='lineStore'></div>
                                                 {data.total_rating ? (
                                                     <div className='rating'>{renderStars(data.total_rating || 5)} {data.total_rating.toFixed(2)} Point</div>
