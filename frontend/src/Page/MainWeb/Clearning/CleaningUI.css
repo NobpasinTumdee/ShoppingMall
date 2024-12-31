@@ -224,16 +224,25 @@ button[type="button"] {
 }
 
 .popup {
+  background: linear-gradient(100deg, #fbe8af, #f7c663); /* ไล่ระดับสี */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+}
+
+.popup-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* เพิ่มความโปร่งแสง */
+  background: rgba(0, 0, 0, 0.5); /* ความโปร่งแสง */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999; /* ให้แน่ใจว่าป๊อปอัปอยู่ด้านบนสุด */
+  z-index: 1000;
 }
 
 .popup-content {
@@ -262,7 +271,48 @@ button[type="button"] {
 .popup-content button:hover {
   background: wheat;
 }
+
+.popup-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
 ul {
   list-style-type: none; /* เอาจุดดำออก */
   padding: 0; /* ลบ padding ด้านซ้าย */
+}
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-save {
+  background-color: #C9AF62;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #b89858;
+}
+
+.btn-close {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-close:hover {
+  background-color: #d73831;
+}
+
+.form-group {
+  margin-bottom: 20px; /* เพิ่มช่องว่างระหว่างกลุ่มฟอร์ม */
+}
+
+.error {
+  display: block; /* ทำให้ข้อความ Error เป็นบรรทัดใหม่ */
+  color: red; /* สีแดงสำหรับข้อความ Error */
+  font-size: 0.9rem; /* ขนาดตัวอักษร */
+  margin-top: 5px; /* เว้นระยะห่างระหว่าง Error กับ Input */
 }

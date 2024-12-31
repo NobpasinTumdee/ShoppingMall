@@ -106,6 +106,7 @@ func CreateCleaningRecord(c *gin.Context) {
 		"CleaningID":  u.ID,
 		"ScheduleID":  u.ScheduleID,
 		"ActualStart": u.ActualStartTime,
+		"Notes": u.Notes,
 	})
 }
 
@@ -132,27 +133,17 @@ func GetCleaningRecordsByArea(c *gin.Context) {
     // รับค่า 'id' จากพารามิเตอร์ URL
     areaID := c.Param("id")
 
-    var records []entity.CleaningRecord
+    var cleaningRecords []entity.CleaningRecord
 
     // เรียกใช้งานฐานข้อมูลผ่าน config
     db := config.DB()
 
     // คิวรีข้อมูลพร้อมเช็ค area_id
-    results := db.Raw(`
-    SELECT 
-            cleaning_records.id,
-            cleaning_records.actual_start_time,
-            cleaning_records.actual_end_time,
-            cleaning_records.notes,
-            cleaning_records.schedule_id,
-            cleaning_records.user_id,
-            users.user_name AS user_name
-        FROM cleaning_records
-        JOIN schedules ON cleaning_records.schedule_id = schedules.id
-        JOIN areas ON areas.id = schedules.area_id
-        JOIN users ON users.id = cleaning_records.user_id
-        WHERE areas.id = ?;
-	`, areaID).Scan(&records)
+    results := db.Preload("Schedule.Area").
+	Preload("User").
+	Where("schedules.area_id = ?", areaID).
+	Joins("JOIN schedules ON cleaning_records.schedule_id = schedules.id").
+	Find(&cleaningRecords)
 
     // ตรวจสอบข้อผิดพลาด
     if results.Error != nil {
@@ -164,7 +155,7 @@ func GetCleaningRecordsByArea(c *gin.Context) {
         return
     }
     // ส่ง JSON กลับไปยัง Client
-    c.JSON(http.StatusOK, records)
+    c.JSON(http.StatusOK, cleaningRecords)
 }
 
 // GET /GetSchedulesByArea
@@ -192,7 +183,6 @@ func GetSchedulesByArea(c *gin.Context) {
         }
         return
     }
-
     // ส่ง JSON กลับไปยัง Client
     c.JSON(http.StatusOK, records)
 }

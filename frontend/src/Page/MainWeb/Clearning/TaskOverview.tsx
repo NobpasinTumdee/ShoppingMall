@@ -5,6 +5,12 @@ import { AreaInterface,CleaningRecordInterface,SchedulesInterface } from '../../
 import { message } from "antd";
 
 const TaskOverview: React.FC = () => {
+  interface FormData {
+    ActualStartTime: string;
+    ActualEndTime: string;
+    Notes: string;
+    AreaID: number;
+  }
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -17,11 +23,12 @@ const TaskOverview: React.FC = () => {
   const [schedule, setschedule] = useState<SchedulesInterface[]>([]);
   const [popupCleaningRecords, setPopupCleaningRecords] = useState<CleaningRecordInterface[]>([]);
   const [popupSchedules, setPopupSchedules] = useState<SchedulesInterface[]>([]);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [UserformData, setUserFormData] = useState({
-    UserID: "", // เก็บค่าที่จะส่ง
-    Username: "", // เก็บค่าที่จะแสดง
+    UserID: " ", // เก็บค่าที่จะส่ง
+    Username: " ", // เก็บค่าที่จะแสดง
   });
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     ActualStartTime: '',
     ActualEndTime: '',
     Notes: '',
@@ -36,11 +43,11 @@ const TaskOverview: React.FC = () => {
 
   const openCleanPopup = (day: number) => { 
     
-
     if (!selectedArea) {
       message.info("กรุณาเลือกสถานที่ทำความสะอาดก่อน");
       return;
     }
+    
     // ตรวจสอบว่ามีค่า cleaningRecords หรือไม่
     if (!cleaningRecords || !Array.isArray(cleaningRecords)) {
       //console.error("cleaningRecords ไม่มีค่า หรือไม่ใช่อาร์เรย์");
@@ -60,7 +67,7 @@ const TaskOverview: React.FC = () => {
         recordDate.getFullYear() === currentYear
       );
     });
-  
+    //console.log("Filtered Records:", filteredRecords); // แสดงข้อมูลใน Console
     // เซ็ตข้อมูลที่กรองแล้วใน State
     setPopupCleaningRecords(filteredRecords);
     setPopupMessage(
@@ -69,6 +76,7 @@ const TaskOverview: React.FC = () => {
         : `ไม่มีข้อมูลการทำความสะอาดสำหรับวันที่ ${day}/${currentMonth + 1}/${currentYear}`
     );
     setIsPopupOpenClean(true);
+    //console.log("Filtered Records:", filteredRecords);
   };
 
   const openTaskPopup = (day: number) => {
@@ -95,19 +103,37 @@ const TaskOverview: React.FC = () => {
 
   // ฟังก์ชันจัดการฟอร์ม
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    //formRef.current?.reset();
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     setUserFormData((prevData) => ({ ...prevData, [name]: value }));
+    setErrors((prevErrors) => ({...prevErrors,[name]: "",}));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const validationErrors = {};
 
+    // เช็คสถานที่ที่เลือก
     if (!selectedArea) {
       message.error('กรุณาเลือกสถานที่ก่อนทำการบันทึกการทำความสะอาด');
-      return; // หยุดการทำงานถ้ายังไม่ได้เลือกสถานที่
+      return;
     }
+
+    // เช็คเวลาว่าง
+    if (!formData.ActualStartTime) {
+      validationErrors.ActualStartTime = "กรุณากรอกเวลาเริ่มต้นจริง";
+    }
+    if (!formData.ActualEndTime) {
+      validationErrors.ActualEndTime = "กรุณากรอกเวลาสิ้นสุดจริง";
+    }
+
+    // ตรวจสอบว่ามี error หรือไม่
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors); // อัปเดต errors state
+      return;
+    }
+    
+    setErrors({}); // เคลียร์ errors
 
     // ฟังก์ชันแปลงเวลาให้เป็น UTC และมี timezone
     const formatDateToBackend = (isoDate: string | number | Date) => {
@@ -131,10 +157,11 @@ const TaskOverview: React.FC = () => {
     try { 
       const response = await CreateCleaningRecord({
         ...formData,
-        UserID: Number(UserformData.UserID),
+        UserID : Number(UserformData.UserID),
         AreaID: selectedArea,
         ActualStartTime: formatDateToBackend(formData.ActualStartTime),
         ActualEndTime: formatDateToBackend(formData.ActualEndTime),
+        Notes: formData.Notes,
       });
     
       console.log('Form data submitted successfully:', response);
@@ -167,10 +194,10 @@ const TaskOverview: React.FC = () => {
     setIsPopupOpen(true);
   };
 
-  const closePopup = () => setIsPopupOpen(false);
-  //const closeTaskPopup = () => setIsPopupOpenTask(false);
-  //const closeCleanPopup = () => setIsPopupOpenClean(false);
-
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    resetForm();
+  }
 
   // ดึงข้อมูล Areas
   useEffect(() => {
@@ -191,7 +218,7 @@ const TaskOverview: React.FC = () => {
       const fetchUser = async (userid: string) => {
         try {
           const Userdata = await GetUserById(userid);
-          console.log(Userdata.data);
+          //console.log(Userdata.data);
           setUserFormData(Userdata.data); // สมมติว่าคุณมี setUser อยู่แล้ว
           setUserFormData((prev: any) => ({
             ...prev,
@@ -216,6 +243,10 @@ const TaskOverview: React.FC = () => {
   useEffect(() => {
     if (selectedArea) fetchSchedules(selectedArea);
   }, [selectedArea]);
+
+  useEffect(() => {
+    console.log("Cleaning Records:", cleaningRecords);
+  }, [cleaningRecords])
 
   // Helper functions for calendar generation
   const getDaysInMonth = (month: number, year: number) =>
@@ -257,17 +288,18 @@ const TaskOverview: React.FC = () => {
   // ฟังก์ชันเรียกข้อมูลการทำความสะอาด
   const fetchCleaningRecords = async (areaId: number) => {
     try {
-      const data = await GetCleaningRecordsByArea((areaId)); // เรียก API
+      const data = await GetCleaningRecordsByArea(areaId);
       setCleaningRecords(data); // เก็บข้อมูลใน State
+      //console.log(cleaningRecords)
     } catch (error) {
       console.error('Error fetching cleaning records:', error);
     }
   };
 
-  // ฟังก์ชันเรียกข้อมูลการทำความสะอาด
+  // ฟังก์ชันเรียกข้อมูลตารางการทำความสะอาด
   const fetchSchedules = async (areaId: number) => {
     try {
-      const data = await GetSchedulesByArea((areaId)); // เรียก API
+      const data = await GetSchedulesByArea(areaId); // เรียก API
       setschedule(data); // เก็บข้อมูลใน State
     } catch (error) {
       console.error('Error fetching cleaning records:', error);
@@ -283,8 +315,8 @@ const TaskOverview: React.FC = () => {
         <select
           id="taskFilter"
           className="task-filter"
-          value={selectedArea || ''} // ใช้ '' เป็นค่า fallback ถ้า selectedArea เป็น null
-          onChange={(e) => setSelectedArea(Number(e.target.value))} // อัปเดตค่า selectedArea
+          value={selectedArea || ''} 
+          onChange={(e) => setSelectedArea(Number(e.target.value))} 
         >
           <option value="" disabled>
             เลือกสถานที่
@@ -316,43 +348,46 @@ const TaskOverview: React.FC = () => {
         </button>
       </header>
 
-      {/* Popup สำหรับบันทึกข้อมูล */}
       {isPopupOpen && (
-        <div className="popup">
-          <div className="popup-content">
-            <h3>บันทึกการทำความสะอาด</h3>
+        <div className="popup-container">
+          <div className="popup">
             <form onSubmit={handleSubmit}>
-              <label>
-                เวลาเริ่มต้น:
+              <h2 className="popup-title">{popupMessage}</h2>
+              <div className="form-group">
+                <label htmlFor="ActualStartTime">เวลาเริ่มต้นจริง:</label>
                 <input
                   type="datetime-local"
+                  id="ActualStartTime"
                   name="ActualStartTime"
                   value={formData.ActualStartTime}
                   onChange={handleInputChange}
-                  required
                 />
-              </label>
-              <br />
-              <label>
-                เวลาสิ้นสุด:
+                {errors.ActualStartTime && (
+                  <span className="error">{errors.ActualStartTime}</span>
+                )}
+              </div>
+              <div className="form-group">
+                <label htmlFor="ActualEndTime">เวลาสิ้นสุดจริง:</label>
                 <input
                   type="datetime-local"
+                  id="ActualEndTime"
                   name="ActualEndTime"
                   value={formData.ActualEndTime}
                   onChange={handleInputChange}
-                  required
                 />
-              </label>
-              <br />
-              <label>
-                หมายเหตุ:
+                {errors.ActualEndTime && (
+                  <span className="error">{errors.ActualEndTime}</span>
+                )}
+              </div>
+              <div className="form-group">
+                <label htmlFor="Notes">หมายเหตุ:</label>
                 <textarea
+                  id="Notes"
                   name="Notes"
                   value={formData.Notes}
                   onChange={handleInputChange}
-                ></textarea>
-              </label>
-              <br />
+                />
+              </div>
               <label>
                 ผู้บันทึก :
                 <input
@@ -362,11 +397,13 @@ const TaskOverview: React.FC = () => {
                   readOnly
                 />
               </label>
-              <br />
-              <button type="submit">บันทึก</button>
-              <button type="button" onClick={closePopup}>
-                ยกเลิก
-              </button>
+              
+              <div className="button-group">
+                <button type="submit" className="btn btn-save">บันทึก</button>
+                <button type="button" className="btn btn-close" onClick={closePopup}>
+                  ปิด
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -436,49 +473,53 @@ const TaskOverview: React.FC = () => {
 
       {/* Popup สำหรับ "รายละเอียดงานความสะอาด" */}
       {isPopupOpenTask && (
-      <div className="popup">
-        <div className="popup-content">
-        <h3>{popupMessage}</h3>
-          {popupSchedules.length > 0 ? (
-          <ul>
-            {popupSchedules.map((record, index) => (
-              <li key={index}>
-                <p>เวลาเริ่มต้น {record.StartTime ? record.StartTime.substring(11, 19) : '-'}</p>
-                <p>เวลาสิ้นสุด {record.EndTime ? record.EndTime.substring(11, 19) : '-'}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>ไม่มีข้อมูลงานทำความสะอาดสำหรับวันนี้</p>
-        )}
-          <button onClick={() => setIsPopupOpenTask(false)}>ปิด</button>
+      <div className="popup-container">
+        <div className="popup">
+          <div className="popup-content">
+          <h3>{popupMessage}</h3>
+            {popupSchedules.length > 0 ? (
+            <ul>
+              {popupSchedules.map((record, index) => (
+                <li key={index}>
+                  <p>เวลาเริ่มต้น {record.StartTime ? record.StartTime.substring(11, 19) : '-'}</p>
+                  <p>เวลาสิ้นสุด {record.EndTime ? record.EndTime.substring(11, 19) : '-'}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>ไม่มีข้อมูลงานทำความสะอาดสำหรับวันนี้</p>
+          )}
+            <button onClick={() => setIsPopupOpenTask(false)}>ปิด</button>
+          </div>
         </div>
       </div>
       )}
 
       {/* Popup สำหรับ "รายละเอียดการทำความสะอาด" */}
       {isPopupOpenClean && (
-      <div className="popup">
-        <div className="popup-content">
-        <h3>{popupMessage}</h3>
-          {popupCleaningRecords.length > 0 ? (
-          <ul>
-            {popupCleaningRecords.map((record, index) => (
-              <li key={index}>
-                <p>เวลาเริ่มต้น {record.ActualStartTime ? new Date(record.ActualStartTime).toLocaleTimeString('th-TH') : '-'}</p>
-                <p>เวลาสิ้นสุด {record.ActualEndTime ? new Date(record.ActualEndTime).toLocaleTimeString('th-TH') : '-'}</p>
-                <p>หมายเหตุ: {record.Notes || '-'}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>ไม่มีข้อมูลการทำความสะอาดสำหรับวันนี้</p>
-        )}
-          <button onClick={() => setIsPopupOpenClean(false)}>ปิด</button>
+      <div className="popup-container">
+        <div className="popup">
+          <div className="popup-content">
+          <h3>{popupMessage}</h3>
+            {popupCleaningRecords.length > 0 ? (
+            <ul>
+              {popupCleaningRecords.map((record, index) => (
+                <li key={index}>
+                  <p>เวลาเริ่มต้น {record.ActualStartTime ? new Date(record.ActualStartTime).toLocaleTimeString('th-TH') : '-'}</p>
+                  <p>เวลาสิ้นสุด {record.ActualEndTime ? new Date(record.ActualEndTime).toLocaleTimeString('th-TH') : '-'}</p>
+                  <p>หมายเหตุ: {record.Notes || '-'}</p>
+                  <p>ผู้บันทึก: {record.User?.UserName || '-'}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>ไม่มีข้อมูลการทำความสะอาดสำหรับวันนี้</p>
+          )}
+            <button onClick={() => setIsPopupOpenClean(false)}>ปิด</button>
+          </div>
         </div>
       </div>
       )}
-
     </div>
   );
 };
