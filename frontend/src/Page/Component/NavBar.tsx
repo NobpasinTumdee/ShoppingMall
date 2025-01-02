@@ -382,9 +382,9 @@ export const NavBar: React.FC = () => {
                 })
 
             }else {
-                setTimeout(() => {
+                /* setTimeout(() => {
                     message.info("You can store tax invoice information at Your profile if you need.");
-                }, 2000);
+                }, 2000); */
             }
         } catch (error) {
             console.error("Error fetching user Tax data:", error); // Debug

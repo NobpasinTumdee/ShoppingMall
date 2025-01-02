@@ -46,10 +46,10 @@ func CreateParkingCard(c *gin.Context) {
 	}
 
 	// Determine TypeParkID and ParkingFeePolicyID
-	if user.Status == "Member" && store.UserID != 0 {
+	if user.Status == "Member" && store.UserID == 0 {
 		card.TypeParkID = 1
 		card.ParkingFeePolicyID = 1
-	} else if user.Status == "Member" && store.UserID == 0 {
+	} else if user.Status == "Member" && store.UserID != 0 {
 		card.TypeParkID = 2
 		card.ParkingFeePolicyID = 2
 	} else if user.Status == "User" {
@@ -140,8 +140,7 @@ func GetListCard(c *gin.Context) {
 
 	db := config.DB()
 
-	if err := db.Preload("User").
-		Preload("Store").Preload("ParkingFeePolicy").
+	if err := db.Preload("User").Preload("ParkingFeePolicy").
 		Preload("TypePark").Preload("StatusCard").
 		Preload("ParkingZone").
 		Preload("ParkingTransaction").
@@ -204,7 +203,6 @@ func GetParkingCardByUserID(c *gin.Context) {
 		Preload("ParkingTransaction").
 		Preload("ParkingPayment").
 		Preload("ParkingZone").
-		Preload("Store").
 		Preload("User").
 		Where("user_id = ?", userID). // ค้นหาตาม user_id
 		First(&parkingCard).Error; err != nil {
@@ -248,8 +246,7 @@ func GetListCardAndUser(c *gin.Context) {
 	db := config.DB()
 
 	// ดึงข้อมูล ParkingCard พร้อม preload ความสัมพันธ์
-	if err := db.Preload("User").
-		Preload("Store").Preload("ParkingFeePolicy").
+	if err := db.Preload("User").Preload("ParkingFeePolicy").
 		Preload("TypePark").Preload("StatusCard").
 		Preload("ParkingZone").
 		Preload("ParkingTransaction").
@@ -270,6 +267,23 @@ func GetListCardAndUser(c *gin.Context) {
 		"cards": cards,
 		"users": users,
 	})
+}
+
+
+func GetListTransaction(c *gin.Context) {
+	var trans []entity.ParkingTransaction
+
+	db := config.DB()
+
+	if err := db.Preload("User").
+		Preload("ParkingZone").
+		Preload("ParkingPayment").
+		Find(&trans).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, trans)
 }
 
 // POST ParkingTransaction
@@ -295,7 +309,7 @@ func CreateParkingTransaction(c *gin.Context) {
 		Make:            trans.Make,
 		UserID:          trans.UserID,
 		ParkingCardID:   trans.ParkingCardID, // Using ParkingCard ID
-		ParkingZoneID:   trans.ParkingZoneID,
+		ParkingZoneDailyID:   trans.ParkingZoneDailyID,
 	}
 
 	if err := db.Create(&newTransaction).Error; err != nil {
@@ -357,7 +371,6 @@ func GetUserDetails(c *gin.Context) {
 		Preload("ParkingTransaction").
 		Preload("ParkingPayment").
 		Preload("ParkingZone").
-		Preload("Store").
 		Preload("User").
 		Where("user_id = ?", userID).
 		First(&parkingCard).Error; err != nil {

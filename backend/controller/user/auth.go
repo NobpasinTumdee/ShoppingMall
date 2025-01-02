@@ -152,7 +152,7 @@ func SignUp(c *gin.Context) {
 
 		Tel: payload.Tel,
 
-		Status: "User",
+		Status: "Member",
 	}
 
 	// Save the user to the database

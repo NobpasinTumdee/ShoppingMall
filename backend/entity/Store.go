@@ -32,8 +32,6 @@ type Store struct {
 
 	Rating 				[]Rating 		`gorm:"foreignKey:StoreID"`
 	BackupStore 		[]BackupStore 	`gorm:"foreignKey:StoreID"`
-
-	ParkingCard 		*ParkingCard `gorm:"foreignKey:StoreID"`
 }
 
 type Membership struct {

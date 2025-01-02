@@ -1,23 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  message,
-  Modal,
-  Progress,
-  Radio,
-  Row,
-  Tabs,
-} from "antd";
-import type { CheckboxProps } from "antd";
+import { Button, Card, Modal, message, Row, Col, Spin, QRCode } from "antd";
 import { ParkingCardInterface } from "../../../../../interfaces/Carpark";
-import layout from "antd/es/layout";
-//import "./../CarPark.css";
-import { UpdateParkingCard } from "../../../../../services/https";
 
 interface InProps {
   setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
@@ -62,141 +45,140 @@ const OUT: React.FC<InProps> = ({
   isModalOutVisible,
   handleCancel,
 }) => {
-  const [form] = Form.useForm();
-  const [messageApi, contextHolder] = message.useMessage();
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
-  const [amount, setAmount] = useState<number>(0);
-  const [totalTime, setTotalTime] = useState<string>("");
-  const [totalAmount, setTotalAmount] = useState<number>(0);
-  const [discount, setDiscount] = useState<number>(0);
-  const [latestEntryTime, setLatestEntryTime] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [paymentCompleted, setPaymentCompleted] = useState<boolean>(false);
+  const [cashReceived, setCashReceived] = useState<number>(0);
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleString("en-EN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-  };
-
-  const calculateTimeDifference = (entryTime: string) => {
-    const entry = new Date(entryTime);
-    const now = new Date();
-    const timeDiff = (now.getTime() - entry.getTime()) / (1000 * 3600); // ชั่วโมง
-
-    const totalTime = `${Math.floor(timeDiff)} hr ${Math.round(
-      (timeDiff % 1) * 60
-    )} min`;
-    return totalTime;
-  };
-
-  const onChange: CheckboxProps["onChange"] = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
-
-  // ฟังก์ชันคำนวณเวลาระหว่าง IN และ OUT
-  useEffect(() => {
-    if (selectedCard?.ParkingTransaction?.length) {
-      const latestEntry = selectedCard.ParkingTransaction.reduce(
-        (latest, current) => {
-          return new Date(current.EntryTime || "").getTime() >
-            new Date(latest.EntryTime || "").getTime()
-            ? current
-            : latest;
-        },
-        selectedCard.ParkingTransaction[0]
-      );
-
-      if (latestEntry.EntryTime) {
-        setLatestEntryTime(formatDate(new Date(latestEntry.EntryTime)));
-        setTotalTime(calculateTimeDifference(latestEntry.EntryTime));
-      }
+  const handlePayment = async () => {
+    if (!paymentMethod) {
+      message.error("Please select a payment method");
+      return;
     }
-  }, [selectedCard]);
 
-  const handlePayment = () => {
-    message.success("Payment Successful");
-    setIsModalOutVisible(false);
+    if (
+      paymentMethod === "Cash" &&
+      cashReceived < (selectedCard?.ParkingPayment?.Amount || 0)
+    ) {
+      message.error("Insufficient cash amount");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Simulate backend call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (paymentMethod === "Cash") {
+        const change =
+          cashReceived - (selectedCard?.ParkingPayment?.Amount || 0);
+        console.log(`Change to give back: ${change}`);
+      }
+
+      setPaymentCompleted(true);
+      message.success(`Payment successful with ${paymentMethod}`);
+    } catch (error) {
+      message.error("Payment failed, please try again");
+    } finally {
+      setIsLoading(false);
+      setIsModalOutVisible(false);
+    }
   };
 
-  const handlePaymentOk = () => {
-    handlePayment();
-  };
   return (
     <Modal
-      title={
-        <span
-          style={{
-            fontSize: "30px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-            textAlign: "center",
-          }}
-        >
-          ICONIC REALTY SERVICES CO.,LTD.
-        </span>
-      }
+      title="Payment Options"
       open={isModalOutVisible}
-      onOk={handlePaymentOk}
       onCancel={handleCancel}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "16px",
-        padding: "16px",
-        fontSize: "16px", // กำหนด fontSize สำหรับ Modal ทั้งหมด
-        fontFamily: "Dongle, sans-serif",
-      }}
+      footer={null}
+      centered
     >
-      {contextHolder}
-      <div
-        style={{
-          justifySelf: "center",
-          fontFamily: "Dongle, sans-serif",
-          fontSize: "30px",
-        }}
-      >
-        {amount.toFixed(2)} {"฿"}
-      </div>
-      <div style={{ fontSize: "20px", marginTop: "10px" }}>
-        {/* กำหนด fontSize ของเนื้อหาภายใน Modal */}
-        <Row gutter={50}>
-          <Col span={10}>{"License Plate"}</Col>
-          <Col>{selectedCard?.ParkingTransaction?.[0]?.LicensePlate || "No Data"}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"IN"}</Col>
-          <Col>{latestEntryTime || "No Data"}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"OUT"}</Col>
-          <Col>{formatDate(new Date())}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Total Time"}</Col>
-          <Col>{totalTime || "Calculating..."}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Amount"}</Col>
-          <Col>{amount.toFixed(2)}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Discount (%)"}</Col>
-          <Col>{discount.toFixed(2)}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Total Amount"}</Col>
-          <Col>{(amount - discount).toFixed(2)}</Col>
-        </Row>
-        <Button onClick={handlePayment}>Pay Now</Button>
-      </div>
+      {isLoading ? (
+        <Spin tip="Processing payment..." />
+      ) : paymentCompleted ? (
+        <div style={{ textAlign: "center" }}>
+          <h3>Payment Successful!</h3>
+          <p>Thank you for your payment.</p>
+        </div>
+      ) : (
+        <>
+          <h4>Select Payment Method</h4>
+          <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
+            <Col span={12}>
+              <Card
+                hoverable
+                onClick={() => setPaymentMethod("QR Payment")}
+                style={{
+                  borderColor:
+                    paymentMethod === "QR Payment" ? "#1890ff" : "#f0f0f0",
+                }}
+              >
+                <h3>QR Payment</h3>
+                <p>Pay using mobile banking</p>
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card
+                hoverable
+                onClick={() => setPaymentMethod("Cash")}
+                style={{
+                  borderColor: paymentMethod === "Cash" ? "#1890ff" : "#f0f0f0",
+                }}
+              >
+                <h3>Cash</h3>
+                <p>Pay with cash at the counter</p>
+              </Card>
+            </Col>
+          </Row>
+          {paymentMethod === "QR Payment" && (
+            <div style={{ textAlign: "center", marginTop: "16px" }}>
+              <img
+                src={
+                  `https://promptpay.io/0970306427.png/${
+                    selectedCard?.ParkingPayment?.Amount || 0
+                  }` ||
+                  "https://img.freepik.com/premium-vector/broken-credit-card-debt-bankruptcy-failed-money-transaction-vector-stock-illustration_100456-11684.jpg"
+                }
+                width={150}
+                alt="QR Code for Payment"
+              />
+              <p>Scan this QR Code to complete payment</p>
+            </div>
+          )}
+          {paymentMethod === "Cash" && (
+            <div style={{ marginTop: "16px", textAlign: "center" }}>
+              <h4>Enter Cash Received</h4>
+              <input
+                type="number"
+                value={cashReceived}
+                onChange={(e) => setCashReceived(Number(e.target.value))}
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  margin: "8px 0",
+                  border: "1px solid #d9d9d9",
+                  borderRadius: "4px",
+                }}
+                placeholder="Enter amount"
+              />
+              <p>
+                Total Amount:{" "}
+                {(selectedCard?.ParkingPayment?.Amount || 0).toFixed(2)} THB
+              </p>
+            </div>
+          )}
+
+          <div style={{ marginTop: "16px", textAlign: "center" }}>
+            <Button
+              type="primary"
+              onClick={handlePayment}
+              disabled={!paymentMethod}
+            >
+              Confirm Payment
+            </Button>
+          </div>
+        </>
+      )}
     </Modal>
   );
 };

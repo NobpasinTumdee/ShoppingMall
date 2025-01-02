@@ -12,6 +12,7 @@ type ParkingPayment struct {
 	Amount         int       `json:"Amount"`
 	DiscountAmount int       `json:"DiscountAmount"`
 	NetAmount      int       `json:"NetAmount"`
+	IsCash         bool      `json:"IsCash"`
 
 	ParkingCardID string      `json:"ParkingCardID"`
 	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
