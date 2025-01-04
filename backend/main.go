@@ -125,14 +125,13 @@ func main() {
 		router.PUT("/Service/:id", servicerequest.UpdateServiceByid)
 
 
-		
-
 		//ระบบ แม่บ้าน
 		router.GET("/Area", Cleaning.ListArea)
 		router.POST("/CleaningRecord", Cleaning.CreateCleaningRecord)
 		router.GET("/Schedules", Cleaning.ListSchedules)
 		router.GET("/CleaningRecordsByArea/:id", Cleaning.GetCleaningRecordsByArea)
 		router.GET("/SchedulesByArea/:id", Cleaning.GetSchedulesByArea)
+		router.DELETE("/DeleteCleaningRecord", Cleaning.DeleteCleaningRecord)
 		//ระบบ อุปการณ์แม่บ้าน
 
 	}

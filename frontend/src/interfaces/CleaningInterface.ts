@@ -8,8 +8,8 @@ export interface AreaInterface {
 
 export interface CleaningRecordInterface {
     ID?: number;
-    ActualStartTime?: string;
-    ActualEndTime?: string;
+    ActualStartTime?: Date;
+    ActualEndTime?: Date;
     Notes?: string;
     ScheduleID?: number;
     User ?: UsersInterface;
@@ -20,7 +20,7 @@ export interface CleaningRecordInterface {
 export interface SchedulesInterface {
     TaskName: string;
     ID?: number;
-    StartTime?: string;
-    EndTime?: string;
+    StartTime?: Date;
+    EndTime?: Date;
     AreaID?: number;
 }

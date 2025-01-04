@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './CleaningUI.css';
-import { ListAreas,CreateCleaningRecord,GetCleaningRecordsByArea,GetSchedulesByArea,GetUserById } from '../../../services/https';
+import { ListAreas,CreateCleaningRecord,GetCleaningRecordsByArea,GetSchedulesByArea,GetUserById, DeleteCleaningRecord } from '../../../services/https';
 import { AreaInterface,CleaningRecordInterface,SchedulesInterface } from '../../../interfaces/CleaningInterface';
 import { message } from "antd";
 
 const TaskOverview: React.FC = () => {
-  interface FormData {
+  /*interface FormData {
     ActualStartTime: string;
     ActualEndTime: string;
     Notes: string;
     AreaID: number;
-  }
+  }*/
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -28,17 +28,15 @@ const TaskOverview: React.FC = () => {
     UserID: " ", // เก็บค่าที่จะส่ง
     Username: " ", // เก็บค่าที่จะแสดง
   });
-  const [formData, setFormData] = useState<FormData>({
-    ActualStartTime: '',
-    ActualEndTime: '',
+  const [formData, setFormData] = useState<CleaningRecordInterface>({
+    ActualStartTime: undefined, 
+    ActualEndTime: undefined,
     Notes: '',
     AreaID: 0,
   });
   const resetForm = () => {
     setFormData({
-      ActualStartTime: '',ActualEndTime: '',Notes: '',AreaID: 0});
-    setUserFormData({
-      UserID: "",Username: "",});
+      ActualStartTime: undefined,ActualEndTime: undefined,Notes: '',AreaID: 0});
   };
 
   const openCleanPopup = (day: number) => { 
@@ -50,7 +48,6 @@ const TaskOverview: React.FC = () => {
     
     // ตรวจสอบว่ามีค่า cleaningRecords หรือไม่
     if (!cleaningRecords || !Array.isArray(cleaningRecords)) {
-      //console.error("cleaningRecords ไม่มีค่า หรือไม่ใช่อาร์เรย์");
       setPopupCleaningRecords([]);
       setPopupMessage(`ไม่พบข้อมูลการทำความสะอาดสำหรับวันที่ ${day}/${currentMonth + 1}/${currentYear}`);
       setIsPopupOpenClean(true);
@@ -58,16 +55,16 @@ const TaskOverview: React.FC = () => {
     }
   
     const filteredRecords = cleaningRecords.filter((record) => {
-      if (record && typeof record.ActualStartTime === "string") {
-          const recordDate = new Date(record.ActualStartTime);
-          return (
-              recordDate.getDate() === day &&
-              recordDate.getMonth() === currentMonth &&
-              recordDate.getFullYear() === currentYear
-          );
+      if (record && record.ActualStartTime) {
+        const startTime = new Date(record.ActualStartTime);
+        return (
+          startTime.getDate() === day &&
+          startTime.getMonth() === currentMonth &&
+          startTime.getFullYear() === currentYear
+        );
       }
       return false;
-    });
+    });    
 
     //console.log("Filtered Records:", filteredRecords); // แสดงข้อมูลใน Console
     // เซ็ตข้อมูลที่กรองแล้วใน State
@@ -106,97 +103,125 @@ const TaskOverview: React.FC = () => {
   // ฟังก์ชันจัดการฟอร์ม
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "ActualStartTime" || name === "ActualEndTime"
+        ? (value ? new Date(new Date(value).getTime() - new Date().getTimezoneOffset() * 60000) : null)
+        : value,
+    }));    
     setUserFormData((prevData) => ({ ...prevData, [name]: value }));
-    setErrors((prevErrors) => ({...prevErrors,[name]: "",}));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   };
 
+  const handleDelete = async (day: Date) => {
+    try {
+      console.log("วันที่ที่ต้องการลบ:", day);
+  
+      // ตรวจสอบว่ามีการเลือกพื้นที่หรือยัง
+      if (!selectedArea) {
+        message.info("กรุณาเลือกสถานที่ทำความสะอาดก่อน");
+        return;
+      }
+  
+      // แปลงวันที่ให้เป็น local time (yyyy-MM-dd)
+      const localDate = new Date(day);
+      localDate.setHours(0, 0, 0, 0); // ตั้งเวลาเป็นเที่ยงคืน
+      const formattedDay = localDate.toLocaleDateString("en-CA"); // ได้รูปแบบ yyyy-MM-dd
+  
+      // สร้าง payload เพื่อส่งไปยัง API
+      const payload = {
+        AreaID: selectedArea.toString(),
+        Day: formattedDay, // ส่งค่าใน local timezone
+      };
+  
+      // ส่งคำขอ API เพื่อทำการลบข้อมูล
+      console.log("ลบข้อมูลด้วย payload:", payload);
+      await DeleteCleaningRecord(payload);
+  
+      // อัปเดตรายการหลังการลบสำเร็จ
+      await fetchCleaningRecords(selectedArea); // ดึงข้อมูลใหม่สำหรับพื้นที่ที่เลือก
+      message.success("ลบข้อมูลการทำความสะอาดสำเร็จ");
+    } catch (error) {
+      console.error("Error deleting record:", error);
+      message.error("เกิดข้อผิดพลาดในการลบข้อมูล");
+    }
+  };     
+   
   const validateForm = (formData: any) => {
     const errors: Record<string, string> = {};
   
     if (!selectedArea) {
       errors.selectedArea = "กรุณาเลือกสถานที่ก่อนทำการบันทึกการทำความสะอาด";
     }
-    if (!formData.ActualStartTime) {
+    if (!formData.ActualStartTime || !(formData.ActualStartTime instanceof Date)) {
       errors.ActualStartTime = "กรุณากรอกเวลาเริ่มต้นจริง";
     }
-    if (!formData.ActualEndTime) {
+    if (!formData.ActualEndTime || !(formData.ActualEndTime instanceof Date)) {
       errors.ActualEndTime = "กรุณากรอกเวลาสิ้นสุดจริง";
     }
-  
     return errors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // เช็คสถานที่ที่เลือก
     if (!selectedArea) {
-      message.error('กรุณาเลือกสถานที่ก่อนทำการบันทึกการทำความสะอาด');
+      message.error("กรุณาเลือกสถานที่ก่อนทำการบันทึกการทำความสะอาด");
       return;
     }
-
+  
     const errors = validateForm(formData);
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
     }
+  
+    setErrors({}); 
+  
+    const formattedStartTime = formData.ActualStartTime
+      ? new Date(formData.ActualStartTime)
+      : undefined;
 
-    setErrors({});
-
-    // ฟังก์ชันแปลงเวลาให้เป็น UTC และมี timezone
-    const formatDateToBackend = (isoDate: string | number | Date) => {
-      const date = new Date(isoDate);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
-      const timezoneOffset = date.getTimezoneOffset();
-      const sign = timezoneOffset > 0 ? '-' : '+';
-      const absOffset = Math.abs(timezoneOffset);
-      const offsetHours = String(Math.floor(absOffset / 60)).padStart(2, '0');
-      const offsetMinutes = String(absOffset % 60).padStart(2, '0');
-      const timezone = `${sign}${offsetHours}:${offsetMinutes}`;
-
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}${timezone}`;
-    };
-    
-    try { 
+    const formattedEndTime = formData.ActualEndTime
+      ? new Date(formData.ActualEndTime)
+      : undefined;
+  
+    try {
       const response = await CreateCleaningRecord({
         ...formData,
-        UserID : Number(UserformData.UserID),
+        UserID: Number(UserformData.UserID),
         AreaID: selectedArea,
-        ActualStartTime: formatDateToBackend(formData.ActualStartTime),
-        ActualEndTime: formatDateToBackend(formData.ActualEndTime),
         Notes: formData.Notes,
+        ActualStartTime: formattedStartTime, 
+        ActualEndTime: formattedEndTime,   
       });
-    
-      console.log('Form data submitted successfully:', response);
-    
-      // ตรวจสอบสถานะ response ที่ไม่ใช่ 200/201
+  
+      console.log("Form data submitted successfully:", response);
+  
       if (response.status >= 400) {
-        throw new Error(response.data.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+        throw new Error(response.data.error || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       }
-
+  
       await fetchCleaningRecords(selectedArea);
       message.success("บันทึกข้อมูลการทำความสะอาดสำเร็จ");
       resetForm();
       closePopup();
     } catch (error: any) {
-      console.error('Error while submitting form:', error);
-    
+      console.error("Error while submitting form:", error);
+  
       if (error?.response?.data?.error) {
         message.error(`${error.response.data.error}`);
       } else if (error.message) {
         message.error(`ข้อผิดพลาด: ${error.message}`);
       } else {
-        message.error('เกิดข้อผิดพลาดที่ไม่คาดคิด');
+        message.error("เกิดข้อผิดพลาดที่ไม่คาดคิด");
       }
     }
-    
-  };
+  }; 
 
   const openPopup = () => {
     setPopupMessage('บันทึกการทำความสะอาด');
@@ -371,7 +396,7 @@ const TaskOverview: React.FC = () => {
                   type="datetime-local"
                   id="ActualStartTime"
                   name="ActualStartTime"
-                  value={formData.ActualStartTime}
+                  value={formData.ActualStartTime ? formData.ActualStartTime.toISOString().slice(0, 16) : ''}
                   onChange={handleInputChange}
                 />
                 {errors.ActualStartTime && (
@@ -384,7 +409,7 @@ const TaskOverview: React.FC = () => {
                   type="datetime-local"
                   id="ActualEndTime"
                   name="ActualEndTime"
-                  value={formData.ActualEndTime}
+                  value={formData.ActualEndTime ? formData.ActualEndTime.toISOString().slice(0, 16) : ''}
                   onChange={handleInputChange}
                 />
                 {errors.ActualEndTime && (
@@ -472,6 +497,14 @@ const TaskOverview: React.FC = () => {
                               >
                               รายละเอียดการทำงาน
                             </div>
+                            <div className="delete-icon-container">
+                            <button
+                              className="delete-icon"
+                              onClick={() => handleDelete(new Date(currentYear, currentMonth, day))}
+                              >
+                                🗑️
+                            </button>
+                          </div>
                           </>
                         )}
                       </td>
@@ -485,27 +518,45 @@ const TaskOverview: React.FC = () => {
 
       {/* Popup สำหรับ "รายละเอียดงานความสะอาด" */}
       {isPopupOpenTask && (
-      <div className="popup-container">
-        <div className="popup">
-          <div className="popup-content">
-          <h3>{popupMessage}</h3>
-            {popupSchedules.length > 0 ? (
-            <ul>
-              {popupSchedules.map((record, index) => (
-                <li key={index}>
-                  <p>เวลาเริ่มต้น {record.StartTime ? record.StartTime.substring(11, 19) : '-'}</p>
-                  <p>เวลาสิ้นสุด {record.EndTime ? record.EndTime.substring(11, 19) : '-'}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>ไม่มีข้อมูลงานทำความสะอาดสำหรับวันนี้</p>
-          )}
-            <button onClick={() => setIsPopupOpenTask(false)}>ปิด</button>
+        <div className="popup-container">
+          <div className="popup">
+            <div className="popup-content">
+              <h3>{popupMessage}</h3>
+              {popupSchedules.length > 0 ? (
+                <ul>
+                  {popupSchedules.map((record, index) => {
+                    const startTime =
+                      record.StartTime ? new Date(record.StartTime) : null;
+                      const endTime =
+                      record.EndTime ? new Date(record.EndTime) : null;
+
+                    return (
+                      <li key={index}>
+                        <p>
+                          เวลาเริ่มต้น{" "}
+                          {startTime && !isNaN(startTime.getTime())
+                            ? startTime.toISOString().substring(11, 19)
+                            : "-"}
+                        </p>
+                        <p>
+                          เวลาสิ้นสุด{" "}
+                          {endTime && !isNaN(endTime.getTime())
+                            ? endTime.toISOString().substring(11, 19)
+                            : "-"}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p>ไม่มีข้อมูลงานทำความสะอาดสำหรับวันนี้</p>
+              )}
+              <button onClick={() => setIsPopupOpenTask(false)}>ปิด</button>
+            </div>
           </div>
         </div>
-      </div>
       )}
+
 
       {/* Popup สำหรับ "รายละเอียดการทำความสะอาด" */}
       {isPopupOpenClean && (
@@ -517,8 +568,8 @@ const TaskOverview: React.FC = () => {
             <ul>
               {popupCleaningRecords.map((record, index) => (
                 <li key={index}>
-                  <p>เวลาเริ่มต้น {record.ActualStartTime ? new Date(record.ActualStartTime).toLocaleTimeString('th-TH') : '-'}</p>
-                  <p>เวลาสิ้นสุด {record.ActualEndTime ? new Date(record.ActualEndTime).toLocaleTimeString('th-TH') : '-'}</p>
+                  <p>เวลาเริ่มต้น {record.ActualStartTime ? new Date(new Date(record.ActualStartTime).getTime() - 7 * 60 * 60 * 1000).toLocaleTimeString('th-TH') : '-'}</p>
+                  <p>เวลาสิ้นสุด {record.ActualEndTime ? new Date(new Date(record.ActualEndTime).getTime() - 7 * 60 * 60 * 1000).toLocaleTimeString('th-TH') : '-'}</p>
                   <p>หมายเหตุ: {record.Notes || '-'}</p>
                   <p>ผู้บันทึก: {record.User?.UserName || '-'}</p>
                 </li>

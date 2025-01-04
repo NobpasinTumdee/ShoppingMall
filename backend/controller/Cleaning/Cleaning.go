@@ -3,7 +3,9 @@ package Cleaning
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
+
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
 	"github.com/gin-gonic/gin"
@@ -44,17 +46,16 @@ func CreateCleaningRecord(c *gin.Context) {
 		return
 	}
 
-	// Parse ActualStartTime และ ActualEndTime
-	startTime, err := time.Parse("2006-01-02 15:04:05-07:00", input.ActualStartTime)
+	startTime, err := time.Parse(time.RFC3339, input.ActualStartTime)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ActualStartTime format"})
-		return
+    	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ActualStartTime format"})
+    	return
 	}
 
-	endTime, err := time.Parse("2006-01-02 15:04:05-07:00", input.ActualEndTime)
+	endTime, err := time.Parse(time.RFC3339, input.ActualEndTime)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ActualEndTime format"})
-		return
+    	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ActualEndTime format"})
+    	return
 	}
 
 	// ดึงเฉพาะวันที่จาก startTime
@@ -186,4 +187,66 @@ func GetSchedulesByArea(c *gin.Context) {
     // ส่ง JSON กลับไปยัง Client
     c.JSON(http.StatusOK, records)
 }
+
+func DeleteCleaningRecord(c *gin.Context) {
+    //log.Println("Step 1: Starting DeleteCleaningRecord function")
+
+    // ดึงค่าจาก query string
+    areaID := c.Query("AreaID")
+    day := c.Query("Day")
+    //log.Println("Step 2: Received AreaID:", areaID, "Day:", day)
+
+    // ตรวจสอบว่า AreaID และ Day มีค่า
+    if areaID == "" || day == "" {
+        //log.Println("Step 3: AreaID or Day is empty, returning error")
+        c.JSON(http.StatusBadRequest, gin.H{"error": "AreaID and Day are required"})
+        return
+    }
+
+    // ตรวจสอบว่า AreaID เป็นตัวเลข
+    areaIDInt, err := strconv.Atoi(areaID)
+    if err != nil {
+        //log.Println("Step 4: Invalid AreaID format:", err)
+        c.JSON(http.StatusBadRequest, gin.H{"error": "AreaID must be a valid integer"})
+        return
+    }
+
+    // ตรวจสอบรูปแบบวันที่
+    layout := "2006-01-02" // รูปแบบ `YYYY-MM-DD`
+	parsedDate, err := time.Parse(layout, day)
+    if err != nil {
+        //log.Println("Step 5: Error parsing Day:", err)
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Day must be in RFC3339 format"})
+        return
+    }
+
+    // แปลงวันที่เป็นรูปแบบ `YYYY-MM-DD` สำหรับ SQL
+    formattedDate := parsedDate.Format("2006-01-02")
+    //log.Println("Step 6: Formatted Date:", formattedDate)
+
+    // ลบข้อมูลในฐานข้อมูล
+    db := config.DB()
+    tx := db.Exec("DELETE FROM cleaning_records WHERE schedule_id IN (SELECT id FROM schedules WHERE area_id = ?) AND DATE(actual_start_time) = ?", areaIDInt, formattedDate)
+
+    if tx.Error != nil {
+        //log.Println("Step 7: Error deleting record:", tx.Error)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete record"})
+        return
+    }
+
+    if tx.RowsAffected == 0 {
+        //log.Println("Step 8: No records found to delete")
+        c.JSON(http.StatusNotFound, gin.H{"error": "record not found"})
+        return
+    }
+
+    //log.Println("Step 9: Record deleted successfully")
+    c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
+}
+
+
+
+
+
+
 
