@@ -655,6 +655,24 @@ async function GetSchedulesByArea(id: number) {
     .catch((e) => e.response);
 
 }
+
+async function DeleteCleaningRecord(payload: { AreaID: string; Day: string }) {
+
+    const response = await axios.delete(
+      `${apiUrl}/DeleteCleaningRecord`,
+      {
+        params: {
+          AreaID: payload.AreaID,
+          Day: payload.Day,
+        },
+        ...requestOptions, // รวม options เช่น headers
+      }
+    );
+
+    return response.data; // ส่งผลลัพธ์กลับมา
+    
+}
+
 //=======================================Service============================================
 //listService by status
 async function ListService(Status: string) {
@@ -826,5 +844,6 @@ export {
     ListAreas,
     CreateCleaningRecord,
     GetCleaningRecordsByArea,
-    GetSchedulesByArea
+    GetSchedulesByArea,
+    DeleteCleaningRecord
 }

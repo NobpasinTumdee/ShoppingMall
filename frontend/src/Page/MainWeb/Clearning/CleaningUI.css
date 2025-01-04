@@ -316,3 +316,20 @@ ul {
   font-size: 0.9rem; /* ขนาดตัวอักษร */
   margin-top: 5px; /* เว้นระยะห่างระหว่าง Error กับ Input */
 }
+.delete-icon-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.delete-icon {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.delete-icon:hover {
+  color: darkred;
+}
