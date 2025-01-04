@@ -114,22 +114,22 @@ const Main: React.FC = () => {
                 <span className='subFloor'>
                     <img src={market} alt="market" />
                     <h4>NIGHT MARKET</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
                 <span className='subFloor'>
                     <img src={Food} alt="Food" />
                     <h4>FOOD CENTER</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
                 <span className='subFloor'>
                     <img src={Decorations} alt="Decorations" />
                     <h4>DECORATIONS</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
                 <span className='subFloor'>
                     <img src={Computer} alt="Computer" />
-                    <h4>COMPUTER EQUIPMENT</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <h4>COMPUTER</h4>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
             </div>
 
@@ -152,6 +152,11 @@ const Main: React.FC = () => {
                         </div>
                 </>
             }
+            <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'70px',margin:"20px 10% 40px"}}>
+                <div style={{backgroundColor:"#B0946F",height:'4px',width:'70%'}}></div>
+                <h1 style={{fontFamily:'"Trirong", serif',textAlign:'center',width:'100%'}}>WHAT DO YOU WANT TO WEAR!</h1>
+                <div style={{backgroundColor:"#B0946F",height:'4px',width:'70%'}}></div>
+            </div>
             <div className="marquee-section">
                 <div className="marquee-div">
                     <div className="marquee">
@@ -192,7 +197,7 @@ const Main: React.FC = () => {
 
 
             <footer>
-                <div style={{display: 'flex', margin: '0 100px',fontFamily:'"Parkinsans", sans-serif'}}>
+                <div style={{display: 'flex', margin: '0 100px',fontFamily:'"Trirong", serif'}}>
                     <span>
                         <div style={{color: '#fff'}}>
                             Getting here <br />

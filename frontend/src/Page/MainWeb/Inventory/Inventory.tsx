@@ -53,7 +53,7 @@ const Inventory: React.FC = () => {
         <>
             <div style={{ height: '110px', zIndex: '0' }}></div>
             <div className='headerInventory'>
-                <h1>Inventory</h1>
+                <h1>INVENTORY</h1>
             </div>
             <div className='Mode'>
                 {categories.map((category) => (

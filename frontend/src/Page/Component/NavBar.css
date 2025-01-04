@@ -101,6 +101,12 @@
     text-align: right;
     cursor: pointer;
 }
+.box:hover{
+    animation: box 0.6s ease-in-out ;
+}
+@keyframes box {
+    0%{}25%{rotate: 20deg;}50%{rotate: -20deg;}75%{rotate: 20deg;}100%{rotate: 0deg;}
+}
 
 .NavComponentMenu {
     width: 100%;
@@ -129,7 +135,7 @@
     transition: 0.4s ease-in-out;
 }
 .MenuHover.active {
-    color: #C9AF62;
+    color: #B0946F;
 }
 
 .MenuHover:hover {
@@ -168,24 +174,18 @@
 
 @keyframes dropboxMenu{
     0%{
-        transform: translateX(100px);
-        scale: 0;
-    }50%{
-        transform: translateX(0px);
-        scale: 1;
+        transform: translate(50px,-60px)scale(0.5);
+        opacity: 0;
     }100%{
-
+        transform: translate(0px);
     }
 }
 @keyframes dropboxMenuOut{
     0%{
-        transform: translateX(1000px);
-        scale: 0;
-    }50%{
-        transform: translateX(0px);
-        scale: 1;
+        transform: translate(50px,-60px)scale(0.5);
+        opacity: 0;
     }100%{
-
+        transform: translateX(0px);
     }
 }
 .dropboxMenu a {

@@ -70,7 +70,7 @@ export const FloorMenu: React.FC = () => {
                 <div className={`BGMap ${isMap === true ? 'fade-in' : 'fade-out'}`} onClick={MapExit}></div>
                 <div className={`Map ${isMap === true ? 'fade-in' : 'fade-out'}`}>
                     <div className='ExitMap'onClick={MapExit}>X</div>
-                    <p>Floor 1</p>
+                    <p>FLOOR I</p>
                     <img src={F1} alt="Floor1" />
                 </div>
 
@@ -78,7 +78,7 @@ export const FloorMenu: React.FC = () => {
                 <div className={`BGMap ${isMap2 === true ? 'fade-in' : 'fade-out'}`} onClick={MapExit2}></div>
                 <div className={`Map ${isMap2 === true ? 'fade-in' : 'fade-out'}`}>
                     <div className='ExitMap'onClick={MapExit2}>X</div>
-                    <p>Floor 2</p>
+                    <p>FLOOR II</p>
                     <img src={F2} alt="Floor2" />
                 </div>
 
@@ -86,14 +86,14 @@ export const FloorMenu: React.FC = () => {
                 <div className={`BGMap ${isMap3 === true ? 'fade-in' : 'fade-out'}`} onClick={MapExit3}></div>
                 <div className={`Map ${isMap3 === true ? 'fade-in' : 'fade-out'}`}>
                     <div className='ExitMap'onClick={MapExit3}>X</div>
-                    <p>Floor 3</p>
+                    <p>FLOOR III</p>
                     <img src={F3} alt="Floor3" />
                 </div>
 
                 <div className={`BGMap ${isMap4 === true ? 'fade-in' : 'fade-out'}`} onClick={MapExit4}></div>
                 <div className={`Map ${isMap4 === true ? 'fade-in' : 'fade-out'}`}>
                     <div className='ExitMap'onClick={MapExit4}>X</div>
-                    <p>Floor 4</p>
+                    <p>FLOOR IV</p>
                     <img src={F4} alt="Floor4" />
                 </div>
 
