@@ -225,6 +225,6 @@ func SignIn(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token_type": "Bearer", "token": signedToken, "id": user.ID})
+	c.JSON(http.StatusOK, gin.H{"token_type": "Bearer", "token": signedToken, "id": user.ID ,"user_name": user.UserName})
 
 }

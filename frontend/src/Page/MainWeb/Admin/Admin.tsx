@@ -83,6 +83,7 @@ const Admin: React.FC = () => {
                 </span>
             </div>
             {isFloorPopup &&
+            <>
                 <div className='popupStore'>
                     <div className='popupheader'>
                         <h1>Store</h1>
@@ -110,6 +111,8 @@ const Admin: React.FC = () => {
                     </div>
                     <div className='Exit' style={{textAlign: 'center' ,color: "#fff"}} onClick={handleClickToHistory}>X</div>
                 </div>
+                <div className='backgroundevent' onClick={handleClickToHistory}></div>
+            </>
             }
 
         </>

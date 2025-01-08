@@ -655,6 +655,24 @@ async function GetSchedulesByArea(id: number) {
     .catch((e) => e.response);
 
 }
+
+async function DeleteCleaningRecord(payload: { AreaID: string; Day: string }) {
+
+    const response = await axios.delete(
+      `${apiUrl}/DeleteCleaningRecord`,
+      {
+        params: {
+          AreaID: payload.AreaID,
+          Day: payload.Day,
+        },
+        ...requestOptions, // รวม options เช่น headers
+      }
+    );
+
+    return response.data; // ส่งผลลัพธ์กลับมา
+    
+}
+
 //=======================================Service============================================
 //listService by status
 async function ListService(Status: string) {
@@ -1052,36 +1070,37 @@ export {
     CreateCleaningRecord,
     GetCleaningRecordsByArea,
     GetSchedulesByArea,
+    DeleteCleaningRecord,
 
-    // Car Parking
-    GetUserDetails,
-    GetListCardAndCheckExpiredCardtoUpdate,
-    GetListTransaction,
-    GetListZoneDaily,
-    /* CreateParkingCardAndVehical, */
-    GetListCardAndUser,
-    GetListZone,
-    GetListStatusCard,
-    //GetZoneByTypePark,
-    //GetListLastTransaction,
-    CreateParkingCard,
-    CreateParkingTransaction,
-    CreateParkingPayment,
-    CreateVehicle,
-    CreateZoneDaily,
-    UpdateParkingCard,
-    UpdateParkingZone,
-    UpdateVehicle,
-    UpdateParkingTransaction,
-    //UpdateParkingCardAndZone,
-    UpdateZoneDailyByID,
-    UpdateZoneDailyByZoneID,
-    GetParkingCardByID,
-    GetParkingFeePolicyByID,
-    GetParkingCardByUserID,
-    GetParkingPaymentByTransactionID,
-    //GetParkingCardWithZoneByID,
-    GetZoneDailyByZoneID,
-    GetIdCardZone,
-    DeleteParkingCard,
+     // Car Parking
+     GetUserDetails,
+     GetListCardAndCheckExpiredCardtoUpdate,
+     GetListTransaction,
+     GetListZoneDaily,
+     /* CreateParkingCardAndVehical, */
+     GetListCardAndUser,
+     GetListZone,
+     GetListStatusCard,
+     //GetZoneByTypePark,
+     //GetListLastTransaction,
+     CreateParkingCard,
+     CreateParkingTransaction,
+     CreateParkingPayment,
+     CreateVehicle,
+     CreateZoneDaily,
+     UpdateParkingCard,
+     UpdateParkingZone,
+     UpdateVehicle,
+     UpdateParkingTransaction,
+     //UpdateParkingCardAndZone,
+     UpdateZoneDailyByID,
+     UpdateZoneDailyByZoneID,
+     GetParkingCardByID,
+     GetParkingFeePolicyByID,
+     GetParkingCardByUserID,
+     GetParkingPaymentByTransactionID,
+     //GetParkingCardWithZoneByID,
+     GetZoneDailyByZoneID,
+     GetIdCardZone,
+     DeleteParkingCard,
 }

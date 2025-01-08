@@ -4,7 +4,7 @@
     position: fixed;
     top: 20%;
     right: 0px;
-    background-color: #E8D196;
+    background-color: #B0946F;
     width: 200px;
     height: 60px;
     border-radius: 10px 0 0 10px;
@@ -22,7 +22,7 @@
     0%{
 
     }50%{
-        box-shadow: 0 0 40px #f5d481;
+        box-shadow: 0 0 40px #B0946F;
     }100%{
         
     }
@@ -58,7 +58,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #E8D196;
+    background-color: #B0946F;
     margin-top: 20px;
     text-align: center;
     box-shadow: 0 4px 10px #0000004f;
@@ -154,8 +154,8 @@
     margin-bottom: 10px;
 }
 .Map p{
-    font-family: 'Dongle', sans-serif;
-    color: #C9AF62;
+    font-family: "Trirong", serif;
+    color: #B0946F;
     font-size: 60px;
     margin: 0;
     padding: 0;
@@ -204,12 +204,12 @@
     right: 10px;
     width: 20px;
     height: 20px;
-    background-color: #C9AF62;
+    background-color: #B0946F;
     text-align: center;
     border-radius: 100%;
     color: #ffffff;
     cursor: pointer;
-    box-shadow: 0 0 4px #C9AF62;
+    box-shadow: 0 0 4px #B0946F;
     font-family: 'Dongle', sans-serif;
     font-size: 14px;
 }

@@ -1,9 +1,9 @@
 
 
 .headerInventory h1{
-    font-family: "Parkinsans", sans-serif;
+    font-family: "Trirong", serif;
     text-align: center;
-    color: #C9AF62;
+    color: #B0946F;
     font-size: 40px;
 
     animation: headerH2 1s ease-in-out ;
@@ -40,11 +40,11 @@
     margin: 10px 10px;
     padding: 5px;
     cursor: pointer;
-    font-family: "Parkinsans", sans-serif;
-    font-weight: 500;
+    font-family: "Trirong", serif;
+    font-weight: 700;
     border-radius: 20px;
-    color: #C9AF62;
-    border: 2px solid #C9AF62;
+    color: #B0946F;
+    border: 2px solid #B0946F;
 }
 
 .columntable {
@@ -53,9 +53,9 @@
     width: 100%;
     align-items: center;
     height: 50px;
-    border-bottom: 0px solid #C9AF62;
+    border-bottom: 0px solid #B0946F;
     box-shadow: 0 5px 5px #c9af622d;
-    background-color: #fbe8af;
+    background-color: #B0946F;
 }
 
 .columntable p{
@@ -63,6 +63,7 @@
     text-align: start;
     padding-left: 15px;
     font-family: "Parkinsans", sans-serif;
+    color: #fff;
     font-weight: 500;
 }
 

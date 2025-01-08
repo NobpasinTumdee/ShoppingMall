@@ -28,7 +28,7 @@
 .L span {
     width: 100%;
     height: 2px;
-    background-color: #C9AF62;
+    background-color: #B0946F;
 }
 
 
@@ -36,8 +36,8 @@
     margin-top: 20px;
     margin-bottom: 0;
     font-size: 80px;
-    font-family: 'Dongle';
-    color: #C9AF62;
+    font-family: "Trirong", serif;
+    color: #B0946F;
     text-align: center;
 }
 .ContanerStore {
@@ -58,7 +58,7 @@
     border: 1px solid #484848;
     box-shadow: 0 4px 10px #00000052;
     background-color: rgb(255, 255, 255);
-    font-family: 'Dongle';
+    font-family: "Trirong", serif;
     cursor: pointer;
 
     animation-duration: 0.5s;
@@ -76,7 +76,7 @@
     }
 }
 .cardStore.active {
-    border: 1px solid #C9AF62;}
+    border: 1px solid #B0946F;}
 .cardStore.inactive {
     pointer-events: none;
     border: 1px solid #6265c9;}
@@ -100,6 +100,7 @@
 .lineStore {
     width: 100%;
     height: 1px;
+    margin: 5px 0;
     background-color: #DADADA;
 }
 .DescribtionStore {
@@ -119,7 +120,7 @@
     cursor: pointer;
 }
 .ViewStore.active {
-    background-color: #C9AF62;
+    background-color: #B0946F;
 }
 .ViewStore.inactive {
     background-color: #6265c9;
@@ -152,9 +153,10 @@
     display: flex;
     align-items: center;
 
-    font-size: 24px;
-    font-family: 'Dongle', sans-serif;
-    line-height: 0.4;
+    font-size: 20px;
+    font-family: "Trirong", serif;
+    line-height: 10px;
+    font-weight: 100;
 
     margin-bottom: 50px;
     margin-top: 30px;
@@ -185,7 +187,7 @@
 }
 
 .buttonFloor.active {
-    background-color: #C9AF62;
+    background-color: #B0946F;
     border-radius: 10px;
 }
 .buttonFloor:hover {
@@ -247,6 +249,11 @@
     border-radius: 10px;
     border: 4px solid #eadcb2;
     box-shadow: 0 0 15px #00000016;
+    z-index: 1020;
+    animation: addBookingpopup 0.6s ease-in-out ;
+}
+@keyframes addBookingpopup {
+    0%{transform: translate(-50%, 100%)scale(0.5);}
 }
 /*====================================================================================================================================*/
 

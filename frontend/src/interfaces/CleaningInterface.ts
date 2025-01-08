@@ -1,3 +1,5 @@
+import { UsersInterface } from "./UsersInterface";
+
 export interface AreaInterface {
     ID?: number;
     AreaName?: string;   
@@ -6,17 +8,19 @@ export interface AreaInterface {
 
 export interface CleaningRecordInterface {
     ID?: number;
-    ActualStartTime?: string;
-    ActualEndTime?: string;
+    ActualStartTime?: Date;
+    ActualEndTime?: Date;
     Notes?: string;
     ScheduleID?: number;
+    User ?: UsersInterface;
     UserID?: number;
     AreaID?: number;
 }
 
 export interface SchedulesInterface {
+    TaskName: string;
     ID?: number;
-    StartTime?: string;
-    EndTime?: string;
+    StartTime?: Date;
+    EndTime?: Date;
     AreaID?: number;
 }

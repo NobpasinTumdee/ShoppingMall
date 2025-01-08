@@ -201,7 +201,7 @@ const Store: React.FC = () => {
                     </span>
                     <span onClick={Floor4} className={`buttonFloor ${isFloor4 ? "active" : ""}`}>
                         <div><img src={Computer} alt="market" /></div>
-                        <div>COMPUTER EQUIPMENT</div>
+                        <div>COMPUTER</div>
                     </span>
                     <span style={{width: "40%",backgroundColor: "#ffffff"}}></span>
                 </div>
@@ -216,7 +216,7 @@ const Store: React.FC = () => {
                                         <span key={index} className={`cardStore ${data.status_store === "This store is already taken." ? "active" : data.status_store === "WaitingForApproval" ? "inactive" : data.status_store === "Waiting for Payment." ? "WaitingPayment" : ""}`} >
                                             <div onClick={() => handleStoreClick(data)}>
                                                 <div><img src={data.pic_store || PicNoStore} alt="PicNoStore" /></div>
-                                                <div><p style={{fontSize: '28px' , color: '#000'}}>{data.name_store}</p></div>
+                                                <div><p style={{fontSize: '24px' , color: '#000',fontWeight:'600'}}>{data.name_store}</p></div>
                                                 <div className='lineStore'></div>
                                                 {data.total_rating ? (
                                                     <div className='rating'>{renderStars(data.total_rating || 5)} {data.total_rating.toFixed(2)} Point</div>
@@ -392,6 +392,7 @@ export const BookingStoreAdmin: React.FC = () => {
             formData.sub_pic_three = await getImageURL(fileList[3]?.originFileObj);
             console.log('Form data submitted:', formData);
             BookStore(formData);
+            setAddBookingpopup(false);
         };
         //คำนวนวัน
         const BDate = new Date(); // กำหนดเป็นวันที่ปัจจุบัน
@@ -460,6 +461,7 @@ export const BookingStoreAdmin: React.FC = () => {
                     </div>
                     <Table<StoreInterface> columns={columns} dataSource={Store} size="middle" style={{width:"80%",margin:'auto',border: '3px solid #eadcb2'}} />
                     {addBookingpopup && 
+                    <>
                         <div className='addBookingpopup'>
                             <p style={{fontSize:'25px',textAlign: 'center'}}>Booking</p>
                             <form onSubmit={handleSubmitEdit}>
@@ -523,6 +525,8 @@ export const BookingStoreAdmin: React.FC = () => {
                                 </div>
                             </form>
                         </div>
+                        <div className='backgroundevent' onClick={() => setAddBookingpopup(false)}></div>
+                    </>
                     }
                 </div>
             }
