@@ -11,8 +11,6 @@ import (
 	"net/http"
 )
 
-
-
 func CreateVehicle(c *gin.Context) {
 	var vehicle entity.Vehicle
 
@@ -56,7 +54,7 @@ func UpdateVehicle(c *gin.Context) {
 		LicensePlate: vehicle.LicensePlate,
 		Color:        vehicle.Color,
 		Make:         vehicle.Make,
-		Image:        vehicle.Image, 
+		Image:        vehicle.Image,
 	})
 
 	if result.Error != nil {

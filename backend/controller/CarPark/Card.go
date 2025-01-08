@@ -6,7 +6,9 @@ import (
 	//"fmt"
 
 	"fmt"
+	"time"
 
+	"github.com/asaskevich/govalidator"
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
 	"github.com/gin-gonic/gin"
@@ -45,20 +47,23 @@ func CreateParkingCard(c *gin.Context) {
 		return
 	}
 
-	// Determine TypeParkID and ParkingFeePolicyID
-	if user.Status == "Member" && store.UserID == 0 {
+	if user.Status == "Member" {
 		card.TypeParkID = 1
 		card.ParkingFeePolicyID = 1
-	} else if user.Status == "Member" && store.UserID != 0 {
+	} else if user.Status == "User" {
 		card.TypeParkID = 2
 		card.ParkingFeePolicyID = 2
-	} else if user.Status == "User" {
-		card.TypeParkID = 3
-		card.ParkingFeePolicyID = 3
 	} else {
-		return
+		card.TypeParkID = 1
+		card.ParkingFeePolicyID = 1
 	}
 
+/* 	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	if _, err := govalidator.ValidateStruct(card); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+ */
 	// Create ParkingCard
 	if err := db.Create(&card).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -79,9 +84,7 @@ func CreateParkingCard(c *gin.Context) {
 	switch card.TypeParkID {
 	case 1: // VIP
 		zonesToAssign = append(zonesToAssign, zoneMap["VIP"], zoneMap["GENERAL"])
-	case 2: // STORE
-		zonesToAssign = append(zonesToAssign, zoneMap["STORE"], zoneMap["GENERAL"])
-	case 3: // GENERAL
+	case 2: // GENERAL
 		zonesToAssign = append(zonesToAssign, zoneMap["GENERAL"])
 	}
 
@@ -135,7 +138,7 @@ func CreateParkingCard(c *gin.Context) {
     c.JSON(http.StatusCreated, gin.H{"message": "Parking Card and Vehicle created successfully", "data": card})
 } */
 
-func GetListCard(c *gin.Context) {
+func GetListCardAndCheckExpiredCardtoUpdate(c *gin.Context) {
 	var cards []entity.ParkingCard
 
 	db := config.DB()
@@ -148,6 +151,17 @@ func GetListCard(c *gin.Context) {
 		Find(&cards).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
+	}
+
+	/******************** ถ้า ExpiryDate น้อยกว่าวันนี้ เปลี่ยน Status Card ******************************/
+	for _, card := range cards {
+		if card.ExpiryDate != nil && card.ExpiryDate.Before(time.Now()) && card.StatusCardID != 3 {
+			card.StatusCard.ID = uint(3)
+			if err := db.Save(&card).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+		}
 	}
 
 	c.JSON(http.StatusOK, cards)
@@ -169,6 +183,7 @@ func UpdateParkingCard(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to mappayload"})
 		return
 	}
+
 	result = db.Save(&card)
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
@@ -183,7 +198,7 @@ func GetParkingCardByID(c *gin.Context) {
 
 	db := config.DB()
 
-	if err := db.Preload("ParkingZone").Preload("User").Preload("StatusCard").Preload("TypePark").Preload("ParkingTransaction").Preload("ParkingPayment").First(&parkingCard, "id = ?", id).Error; err != nil {
+	if err := db.Preload("ParkingFeePolicy").Preload("ParkingZone").Preload("User").Preload("StatusCard").Preload("TypePark").Preload("ParkingTransaction").Preload("ParkingPayment").First(&parkingCard, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
 		return
 	}
@@ -269,7 +284,6 @@ func GetListCardAndUser(c *gin.Context) {
 	})
 }
 
-
 func GetListTransaction(c *gin.Context) {
 	var trans []entity.ParkingTransaction
 
@@ -286,6 +300,19 @@ func GetListTransaction(c *gin.Context) {
 	c.JSON(http.StatusOK, trans)
 }
 
+func GetListStatusCard(c *gin.Context) {
+	var status []entity.StatusCard
+
+	db := config.DB()
+
+	if err := db.Find(&status).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, status)
+}
+
 // POST ParkingTransaction
 func CreateParkingTransaction(c *gin.Context) {
 	var trans entity.ParkingTransaction
@@ -298,18 +325,18 @@ func CreateParkingTransaction(c *gin.Context) {
 	db := config.DB()
 
 	newTransaction := entity.ParkingTransaction{
-		ReservationDate: trans.ReservationDate,
-		IsReservedPass:  trans.IsReservedPass,
-		EntryTime:       trans.EntryTime,
-		ExitTime:        trans.ExitTime,
-		Hourly_Rate:     trans.Hourly_Rate,
-		Image:           trans.Image,
-		LicensePlate:    trans.LicensePlate,
-		Color:           trans.Color,
-		Make:            trans.Make,
-		UserID:          trans.UserID,
-		ParkingCardID:   trans.ParkingCardID, // Using ParkingCard ID
-		ParkingZoneDailyID:   trans.ParkingZoneDailyID,
+		ReservationDate:    trans.ReservationDate,
+		IsReservedPass:     trans.IsReservedPass,
+		EntryTime:          trans.EntryTime,
+		ExitTime:           trans.ExitTime,
+		TotalHourly:        trans.TotalHourly,
+		Image:              trans.Image,
+		LicensePlate:       trans.LicensePlate,
+		Color:              trans.Color,
+		Make:               trans.Make,
+		UserID:             trans.UserID,
+		ParkingCardID:      trans.ParkingCardID, // Using ParkingCard ID
+		ParkingZoneDailyID: trans.ParkingZoneDailyID,
 	}
 
 	if err := db.Create(&newTransaction).Error; err != nil {
@@ -323,7 +350,9 @@ func CreateParkingTransaction(c *gin.Context) {
 func UpdateParkingTransaction(c *gin.Context) {
 	var tran entity.ParkingTransaction
 	TranID := c.Param("id")
+
 	db := config.DB()
+
 	result := db.First(&tran, TranID)
 	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
@@ -333,12 +362,13 @@ func UpdateParkingTransaction(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to mappayload"})
 		return
 	}
+
 	result = db.Save(&tran)
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
 		return
 	}
-    c.JSON(http.StatusOK, gin.H{"message": "ParkingZone updated successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "ParkingZone updated successfully"})
 }
 
 /********************************* User *************************************/
@@ -373,6 +403,7 @@ func GetUserDetails(c *gin.Context) {
 		Preload("ParkingZone").
 		Preload("User").
 		Where("user_id = ?", userID).
+		Order("created_at DESC").
 		First(&parkingCard).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "No parking card found for user_id " + userID})
 		return
@@ -401,7 +432,11 @@ func UpdateParkingCardAndZone(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("Payload:", payload)
+	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	if _, err := govalidator.ValidateStruct(payload); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	fmt.Println("ParkingCard ID:", payload.ParkingCard.ID)
 	fmt.Println("ParkingCard StatusCardID:", payload.ParkingCard.StatusCardID)

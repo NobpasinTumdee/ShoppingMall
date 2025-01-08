@@ -14,9 +14,10 @@ func TestParkingCardID(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	t.Run("ParkingCard ID is required", func(t *testing.T) {
+		now := time.Now()
 		card := entity.ParkingCard{
 			ID:                 "",
-			ExpiryDate:         time.Now(),
+			ExpiryDate:         &now,
 			IsPermanent:        false,
 			TypeParkID:         1,
 			UserID:             1,

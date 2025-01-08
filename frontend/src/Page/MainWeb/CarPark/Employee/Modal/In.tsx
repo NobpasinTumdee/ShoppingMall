@@ -33,7 +33,9 @@ import {
 //import "./../Carpark.css";
 import {
   ParkingCardInterface,
+  ParkingTransactionInterface,
   ParkingZoneDailyInterface,
+  StatusCardInterface,
 } from "../../../../../interfaces/Carpark";
 
 import Tesseract from "tesseract.js";
@@ -57,7 +59,18 @@ interface InProps {
   setIsModalInVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedButtonInOutDefault: React.Dispatch<React.SetStateAction<string>>;
   setFilteredData: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
+  setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
   cards: ParkingCardInterface[];
+  status: StatusCardInterface[];
+  //fetchDataForInOut: () => Promise<void>;
+  setCarLicensePlate: React.Dispatch<React.SetStateAction<string>>;
+  carLicensePlate: string;
+  setCarColor: React.Dispatch<React.SetStateAction<string | undefined>>;
+  carColor: string | undefined;
+  setCarMake: React.Dispatch<React.SetStateAction<string | undefined>>;
+  carMake: string | undefined;
+  setFileList: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
+  fileList: UploadFile<any>[];
 }
 
 const IN: React.FC<InProps> = ({
@@ -70,7 +83,18 @@ const IN: React.FC<InProps> = ({
   setIsModalInVisible,
   setSelectedButtonInOutDefault,
   setFilteredData,
+  setCards,
   cards,
+  status,
+  //fetchDataForInOut,
+/*   setCarLicensePlate,
+  carLicensePlate,
+  setCarColor,
+  carColor,
+  setCarMake,
+  carMake,
+  setFileList,
+  fileList, */
 }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -87,6 +111,7 @@ const IN: React.FC<InProps> = ({
   const [selectedZoneDaily, setSelectedZoneDaily] =
     useState<ParkingZoneDailyInterface>();
   const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
+  
   useEffect(() => {
     console.log("Requesting with ID:", selectedCard?.ID);
     const fetchData = async () => {
@@ -126,7 +151,7 @@ const IN: React.FC<InProps> = ({
       } catch (error) {
         message.error("Failed to fetch parking card data.");
       }
-    };
+    }; 
     if (isModalInVisible) fetchData();
     console.log("carLicensePlate: ", carLicensePlate);
     console.log("carColor: ", carColor);
@@ -186,10 +211,10 @@ const IN: React.FC<InProps> = ({
     );
 
     const updateCardData = {
-      StatusCardID: 2, // เปลี่ยนสถานะบัตรให้เป็นใช้งานอยู่
+      StatusCardID: Number(status?.find((state: any) => state.Status === "OUT")?.ID || null),
     };
 
-    // Convert today to the start of the day (00:00:00)
+        // Convert today to the start of the day (00:00:00)
     const DayToday = new Date(today.toDate());
     DayToday.setHours(0, 0, 0, 0);
 
@@ -220,7 +245,7 @@ const IN: React.FC<InProps> = ({
           Date: dateWithTime,
           TotalVisitors: (ZoneDaily?.TotalVisitors || 0) + 1,
           AvailableZone:
-            existingTransaction !== undefined
+            existingTransaction !== undefined 
               ? (ZoneDaily?.AvailableZone || 0) - 1
               : (zone?.MaxCapacity || 0) - 1,
           ReservedAvailable:
@@ -237,6 +262,7 @@ const IN: React.FC<InProps> = ({
                 ),
           ParkingZoneID: zone.ID,
         };
+
 
         /* const ZoneDailyDate = ZoneDaily ? new Date(ZoneDaily?.Date) : null;
         if (ZoneDailyDate && !isNaN(ZoneDailyDate.getTime())) {
@@ -289,8 +315,14 @@ const IN: React.FC<InProps> = ({
             console.log("selectedZoneDate.toISOString(): ", ZoneDailyDate);
             console.log("DayToday.toISOString(): ", DayToday);
             console.log("selectedZone?.ID || 0: ", ZoneDaily?.ID || 0);
-            console.log("isSameDate(ZoneDailyDate, DayToday): ",isSameDate(ZoneDailyDate, DayToday));
-            console.log("(selectedZone?.ID || 0) > 0: ",(ZoneDaily?.ID || 0) > 0);
+            console.log(
+              "isSameDate(ZoneDailyDate, DayToday): ",
+              isSameDate(ZoneDailyDate, DayToday)
+            );
+            console.log(
+              "(selectedZone?.ID || 0) > 0: ",
+              (ZoneDaily?.ID || 0) > 0
+            );
             const resZoneDaily =
               isSameDate(ZoneDailyDate, DayToday) && (ZoneDaily?.ID || 0) > 0
                 ? await UpdateZoneDailyByID(
@@ -340,7 +372,10 @@ const IN: React.FC<InProps> = ({
             console.log("selectedZoneDate.toISOString(): ", ZoneDailyDate);
             console.log("DayToday.toISOString(): ", DayToday);
             console.log("selectedZone?.ID || 0: ", ZoneDaily?.ID || 0);
-            console.log("isSameDate(ZoneDailyDate, DayToday): ",isSameDate(ZoneDailyDate, DayToday));
+            console.log(
+              "isSameDate(ZoneDailyDate, DayToday): ",
+              isSameDate(ZoneDailyDate, DayToday)
+            );
             console.log(
               "(selectedZone?.ID || 0) > 0: ",
               (ZoneDaily?.ID || 0) > 0
@@ -453,14 +488,14 @@ const IN: React.FC<InProps> = ({
         >
           {Array.isArray(selectedCard?.ParkingZone) &&
             selectedCard.ParkingZone.map((zone, index) => {
-              const zoneDaily = zoneDailyData?.find(
-                (data: ParkingZoneDailyInterface) => {
-                  return (
-                    data.ParkingZone?.ID === zone.ID &&
-                    data.Date === dateWithTime
-                  );
-                }
-              );
+              const zoneDaily =
+                zoneDailyData && Array.isArray(zoneDailyData)
+                  ? zoneDailyData.find(
+                      (data: ParkingZoneDailyInterface) =>
+                        data.ParkingZone?.ID === zone.ID &&
+                        data.Date === dateWithTime
+                    )
+                  : null;
               return (
                 <Card
                   id="Zone"
@@ -496,8 +531,8 @@ const IN: React.FC<InProps> = ({
                           <div>Capacity: {zone.MaxCapacity}</div>
                           <div>
                             Available:{" "}
-                            {zoneDaily?.ReservedAvailable ??
-                              zone?.MaxReservedCapacity}
+                            {zoneDaily?.AvailableZone ??
+                              zone?.MaxCapacity}
                           </div>
                         </div>
                       </div>

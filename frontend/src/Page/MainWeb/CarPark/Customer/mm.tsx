@@ -14,7 +14,6 @@ import { NavBar } from "../../../Component/NavBar";
 import dayjs from "dayjs";
 import { SelectInfo } from "antd/es/calendar/generateCalendar";
 import {
-  GetListCard,
   GetListTransaction,
   GetListZone,
 } from "../../../../services/https";

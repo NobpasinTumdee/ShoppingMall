@@ -26,7 +26,8 @@ import {
   CreateParkingTransaction,
   CreateVehicle,
   CreateZoneDaily,
-  GetListCard,
+  GetListCardAndCheckExpiredCardtoUpdate,
+  GetListStatusCard,
   GetListZone,
   GetListZoneDaily,
   GetParkingCardByUserID,
@@ -41,6 +42,7 @@ import {
   ParkingCardInterface,
   ParkingZoneDailyInterface,
   ParkingZoneInterface,
+  StatusCardInterface,
   VehicleInterface,
 } from "../../../../interfaces/Carpark";
 import dayjs, { Dayjs } from "dayjs";
@@ -67,6 +69,7 @@ const CustomerParkingBooking: React.FC = () => {
   >([]);
   const [selectedZoneDaily, setSelectedZoneDaily] =
     useState<ParkingZoneDailyInterface>();
+  const [status, setStatus] = useState<StatusCardInterface[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>();
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [carLicensePlate, setCarLicensePlate] = useState<string>();
@@ -160,17 +163,24 @@ const CustomerParkingBooking: React.FC = () => {
   const fetchUserDetails = async () => {
     setLoading(true); // เริ่มโหลดข้อมูล
     try {
-      const [listCardRes, userdetailRes, listZoneDailyRes] = await Promise.all([
-        GetListCard(),
-        GetUserDetails(Number(userid)),
-        GetListZoneDaily(),
-      ]);
+      const [listCardRes, userdetailRes, listZoneDailyRes, statusRes] =
+        await Promise.all([
+          GetListCardAndCheckExpiredCardtoUpdate(),
+          GetUserDetails(Number(userid)),
+          GetListZoneDaily(),
+          GetListStatusCard(),
+        ]);
 
       if (listCardRes.status === 200) {
         setListCards(listCardRes.data);
-        console.log("ListCard:", listCardRes.data);
       } else {
         message.error("Failed to fetch list card.");
+      }
+
+      if (statusRes.status === 200) {
+        setStatus(statusRes.data);
+      } else {
+        message.error("Failed to fetch list status card.");
       }
 
       if (userdetailRes.status === 200) {
@@ -194,6 +204,11 @@ const CustomerParkingBooking: React.FC = () => {
             url: vehicle.Image, // ที่นี่จะต้องเป็น base64 string ที่มาจากฐานข้อมูล
           },
         ]);
+
+        // ตรวจสอบสถานะการ์ด
+        if (userdetailRes.data.parkingCard.StatusCard.Status === "Expired") {
+          setIsModalCreateCardVisible(true);
+        }
 
         // ตรวจสอบสถานะการตอบกลับของ ZoneDaily
         if (listZoneDailyRes.status === 200) {
@@ -257,14 +272,15 @@ const CustomerParkingBooking: React.FC = () => {
       ExpiryDate: new Date(
         new Date().setFullYear(new Date().getFullYear() + 1)
       ).toISOString(),
-      StatusCardID: 1,
+      StatusCardID: Number(
+        status?.find((state: any) => state.Status === "IN")?.ID || null
+      ),
     };
 
     try {
       // สร้าง ParkingCard
       const resCreateCard = await CreateParkingCard(newCardData);
       if (resCreateCard.status === 201) {
-        // ข้อมูลสำหรับสร้าง Vehicle (ใช้ cardID จาก ParkingCard)
         const vehicleData = {
           LicensePlate: carLicensePlate,
           Image: imageUrl || "",
@@ -273,14 +289,20 @@ const CustomerParkingBooking: React.FC = () => {
           UserID: Number(userid),
         };
 
-        // สร้าง Vehicle
-        const resCreateVehicle = await CreateVehicle(vehicleData);
-        if (resCreateVehicle.status === 201) {
-          console.log("Parking card and vehicle created successfully.");
+        if (cards?.StatusCard?.Status !== "Expired") {
+          // สร้าง Vehicle
+          const resCreateVehicle = await CreateVehicle(vehicleData);
+          if (resCreateVehicle.status === 201) {
+            console.log("Parking card and vehicle created successfully.");
+            setIsModalCreateCardVisible(false);
+            setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
+          } else {
+            message.error("Failed to create vehicle.");
+          }
+        } else {
+          await handleEditCarOk();
           setIsModalCreateCardVisible(false);
           setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
-        } else {
-          message.error("Failed to create vehicle.");
         }
       } else {
         message.error("Failed to create parking card.");
@@ -313,10 +335,6 @@ const CustomerParkingBooking: React.FC = () => {
     ]);
   };
 
-  /*   const handleDateChange = (value: string) => {
-    setSelectedDate(value);
-  };
- */
   const handleZoneClick = (index: any) => {
     setSelectedZone(index === selectedZone ? null : index);
   };
@@ -467,7 +485,6 @@ const CustomerParkingBooking: React.FC = () => {
       Make: carMake,
       UserID: Number(userid),
       ParkingCardID: cards?.ID,
-      StatusPaymentID: 1,
       ParkingZoneDailyID: selectedZoneDaily?.ID,
     };
 
@@ -540,10 +557,6 @@ const CustomerParkingBooking: React.FC = () => {
   };
 
   /***************************    Choode Date    ******************************** */
-  // ฟังก์ชันในการเปลี่ยนวันที่ให้เป็นช่วงเวลา 00:00 - 23:59
-  const getStartOfDay = (date: dayjs.Dayjs) => date.startOf("day"); // 00:00
-  const getEndOfDay = (date: dayjs.Dayjs) => date.endOf("day"); // 23:59
-
   const onChangeDatePicker: DatePickerProps["onChange"] = (
     date,
     dateString
@@ -647,25 +660,45 @@ const CustomerParkingBooking: React.FC = () => {
                         Edit Car Information
                       </Button>
                     </div>
-                    <div style={{ width: "500px", justifyItems: "center", display: "flex", gap:"16px"}}>
+                    <div
+                      style={{
+                        width: "500px",
+                        justifyItems: "center",
+                        display: "flex",
+                        gap: "16px",
+                      }}
+                    >
                       {Array.isArray(cards?.ParkingZone) &&
                         cards?.ParkingZone.map((zone, index) => {
                           // ก่อนการค้นหา zoneDaily
                           console.log("Searching for zone:", zone.ID);
-                          console.log( "Selected Date:", selectedDate?.toISOString().split("T")[0] );
+                          console.log(
+                            "Selected Date:",
+                            selectedDate?.toISOString().split("T")[0]
+                          );
 
                           // ค้นหา zoneDaily ที่ตรงกับวันที่
                           const zoneDaily = zoneDailyData?.find(
                             (data: ParkingZoneDailyInterface) => {
-                              const isMatchingID = data.ParkingZone?.ID === zone.ID;
+                              const isMatchingID =
+                                data.ParkingZone?.ID === zone.ID;
                               const isMatchingDate = data.Date === dateWithTime;
-                              
-                              console.log("data.ParkingZone?.ID:", data.ParkingZone?.ID);
+
+                              console.log(
+                                "data.ParkingZone?.ID:",
+                                data.ParkingZone?.ID
+                              );
                               console.log("zone.ID:", zone.ID);
                               console.log("data.Date:", data.Date);
                               console.log("dateWithTime:", dateWithTime);
-                              console.log(  "data.ParkingZone?.ID === zone.ID:", isMatchingID );
-                              console.log( "data.Date === selectedDate:", isMatchingDate );
+                              console.log(
+                                "data.ParkingZone?.ID === zone.ID:",
+                                isMatchingID
+                              );
+                              console.log(
+                                "data.Date === selectedDate:",
+                                isMatchingDate
+                              );
 
                               return isMatchingID && isMatchingDate;
                             }
@@ -715,7 +748,9 @@ const CustomerParkingBooking: React.FC = () => {
                                         Capacity: {zone?.MaxReservedCapacity}
                                       </div>
                                       <div>
-                                        Available:{" "} {zoneDaily?.ReservedAvailable ?? zone?.MaxReservedCapacity}
+                                        Available:{" "}
+                                        {zoneDaily?.ReservedAvailable ??
+                                          zone?.MaxReservedCapacity}
                                       </div>
                                     </div>
                                   </div>
@@ -730,7 +765,14 @@ const CustomerParkingBooking: React.FC = () => {
                                     type="circle"
                                     strokeColor="#E8D196"
                                     size={80}
-                                    percent={ zone.MaxReservedCapacity ? ((zoneDaily?.ReservedAvailable ?? zone?.MaxReservedCapacity) / zone.MaxReservedCapacity) * 100 : 0 }
+                                    percent={
+                                      zone.MaxReservedCapacity
+                                        ? ((zoneDaily?.ReservedAvailable ??
+                                            zone?.MaxReservedCapacity) /
+                                            zone.MaxReservedCapacity) *
+                                          100
+                                        : 0
+                                    }
                                     format={(percent) =>
                                       `${(percent ?? 0).toFixed(2)}%`
                                     }

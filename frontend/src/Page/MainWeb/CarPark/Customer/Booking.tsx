@@ -15,9 +15,8 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavBar } from "../../../Component/NavBar";
-import { GetListCard, GetListZone } from "../../../../services/https";
+import { GetListCardAndCheckExpiredCardtoUpdate, GetListZone } from "../../../../services/https";
 import {
-  MembershipCustomerInterface,
   ParkingCardInterface,
   ParkingZoneInterface,
 } from "../../../../interfaces/Carpark";
@@ -67,7 +66,7 @@ const CustomerParkingBooking: React.FC = () => {
 
   const GetCard = async () => {
     try {
-      const res = await GetListCard();
+      const res = await GetListCardAndCheckExpiredCardtoUpdate();
       if (res.status === 200) {
         setCards(res.data);
       } else {
@@ -243,8 +242,8 @@ const CustomerParkingBooking: React.FC = () => {
                           lineHeight: "1.5",
                         }}
                       >
-                        <div>Capacity: {zone.Capacity}</div>
-                        <div>Available: {zone.AvailableZone}</div>
+                        {/* <div>Capacity: {zone.Capacity}</div>
+                        <div>Available: {zone.AvailableZone}</div> */}
                       </div>
                     </div>
                   </Col>
@@ -258,9 +257,9 @@ const CustomerParkingBooking: React.FC = () => {
                       type="circle"
                       strokeColor="#E8D196"
                       size={80}
-                      percent={
+                      /* percent={
                         ((zone.AvailableZone || 0) / (zone.Capacity || 0)) * 100
-                      }
+                      } */
                       format={(percent) => `${(percent ?? 0).toFixed(2)}%`}
                       style={{
                         marginTop: "10px",

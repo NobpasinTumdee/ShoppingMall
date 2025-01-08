@@ -3,6 +3,7 @@ package CarPark
 import (
 	//"errors" // เพิ่ม import สำหรับ package errors
 	//"strings"
+	"github.com/asaskevich/govalidator"
 
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
@@ -40,20 +41,11 @@ func UpdateParkingZone(c *gin.Context) {
 		return
 	}
 
-	/* if zone.AvailableZone < 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "This zone is already full."})
+	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	if _, err := govalidator.ValidateStruct(zone); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	if zone.ReservedAvailable < 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "This zone is already fully reserved."})
-		return
-	}
-
-	if zone.AvailableZone < 0 || zone.ReservedAvailable > zone.MaxReservedCapacity {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "This zone has no available parking space or the reserved capacity is full."})
-		return
-	} */
 
 	result = db.Save(&zone)
 	if result.Error != nil {
@@ -93,12 +85,19 @@ func GetZoneByTypePark(c *gin.Context) {
 
 func CreateZoneDaily(c *gin.Context) {
 	var daily entity.ParkingZoneDaily
-	db := config.DB()
 
 	if err := c.ShouldBindJSON(&daily); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload", "details": err.Error()})
 		return
 	}
+
+	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	if _, err := govalidator.ValidateStruct(daily); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
 
 	if daily.AvailableZone < 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "This zone is already full."})
@@ -163,11 +162,18 @@ func UpdateZoneDailyByID(c *gin.Context) {
 	var zone entity.ParkingZone
 
 	DailyID := c.Param("id") // ID จาก URL
-	db := config.DB()
 
 	// ตรวจสอบว่า JSON payload ถูกต้อง
 	if err := c.ShouldBindJSON(&daily); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		return
+	}
+
+	db := config.DB()
+
+	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	if _, err := govalidator.ValidateStruct(daily); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -213,6 +219,13 @@ func UpdateZoneDailyByZoneID(c *gin.Context) {
 	var zone entity.ParkingZone
 	ZoneID := c.Param("id")
 	db := config.DB()
+
+	
+	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	if _, err := govalidator.ValidateStruct(daily); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	// ตรวจสอบว่า ParkingZone มีอยู่หรือไม่
 	if err := db.Where("id = ?", ZoneID).First(&zone).Error; err != nil {

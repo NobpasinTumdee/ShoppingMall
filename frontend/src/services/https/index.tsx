@@ -5,6 +5,7 @@ import { UsersInterface , MessageBoardInterface, EventInterface } from "../../in
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 import {
   ParkingCardInterface,
+  ParkingPaymentInterface,
   ParkingTransactionInterface,
   ParkingZoneDailyInterface,
   ParkingZoneInterface,
@@ -762,7 +763,7 @@ async function GetUserDetails(id: number) {
     .then((res) => res)
     .catch((e) => e.response);
 }
-async function GetListCard() {
+async function GetListCardAndCheckExpiredCardtoUpdate() {
   return await axios
     .get(`${apiUrl}/get-list-parking-card`, requestOptions)
     .then((res) => res)
@@ -835,6 +836,12 @@ async function CreateZoneDaily(data: ParkingZoneDailyInterface) {
     .then((res) => res)
     .catch((e) => e.response);
 }
+async function CreateParkingPayment(data: ParkingPaymentInterface) {
+  return await axios
+    .post(`${apiUrl}/create-parking-payment`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
 /* async function CreateParkingCardAndVehical(data: ParkingTransactionInterface) {
   return await axios
     .post(`${apiUrl}/create-parkingcard-and-vehical`, data, requestOptions)
@@ -843,7 +850,7 @@ async function CreateZoneDaily(data: ParkingZoneDailyInterface) {
 }	 */
 async function UpdateParkingCard(id: string, data: ParkingCardInterface) {
   return await axios
-    .put(`${apiUrl}/update-parkingcard/${id}`, data, requestOptions)
+    .patch(`${apiUrl}/patch-parkingcard/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }	
@@ -855,25 +862,25 @@ async function UpdateParkingZone(id: number, data: ParkingZoneInterface) {
 }
 async function UpdateVehicle(id: number, data: ParkingCardInterface) {
   return await axios
-    .put(`${apiUrl}/update-vehicle/${id}`, data, requestOptions)
+    .patch(`${apiUrl}/patch-vehicle/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }	
 async function UpdateParkingTransaction(id: number, data: ParkingCardInterface) {
   return await axios
-    .put(`${apiUrl}/update-parkingtransaction/${id}`, data, requestOptions)
+    .patch(`${apiUrl}/patch-parkingtransaction/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 async function UpdateZoneDailyByID(id: number, data: ParkingZoneDailyInterface) {
   return await axios
-    .put(`${apiUrl}/update-parkingzone-daily/${id}`, data, requestOptions)
+    .patch(`${apiUrl}/patch-parkingzone-daily/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 async function UpdateZoneDailyByZoneID(id: number, data: ParkingZoneDailyInterface) {
   return await axios
-    .put(`${apiUrl}/update-parkingzone-daily-by-zone/${id}`, data, requestOptions)
+    .patch(`${apiUrl}/patch-parkingzone-daily-by-zone/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }/* 
@@ -901,8 +908,13 @@ async function GetParkingCardByID(id: string) {
     .get(`${apiUrl}/get-parking-card/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
+}		
+async function GetParkingFeePolicyByID(id: number) {
+  return await axios
+    .get(`${apiUrl}/get-parking-fee-policy/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
 }	
-
 async function GetParkingCardByUserID(id: string) {
   return await axios
     .get(`${apiUrl}/get-parking-card-by-user/${id}`, requestOptions)
@@ -921,9 +933,24 @@ async function GetZoneDailyByZoneID(id: number) {
     .then((res) => res)
     .catch((e) => e.response);
 }
+async function GetParkingPaymentByTransactionID(id: number) {
+  return await axios
+    .get(`${apiUrl}/get-parkingpayment-by-transaction/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
 async function GetListZone() {
   return await axios
     .get(`${apiUrl}/get-list-parking-zone`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
+async function GetListStatusCard() {
+  return await axios
+    .get(`${apiUrl}/get-list-status-card`, requestOptions)
     .then((res) => res)
     .catch((e) => {
       console.error("Error fetching data:", e);
@@ -1028,16 +1055,18 @@ export {
 
     // Car Parking
     GetUserDetails,
-    GetListCard,
+    GetListCardAndCheckExpiredCardtoUpdate,
     GetListTransaction,
     GetListZoneDaily,
     /* CreateParkingCardAndVehical, */
     GetListCardAndUser,
     GetListZone,
+    GetListStatusCard,
     //GetZoneByTypePark,
     //GetListLastTransaction,
     CreateParkingCard,
     CreateParkingTransaction,
+    CreateParkingPayment,
     CreateVehicle,
     CreateZoneDaily,
     UpdateParkingCard,
@@ -1048,7 +1077,9 @@ export {
     UpdateZoneDailyByID,
     UpdateZoneDailyByZoneID,
     GetParkingCardByID,
+    GetParkingFeePolicyByID,
     GetParkingCardByUserID,
+    GetParkingPaymentByTransactionID,
     //GetParkingCardWithZoneByID,
     GetZoneDailyByZoneID,
     GetIdCardZone,

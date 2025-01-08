@@ -26,9 +26,10 @@ import SignUp from './Page/SignUp/SignUp';
 import CarPark from './Page/MainWeb/CarPark/Employee/CarPark';
 import CarParkIN from './Page/MainWeb/CarPark/CarParkIN';
 import CarParkINZone from './Page/MainWeb/CarPark/IN/CarParkINZone';
-import HistoryCard from './Page/MainWeb/CarPark/Employee/HistoryCard'
-import CarParkCustomerMain from './Page/MainWeb/CarPark/Customer/Main'
-import CarParkCustomerBook from './Page/MainWeb/CarPark/Customer/Booking'
+import HistoryCard from './Page/MainWeb/CarPark/Employee/HistoryCard';
+import ReceiptCard from './Page/MainWeb/CarPark/Employee/Modal/Receipt';
+import CarParkCustomerMain from './Page/MainWeb/CarPark/Customer/Main';
+import CarParkCustomerBook from './Page/MainWeb/CarPark/Customer/Booking';
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning","/service"].includes(location.pathname);
@@ -68,6 +69,7 @@ const App: React.FC = () => {
         <Route path="/CarPark/Booking" element={<CarParkCustomerBook />} />
         <Route path="/CarPark-Attendant" element={<CarPark />} />
         <Route path="/CarPark/HistoryCard" element={<HistoryCard />} />
+        <Route path="/CarPark/HistoryCard/Receipt" element={<ReceiptCard payment={location.state?.payment} selectedCard={location.state?.selectedCard} existingTransaction={location.state?.existingTransaction}/>}/>
         <Route path="/CarParking-In" element={<CarParkIN />} />
         <Route path="/CarParking-In-Zone" element={<CarParkINZone />} />
       </Routes>

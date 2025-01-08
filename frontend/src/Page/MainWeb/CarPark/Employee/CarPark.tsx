@@ -11,6 +11,7 @@ import {
   Row,
   Space,
   Table,
+  UploadFile,
   message,
 } from "antd";
 import React, { useState, useEffect } from "react";
@@ -24,10 +25,17 @@ import {
   DatabaseOutlined,
   CreditCardOutlined,
 } from "@ant-design/icons";
-import { DeleteParkingCard, GetListCard } from "./../../../../services/https";
+import {
+  DeleteParkingCard,
+  GetListCardAndCheckExpiredCardtoUpdate,
+  GetListStatusCard,
+  GetParkingCardByID,
+} from "./../../../../services/https";
 import {
   ParkingCardInterface,
   ParkingFeePolicyInterface,
+  ParkingTransactionInterface,
+  StatusCardInterface,
 } from "./../../../../interfaces/Carpark";
 import "./../CarPark.css";
 import PicFloor from "./../../../../assets/icon/ForPage/Store/Reserve.png";
@@ -35,10 +43,18 @@ import IN from "./Modal/In";
 import OUT from "./Modal/Out";
 import { NavBar } from "../../../Component/NavBar";
 import AddCardModal from "./Modal/AddCard";
+import dayjs from "dayjs";
+import carIn from "./../../../../assets/CarPark/car_in.png";
+import carOut from "./../../../../assets/CarPark/car_out.png";
+import expired from "./../../../../assets/CarPark/expired.png";
 
 //import "./../Store/StoreAndPay.css";
 
 type OTPProps = GetProps<typeof Input.OTP>;
+
+const today = dayjs();
+const dateOnly = today?.format("YYYY-MM-DD"); // เอาแค่วันที่
+const dateWithTime = `${dateOnly}T00:00:00+07:00`;
 
 const CarPark: React.FC = () => {
   const [cards, setCards] = useState<ParkingCardInterface[]>([]);
@@ -50,19 +66,23 @@ const CarPark: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<ParkingCardInterface | null>(
     null
   );
+  const [status, setStatus] = useState<StatusCardInterface[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredData, setFilteredData] = useState<ParkingCardInterface[]>([]);
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
     null
   ); // Zone
-  const [carLicensePlate, setCarLicensePlate] = useState("");
   const [isModalInVisible, setIsModalInVisible] = useState<boolean>(false);
   const [isModalOutVisible, setIsModalOutVisible] = useState<boolean>(false);
   const [isAddCardModalVisible, setIsAddCardModalVisible] = useState(false);
   const [data, setData] = useState("No result");
   const [isCameraActive, setIsCameraActive] = useState<boolean>(true);
+  const [carLicensePlate, setCarLicensePlate] = useState("");
+  const [carColor, setCarColor] = useState<string>();
+  const [carMake, setCarMake] = useState<string>();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const columnsCarIn = [
+  const columns = [
     { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
     {
       title: "Card Type",
@@ -79,31 +99,64 @@ const CarPark: React.FC = () => {
       dataIndex: "ExpiryDate",
       key: "ExpiryDate",
       render: (_: any, record: any) =>
-        formatDate(new Date(record.ExpiryDate)) || "",
+         (record.ExpiryDate !== null) ? formatDate(new Date(record.ExpiryDate)) : "-",
     },
     {
-      title: "Status",
+      title: "Manage Card",
       key: "StatusCard.Status",
       fixed: "right" as const,
-      render: (_: any, record: ParkingCardInterface) => (
-        <Button
-          type="primary"
-          onClick={() =>
-            handleStatusClick(record.StatusCard?.Status || "", record)
-          }
-        >
-          {record.StatusCard?.Status === "IN"
-            ? "IN"
-            : record.StatusCard?.Status === "OUT"
-            ? "OUT"
-            : record.StatusCard?.Status === "Expired"
-            ? "Expired"
-            : record.StatusCard?.Status === "Reserved"
-            ? "IN"
-            : "Un Used"}
-        </Button>
-      ),
-    },
+      render: (_: any, record: ParkingCardInterface) => {
+        const isExpired = !!(
+          record.ExpiryDate && new Date(record.ExpiryDate) < new Date()
+        );
+    
+        let iconSrc;
+        let statusText;
+    
+        switch (record.StatusCard?.Status) {
+          case "IN":
+            iconSrc = carIn;
+            statusText = "IN";
+            break;
+          case "OUT":
+            iconSrc = carOut;
+            statusText = "OUT";
+            break;
+          case "Expired":
+            iconSrc = expired;
+            statusText = "Expired";
+            break;
+          default:
+            iconSrc = carIn;
+            statusText = "IN";
+        }
+    
+        return (
+          <Button
+            type="primary"
+            onClick={() =>
+              handleStatusClick(record.StatusCard?.Status || "", record)
+            }
+            disabled={isExpired}
+            style={{
+              backgroundColor: isExpired ? '#ccc' : '#fbe8af', // สีพื้นหลัง
+              padding: '10px',
+            }}
+          >
+            <img
+              src={iconSrc}
+              alt={statusText}
+              style={{
+                width: '24px', // ขนาดไอคอน
+                height: '24px',
+                marginRight: '8px',
+              }}
+            />
+            {statusText}
+          </Button>
+        );
+      },
+    },   
     {
       title: "History",
       key: "history",
@@ -130,7 +183,7 @@ const CarPark: React.FC = () => {
   ];
 
   // Columns สำหรับ Car OUT
-  const columnsCarOut = [
+  /*   const columnsCarOut = [
     { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
     {
       title: "Image Car",
@@ -221,27 +274,6 @@ const CarPark: React.FC = () => {
       },
     },
     {
-      title: "Fee",
-      dataIndex: "ParkingTransaction.Fee",
-      key: "Fee",
-      render: (_: any, record: any) => {
-        const latestTransaction = record.ParkingTransaction?.sort(
-          (a: any, b: any) =>
-            new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
-        )[0];
-
-        if (latestTransaction?.EntryTime && latestTransaction?.ExitTime) {
-          const fee = calculateParkingFee(
-            new Date(latestTransaction.EntryTime),
-            new Date(latestTransaction.ExitTime),
-            record.ParkingFeePolicy
-          );
-          return `${fee} Baht`;
-        }
-        return "N/A";
-      },
-    },
-    {
       title: "Hourly Rate",
       dataIndex: "ParkingTransaction.Hourly_Rate",
       key: "Hourly_rate",
@@ -263,22 +295,30 @@ const CarPark: React.FC = () => {
       title: "Status",
       key: "StatusCard.Status",
       fixed: "right" as const,
-      render: (_: any, record: ParkingCardInterface) => (
-        <Button
-          type="primary"
-          onClick={() =>
-            handleStatusClick(record.StatusCard?.Status || "", record)
-          }
-        >
-          {record.StatusCard?.Status === "IN"
-            ? "IN"
-            : record.StatusCard?.Status === "OUT"
-            ? "OUT"
-            : record.StatusCard?.Status === "Expired"
-            ? "Expired"
-            : "Un Used"}
-        </Button>
-      ),
+      render: (_: any, record: ParkingCardInterface) => {
+        const isExpired =
+          record.ExpiryDate && new Date(record.ExpiryDate) < new Date()
+            ? true
+            : false;
+
+        return (
+          <Button
+            type="primary"
+            onClick={() =>
+              handleStatusClick(record.StatusCard?.Status || "", record)
+            }
+            disabled={isExpired}
+          >
+            {record.StatusCard?.Status === "IN"
+              ? "IN"
+              : record.StatusCard?.Status === "OUT"
+              ? "OUT"
+              : record.StatusCard?.Status === "Expired"
+              ? "Expired"
+              : "IN"}
+          </Button>
+        );
+      },
     },
     {
       title: "History",
@@ -303,18 +343,18 @@ const CarPark: React.FC = () => {
         </Popconfirm>
       ),
     },
-  ];
+  ]; */
 
-  const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
   useEffect(() => {
     console.log("useEffect called");
     getParkingCards();
+    getStatus();
   }, []);
 
   const getParkingCards = async () => {
     setLoading(true);
     try {
-      const resCard = await GetListCard();
+      const resCard = await GetListCardAndCheckExpiredCardtoUpdate();
       if (resCard.status === 200) {
         const data = resCard.data;
         setCards(data);
@@ -327,6 +367,24 @@ const CarPark: React.FC = () => {
         setFilteredData(filtered);
       } else {
         messageApi.error("Failed to fetch parking cards.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      messageApi.error("An error occurred while fetching data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await GetListStatusCard();
+      if (response.status === 200) {
+        const data = response.data;
+        setStatus(data);
+      } else {
+        messageApi.error("Failed to fetch status card.");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -369,19 +427,17 @@ const CarPark: React.FC = () => {
     const parkedMs = exitTime.getTime() - entryTime.getTime();
     const parkedHours = Math.ceil(parkedMs / (1000 * 60 * 60));
 
-    if (policy.IsExempt) return 0; // ยกเว้นค่าจอด
-
     let totalFee = 0;
 
-    if (parkedHours > policy.FreeHours!) {
-      const chargeableHours = parkedHours - policy.FreeHours!;
-      const increment = parseFloat(policy.Time_Increment || "1");
+    // ถ้าคุณไม่ใช้ FreeHours, สามารถคิดค่าจอดตามจำนวนชั่วโมงทั้งหมด
+    const chargeableHours = Math.max(0, parkedHours); // ไม่ใช้ FreeHours
 
-      const additionalFees =
-        Math.ceil(chargeableHours / increment) * policy.AddBase_Fee!;
+    const increment = parseFloat(policy.Time_Increment || "1");
 
-      totalFee = additionalFees - policy.Discount!;
-    }
+    const additionalFees =
+      Math.ceil(chargeableHours / increment) * (policy.AddBase_Fee || 0);
+
+    totalFee = additionalFees - (policy.Discount || 0);
 
     return totalFee > 0 ? totalFee : 0;
   };
@@ -435,7 +491,7 @@ const CarPark: React.FC = () => {
     setSelectedCard(record);
     setSelectedButtonInOutDefault(status);
     console.log("status: ", status);
-    if (status === "IN" /* || status === "Reserved" */) {
+    if (status === "IN") {
       setIsModalInVisible(true);
     } else if (status === "OUT") {
       setIsModalOutVisible(true);
@@ -623,11 +679,7 @@ const CarPark: React.FC = () => {
               <Space>
                 <Button
                   type={
-                    selectedButtonInOutDefault === "IN"
-                      ? "primary"
-                      : selectedButtonInOutDefault === "OUT"
-                      ? "default"
-                      : "default"
+                    selectedButtonInOutDefault === "IN" ? "primary" : "default"
                   }
                   onClick={() => {
                     setSelectedButtonInOutDefault("IN");
@@ -638,11 +690,7 @@ const CarPark: React.FC = () => {
                 </Button>
                 <Button
                   type={
-                    selectedButtonInOutDefault === "OUT"
-                      ? "primary"
-                      : selectedButtonInOutDefault === "IN"
-                      ? "default"
-                      : "default"
+                    selectedButtonInOutDefault === "OUT" ? "primary" : "default"
                   }
                   onClick={() => {
                     setSelectedButtonInOutDefault("OUT");
@@ -651,21 +699,19 @@ const CarPark: React.FC = () => {
                 >
                   Car OUT
                 </Button>
-                {/* <Button
+                <Button
                   type={
-                    selectedButtonInOutDefault === "Reserved"
+                    selectedButtonInOutDefault === "Expired"
                       ? "primary"
-                      : selectedButtonInOutDefault === "IN" && "OUT"
-                      ? "default"
                       : "default"
                   }
                   onClick={() => {
-                    setSelectedButtonInOutDefault("Reserved");
+                    setSelectedButtonInOutDefault("Expired");
                     handleReset();
                   }}
                 >
-                  Reserved
-                </Button> */}
+                  Expired
+                </Button>
               </Space>
             </Row>
             {/********************************** ส่วนที่จะแสดงตารางเมื่อเลือก Car IN หรือ Car OUT **************************/}
@@ -673,33 +719,22 @@ const CarPark: React.FC = () => {
             <Row justify="center" style={{ marginTop: "30px" }}>
               <Table
                 columns={
-                  selectedButtonInOutDefault == "OUT"
-                    ? columnsCarOut
-                    : selectedButtonInOutDefault == "IN"
-                    ? columnsCarIn
-                    : /* : selectedButtonInOutDefault == "Reserved"
-                    ? columnsReserved */
-                      columnsCarIn
+                  selectedButtonInOutDefault == "OUT" ||
+                  selectedButtonInOutDefault == "IN" ||
+                  selectedButtonInOutDefault == "Expired"
+                    ? columns
+                    : columns
                 }
                 dataSource={filteredData.filter((card) => {
-                  /*  if (!card.ParkingTransaction) return false; */
                   if (selectedButtonInOutDefault == "IN") {
-                    return (
-                      card.StatusCard?.Status == "IN" /* &&
-                      (card.ParkingTransaction.length === 0 ||  // หาก ParkingTransaction เป็น array ว่างๆ ให้ถือว่าเป็น IN  
-                        card.ParkingTransaction.some( 
-                          (transaction) => transaction.IsReservedPass == null //หรือมี transaction ที่ IsReservedPass เป็น null
-                        )) */
-                    );
+                    return card.StatusCard?.Status == "IN";
                   }
                   if (selectedButtonInOutDefault == "OUT") {
                     return card.StatusCard?.Status == "OUT";
                   }
-                  /*                   if (selectedButtonInOutDefault == "Reserved") {
-                    return card.ParkingTransaction?.some(
-                      (transaction) => transaction.IsReservedPass == false
-                    );
-                  } */
+                  if (selectedButtonInOutDefault == "Expired") {
+                    return card.StatusCard?.Status == "Expired";
+                  }
                   return false;
                 })}
                 loading={false}
@@ -774,7 +809,18 @@ const CarPark: React.FC = () => {
           getParkingCards={getParkingCards}
           setSelectedButtonInOutDefault={setSelectedButtonInOutDefault}
           setFilteredData={setFilteredData}
+          setCards={setCards}
           cards={cards}
+          status={status}
+          //fetchDataForInOut={fetchDataForInOut}
+          setCarLicensePlate={setCarLicensePlate}
+          carLicensePlate={carLicensePlate}
+          setCarColor={setCarColor}
+          carColor={carColor}
+          setCarMake={setCarMake}
+          carMake={carMake}
+          setFileList={setFileList}
+          fileList={fileList}
         ></IN>
         <OUT
           setCards={setCards}
@@ -782,17 +828,22 @@ const CarPark: React.FC = () => {
           getParkingCards={getParkingCards}
           selectedCard={selectedCard}
           selectedButtonInOutDefault={selectedButtonInOutDefault}
-          carLicensePlate={carLicensePlate}
-          setCarLicensePlate={setCarLicensePlate}
           selectedCardIndex={selectedCardIndex}
           setSelectedCardIndex={setSelectedCardIndex}
           setSelectedCard={setSelectedCard}
           setFilteredData={setFilteredData}
           setSearchValue={setSearchValue}
           searchValue={searchValue}
+          status={status}
           setIsModalOutVisible={setIsModalOutVisible}
           isModalOutVisible={isModalOutVisible}
-          handleCancel={handleCancel}
+          //fetchDataForInOut={fetchDataForInOut}
+          setCarLicensePlate={setCarLicensePlate}
+          carLicensePlate={carLicensePlate}
+          setCarColor={setCarColor}
+          carColor={carColor}
+          setCarMake={setCarMake}
+          carMake={carMake}
         />
         <AddCardModal
           visible={isAddCardModalVisible}
@@ -806,3 +857,41 @@ const CarPark: React.FC = () => {
 };
 
 export default CarPark;
+/*   const fetchDataForInOut = async () => {
+    try {
+      const rescard = await GetParkingCardByID(selectedCard?.ID || "");
+      setSelectedCard(rescard.data);
+
+      console.log("ParkingTransaction: ", rescard.data.ParkingTransaction);
+      console.log("IsPermanent: ", rescard.data.IsPermanent);
+      console.log("ParkingZone: ", rescard.data.ParkingZone);
+      const existingTrans = rescard.data.ParkingTransaction?.find(
+        (transaction: any) => {
+          console.log("Transaction: ", transaction);
+          return (
+            transaction?.IsReservedPass === false &&
+            transaction?.ReservationDate === String(today) &&
+            rescard.data.ParkingTransaction?.length > 0 &&
+            rescard.data.IsPermanent === true
+          );
+        }
+      );
+      console.log("existingTransaction: ", existingTrans);
+      setExistingTransaction(existingTrans)
+      if (existingTrans !== undefined && existingTrans === true) {
+        setCarLicensePlate(existingTrans.LicensePlate || "");
+        setCarColor(existingTrans.Color || "");
+        setCarMake(existingTrans.Make || "");
+        setFileList([
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: existingTrans.Image,
+          },
+        ]);
+      }
+    } catch (error) {
+      message.error("Failed to fetch parking card data.");
+    }
+  }; */
