@@ -262,6 +262,10 @@ const CustomerParkingBooking: React.FC = () => {
   /***************************    สร้างบัตรจอดรถใหม่    ******************************** */
 
   const handleCreateCardOk = async () => {
+    if (imageUrl === null && fileList.length === 0) {
+      message.error("Please input image!");
+      return;
+    }
     // ข้อมูลสำหรับสร้าง ParkingCard
     const newCardData = {
       ID: (Number(listcards[listcards.length - 1].ID) + 1)
@@ -296,6 +300,7 @@ const CustomerParkingBooking: React.FC = () => {
             console.log("Parking card and vehicle created successfully.");
             setIsModalCreateCardVisible(false);
             setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
+            message.success("Parking card and vehicle created successfully.");
           } else {
             message.error("Failed to create vehicle.");
           }
@@ -631,6 +636,7 @@ const CustomerParkingBooking: React.FC = () => {
               <div>
                 <div style={{ justifySelf: "center" }}>
                   <DatePicker
+                    id="ReservationDate"
                     onChange={onChangeDatePicker}
                     value={selectedDate}
                   />
@@ -797,6 +803,7 @@ const CustomerParkingBooking: React.FC = () => {
                         <Form layout="horizontal" form={form}>
                           <div>Car Picture</div>
                           <Upload
+                            id="Image"
                             fileList={fileList}
                             onChange={onChangeUpload}
                             onPreview={onPreview}
@@ -910,6 +917,7 @@ const CustomerParkingBooking: React.FC = () => {
           <p>
             {imageUrl ? (
               <img
+                id="Image"
                 src={imageUrl}
                 alt="Uploaded"
                 style={{
@@ -920,6 +928,7 @@ const CustomerParkingBooking: React.FC = () => {
               />
             ) : fileList.length > 0 ? (
               <img
+                id="Image"
                 src={fileList[0].url} // ดึง URL จากไฟล์ใน fileList
                 alt="Uploaded"
                 style={{
@@ -968,6 +977,7 @@ const CustomerParkingBooking: React.FC = () => {
           <Form layout="horizontal" form={form}>
             <div>Please provide details of your car</div>
             <Upload
+              id="Image"
               fileList={fileList}
               onChange={onChangeUpload}
               onPreview={onPreview}

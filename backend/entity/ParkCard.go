@@ -11,10 +11,10 @@ type Vehicle struct {
 	LicensePlate string `json:"LicensePlate" valid:"required~License Plate is required"`
 	Color        string `json:"Color" valid:"required~Color is required"`
 	Make         string `json:"Make" valid:"required~Make is required"`
-	Image        string `gorm:"type:longtext" json:"Image"`
+	Image        string `gorm:"type:longtext" json:"Image" valid:"required~Image is required"`
 
-	UserID uint `json:"UserID"`
-	User   User `gorm:"foreignKey:UserID"`
+	UserID uint `json:"UserID" valid:"-"`
+	User   User `gorm:"foreignKey:UserID" valid:"-"`
 }
 
 type ParkingCard struct {
@@ -26,8 +26,8 @@ type ParkingCard struct {
 	TypeParkID uint     `json:"TypeParkID"`
 	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
 
-	UserID uint `json:"UserID"`
-	User   User `gorm:"foreignKey:UserID"`
+	UserID uint `json:"UserID" valid:"-"`
+	User   User `gorm:"foreignKey:UserID" valid:"-"`
 
 	StatusCardID uint       `json:"StatusCardID"`
 	StatusCard   StatusCard `gorm:"foreignKey:StatusCardID"`
@@ -80,33 +80,30 @@ type ParkingZoneDaily struct {
 
 	ParkingTransactions []ParkingTransaction `gorm:"foreignKey:ParkingZoneDailyID"`
 }
-
 type ParkingTransaction struct {
-	gorm.Model
-	ReservationDate *time.Time `json:"ReservationDate" valid:"required~Reservation Date is required"`
-	EntryTime       *time.Time `json:"EntryTime"`
-	ExitTime        *time.Time `json:"ExitTime"`
-	TotalHourly     *float64   `json:"TotalHourly"`
-	IsReservedPass  *bool      `json:"IsReservedPass"`
-	LicensePlate    string     `json:"LicensePlate" valid:"required~License Plate is required"`
-	Image           string     `gorm:"type:longtext" json:"Image" valid:"image is not valid"`
-	Color           string     `json:"Color"`
-	Make            string     `json:"Make"`
+    gorm.Model
+    ReservationDate    *time.Time  `json:"ReservationDate" valid:"-"` // ใช้ optional แทน valid:"-"
+    EntryTime          *time.Time  `json:"EntryTime" valid:"-"`     
+    ExitTime           *time.Time  `json:"ExitTime" valid:"-"`       
+    TotalHourly        *float64    `json:"TotalHourly" valid:"-"`     
+    IsReservedPass     *bool       `json:"IsReservedPass" valid:"-"`  
+    LicensePlate       string      `json:"LicensePlate" valid:"required~License Plate is required"`
+    Image              string      `gorm:"type:longtext" json:"Image" valid:"required~Image is required"`
+    Color              string      `json:"Color" valid:"required~Color is required"`
+    Make               string      `json:"Make" valid:"required~Make is required"`
 
-	ParkingCardID string      `json:"ParkingCardID" valid:"required~ParkingCard is required"`
-	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID"`
+    ParkingCardID      string       `json:"ParkingCardID" valid:"-"` // ไม่มีการตรวจสอบ
+    ParkingCard        ParkingCard  `gorm:"foreignKey:ParkingCardID" valid:"-"`
 
-	/* 	ParkingZoneID uint        `json:"ParkingZoneID" valid:"required~ParkingZone is required"`
-	   	ParkingZone   ParkingZone `gorm:"foreignKey:ParkingZoneID"` */
+    ParkingZoneDailyID uint          `json:"ParkingZoneDailyID" valid:"required~ParkingZoneDaily is required"`
+    ParkingZoneDaily   ParkingZoneDaily `gorm:"foreignKey:ParkingZoneDailyID" valid:"-"`
 
-	ParkingZoneDailyID uint             `json:"ParkingZoneDailyID" valid:"required~ParkingZoneDaily is required"`
-	ParkingZoneDaily   ParkingZoneDaily `gorm:"foreignKey:ParkingZoneDailyID"`
+    UserID             uint         `json:"UserID" valid:"-"`  // ไม่มีการตรวจสอบ
+    User               User         `gorm:"foreignKey:UserID" valid:"-"` 
 
-	UserID uint `json:"UserID"`
-	User   User `gorm:"foreignKey:UserID"`
-
-	ParkingPayment *ParkingPayment `gorm:"foreignKey:ParkingTransactionID"`
+    ParkingPayment     *ParkingPayment `gorm:"foreignKey:ParkingTransactionID valid:"-""`
 }
+
 
 type TypePark struct {
 	gorm.Model

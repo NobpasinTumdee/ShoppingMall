@@ -1,0 +1,595 @@
+{
+  "id": "5fde1f5a-d4c0-42c6-80fd-3b4d2d049a11",
+  "version": "2.0",
+  "name": "SE-Lab07",
+  "url": "http://localhost:5173",
+  "tests": [{
+    "id": "87f7fb85-924d-4a51-8b8d-ad7f5d6a941a",
+    "name": "True-Employee",
+    "commands": [{
+      "id": "bcbbbced-3157-4343-bb4d-297d256df18e",
+      "comment": "",
+      "command": "open",
+      "target": "/CarPark-Attendant",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "995ece91-91ec-49d6-85cc-5c35a708dffd",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "784x816",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3f730f4c-3d27-401d-9609-1586a2a869a0",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-input:nth-child(1)",
+      "targets": [
+        ["css=.ant-input:nth-child(1)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "61ffa36e-1794-4bbf-87c1-c05b613a2c31",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(1)",
+      "targets": [
+        ["css=.ant-input:nth-child(1)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": "0"
+    }, {
+      "id": "fbe711f1-130d-40d8-b3ee-9c3b87e1039e",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(2)",
+      "targets": [
+        ["css=.ant-input:nth-child(2)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//div/input[2]", "xpath:position"]
+      ],
+      "value": "0"
+    }, {
+      "id": "4e7f7768-67d7-4c98-bdc3-78c6a826328b",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(3)",
+      "targets": [
+        ["css=.ant-input:nth-child(3)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input[3]", "xpath:idRelative"],
+        ["xpath=//div/input[3]", "xpath:position"]
+      ],
+      "value": "1"
+    }, {
+      "id": "37c12a98-2c44-4911-91de-14153f6ea085",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(4)",
+      "targets": [
+        ["css=.ant-input:nth-child(4)", "css:finder"],
+        ["xpath=//input[@value='7']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input[4]", "xpath:idRelative"],
+        ["xpath=//div/input[4]", "xpath:position"]
+      ],
+      "value": "2"
+    }, {
+      "id": "3c6b6872-bc0b-4393-b5d0-83d4b7a54382",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-btn > img",
+      "targets": [
+        ["css=.ant-btn > img", "css:finder"],
+        ["xpath=//img[@alt='IN']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[11]/div/div[3]/div[2]/div/div/div/div/div/div/table/tbody/tr[2]/td[4]/button/img", "xpath:idRelative"],
+        ["xpath=//button/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e35db351-128f-4005-89e0-53a701147b03",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-progress-circle-path:nth-child(3)",
+      "targets": [
+        ["css=.ant-progress-circle-path:nth-child(3)", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "49251f32-4686-4bdd-82bf-60558e38304e",
+      "comment": "",
+      "command": "//click",
+      "target": "css=.css-dev-only-do-not-override-19eoymk > .ant-upload-list div > div",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e9b1f20f-c64f-44be-b52d-0cee2751bb2c",
+      "comment": "",
+      "command": "type",
+      "target": "id=Image",
+      "targets": [],
+      "value": "D:\\university\\2_2567\\SE\\ShoppingMall\\frontend\\src\\assets\\CarPark\\car.png"
+    }, {
+      "id": "9ac00695-491a-4af7-af0d-e25371eda283",
+      "comment": "",
+      "command": "click",
+      "target": "id=parking-form_LicensePlate",
+      "targets": [
+        ["id=parking-form_LicensePlate", "id"],
+        ["css=#parking-form_LicensePlate", "css:finder"],
+        ["xpath=//input[@id='parking-form_LicensePlate']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "564a5bc9-4cbb-4bae-a409-bae27c5ede7a",
+      "comment": "",
+      "command": "type",
+      "target": "id=parking-form_LicensePlate",
+      "targets": [
+        ["id=parking-form_LicensePlate", "id"],
+        ["css=#parking-form_LicensePlate", "css:finder"],
+        ["xpath=//input[@id='parking-form_LicensePlate']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "AB12 1234"
+    }, {
+      "id": "787262b3-053c-4a65-a1b4-b2692246e662",
+      "comment": "",
+      "command": "click",
+      "target": "id=parking-form_CarColor",
+      "targets": [
+        ["id=parking-form_CarColor", "id"],
+        ["css=#parking-form_CarColor", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarColor']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[2]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7f94651e-b253-412e-94cb-e5b13eaafb0c",
+      "comment": "",
+      "command": "type",
+      "target": "id=parking-form_CarColor",
+      "targets": [
+        ["id=parking-form_CarColor", "id"],
+        ["css=#parking-form_CarColor", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarColor']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[2]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "blue"
+    }, {
+      "id": "2122b1dc-e9c8-4289-bd11-af0d6e2aabf5",
+      "comment": "",
+      "command": "click",
+      "target": "id=parking-form_CarMake",
+      "targets": [
+        ["id=parking-form_CarMake", "id"],
+        ["css=#parking-form_CarMake", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarMake']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[3]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "73b6fc78-ee3c-44d0-8871-1208dc082eef",
+      "comment": "",
+      "command": "type",
+      "target": "id=parking-form_CarMake",
+      "targets": [
+        ["id=parking-form_CarMake", "id"],
+        ["css=#parking-form_CarMake", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarMake']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[3]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "BMW"
+    }, {
+      "id": "2bab7232-e008-4b09-9a9f-9477010935fd",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-btn-primary:nth-child(2)",
+      "targets": [
+        ["css=.ant-btn-primary:nth-child(2)", "css:finder"],
+        ["xpath=(//button[@type='button'])[12]", "xpath:attributes"],
+        ["xpath=//button[2]", "xpath:position"],
+        ["xpath=//button[contains(.,'OK')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "d3941435-5a59-49e6-983c-427e87975a18",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Parking card, zone, and transaction updated successfully!')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a5e3dc67-f418-436e-bfea-aaff3caf4bec",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Parking card, zone, and transaction updated successfully!')]", "xpath:innerText"]
+      ],
+      "value": "Parking card, zone, and transaction updated successfully!"
+    }]
+  }, {
+    "id": "7d56996b-622a-4e29-b909-67e944cbaaa6",
+    "name": "False-Employee",
+    "commands": [{
+      "id": "6412ae23-59de-433a-bb1a-db43ed1d85af",
+      "comment": "",
+      "command": "open",
+      "target": "/CarPark-Attendant",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "adf1d22a-ce49-4798-958c-0d2a748590d1",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "784x816",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "63fc577f-9fe4-4b92-8fc6-c068cdbe9b1f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-input:nth-child(1)",
+      "targets": [
+        ["css=.ant-input:nth-child(1)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "29c3b9dc-1a53-499d-bd00-e15b90df57b4",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(1)",
+      "targets": [
+        ["css=.ant-input:nth-child(1)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": "0"
+    }, {
+      "id": "63802408-aad6-432e-bcb5-071cda744219",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(2)",
+      "targets": [
+        ["css=.ant-input:nth-child(2)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//div/input[2]", "xpath:position"]
+      ],
+      "value": "0"
+    }, {
+      "id": "79f27977-3c6f-4df4-911d-fad9cc79366d",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(3)",
+      "targets": [
+        ["css=.ant-input:nth-child(3)", "css:finder"],
+        ["xpath=(//input[@value=''])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input[3]", "xpath:idRelative"],
+        ["xpath=//div/input[3]", "xpath:position"]
+      ],
+      "value": "1"
+    }, {
+      "id": "670c7dee-5039-482a-9d05-87b87767337b",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-input:nth-child(4)",
+      "targets": [
+        ["css=.ant-input:nth-child(4)", "css:finder"],
+        ["xpath=//input[@value='7']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div/div[2]/div[2]/div/div/div/div[2]/div/input[4]", "xpath:idRelative"],
+        ["xpath=//div/input[4]", "xpath:position"]
+      ],
+      "value": "3"
+    }, {
+      "id": "d2331fe1-642e-4ae0-a1ff-39b11f634f0d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-btn > img",
+      "targets": [
+        ["css=.ant-btn > img", "css:finder"],
+        ["xpath=//img[@alt='IN']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[11]/div/div[3]/div[2]/div/div/div/div/div/div/table/tbody/tr[2]/td[4]/button/img", "xpath:idRelative"],
+        ["xpath=//button/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "abff54bb-9da4-482a-84ee-810acb2697bc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-progress-circle-path:nth-child(3)",
+      "targets": [
+        ["css=.ant-progress-circle-path:nth-child(3)", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "7939c508-f7dd-45cf-8e6f-a72e98715ff5",
+      "comment": "",
+      "command": "//click",
+      "target": "css=.css-dev-only-do-not-override-19eoymk > .ant-upload-list div > div",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "69d879df-2665-4bc1-97f1-33d530b59f88",
+      "comment": "",
+      "command": "click",
+      "target": "id=parking-form_LicensePlate",
+      "targets": [
+        ["id=parking-form_LicensePlate", "id"],
+        ["css=#parking-form_LicensePlate", "css:finder"],
+        ["xpath=//input[@id='parking-form_LicensePlate']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2d4ea5bd-680b-4e75-82d9-94d0dfe510d1",
+      "comment": "",
+      "command": "type",
+      "target": "id=parking-form_LicensePlate",
+      "targets": [
+        ["id=parking-form_LicensePlate", "id"],
+        ["css=#parking-form_LicensePlate", "css:finder"],
+        ["xpath=//input[@id='parking-form_LicensePlate']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "AB12 1234"
+    }, {
+      "id": "874c05bb-0194-428a-ba20-8837db5545b9",
+      "comment": "",
+      "command": "click",
+      "target": "id=parking-form_CarColor",
+      "targets": [
+        ["id=parking-form_CarColor", "id"],
+        ["css=#parking-form_CarColor", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarColor']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[2]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "dcee813c-57de-443e-931e-bf3463183c31",
+      "comment": "",
+      "command": "type",
+      "target": "id=parking-form_CarColor",
+      "targets": [
+        ["id=parking-form_CarColor", "id"],
+        ["css=#parking-form_CarColor", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarColor']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[2]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "blue"
+    }, {
+      "id": "4349b0d3-ac43-46d4-9b4d-00bee2442094",
+      "comment": "",
+      "command": "click",
+      "target": "id=parking-form_CarMake",
+      "targets": [
+        ["id=parking-form_CarMake", "id"],
+        ["css=#parking-form_CarMake", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarMake']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[3]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5cb647c2-b363-4143-8523-cb46f5094922",
+      "comment": "",
+      "command": "type",
+      "target": "id=parking-form_CarMake",
+      "targets": [
+        ["id=parking-form_CarMake", "id"],
+        ["css=#parking-form_CarMake", "css:finder"],
+        ["xpath=//input[@id='parking-form_CarMake']", "xpath:attributes"],
+        ["xpath=//form[@id='parking-form']/div[3]/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "BMW"
+    }, {
+      "id": "dcb1974f-c26b-4093-998a-5e0ff5af12ad",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-btn-primary:nth-child(2)",
+      "targets": [
+        ["css=.ant-btn-primary:nth-child(2)", "css:finder"],
+        ["xpath=(//button[@type='button'])[12]", "xpath:attributes"],
+        ["xpath=//button[2]", "xpath:position"],
+        ["xpath=//button[contains(.,'OK')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a98cc289-ea6a-416c-b4ae-0b1cc739765b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Parking card, zone, and transaction updated successfully!')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "466418f1-9572-4a43-b898-900546a9b4de",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Please select a parking zone and input all!')]", "xpath:innerText"]
+      ],
+      "value": "Please select a parking zone and input all!"
+    }]
+  }, {
+    "id": "56068333-537b-4a0d-a130-682c73e120b1",
+    "name": "True-Customer",
+    "commands": [{
+      "id": "2912c3b0-ddf1-41e4-91a2-ceb82b02ef91",
+      "comment": "",
+      "command": "open",
+      "target": "/CarPark",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9630afeb-ac28-4d6d-b8f7-55d7d40c8e8c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "784x816",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a5a22b46-c29d-4bdc-a942-62ed5c50822d",
+      "comment": "",
+      "command": "type",
+      "target": "id=Image",
+      "targets": [],
+      "value": "D:\\university\\2_2567\\SE\\ShoppingMall\\frontend\\src\\assets\\CarPark\\car.png"
+    }, {
+      "id": "84e81c0c-3693-4b1f-bb23-afe0738971dd",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-form:nth-child(3) #LicensePlate",
+      "targets": [
+        ["css=.ant-form:nth-child(3) #LicensePlate", "css:finder"],
+        ["xpath=(//input[@id='LicensePlate'])[2]", "xpath:attributes"],
+        ["xpath=//div[2]/form/div[2]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e06dae63-86bd-4d1f-b131-1026140bc515",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-form:nth-child(3) #LicensePlate",
+      "targets": [
+        ["css=.ant-form:nth-child(3) #LicensePlate", "css:finder"],
+        ["xpath=(//input[@id='LicensePlate'])[2]", "xpath:attributes"],
+        ["xpath=//div[2]/form/div[2]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "aa12 1234"
+    }, {
+      "id": "4f5037c6-cbca-46a5-93bb-db5dc8ed9b40",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-form:nth-child(3) #CarColor",
+      "targets": [
+        ["css=.ant-form:nth-child(3) #CarColor", "css:finder"],
+        ["xpath=(//input[@id='CarColor'])[2]", "xpath:attributes"],
+        ["xpath=//div[2]/form/div[3]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8904a262-6635-4a34-9e49-a35ce69c5215",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-form:nth-child(3) #CarColor",
+      "targets": [
+        ["css=.ant-form:nth-child(3) #CarColor", "css:finder"],
+        ["xpath=(//input[@id='CarColor'])[2]", "xpath:attributes"],
+        ["xpath=//div[2]/form/div[3]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "Blue"
+    }, {
+      "id": "0cfa7f59-74fb-406c-a95c-c8d4da97179d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-form:nth-child(3) #CarMake",
+      "targets": [
+        ["css=.ant-form:nth-child(3) #CarMake", "css:finder"],
+        ["xpath=(//input[@id='CarMake'])[2]", "xpath:attributes"],
+        ["xpath=//div[2]/form/div[4]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "24ea8e54-21e7-4085-ab88-c4f0ce117709",
+      "comment": "",
+      "command": "type",
+      "target": "css=.ant-form:nth-child(3) #CarMake",
+      "targets": [
+        ["css=.ant-form:nth-child(3) #CarMake", "css:finder"],
+        ["xpath=(//input[@id='CarMake'])[2]", "xpath:attributes"],
+        ["xpath=//div[2]/form/div[4]/div/div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "BMW"
+    }, {
+      "id": "afb0143f-ae5d-4c80-b301-2b6191266713",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-btn-primary:nth-child(2) > span",
+      "targets": [
+        ["css=.ant-btn-primary:nth-child(2) > span", "css:finder"],
+        ["xpath=//button[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'OK')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8f28eea3-2f68-467a-823d-9733ff883f83",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Parking card and vehicle created successfully.')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "350635e4-ebe8-43aa-9d24-d8c60b46e704",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Parking card and vehicle created successfully.')]", "xpath:innerText"]
+      ],
+      "value": "Parking card and vehicle created successfully."
+    }, {
+      "id": "e0448dd1-17d0-4ffe-9a9d-2b282ac6ab98",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(11) > div > div",
+      "targets": [
+        ["css=div:nth-child(11) > div > div", "css:finder"],
+        ["xpath=//div[@id='root']/div[10]/div/div", "xpath:idRelative"],
+        ["xpath=//div[10]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "6e96f430-84ab-4e3e-bbd6-7244d7c91184",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["87f7fb85-924d-4a51-8b8d-ad7f5d6a941a"]
+  }],
+  "urls": ["http://localhost:5173/"],
+  "plugins": []
+}

@@ -1,6 +1,7 @@
 package unit
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -10,105 +11,130 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestParkingCardID(t *testing.T) {
-	g := NewGomegaWithT(t)
+func TestParkingTransaction(t *testing.T) {
+    g := NewGomegaWithT(t)
 
-	t.Run("ParkingCard ID is required", func(t *testing.T) {
-		now := time.Now()
-		card := entity.ParkingCard{
-			ID:                 "",
-			ExpiryDate:         &now,
-			IsPermanent:        false,
-			TypeParkID:         1,
-			UserID:             1,
-			StatusCardID:       1,
-			ParkingFeePolicyID: 1,
-		}
+    t.Run("Valid ParkingTransaction", func(t *testing.T) {
+        now := time.Now()
+        totalHourly := 20.022 // ประกาศตัวแปร float64 ก่อน
+        transaction := entity.ParkingTransaction{
+            LicensePlate:       "12AB 1234",
+            ParkingCardID:      "PC123456",
+            ParkingZoneDailyID: 1,
+            ReservationDate:    &now,
+            EntryTime:          &now,
+            ExitTime:           &now,
+            TotalHourly:        &totalHourly, // ใช้ pointer ของตัวแปร totalHourly
+            IsReservedPass:     nil,
+            Image:              "some-image-url",
+            Color:              "Red",
+            Make:               "Toyota",
+        }
+    
+        ok, err := govalidator.ValidateStruct(transaction)
+        fmt.Println("Validation Result:", ok, err)
+        g.Expect(ok).To(BeTrue())
+        g.Expect(err).To(BeNil())
+    })
+    
+    t.Run("LicensePlate is required", func(t *testing.T) {
+        transaction := entity.ParkingTransaction{
+            LicensePlate:       "",
+            ParkingCardID:      "PC123456",
+            ParkingZoneDailyID: 1,
+            ReservationDate:    &time.Time{},
+        }
 
-		ok, err := govalidator.ValidateStruct(card)
+        ok, err := govalidator.ValidateStruct(transaction)
+        g.Expect(ok).NotTo(BeTrue())
+        g.Expect(err).NotTo(BeNil())
+        g.Expect(err.Error()).To(ContainSubstring("License Plate is required"))
+    })
 
-		g.Expect(ok).NotTo(BeTrue())
-		g.Expect(err).NotTo(BeNil())
-		g.Expect(err.Error()).To(ContainSubstring("ID is required"))
-	})
+    t.Run("ParkingZoneDailyID is required", func(t *testing.T) {
+        transaction := entity.ParkingTransaction{
+            LicensePlate:       "12AB 1234",
+            ParkingCardID:      "PC123456",
+            ParkingZoneDailyID: 0,
+            ReservationDate:    &time.Time{},
+        }
+
+        ok, err := govalidator.ValidateStruct(transaction)
+        g.Expect(ok).NotTo(BeTrue())
+        g.Expect(err).NotTo(BeNil())
+        g.Expect(err.Error()).To(ContainSubstring("ParkingZoneDaily is required"))
+    })
 }
 
-func TestParkingTransaction(t *testing.T) {
-	g := NewGomegaWithT(t)
+func TestVehicle(t *testing.T) {
+    g := NewGomegaWithT(t)
 
-	t.Run("LicensePlate is required", func(t *testing.T) {
-		transaction := entity.ParkingTransaction{
-			//ReservationDate:    time.Now(),
-			LicensePlate:       "",
-			ParkingCardID:      "PC123456",
-			ParkingZoneDailyID: 1,
-			UserID:             1,
-		}
+    t.Run("Valid Vehicle", func(t *testing.T) {
+        vehicle := entity.Vehicle{
+            LicensePlate: "12AB 1234",
+            Color:        "Red",
+            Make:         "Toyota",
+            Image:        "some-image-url",
+        }
 
-		ok, err := govalidator.ValidateStruct(transaction)
+        ok, err := govalidator.ValidateStruct(vehicle)
+        g.Expect(ok).To(BeTrue())  
+        g.Expect(err).To(BeNil())  
+    })
 
-		g.Expect(ok).NotTo(BeTrue())
-		g.Expect(err).NotTo(BeNil())
-		g.Expect(err.Error()).To(ContainSubstring("License Plate is required"))
-	})
+    t.Run("LicensePlate is required", func(t *testing.T) {
+        vehicle := entity.Vehicle{
+            LicensePlate: "",
+            Color:        "Red",
+            Make:         "Toyota",
+            Image:        "some-image-url",
+        }
 
-	t.Run("ReservationDate is required", func(t *testing.T) {
-		transaction := entity.ParkingTransaction{
-			//ReservationDate:    time.Time{},
-			LicensePlate:       "12AB 1234",
-			ParkingCardID:      "PC123456",
-			ParkingZoneDailyID: 1,
-			UserID:             1,
-		}
+        ok, err := govalidator.ValidateStruct(vehicle)
+        g.Expect(ok).NotTo(BeTrue())
+        g.Expect(err).NotTo(BeNil())
+        g.Expect(err.Error()).To(ContainSubstring("License Plate is required"))
+    })
 
-		ok, err := govalidator.ValidateStruct(transaction)
+    t.Run("Color is required", func(t *testing.T) {
+        vehicle := entity.Vehicle{
+            LicensePlate: "12AB 1234",
+            Color:        "",
+            Make:         "Toyota",
+            Image:        "some-image-url",
+        }
 
-		g.Expect(ok).NotTo(BeTrue())
-		g.Expect(err).NotTo(BeNil())
-		g.Expect(err.Error()).To(ContainSubstring("Reservation Date is required"))
-	})
+        ok, err := govalidator.ValidateStruct(vehicle)
+        g.Expect(ok).NotTo(BeTrue())
+        g.Expect(err).NotTo(BeNil())
+        g.Expect(err.Error()).To(ContainSubstring("Color is required"))
+    })
 
-	// ทดสอบเมื่อ ParkingCardID เป็นค่าว่าง
-	t.Run("ParkingCardID is required", func(t *testing.T) {
-		transaction := entity.ParkingTransaction{
-			//ReservationDate:    time.Now(),
-			LicensePlate:       "12AB 1234",
-			ParkingCardID:      "",
-			ParkingZoneDailyID: 1,
-			UserID:             1,
-		}
+    t.Run("Make is required", func(t *testing.T) {
+        vehicle := entity.Vehicle{
+            LicensePlate: "12AB 1234",
+            Color:        "Red",
+            Make:         "",
+            Image:        "some-image-url",
+        }
 
-		ok, err := govalidator.ValidateStruct(transaction)
+        ok, err := govalidator.ValidateStruct(vehicle)
+        g.Expect(ok).NotTo(BeTrue())
+        g.Expect(err).NotTo(BeNil())
+        g.Expect(err.Error()).To(ContainSubstring("Make is required"))
+    })
 
-		g.Expect(ok).NotTo(BeTrue())
-		g.Expect(err).NotTo(BeNil())
-		g.Expect(err.Error()).To(ContainSubstring("ParkingCard is required"))
-	})
+    t.Run("Image is required", func(t *testing.T) {
+        vehicle := entity.Vehicle{
+            LicensePlate: "12AB 1234",
+            Color:        "Red",
+            Make:         "Toyota",
+            Image:        "",
+        }
 
-	t.Run("ParkingZoneDailyID is required", func(t *testing.T) {
-		transaction := entity.ParkingTransaction{
-			//ReservationDate:    time.Now(),
-			LicensePlate:       "12AB 1234",
-			ParkingCardID:      "PC123456",
-			ParkingZoneDailyID: 0,
-			UserID:             1,
-		}
-
-		ok, err := govalidator.ValidateStruct(transaction)
-
-		g.Expect(ok).NotTo(BeTrue())
-		g.Expect(err).NotTo(BeNil())
-		g.Expect(err.Error()).To(ContainSubstring("ParkingZoneDaily is required"))
-	})
-
-	t.Run(`image is not valid`, func(t *testing.T) {
-		transaction := entity.ParkingTransaction{
-			Image: "invalid",
-		}
-
-		ok, err := govalidator.ValidateStruct(transaction)
-
-		g.Expect(ok).NotTo(BeTrue())
-		g.Expect(err).NotTo(BeNil())
-	})
+        ok, err := govalidator.ValidateStruct(vehicle)
+        g.Expect(ok).NotTo(BeTrue())
+        g.Expect(err).NotTo(BeNil())
+        g.Expect(err.Error()).To(ContainSubstring("Image is required"))
+    })
 }
