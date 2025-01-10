@@ -16,6 +16,7 @@ import { NavBar } from './Page/Component/NavBar';
 
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
+<<<<<<< Updated upstream
 import Carlendar from './Page/MainWeb/Hall/carlendar/calendar';
 import Listbooking from './Page/MainWeb/Hall/ListBooking/ListBooking';
 
@@ -23,6 +24,13 @@ import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
   const location = useLocation();
   const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
+=======
+import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
+import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
+const App: React.FC = () => {
+  const location = useLocation();
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory"].includes(location.pathname);
+>>>>>>> Stashed changes
   return (
     <>
       {Navbar && <NavBar />}
