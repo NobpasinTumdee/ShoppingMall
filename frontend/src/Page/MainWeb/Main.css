@@ -8,7 +8,7 @@
 .AdvertisingMain  {
     width: 100%;
     height: 355px;
-    background-color: #E8D196;
+    background-color: #B0946F;
     font-family: 'Dongle', sans-serif;
     color: #ffffff;
 
@@ -42,14 +42,15 @@
 
 
 .advertisingtext {
-    font-size: 24px;
+    font-size: 20px;
     width: 800px;
     line-height: 0.7;
     padding-right: 300px;
+    font-family: "Trirong", serif;
 }
 .advertisingtext h1{
-    font-size: 96px;
-    margin: 100px 0 10px ;
+    font-size: 70px;
+    margin: 100px 0 30px ;
 }
 
 .fade {
@@ -81,13 +82,13 @@
     width: 1150px;
     height: 200px;
     margin: 60px auto 60px;
-    font-family: 'Dongle', sans-serif;
-    font-size: 24px ;
+    font-family: "Trirong", serif;
+    font-size: 22px ;
 
     display: flex;
     align-items: center;
     text-align: center;
-    justify-content: space-between;
+    justify-content: center;
 
     animation-duration: 1s;
     animation-name: introAd;
@@ -101,12 +102,14 @@
     }
 }
 .subFloor {
+    width: 250px;
+    margin: 0 10px;
     transition: 0.3s ease-in-out;
 }
 .subFloor:hover {
     background-color: #f4f4f471;
     border-radius: 10px;
-    color: #C9AF62;
+    color: #B0946F;
 }
 .Floor img{
     width: 60px;
@@ -124,26 +127,72 @@
         scale: 1;
     }50%{
         scale: 1.2;
-        filter: drop-shadow(0 0 20px #eed699);
+        filter: drop-shadow(0 0 20px #B0946F);
     }100%{
         scale: 1;
     }
 }
 .Floor h4{
-    margin: 0px 0 0px;
-    font-size: 36px ;
+    margin: 0px 0px 0px;
+    font-size: 26px ;
 
 }
 .Floor p{
     margin: 0;
     line-height: 0.7;
     color: #8A8A8A;
+    font-size: 15px;
+    line-height: 14px;
+}
+/* ====================================text slide======================== */
+.marquee-section {
+    position: relative;
+    min-height: 82px;
+    font-size: 50px;
+    font-family: "Trirong", serif;
+    font-weight: 900;
+    height: 100px;
+    color: #fff;
+    background-color: #B0946F;
+    display: flex;
+    align-items: center;
 }
 
+.marquee-section, .marquee-section * {
+    overflow: hidden;
+}
 
+.marquee {
+    white-space: nowrap;
+}
 
+.marquee-div {
+    position: absolute;
+    animation: move-right-to-left linear 42.5s infinite;
+}
 
-
+@keyframes move-right-to-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+.PreviewProduct{
+    display: flex;
+    overflow-x: scroll;
+}
+.PreviewProduct img{
+    margin-right: 10px;
+    margin-bottom: 60px;
+    transition: 0.2s ease-in-out;
+}
+.PreviewProduct:hover > :not(:hover) {
+    filter: blur(1px);
+    filter: grayscale(100%);
+    scale: 0.95;
+}
 
 .NEWS {
     display: flex;
@@ -154,7 +203,7 @@
 .NEWS span{
     width: 500px;
     height: 3px;
-    background-color: #E8D196;
+    background-color: #B0946F;
     margin-left: 150px;
     margin-right: 150px;
 
@@ -164,7 +213,7 @@
 .NewInfo {
     margin-left: 150px;
     margin-right: 150px;
-    margin-bottom: 300px;
+    margin-bottom: 100px;
     font-family: 'Dongle', sans-serif;
 }
 .SubInfo {
@@ -175,7 +224,7 @@
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: start;
 
     animation-duration: 3s;
     animation-name: NewSub;
@@ -201,16 +250,20 @@
     margin-right: 100px;
 }
 .SubInfo h4{
+    font-family: "Trirong", serif;
     margin: 0;
-    font-size: 39px;
+    font-size: 30px;
     line-height: 0.7;
 }
 .SubInfo p{
+    font-family: "Trirong", serif;
     font-size: 20px;
     color: #8A8A8A;
+    overflow-y: scroll;
+    height: 120px;
 }
 .SubInfo:hover {
-    color: #C9AF62;
+    color: #B0946F;
 }
 
 
@@ -219,7 +272,7 @@
 
 
 footer{
-    background-color: #C9AF62;
+    background-color: #B0946F;
     width: 100%;
     height: 300px;
     margin-top: 50px;
@@ -349,6 +402,13 @@ footer{
     border-radius: 20px;
     width: 200px;
     padding-right: 10px;
+    cursor: pointer;
+    transition: 0.2s ease-in;
+}
+.ManageMainPage:hover {
+    background-color: #f7e1aa;
+    color: #ffffff;
+    box-shadow: 0 4px 4px #d3b66e;
 }
 .ManageMainPage img{
     margin-left: 10px;
@@ -364,7 +424,7 @@ footer{
     display: flex;
     align-items: center;
     text-align: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 30px;
     margin-left: 200px;
     margin-right: 200px;
@@ -393,8 +453,14 @@ footer{
     color: #C9AF62;
     box-shadow: 0 4px 4px #00000047;
     cursor: pointer;
+    margin: 0 10px;
+    transition: 0.3s ease-in;
 
     animation: ManagementSpan 1s ease-in-out; /* เพิ่มระยะเวลาและใช้ easing ที่สมูทขึ้น */
+}
+.ManagementSpan:hover {
+    transform: translateY(-10px);
+    background-color: #fdf2ce;
 }
 
 @keyframes ManagementSpan {
@@ -597,6 +663,93 @@ footer{
     }
 }
 
+.popupStore{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 70%;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px #00000057;
+    border-radius: 10px;
+    z-index: 1020;
+    transition: 0.2s ease-in;
+    animation: popupStore 0.6s ease-in-out ;
+}
+@keyframes popupStore {
+    0%{transform: translate(-50%, 100%)scale(0.5);}
+}
+.popupheader{
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    color: #c2a14f;
+    margin-bottom: 10px;
+}
+.BtnFloor{
+    background-color: #C9AF62;
+    margin: 0 10px;
+    color: #fff;
+    padding: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.AllStore{
+    margin: 0 10%;
+    overflow-y: scroll;
+    height: 450px;
+}
+.CardStore {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 250px);
+    gap: 10px;
+}
+.CardSubStore{
+    width: 250px;
+    height: 200px;
+    border: 2px solid #eed699;
+    color: #000;
+    cursor: pointer;
+}
+.NoStorecard{
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+}
+.FloorNumber{
+    transform: translate(10px, -215px);
+    font-family: "Parkinsans", sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #664b05;
+    text-shadow: 0 0 5px #e9cc83;
+}
+
+
+.BackUpC{
+    margin: 10px 10%;
+}
+.BackUpCard{
+    width: 100%;
+    height: 150px;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px #000;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.BackUpCard img{
+    border-radius: 10px 0 0 10px;
+}
+.BackUpCard p{
+    line-height: 0px;
+}
+.UserPicBackup{
+    transform: translate(-240px,50px);
+    border: 2px solid #ffffff;
+}
 /* ====================================================Admin job========================================================= */
 .headJob{
     text-align: center;
@@ -710,7 +863,79 @@ footer{
     color: #ffffff;
     box-shadow: 0 5px 5px #00000033;
 }
-
+/* ================================================Admin Event==================================================== */
+.cardEvent{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 160px;
+    background-color: transparent;
+    box-shadow: 0 0 10px #7a7a7a;
+    border-radius: 10px;
+    transition: 0.3s ease-in-out;
+    margin: 10px 0;
+    overflow-y: auto;
+}
+.cardEvent:hover{
+    height: 250px;
+}
+.popupevent {
+    width: 500px;
+    height: 500px;
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 10px;
+    z-index: 1020;
+    animation: popupevent 0.3s ease-in-out forwards;
+    padding: 50px 30px;
+}
+@keyframes popupevent {
+    0%{transform: translate(-50%, 50%); opacity: 0;}
+}
+.backgroundevent{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 1010;
+    background-color: #0000001f;
+    animation: backgroundevent 0.5s ease-in-out;
+}
+@keyframes backgroundevent {
+    0%{opacity: 0;}
+}
+.forminputevent{
+    font-family: "Parkinsans", sans-serif;
+}
+.SubmitEvent{
+    background-color: #fff;
+    border: 2px solid #C9AF62;
+    color: #C9AF62;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: 0.3s ease-in-out;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+.SubmitEvent:hover{
+    background-color: #C9AF62;
+    border: 2px solid #C9AF62;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.AddEvent{
+    cursor: pointer;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 400;
+}
 /* =============================================== Adio player ===================================================== */
 .ButtonMusic{
     position: fixed;

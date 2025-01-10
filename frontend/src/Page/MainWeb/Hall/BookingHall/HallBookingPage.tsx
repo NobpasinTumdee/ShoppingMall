@@ -183,7 +183,6 @@ function BookingHall() {
                 <InputNumber min={1} max={100} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
-
             <Form.Item>
               <Button
                 type="primary"
@@ -200,5 +199,6 @@ function BookingHall() {
   </>
   );
 }
+
 
 export default BookingHall;

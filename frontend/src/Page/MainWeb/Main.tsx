@@ -12,14 +12,20 @@ import Food from "../../assets/icon/ForPage/MainIcon/FoodBar.png"
 import Decorations from "../../assets/icon/ForPage/MainIcon/Home.png"
 import Computer from "../../assets/icon/ForPage/MainIcon/LaptopSettings.png"
 import st from "../../assets/icon/ForPage/Store/Store3.jpg"
+import Award1 from "../../assets/icon/ForPage/MainIcon/Award1.png"
+import Award2 from "../../assets/icon/ForPage/MainIcon/Award2.png"
+import Award3 from "../../assets/icon/ForPage/MainIcon/Award3.png"
+import Award4 from "../../assets/icon/ForPage/MainIcon/Award4.png"
+import Award5 from "../../assets/icon/ForPage/MainIcon/Award5.png"
+import promotion from "../../assets/icon/ForPage/MainIcon/promotion.png"
 
 //New
-import Newtest from "../../assets/icon/ForPage/MainIcon/TestNew.png"
 //import axios from 'axios';
 import './Main.css';
 
-import { GetStoreByFloor } from '../../services/https';
+import { GetStoreByFloor , GetEvent } from '../../services/https';
 import { StoreInterface } from '../../interfaces/StoreInterface';
+import { EventInterface } from '../../interfaces/UsersInterface';
 import STMB from '../../assets/Audio/SwayToMyBest.mp3'
 import STMBpic from '../../assets/Audio/SwayToMyBeat.jpg'
 const Main: React.FC = () => {
@@ -38,30 +44,7 @@ const Main: React.FC = () => {
 
         return () => clearInterval(interval);
     }, []);
-
-    const testdata = [
-        {
-            id: 1,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        {
-            id: 2,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        {
-            id: 3,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        {
-            id: 4,
-            Name: "Product advertising",
-            info: "loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-    ]
-
+    //==============================================ดึงข้อมูลร้านค้า========================================
     const [Store, setStore] = useState<StoreInterface[]>([]);
     useEffect(() => {
         if (1) {
@@ -84,8 +67,23 @@ const Main: React.FC = () => {
     const Openpopup = () => {
         setpopup(!popup)
     };
-    //main && branch halooo
-    //main && branch and maindata1 test
+    //=================================================ดึงข้อมูลevent=====================================
+    const [Event, setEvent] = useState<EventInterface[]>([]);
+    useEffect(() => {
+        fetchEvent()
+    }, []);
+    const fetchEvent = async () => {
+        try {
+            const res = await GetEvent();
+            if (res.status === 200 && res.data) {
+                setEvent(res.data);
+            }else{
+                setEvent([]);
+            }
+        } catch (error) {
+            setEvent([]);
+        }
+    }
     return(
         <>
             <div style={{height: '110px',zIndex: '0'}}></div>
@@ -97,12 +95,17 @@ const Main: React.FC = () => {
             <div className='AdvertisingMain'>
                 <img src={images[currentImageIndex]} alt="Product" className={`fade ${fade ? 'visible' : 'hidden'}`}  />
                 <span className='advertisingtext'>
-                    <h1>Product advertising</h1>
-                    loremLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse 
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt  
-                    mollit anim id est laborum.
+                    {Event ? (
+                        <>
+                            <h1>{Event[0]?.event_topic || "Discover the Ultimate"}</h1>
+                            {Event[0]?.event_description || "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda quia consequuntur, eos dolor officiis mollitia quae, molestiae numquam quisquam voluptatum dignissimos, fugit modi veniam. Consectetur error commodi voluptatem quam! Quas, commodi ad, harum consequatur tenetur esse ullam quisquam amet atque, veritatis vel odio magnam sunt provident aspernatur officia ipsa sed!"} 
+                        </>
+                    ) : (
+                        <>
+                            <h1>Product advertising</h1>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda quia consequuntur, eos dolor officiis mollitia quae, molestiae numquam quisquam voluptatum dignissimos, fugit modi veniam. Consectetur error commodi voluptatem quam! Quas, commodi ad, harum consequatur tenetur esse ullam quisquam amet atque, veritatis vel odio magnam sunt provident aspernatur officia ipsa sed!
+                        </>
+                    )}
                 </span>
             </div>
             {/* <div onClick={handleSubmit}>Gmail</div> */}
@@ -111,53 +114,79 @@ const Main: React.FC = () => {
                 <span className='subFloor'>
                     <img src={market} alt="market" />
                     <h4>NIGHT MARKET</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
                 <span className='subFloor'>
                     <img src={Food} alt="Food" />
                     <h4>FOOD CENTER</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
                 <span className='subFloor'>
                     <img src={Decorations} alt="Decorations" />
                     <h4>DECORATIONS</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
                 <span className='subFloor'>
                     <img src={Computer} alt="Computer" />
-                    <h4>COMPUTER EQUIPMENT</h4>
-                    <p>Lorem ipsum dolor sit amet, <br />consectetur adipiscing elit, sed <br />do eiusmod tempor incididunt <br />ut labore et dolore </p>
+                    <h4>COMPUTER</h4>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus odit ipsam earum recusandae dolor id eius velit, non amet alias pariatur tempora dolores itaque voluptatum ullam, beatae quae officia? Earum!</p>
                 </span>
             </div>
 
-            <div className='NEWS'>
-                <span></span>
-                <p>STORE</p>
-                <span></span>
+            {Store &&
+                <>
+                    <div className='NEWS'>
+                        <span></span>
+                        <p>STORE</p>
+                        <span></span>
+                    </div>
+                        <div className='Store1'> 
+                            <div ><img src={Store[0]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[1]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[2]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[3]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[4]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[5]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[6]?.pic_store||st} alt="" /></div>
+                            <div ><img src={Store[7]?.pic_store||st} alt="" /></div>
+                        </div>
+                </>
+            }
+            <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'70px',margin:"20px 10% 40px"}}>
+                <div style={{backgroundColor:"#B0946F",height:'4px',width:'70%'}}></div>
+                <h1 style={{fontFamily:'"Trirong", serif',textAlign:'center',width:'100%'}}>WHAT DO YOU WANT TO WEAR!</h1>
+                <div style={{backgroundColor:"#B0946F",height:'4px',width:'70%'}}></div>
             </div>
-            <div className='Store1'> 
-                <div ><img src={Store[0]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[1]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[2]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[3]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[4]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[5]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[6]?.pic_store||st} alt="" /></div>
-                <div ><img src={Store[7]?.pic_store||st} alt="" /></div>
+            <div className="marquee-section">
+                <div className="marquee-div">
+                    <div className="marquee">
+                        94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑 94 NEW STYLES JUST LANDED. SHOP NOW. 👑
+                    </div>
+                </div>
             </div>
+            <div className='PreviewProduct'>
+                <img src={promotion} alt="promotion" />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889534_100244_m" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889534_100244_a" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4314237_100313_m" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4314237_100313_a" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889559_100106_m" alt="Product" width={250} />
+                <img src="https://media.bergdorfgoodman.com/f_auto,q_auto:good,ar_5:7,c_fill,dpr_1.0,w_720/01/bg_4889559_100106_a" alt="Product" width={250} />
+            </div>
+
             <div className='NEWS'>
                 <span></span>
                 <p>NEWS</p>
                 <span></span>
             </div>
             <div className='NewInfo'>
-                {testdata.length > 0 ? (
-                    testdata.map((data) => (
-                        <div className='SubInfo' key={data.id}>
-                            <img src={Newtest} alt="Newtest" />
+                {Event.length > 0 ? (
+                    Event.map((data,index) => (
+                        <div className='SubInfo' key={index}>
+                            <img src={data.event_pic} alt="Newtest" width={350} height={200} />
                             <span>
-                                <h4>{data.Name}</h4>
-                                <p>{data.id} {data.info} </p>
+                                <h4>{data.event_topic}</h4>
+                                <p>{data.ID} {data.event_description || 'No description'}</p>
                             </span>
                         </div>
                     ))
@@ -168,9 +197,40 @@ const Main: React.FC = () => {
 
 
             <footer>
-                <span>1</span>
-                <span>1</span>
-                <span>1</span>
+                <div style={{display: 'flex', margin: '0 100px',fontFamily:'"Trirong", serif'}}>
+                    <span>
+                        <div style={{color: '#fff'}}>
+                            Getting here <br />
+                            Upadate News <br />
+                            7 Wondrous <br />
+                            About us <br />
+                            Vision & Mission <br />
+                            Privacy policy <br />
+                        </div>
+                    </span>
+                    <span>
+                        <div style={{color: '#fff'}}>
+                            Board of Director <br />
+                            Award <br /> 
+                            Contact us <br /> 
+                            Tenant services <br />
+                        </div>
+                    </span>
+                </div>
+                <div>
+                    <div>
+                        <span><img src={Award1} alt="Award1" width={80}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award3} alt="Award3" width={70}/></span>
+                        <span><img src={Award2} alt="Award2" width={100}/></span>
+                    </div>
+                    <div>
+                        <span><img src={Award4} alt="Award4" width={250}/></span>
+                        <span><img src={Award5} alt="Award5" width={150}/></span>
+                    </div>
+                </div>
             </footer>
 
         </>

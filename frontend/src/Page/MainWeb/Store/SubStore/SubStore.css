@@ -1,5 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Abel&family=Faculty+Glyphic&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Parkinsans:wght@300..800&display=swap');
+.EditStore{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 550px;
+    height: 500px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 5px solid #E8D196;
+    padding: 10px;
+    font-family: "Abel", sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    z-index: 1020;
+    animation: Edit 0.4s ease;
+}
+@keyframes Edit {
+    0%{transform: translate(-50%, 100%);}
+}
+.SubmitEdit{
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-right: 10px;
+    background-color: #fff;
+    border: 2px solid #E8D196;
+    cursor: pointer;
+    color: #856f38;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+}
+.SubmitEdit:hover{
+    background-color: #E8D196;
+    color: #fff;
+}
+.servicestore{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 250px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    z-index: 1020;
+    animation: servicestore 0.4s ease-in-out ;
+}
+@keyframes servicestore {
+    0%{transform: translate(-50%, 100%)scale(0.3);}
+}
 .BookingBtn{
     position: fixed;
     width: 60px;
@@ -267,12 +317,12 @@
 .H1 {
     text-align: center;
     font-size: 64px;
-    font-family: 'Dongle', sans-serif;
-    color: #C9AF62;
+    font-family: "Trirong", serif;
+    color: #B0946F;
 }
 .Package {
-    font-size: 64px;
-    font-family: 'Dongle', sans-serif;
+    font-size: 50px;
+    font-family: "Trirong", serif;
     display: flex;
     align-items: center;
     text-align: center;
@@ -283,12 +333,12 @@
 }
 .Package p {
     margin: 40px;
-    font-size: 34px;
+    font-size: 24px;
     text-align: left;
     line-height: 10px;
 }
 .Package span{
-    border-radius: 20px;
+    border-radius: 10px;
 
     width: 350px;
     height: auto;
@@ -311,17 +361,18 @@
 .Packagespan{
     scale: 1;
     transition: 0.5s;
+    color: #5e482c;
 }
 .Packagespan:hover{
     scale: 1.05;
-    background-color: #C9AF62;
+    background-color: #B0946F;
     color: #ffffff;
 }
 .PromotionBtn{
-    font-size: 34px;
+    font-size: 30px;
     color: #ffffff;
-    background-color: #C9AF62;
-    border-radius: 0 0 18px 18px;
+    background-color: #B0946F;
+    border-radius: 0 0 8px 8px;
     transition: 0.8s ease-in-out;
     cursor: pointer;
 }
@@ -368,7 +419,7 @@
     width: 150px;
     padding: 10px;
     border-radius: 5px;
-    background-color: #b99d55;
+    background-color: #B0946F;
     cursor: pointer;
 }
 

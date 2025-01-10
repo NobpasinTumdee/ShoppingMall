@@ -14,6 +14,7 @@ const Carlendar: React.FC = () => {
     const [ bookings, setBookings] = useState<BookingHallInterface[]>([]);
     
     useEffect(() => {
+
         console.log("Current hall ID:", id);
         const fetchBookings = async () => {
             try {
@@ -105,13 +106,13 @@ const Carlendar: React.FC = () => {
                 <Layout style={{ padding: "2px" }}>
                     <Content style={{ padding: 24, margin: 0, background: "#fff" }}>
                         <h2>ปฏิทินการจองห้องประชุม</h2>
+z
                         <Calendar 
                             cellRender={cellRender} style={{ borderRadius: "10px" }} />                        
                         <Button
                             type="primary"
                             onClick={handleBookingClick}
-                            style={{ marginTop: "20px" }}
-                        >
+                            style={{ marginTop: "20px" }}                       >
                             จองห้องประชุม
                         </Button>
                     </Content>

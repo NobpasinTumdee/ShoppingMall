@@ -2,11 +2,13 @@ package entity
 
 import (
 	"gorm.io/gorm"
+	"time"
 )
 
 type InventoryRequest struct {
 	gorm.Model
-	DateRequest string    `json:"DateRequest"` 
+	NameItem string `json:"NameItem"` 
+	DateRequest time.Time    `json:"DateRequest"` 
 	QuantityRequest    int       `json:"QuantityRequest"`    
 
 	UserID       uint      `json:"UserID"`

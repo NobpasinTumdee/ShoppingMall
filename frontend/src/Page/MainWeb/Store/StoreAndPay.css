@@ -28,7 +28,7 @@
 .L span {
     width: 100%;
     height: 2px;
-    background-color: #C9AF62;
+    background-color: #B0946F;
 }
 
 
@@ -36,8 +36,8 @@
     margin-top: 20px;
     margin-bottom: 0;
     font-size: 80px;
-    font-family: 'Dongle';
-    color: #C9AF62;
+    font-family: "Trirong", serif;
+    color: #B0946F;
     text-align: center;
 }
 .ContanerStore {
@@ -58,7 +58,7 @@
     border: 1px solid #484848;
     box-shadow: 0 4px 10px #00000052;
     background-color: rgb(255, 255, 255);
-    font-family: 'Dongle';
+    font-family: "Trirong", serif;
     cursor: pointer;
 
     animation-duration: 0.5s;
@@ -76,7 +76,7 @@
     }
 }
 .cardStore.active {
-    border: 1px solid #C9AF62;}
+    border: 1px solid #B0946F;}
 .cardStore.inactive {
     pointer-events: none;
     border: 1px solid #6265c9;}
@@ -100,6 +100,7 @@
 .lineStore {
     width: 100%;
     height: 1px;
+    margin: 5px 0;
     background-color: #DADADA;
 }
 .DescribtionStore {
@@ -119,7 +120,7 @@
     cursor: pointer;
 }
 .ViewStore.active {
-    background-color: #C9AF62;
+    background-color: #B0946F;
 }
 .ViewStore.inactive {
     background-color: #6265c9;
@@ -152,9 +153,10 @@
     display: flex;
     align-items: center;
 
-    font-size: 24px;
-    font-family: 'Dongle', sans-serif;
-    line-height: 0.4;
+    font-size: 20px;
+    font-family: "Trirong", serif;
+    line-height: 10px;
+    font-weight: 100;
 
     margin-bottom: 50px;
     margin-top: 30px;
@@ -185,7 +187,7 @@
 }
 
 .buttonFloor.active {
-    background-color: #C9AF62;
+    background-color: #B0946F;
     border-radius: 10px;
 }
 .buttonFloor:hover {
@@ -197,9 +199,62 @@
     height: 40px;
     margin-bottom: 10px;
 }
-
-
-
+/* ===========================================================Booking for admin=========================================================== */
+.BookingStoreAdminicon{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    z-index: 1001;
+}
+.BookingStoreAdminicon:hover{
+    animation: Bookingicon 0.7s ease-in-out;
+}
+@keyframes Bookingicon {
+    0%{rotate: 360deg;}
+    50%{rotate: -160deg;}
+}
+.BookingStoreAdmin{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 1000;
+    animation: BookingStoreAdmin 0.8s ease-in-out;
+}
+@keyframes BookingStoreAdmin {
+    0%{transform: translateY(100%) scale(0.3);}
+}
+.FloorStoreAdmin{
+    margin:0 auto 40px;
+    width: 80%;
+    text-align: center;
+}
+.FloorStoreAdmin span{
+    margin: 0 5px;
+    background-color: #eadcb2;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.addBookingpopup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    width: 600px;
+    height: auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 4px solid #eadcb2;
+    box-shadow: 0 0 15px #00000016;
+    z-index: 1020;
+    animation: addBookingpopup 0.6s ease-in-out ;
+}
+@keyframes addBookingpopup {
+    0%{transform: translate(-50%, 100%)scale(0.5);}
+}
 /*====================================================================================================================================*/
 
 
@@ -243,25 +298,30 @@
 }
 .total {
     display: flex;
-    justify-content:space-between;
+    justify-content:flex-end;
     font-size: 30px;
 }
 .total p:nth-child(1){
-    width: 60%;
+    width: 70%;
 }
 .total p:nth-child(2){
-    width: 40%;
+    width: 30%;
     font-weight: 700;
+    text-align: end;
 }
 
 .listPayR{
     width: 30%;
     background-color: #F6F6F6;
     box-shadow: 0 0 5px #acacac;
-    height: 680px;
+    max-height: 750px;
+    min-height: auto;
     border-radius: 10px;
     margin-right: 20px;
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .listPayRSub{
     margin: 20px;
@@ -287,11 +347,11 @@
 
 .QRCODE{
     position: absolute;
-    width: 21%;
+    width: 15%;
     text-align: center;
     margin-top: 14px;
     background-color: #fff;
-    margin: 10px 2%;
+    margin: 10px 5%;
 }
 .QRCODE.Method{
     visibility: visible;
@@ -332,10 +392,9 @@
     z-index: 1010;
 }
 .AttachSlip{
-    position: absolute;
+    margin: 10px 5% ;
     text-align: center;
-    bottom: 100px;
-    width: 26%;
+    width: 90%;
     height: 20px;
     background-color: transparent;
     border: 2px solid #C9AF62;
@@ -352,10 +411,9 @@
     visibility: hidden;
 }
 .PayNow {
-    position: absolute;
+    margin: 0 5%;
     text-align: center;
-    bottom: 40px;
-    width: 26%;
+    width: 90%;
     height: 30px;
     background-color: #C9AF62;
     font-size: 30px;
@@ -363,6 +421,7 @@
     color: #fff;
     border-radius: 10px;
     cursor: pointer;
+    
 }
 
 .PayNow.NoMethod {
@@ -460,4 +519,39 @@
     cursor: pointer;
     box-shadow: 0 0 10px #C9AF62;
     color: #fff;
+}
+
+.succ {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+    box-shadow: 0 0 5px #4848485b;
+    border-radius: 10px;
+
+    animation: Succ 0.8s ease-in-out;
+}
+@keyframes Succ {
+    0%{
+        opacity: 0;
+        transform: translate(-50% , -150%) scale(0);
+    }
+}
+
+.Completed{
+    position: fixed;
+    bottom: 20px;
+    left: 50px;
+    padding: 5px 10px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+    border: 3px solid #27b720;
+    color: #27b720;
+    border-radius: 20px;
 }

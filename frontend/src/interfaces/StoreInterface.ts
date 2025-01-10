@@ -11,10 +11,13 @@ export interface StoreInterface {
     LastDay?:  		    Date ;
     DescribtionStore?:  string ;
     StatusStore?:       string ;
+    StatusService?:     string ;
     UserID?:            number ;
     ProductTypeID?:     number ;
 
     Membership?: MembershipInterface;
+    User?: UsersInterface;
+    ProductType?: ProductTypeInterface;
 
     //With Rating
     id?:                number ;
@@ -27,6 +30,7 @@ export interface StoreInterface {
     last_day?:          string ;
     describtion_store?: string ;
     status_store?:      string ;
+    status_service?:    string ;
     total_rating?:      number ;
 }
 export interface MembershipInterface {
@@ -36,6 +40,10 @@ export interface MembershipInterface {
     Pwa?:               number;
     Pea?:               number;
     RentalFee?:         number;
+}
+export interface ProductTypeInterface {
+    ID?:                number;
+    NameType?:  		string ;
 }
 
 export interface BackupStoreInterface{
@@ -52,6 +60,9 @@ export interface BackupStoreInterface{
     ProductTypeIDB?:    number ;
     UserID?:            number ;
     StoreID?:           number ;
+
+    User?: UsersInterface;
+    Store?: StoreInterface;
 }
 
 

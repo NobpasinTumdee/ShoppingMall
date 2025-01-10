@@ -12,6 +12,9 @@ go get -u golang.org/x/crypto@v0.16.0
 go get -u github.com/golang-jwt/jwt/v4
 go get github.com/dgrijalva/jwt-go
 
+go get github.com/onsi/gomega
+go get github.com/asaskevich/govalidator
+
 ติดตั้ง react
 npm create vite@latest ชื่อ
 npm install
@@ -30,3 +33,7 @@ npm install html2canvas
 
 ตรวจสอบภาพ
 npm install tesseract.js
+
+
+ระบบ hall
+npm i date-fns

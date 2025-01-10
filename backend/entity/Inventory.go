@@ -11,11 +11,13 @@ type Inventory struct {
 
 	CategoryID       uint      `json:"CategoryID"`    
 	CategoryInventory         CategoryInventory      `gorm:"foreignKey:CategoryID"` 
+
+	EquipmentRequest []EquipmentRequest		`gorm:"foreignKey:InventoryID"`
 }
 
 type CategoryInventory struct {
 	gorm.Model
 	CategoryName string    `json:"CategoryName"`
 
-	InventoryRequests []InventoryRequest `gorm:"many2many:RequestDetails;joinForeignKey:InventoryID;joinReferences:RequestID"`
+	Inventorys []Inventory `gorm:"foreignKey:CategoryID"`
 } 
