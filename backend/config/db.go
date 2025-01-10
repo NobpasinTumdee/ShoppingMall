@@ -191,7 +191,6 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg,entity.Inventory{InventoryName: pkg.InventoryName})
 	}
 
-<<<<<<< Updated upstream
 	halls := []entity.Hall{
 		{
 			HallName:     "Grand Hall",
@@ -254,83 +253,6 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.Facilities{FacilitiesName: pkg.FacilitiesName})
 	}
 	
-=======
-	
-	//Hall
-	Hall := []entity.Hall{
-		{
-			HallName:     "Grand Conference Room",
-			Capacity:     200,
-			Location:     "1st Floor, Building A",
-			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
-			Description:  "A spacious hall suitable for conferences and seminars.",
-			PricePerHour: 5000,
-		},
-		{
-			HallName:     "VIP Meeting Room",
-			Capacity:     50,
-			Location:     "2nd Floor, Building B",
-			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
-			Description:  "A premium meeting room for exclusive gatherings.",
-			PricePerHour: 3000,
-		},
-		{
-			HallName:     "Outdoor Event Space",
-			Capacity:     500,
-			Location:     "Garden Area",
-			ImageHall:    "https://www.motorshow.in.th/wp-content/uploads/2024/10/McLaren_W1_Thumb.jpg", // Path ในเซิร์ฟเวอร์
-			Description:  "An open space perfect for weddings and large events.",
-			PricePerHour: 7000,
-		},
-	}
-	
-	for _, pkg := range Hall {
-		db.FirstOrCreate(&pkg, entity.Hall{HallName: pkg.HallName})
-	}
-	
-
-	// การเพิ่มข้อมูลการจองห้อง
-	BookingHalls := []entity.BookingHall{
-		{
-			HallID:        1,
-			StartDateTime: time.Date(2024, time.December, 6, 10, 0, 0, 0, time.UTC),
-			EndDateTime:   time.Date(2024, time.December, 6, 12, 0, 0, 0, time.UTC),
-			CustomerName:  "John Doe",
-			CustomerEmail: "johndoe@example.com",
-			CustomerPhone: "0123456789",
-			CustomerAddress: "123 Main St, City, Country",
-			Status:         "Confirmed",
-			TotalCost:      5000,
-		},
-		{
-			HallID:        2,
-			StartDateTime: time.Date(2024, time.December, 7, 14, 0, 0, 0, time.UTC),
-			EndDateTime:   time.Date(2024, time.December, 7, 16, 0, 0, 0, time.UTC),
-			CustomerName:  "Jane Smith",
-			CustomerEmail: "janesmith@example.com",
-			CustomerPhone: "0987654321",
-			CustomerAddress: "456 Elm St, City, Country",
-			Status:         "Confirmed",
-			TotalCost:      3000,
-		},
-		{
-			HallID:        1,
-			StartDateTime: time.Date(2024, time.December, 8, 9, 0, 0, 0, time.UTC),
-			EndDateTime:   time.Date(2024, time.December, 8, 11, 0, 0, 0, time.UTC),
-			CustomerName:  "Mike Taylor",
-			CustomerEmail: "miketaylor@example.com",
-			CustomerPhone: "0234567890",
-			CustomerAddress: "789 Oak St, City, Country",
-			Status:         "Pending",
-			TotalCost:      4000,
-		},
-	}
-
-for _, booking := range BookingHalls {
-	db.FirstOrCreate(&booking, entity.BookingHall{StartDateTime: booking.StartDateTime, HallID: booking.HallID})
-}
-
->>>>>>> Stashed changes
 	//Store
 	
 	Store := []entity.Store{
