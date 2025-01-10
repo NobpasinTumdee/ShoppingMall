@@ -139,26 +139,6 @@ function BookingHall() {
                     />
                 </Form.Item>
             </Col>
-            {/* <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-              <Form.Item
-                name="StartDateTime"
-                label="วันที่เริ่มต้น"
-                rules={[{ required: true, message: "กรุณาเลือกวันที่เริ่มต้น!" }]}
-              >
-                <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
-              </Form.Item>
-            </Col> */}
-
-            {/* <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-              <Form.Item
-                name="EndDateTime"
-                label="วันที่สิ้นสุด"
-                rules={[{ required: true, message: "กรุณาเลือกวันที่สิ้นสุด!" }]}
-              >
-                <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
-              </Form.Item>
-            </Col> */}
-
             <Col xs={24} sm={24} md={24} lg={24} xl={12}>
               <Form.Item
                 name="FacilitiesID"
