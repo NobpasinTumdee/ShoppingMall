@@ -1,142 +1,204 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Form, Input, Button, DatePicker, Select, message } from 'antd';
-import axios from 'axios'; // สำหรับเรียก API
-import SideBar from '../../../Component/SideBar'; // นำเข้า SideBar ที่สร้างไว้
+import { useState, useEffect } from 'react';
+import { Layout,Form, Col, Button, DatePicker, Select, message, Card, Divider, Input, InputNumber } from 'antd';
 import './HallBookingPage.css';
+import { CreateBookingHall, GetFacility } from '../../../../services/https';
 import { BookingHallInterface } from '../../../../interfaces/HallInterface';
-import { HallInterface } from '../../../../interfaces/HallInterface';
+import { FacilityInterface } from '../../../../interfaces/HallInterface';
 import { useParams } from "react-router-dom";
 import { NavBar } from '../../../Component/NavBar';
-import { CreateBookingHall } from '../../../../services/https';
+import SideBar from '../../../Component/SideBar';
+import moment from 'moment';
+const { Sider } = Layout;
 
-const { Sider, Content } = Layout;
-const { Option } = Select;
+function BookingHall() {
+  const { id } = useParams();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [facilitys, setFacility] = useState<FacilityInterface[]>([]);
 
-const BookingHall: React.FC = () => {
-    const [form] = Form.useForm();
-    const { id } = useParams<{ id: string }>();
-    const [Hall, setHall] = useState<HallInterface[]>([]); // เก็บข้อมูลห้องประชุม
-    const [loading, setLoading] = useState<boolean>(true); // สถานะการโหลด
+  const getFacility = async () => {
+    const res = await GetFacility();
+    if (res.status) {
+      setFacility(res.data);
+    }
+  };
 
-    // ฟังก์ชันดึงข้อมูลห้องประชุมจาก API
-    useEffect(() => {
-        const fetchHalls = async () => {
-        };
+  useEffect(() => {
+    getFacility();
+  }, [id]);
+  
+  const onFinish = async (values: BookingHallInterface) => {
+    const startDateTime = moment(values.StartDateTime).utcOffset(7, true).toDate(); // แปลงเป็น UTC+7
+    const endDateTime = moment(values.EndDateTime).utcOffset(7, true).toDate(); // แปลงเป็น UTC+7
 
-        fetchHalls();
-    }, []);
-
-    // ฟังก์ชันเมื่อมีการส่งฟอร์ม
-    const onFinish = async (values: BookingHallInterface) => {
-        
-        try {
-            const response = await CreateBookingHall(values,id || "")
-            message.success("การจองสำเร็จ!");
-            console.log(id)
-            form.resetFields();
-        } catch (error) {
-            message.error("การจองล้มเหลว: " + (error.response?.data?.message || "ไม่ทราบข้อผิดพลาด"));
-        }
+    const bookingData: BookingHallInterface = {
+      ...values,
+      StartDateTime: startDateTime,
+      EndDateTime: endDateTime,
+      HallID: Number(id),
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-        message.error('Booking submission failed!');
-    };
+    const res = await CreateBookingHall(bookingData);
+    if (res.status) {
+      messageApi.open({
+        type: "success",
+        content: "บันทึกข้อมูลสำเร็จ",
+      });
+    } else {
+      messageApi.open({
+        type: "error",
+        content: "เกิดข้อผิดพลาด !",
+      });
+    }
+  };
 
-    return (
-        <>
-        <NavBar />
-            <div style={{ height: '110px', zIndex: '0' }}></div>
-            <Layout style={{ minHeight: '750px' }}>
-                {/* Sidebar */}
-                <Sider width={250} theme="dark">
-                    <SideBar />
-                </Sider>
+  return (
+    <> <NavBar /> <div style={{ height: "110px", zIndex: "0" }}></div>
+    <div style={{ display: "flex" }}>
+        <Sider width={250} theme="dark">
+              <SideBar />
+          </Sider>
+        <div style={{ flex: 1, padding: "20px" }}>
+        {contextHolder}
+        <Card>
+          <h2>เพิ่มรายละเอียดการจอง</h2>
+          <Divider />
+          <Form
+            name="hallBooking"
+            layout="vertical"
+            onFinish={onFinish}
+            autoComplete="off"
+          >
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="CustomerName"
+                label="ชื่อ-นามสกุลของผู้จอง"
+                rules={[{ required: true, message: "กรุณากรอกชื่อ!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
 
-                {/* Main Content */}
-                <Layout style={{ padding: '10px' }}>
-                    <Content style={{ padding: 24, margin: 0, background: '#fff' }}>
-                        <h2>จองห้องประชุม</h2>
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
-                            style={{ maxWidth: '600px', margin: '0 auto' }}
-                        >
-                            {/* ชื่อผู้จอง */}
-                            <Form.Item
-                                label="ชื่อผู้จอง"
-                                name="CustomerName"
-                                rules={[{ required: true, message: 'กรุณากรอกชื่อผู้จอง' }]}
-                            >
-                                <Input placeholder="ชื่อผู้จอง" />
-                            </Form.Item>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="CustomerEmail"
+                label="อีเมลผู้จอง"
+                rules={[
+                  { type: "email", message: "รูปแบบอีเมลไม่ถูกต้อง!" },
+                  { required: true, message: "กรุณากรอกอีเมล!" }
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
 
-                            {/* อีเมล */}
-                            <Form.Item
-                                label="อีเมล"
-                                name="CustomerEmail"
-                                rules={[
-                                    { required: true, message: 'กรุณากรอกอีเมล' },
-                                    { type: 'email', message: 'กรุณากรอกอีเมลที่ถูกต้อง' }
-                                ]}
-                            >
-                                <Input placeholder="อีเมล" />
-                            </Form.Item>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="CustomerPhone"
+                label="เบอร์โทรศัพท์"
+                rules={[
+                  { required: true, message: "กรุณากรอกเบอร์โทรศัพท์!" },
+                  { pattern: /^[0]\d{9}$/, message: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง!" }
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
 
-                            {/* หมายเลขโทรศัพท์ */}
-                            <Form.Item
-                                label="หมายเลขโทรศัพท์"
-                                name="CustomerPhone"
-                                rules={[{ required: true, message: 'กรุณากรอกหมายเลขโทรศัพท์' }]}
-                            >
-                                <Input placeholder="หมายเลขโทรศัพท์" />
-                            </Form.Item>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="CustomerAddress"
+                label="ที่อยู่"
+                rules={[{ required: true, message: "กรุณากรอกที่อยู่!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                <Form.Item
+                    name="StartDateTime"
+                    label="วันที่เริ่มต้น"
+                    rules={[{ required: true, message: "กรุณาเลือกวันที่เริ่มต้น!" }]}
+                >
+                    <DatePicker
+                        showTime
+                        format="YYYY-MM-DD HH:mm"
+                        style={{ width: "100%" }}
+                    />
+                </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                <Form.Item
+                    name="EndDateTime"
+                    label="วันที่สิ้นสุด"
+                    rules={[{ required: true, message: "กรุณาเลือกวันที่สิ้นสุด!" }]}
+                >
+                    <DatePicker
+                        showTime
+                        format="YYYY-MM-DD HH:mm"
+                        style={{ width: "100%" }}
+                    />
+                </Form.Item>
+            </Col>
+            {/* <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="StartDateTime"
+                label="วันที่เริ่มต้น"
+                rules={[{ required: true, message: "กรุณาเลือกวันที่เริ่มต้น!" }]}
+              >
+                <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
+              </Form.Item>
+            </Col> */}
 
-                            {/* ที่อยู่ */}
-                            <Form.Item
-                                label="ที่อยู่"
-                                name="CustomerAddress"
-                                rules={[{ required: true, message: 'กรุณากรอกที่อยู่' }]}
-                            >
-                                <Input placeholder="ที่อยู่" />
-                            </Form.Item>
+            {/* <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="EndDateTime"
+                label="วันที่สิ้นสุด"
+                rules={[{ required: true, message: "กรุณาเลือกวันที่สิ้นสุด!" }]}
+              >
+                <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
+              </Form.Item>
+            </Col> */}
 
-                            {/* วันที่เริ่มต้น */}
-                            <Form.Item
-                                label="วันที่เริ่มต้น"
-                                name="StartDateTime"
-                                rules={[{ required: true, message: 'กรุณาเลือกวันที่และเวลาสิ้นสุด' }]}
-                            >
-                                <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
-                            </Form.Item>
-                            {/* วันที่สิ้นสุด */}
-                            <Form.Item
-                                label="วันที่สิ้นสุด"
-                                name="EndDateTime"
-                                rules={[{ required: true, message: 'กรุณาเลือกวันที่และเวลาสิ้นสุด' }]}
-                            >
-                                <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
-                            </Form.Item>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="FacilitiesID"
+                label="เลือกฟอนิเจอร์ที่ต้องการ"
+                rules={[{ required: true, message: "กรุณาเลือกฟอนิเจอร์!" }]}
+              >
+                <Select
+                  options={facilitys.map(data => ({
+                    value: data.ID || 0,
+                    label: data.FacilitiesName,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
 
-                            {/* ปุ่มส่ง */}
-                            <Form.Item>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    style={{ width: '100%', backgroundColor: '#E8D196', color: '#000' }}
-                                >
-                                    จองห้องประชุม
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Content>
-                </Layout>
-            </Layout>
-        </>
-    );
-};
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Form.Item
+                name="QuantityF"
+                label="จำนวนฟอนิเจอร์ที่ต้องการ"
+                rules={[{ required: true, message: "กรุณากรอกจำนวนฟอนิเจอร์!" }]}
+              >
+                <InputNumber min={1} max={100} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: '100%', backgroundColor: '#E8D196', color: '#000' }}
+              >
+                จองห้องประชุม
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </div>
+    </div>
+  </>
+  );
+}
 
 export default BookingHall;

@@ -18,15 +18,7 @@ func CreateBooking(c *gin.Context) {
 		return
 	}
 	db := config.DB()
-
-	var hall entity.Hall
-	var facilities entity.FacilityList
-	db.First(&facilities, hall.HallFacilities)
-	if facilities.ID == 0{
-		c.JSON(http.StatusNotFound, gin.H{"error": "facility not found"})
-		return
-	}
-
+	
 	b := entity.BookingHall{
 		StartDateTime: booking.StartDateTime,
 		EndDateTime: booking.EndDateTime,
@@ -35,7 +27,9 @@ func CreateBooking(c *gin.Context) {
 		CustomerEmail: booking.CustomerEmail,
 		CustomerPhone: booking.CustomerPhone,
 		CustomerAddress: booking.CustomerAddress,
-		TotalCost: booking.TotalCost,
+		HallID: booking.HallID,
+		FacilitiesID: booking.FacilitiesID,
+		QuantityF: booking.QuantityF,
 	}
 
 	if err := db.Create(&b).Error; err != nil {
@@ -110,18 +104,17 @@ func GetBookingByID(c *gin.Context) {
 
 
 
-func ListBookingHall(c *gin.Context) {
+func ListBookingByHallID(c *gin.Context) {
 	var bookings []entity.BookingHall
 
 	db := config.DB()
 
-	results := db.Select("id, user_id, hall_id, start_date_time, end_date_time, status, customer_name, customer_email, customer_phone, customer_address, cancel_date, total_cost").Find(&bookings)
-	
-	// ค้นหาข้อมูลการจองและ Preload ข้อมูล Hall ที่เกี่ยวข้อง
-	if results.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+	hallID := c.Param("id")
+
+	if err := db.Where("hall_id = ?", hallID).Find(&bookings).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No bookings found for the specified Hall ID"})
 		return
-	}
+	}	
 
 	// ส่งข้อมูลการจองกลับไป
 	c.JSON(http.StatusOK, bookings)

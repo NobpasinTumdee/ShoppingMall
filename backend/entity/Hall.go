@@ -14,35 +14,37 @@ type Hall struct {
 	Description    string          `json:"Description"`
 	PricePerHour   int             `json:"price_per_hour"`
 	HallBookings   []BookingHall   `gorm:"foreignKey:HallID"`
-	HallFacilities []Facilities    `gorm:"foreignKey:HallID"`
 }
 
-type FacilityList struct {
-	gorm.Model
-	FacilityName string        `json:"facility_name"`
-	Description  string        `json:"description"`
-	Facilities   []Facilities  `gorm:"foreignKey:FacilityListID"`
-}
+
 
 type Facilities struct {
 	gorm.Model
-	HallID         uint   `json:"HallID"`
-	FacilityListID uint   `json:"FacilityListID"`
-	Quantity       int    `json:"Quantity"`
+	FacilitiesName string        `json:"FacilitiesName"`
+	Price          float64       `json:"Price"`
+	BookingHall    []BookingHall `gorm:"foreignKey:FacilitiesID"`
 }
+
 
 type BookingHall struct {
 	gorm.Model
-	UserID          uint            `json:"UserID"`
+	UserID          uint            `json:"UserID" valid:"required~User ID is required"`
+	User   			User 			`gorm:"foreignKey:UserID"`
+
 	HallID          uint            `json:"HallID"`
+	Hall   			Hall 			`gorm:"foreignKey:HallID"`
+
 	StartDateTime   time.Time       `json:"StartDateTime"`
 	EndDateTime     time.Time       `json:"EndDateTime"`
-	Status          string          `json:"Status"`          // ใช้ enum สำหรับสถานะ
-	CustomerName    string          `json:"CustomerName"`
-	CustomerEmail   string          `json:"CustomerEmail"`
+	Status          string          `json:"Status"`          
+	CustomerName    string          `json:"CustomerName" valid:"required~CustomerName is required"`
+	CustomerEmail   string          `json:"CustomerEmail" valid:"required~CustomerEmail is required"`
 	CustomerPhone   string          `json:"CustomerPhone"`
 	CustomerAddress string          `json:"CustomerAddress"`
-	TotalCost       int             `json:"TotalCost"`     // เพิ่มฟิลด์นี้
+	
+	FacilitiesID	uint			`json:"FacilitiesID"`
+	Facilities		Facilities		`gorm:"foreignKey:FacilitiesID"`
+	QuantityF		int				`json:"QuantityF"`
 	PaymentHall     []PaymentHall   `gorm:"foreignKey:BookingHallID"`
 }
 

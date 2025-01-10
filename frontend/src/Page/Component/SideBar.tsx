@@ -1,48 +1,48 @@
-import React from 'react';
-import { Menu } from 'antd';
-import { CalendarOutlined, BookOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { HallInterface } from '../../interfaces/HallInterface';
+import React from 'react'; 
+import { useParams, useNavigate } from 'react-router-dom'; 
+import { FormOutlined,CalendarOutlined, CarryOutOutlined,CaretLeftOutlined } from '@ant-design/icons';
+import { Menu } from "antd";
 
-interface SideBarProps {
-    hall: HallInterface; // รับข้อมูล Hall เป็น props
-}
+const SideBar: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-const SideBar: React.FC<SideBarProps> = ({ hall }) => {
-    const navigate = useNavigate();
-
-    return (
-        <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
+  return (
+    <Menu mode="inline" style={{ height: '100%', borderRight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div>
             <Menu.Item
                 key="1"
                 icon={<CalendarOutlined />}
-                onClick={() => navigate(`/bookings/hall/${hall.ID}`)} // ส่ง hall.ID ไปที่ URL
+                onClick={() => navigate(`/calendar/${id}`)} // ส่ง hall.ID ไปที่ URL
             >
-                ปฏิทินการใช้ห้อง
+                ปฏิทินการใช้ห้องประชุม
             </Menu.Item>
             <Menu.Item
                 key="2"
-                icon={<BookOutlined />}
-                onClick={() => navigate(`/bookings/${hall.ID}`)} // ส่ง hall.ID ไปที่ URL
+                icon={<FormOutlined />}
+                onClick={() => navigate(`/booking/${id}`)} // ส่ง hall.ID ไปที่ URL
             >
                 จองห้องประชุม
             </Menu.Item>
             <Menu.Item
                 key="3"
-                icon={<FileTextOutlined />}
-                onClick={() => navigate("/reports")}
+                icon={<CarryOutOutlined />}
+                onClick={() => navigate(`/listbooking/${id}`)}
             >
-                รายงานการจองห้องประชุม
+                รายการจองใช้ห้องประชุม
             </Menu.Item>
-            <Menu.Item
-                key="4"
-                icon={<SettingOutlined />}
-                onClick={() => navigate("/admin-info")}
-            >
-                ข้อมูลผู้ดูแล
-            </Menu.Item>
-        </Menu>
-    );
-};
+        </div>
+        {/* เมนู "เลือกห้องประชุม" จะอยู่ด้านล่าง */}
+        <Menu.Item
+            key="4"
+            icon={<CaretLeftOutlined />}
+            onClick={() => navigate("/Hall")}
+            style={{ marginTop: 'auto' }} // ทำให้เมนูอยู่ด้านล่างสุด
+        >
+            เลือกห้องประชุม
+        </Menu.Item>
+    </Menu>
+  );
+}
 
 export default SideBar;

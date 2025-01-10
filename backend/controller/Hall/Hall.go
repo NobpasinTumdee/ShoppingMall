@@ -41,3 +41,39 @@ func GetHall(c *gin.Context){
 	}
 	c.JSON(http.StatusOK, hall)
 }
+
+func GetBookingWithTotalPrice(c *gin.Context) {
+	ID := c.Param("id")
+	var booking entity.BookingHall
+
+	db := config.DB()
+
+	// ดึงข้อมูล Booking พร้อมข้อมูลที่เกี่ยวข้อง
+	results := db.Preload("Hall").Preload("Facilities").Where("id = ?", ID).First(&booking)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	// คำนวณระยะเวลาการจอง (ชั่วโมง)
+	duration := booking.EndDateTime.Sub(booking.StartDateTime).Hours()
+	if duration < 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid booking time range"})
+		return
+	}
+
+	// คำนวณราคาจาก Hall
+	totalPrice := float64(booking.Hall.PricePerHour) * duration
+
+	// รวมราคาจาก Facilities (ถ้ามี)
+	if booking.Facilities.ID > 0 && booking.QuantityF > 0 {
+		totalPrice += booking.Facilities.Price * float64(booking.QuantityF)
+	}
+
+	// ส่งข้อมูลกลับไปยัง frontend
+	c.JSON(http.StatusOK, booking)
+}

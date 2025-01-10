@@ -37,4 +37,7 @@
   h2 {
     color: #001529;
   }
-  
+  /* CSS */
+.ant-select-item-option {
+  color: black; /* ทำให้ข้อความใน Option เป็นสีดำ */
+}

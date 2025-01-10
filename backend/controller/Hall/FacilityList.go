@@ -10,7 +10,7 @@ import (
 )
 
 func Facilities(c *gin.Context) {
-	var facilities []entity.FacilityList
+	var facilities []entity.Facilities
 
 	db := config.DB()
 

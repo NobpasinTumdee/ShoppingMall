@@ -483,10 +483,10 @@ async function GetHallByID(id: string) {
   .catch((e) => e.response);
   
 }
-async function CreateBookingHall(data:BookingHallInterface, id:string) {
+async function CreateBookingHall(data:BookingHallInterface) {
   return await axios
 
-  .post(`${apiUrl}/bookings/${id}`,data, requestOptions)
+  .post(`${apiUrl}/booking`,data, requestOptions)
 
   .then((res) => res)
 
@@ -521,10 +521,10 @@ async function GetBookinghall(id: string) {
   .catch((e) => e.response);
 }
 
-async function ListBookingHall() {
+async function ListBookingByHallID(id: string) {
   return await axios
 
-    .get(`${apiUrl}/bookings`, requestOptions)
+    .get(`${apiUrl}/booking/${id}`, requestOptions)
 
     .then((res) => res)
     
@@ -532,15 +532,35 @@ async function ListBookingHall() {
 }
 
 // Get BookingHall by hallId
-async function GetBookingByHallID(hallId: string) {
+async function GetBookingByHallID(id: string) {
   return await axios
 
-    .get(`${apiUrl}/bookings/hall/${hallId}`, requestOptions)
+    .get(`${apiUrl}/calendar/${id}`, requestOptions)
 
     .then((res) => res)
     
     .catch((e) => e.response);
 }
+
+async function GetFacility() {
+  return await axios
+
+  .get(`${apiUrl}/facilities`,requestOptions)
+
+  .then((res) => res)
+    
+  .catch((e) => e.response);
+}
+
+// async function GetBookingWithTotalPrice(id:string) {
+//   return await axios
+
+//   .get(`${apiUrl}/total/${id}`, requestOptions)
+
+//   .then((res) => res)
+  
+//   .catch((e) => e.response);
+// }
 
 
 export {
@@ -586,8 +606,10 @@ export {
     UpdateBookingHall,
     DeleteBookingHall,
     GetBookinghall,
-    ListBookingHall,
+    ListBookingByHallID,
     GetBookingByHallID,
+    GetFacility,
+    // GetBookingWithTotalPrice,
 
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,

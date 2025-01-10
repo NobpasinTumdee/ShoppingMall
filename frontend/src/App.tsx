@@ -16,7 +16,8 @@ import { NavBar } from './Page/Component/NavBar';
 
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import Hall from './Page/MainWeb/Hall/selectHall/SelectHall';
-import CalendarPage from './Page/MainWeb/Hall/calendar/calendar';
+import Carlendar from './Page/MainWeb/Hall/carlendar/calendar';
+import Listbooking from './Page/MainWeb/Hall/ListBooking/ListBooking';
 
 import Cleaning from './Page/MainWeb/Clearning/Cleaningpage';
 const App: React.FC = () => {
@@ -38,8 +39,9 @@ const App: React.FC = () => {
 
         <Route path="/BillStore" element={<BillStore />} />
         <Route path="/Hall" element={<Hall />} />
-        <Route path="/bookings/:id" element={<BookingHall />} />
-        <Route path="/bookings/hall/:hallId" element={<CalendarPage />} />
+        <Route path="/booking/:id" element={<BookingHall />} />
+        <Route path="/calendar/:id" element={<Carlendar />} />
+        <Route path="/listbooking/:id" element={<Listbooking />}/>
 
         <Route path="/BillStore" element={<BillStore />} /> 
         <Route path="/Recruitment" element={<Recruitment />} />
