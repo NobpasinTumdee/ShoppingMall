@@ -16,8 +16,8 @@ export interface BookingHallInterface {
     User?: UsersInterface;
     HallID?: number;
     Hall?: HallInterface;
-    StartDateTime?: Date;
-    EndDateTime?: Date;
+    StartDateTime?: string;
+    EndDateTime?: string;
     Status?: string;
     CustomerName?: string;
     CustomerEmail?: string;

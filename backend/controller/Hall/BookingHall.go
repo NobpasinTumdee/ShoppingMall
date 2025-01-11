@@ -13,32 +13,59 @@ import (
 func CreateBooking(c *gin.Context) {
 	var booking entity.BookingHall
 
+	// รับข้อมูลจาก JSON
 	if err := c.ShouldBindJSON(&booking); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	db := config.DB()
+
+	// ตรวจสอบว่ามีการจองซ้อนทับหรือไม่
+	var existingBookings []entity.BookingHall
+	err := db.Where("hall_id = ? AND ((start_date_time <= ? AND end_date_time >= ?) OR (start_date_time <= ? AND end_date_time >= ?))", 
+		booking.HallID, 
+		booking.StartDateTime, 
+		booking.StartDateTime, 
+		booking.EndDateTime, 
+		booking.EndDateTime).Find(&existingBookings).Error
 	
-	b := entity.BookingHall{
-		StartDateTime: booking.StartDateTime,
-		EndDateTime: booking.EndDateTime,
-		Status: booking.Status,
-		CustomerName: booking.CustomerName,
-		CustomerEmail: booking.CustomerEmail,
-		CustomerPhone: booking.CustomerPhone,
-		CustomerAddress: booking.CustomerAddress,
-		HallID: booking.HallID,
-		FacilitiesID: booking.FacilitiesID,
-		QuantityF: booking.QuantityF,
+	// ถ้ามีการจองที่ซ้อนทับ
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "เกิดข้อผิดพลาดในการค้นหาการจอง"})
+		return
 	}
 
+	if len(existingBookings) > 0 {
+		c.JSON(http.StatusConflict, gin.H{"message": "ช่วงเวลานี้มีการจองแล้ว กรุณาเลือกเวลาอื่น"})
+		return
+	}
+
+	// สร้างข้อมูลการจองใหม่
+	b := entity.BookingHall{
+		StartDateTime:  booking.StartDateTime,
+		EndDateTime:    booking.EndDateTime,
+		Status:         booking.Status,
+		CustomerName:   booking.CustomerName,
+		CustomerEmail:  booking.CustomerEmail,
+		CustomerPhone:  booking.CustomerPhone,
+		CustomerAddress: booking.CustomerAddress,
+		HallID:         booking.HallID,
+		FacilitiesID:   booking.FacilitiesID,
+		QuantityF:      booking.QuantityF,
+	}
+
+	// บันทึกข้อมูลการจองใหม่
 	if err := db.Create(&b).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Created success","data": b})
+	// ส่งกลับข้อมูลเมื่อบันทึกสำเร็จ
+	c.JSON(http.StatusCreated, gin.H{"message": "Created success", "data": b})
 }
+
+
 
 
 func UpdateBooking(c *gin.Context) {

@@ -106,7 +106,6 @@ const Carlendar: React.FC = () => {
                 <Layout style={{ padding: "2px" }}>
                     <Content style={{ padding: 24, margin: 0, background: "#fff" }}>
                         <h2>ปฏิทินการจองห้องประชุม</h2>
-z
                         <Calendar 
                             cellRender={cellRender} style={{ borderRadius: "10px" }} />                        
                         <Button
