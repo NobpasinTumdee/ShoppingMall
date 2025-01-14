@@ -51,8 +51,9 @@ func SetupDatabase() {
 		&entity.BookingHall{},
 		&entity.Facilities{},
 		&entity.PaymentHall{},
-
-
+		&entity.Taxinvoice{},
+		&entity.StatusPaymentHall{},
+		
 		//ระบบบันทึกการทำความสะอาดของแม่บ้าน
 		&entity.Area{},
 		&entity.Schedule{},
@@ -251,6 +252,15 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.Facilities{FacilitiesName: pkg.FacilitiesName})
 	}
 	
+	// StatusPaymentHall := []entity.StatusPaymentHall{
+	// 	{StatusName: "ชำระเงินแล้ว"},
+	// 	{StatusName: "ยังไม่ชำระเงิน"},
+	// }
+
+	// for _, pkg := range StatusPaymentHall {
+	// 	db.FirstOrCreate(&pkg, entity.StatusPaymentHall{StatusName: pkg.StatusName})
+	// }
+
 
 	//Store
 	

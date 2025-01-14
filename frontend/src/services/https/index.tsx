@@ -1,4 +1,4 @@
-import { BookingHallInterface } from "../../interfaces/HallInterface";
+import { BookingHallInterface, PaymentHallInterface } from "../../interfaces/HallInterface";
 import {SignInInterface} from "../../interfaces/SignIn";
 import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
@@ -606,6 +606,87 @@ async function ListBookingByHallID(id: string) {
     
     .catch((e) => e.response);
 }
+// Get BookingHall by hallId
+async function GetBookingByHallID(id: string) {
+  return await axios
+
+    .get(`${apiUrl}/calendar/${id}`, requestOptions)
+
+    .then((res) => res)
+    
+    .catch((e) => e.response);
+}
+
+async function GetFacility() {
+  return await axios
+
+  .get(`${apiUrl}/facilities`,requestOptions)
+
+  .then((res) => res)
+    
+  .catch((e) => e.response);
+}
+
+// =========================== PaymentHall ==========================================
+
+// List All Payments
+async function ListPayments() {
+  return await axios
+    .get(`${apiUrl}/paymenthall`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+// Get Payment by ID
+async function GetPaymentByID(id: string) {
+  return await axios
+    .get(`${apiUrl}/paymenthall/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+// Create Payment
+async function CreatePayment(data: PaymentHallInterface) {
+  return await axios
+    .post(`${apiUrl}/paymenthall`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+// Update Payment by ID
+async function UpdatePayment(id: string, data: PaymentHallInterface) {
+  return await axios
+    .put(`${apiUrl}/paymenthall/${id}`, data, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+// Delete Payment by ID
+async function DeletePayment(id: string) {
+  return await axios
+    .delete(`${apiUrl}/paymenthall/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+// =========================== StatusPaymentHall ==========================================
+
+// List All Statuses
+async function ListStatusPaymentHall() {
+  return await axios
+    .get(`${apiUrl}/statuspaymenthall`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+// Get Status by ID
+async function GetStatusPaymentHallByID(id: string) {
+  return await axios
+    .get(`${apiUrl}/statuspaymenthall/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
 //=============================Cleaning=====================================
 // get Area
 async function ListAreas() {
@@ -776,36 +857,7 @@ async function UpdateService(id: string, data: ServiceInterface) {
 
 }
 
-// Get BookingHall by hallId
-async function GetBookingByHallID(id: string) {
-  return await axios
 
-    .get(`${apiUrl}/calendar/${id}`, requestOptions)
-
-    .then((res) => res)
-    
-    .catch((e) => e.response);
-}
-
-async function GetFacility() {
-  return await axios
-
-  .get(`${apiUrl}/facilities`,requestOptions)
-
-  .then((res) => res)
-    
-  .catch((e) => e.response);
-}
-
-// async function GetBookingWithTotalPrice(id:string) {
-//   return await axios
-
-//   .get(`${apiUrl}/total/${id}`, requestOptions)
-
-//   .then((res) => res)
-  
-//   .catch((e) => e.response);
-// }
 
 
 export {
@@ -861,7 +913,13 @@ export {
     ListBookingByHallID,
     GetBookingByHallID,
     GetFacility,
-    // GetBookingWithTotalPrice,
+    ListPayments,
+    GetPaymentByID,
+    CreatePayment,
+    UpdatePayment,
+    DeletePayment,
+    ListStatusPaymentHall,
+    GetStatusPaymentHallByID,
 
     ListInventory,//อุปกรณ์ทั้งหมด
     ListCategoryInventory,

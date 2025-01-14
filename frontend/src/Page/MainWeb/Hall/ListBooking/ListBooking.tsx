@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { BookingHallInterface, HallInterface } from "../../../../interfaces/HallInterface";
 import { NavBar } from "../../../Component/NavBar";
-import { ListBookingByHallID, GetHallByID } from "../../../../services/https"; // เพิ่ม GetHallByID
+import { ListBookingByHallID, GetHallByID, DeleteBookingHall } from "../../../../services/https"; // เพิ่ม DeleteBookingHall
 import { useParams } from "react-router-dom";
 import SideBar from "../../../Component/SideBar";
-import { Layout, Table, Tag, Image as AntImage } from "antd";
+import { Layout, Table, Tag, Image as AntImage, Button } from "antd";  // เพิ่ม Button และ Modal
 
 const { Sider, Content } = Layout;
 
 const Listbooking: React.FC = () => {
-  const [hall, setHall] = useState<HallInterface | null>(null); // ใช้ single hall object
+  const [hall, setHall] = useState<HallInterface | null>(null);
   const [bookings, setBookings] = useState<BookingHallInterface[]>([]);
+  const [loading, setLoading] = useState(false); // สำหรับการโหลดข้อมูล
   const { id } = useParams();
 
   useEffect(() => {
@@ -20,30 +21,45 @@ const Listbooking: React.FC = () => {
         return;
       }
 
+      setLoading(true);
       try {
-        // ดึงข้อมูลห้องประชุม
         const hallResponse = await GetHallByID(id);
         setHall(hallResponse.data);
 
-        // ดึงข้อมูลการจอง
         const bookingResponse = await ListBookingByHallID(id);
         setBookings(bookingResponse.data || []);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
+      setLoading(false);
     };
 
     fetchData();
   }, [id]);
 
-  // Define columns for the table
+  const handleDeleteBooking = async (bookingId: number) => {
+    // ขอให้ลบการจองจาก API
+    try {
+      await DeleteBookingHall(bookingId.toString());
+      setBookings(bookings.filter(booking => booking.ID !== bookingId)); // อัปเดตหลังจากลบ
+    } catch (error) {
+      console.error("Failed to delete booking:", error);
+    }
+  };
+
+  const handleEditBooking = (booking: BookingHallInterface) => {
+    // ฟังก์ชันสำหรับการแก้ไขข้อมูลการจอง
+    console.log("Editing booking:", booking);
+    // คุณสามารถเปิด Modal หรือเชื่อมโยงไปที่หน้าแก้ไขการจองที่นี่
+  };
+
   const columns = [
     {
       title: "รูปภาพห้องประชุม",
       key: "ImageHall",
       render: () => (
         <AntImage
-          src={hall?.ImageHall || "default-image-url.jpg"} // ใช้ข้อมูลจาก hall
+          src={hall?.ImageHall || "default-image-url.jpg"}
           alt="รูปภาพห้องประชุม"
           style={{ maxWidth: "100px", maxHeight: "100px" }}
         />
@@ -76,9 +92,25 @@ const Listbooking: React.FC = () => {
       key: "Status",
       dataIndex: "Status",
       render: (status: string) => (
-        <Tag color={status === "confirmed" ? "green" : "red"}>
-          {status === "confirmed" ? "ยืนยันแล้ว" : "รอการยืนยัน"}
+        <Tag color={status === "ยังไม่ชำระเงิน" ? "red" : "green"}>
+          {status === "ยังไม่ชำระเงิน" ? "ยังไม่ชำระเงิน" : "ชำระเงินแล้ว"}
         </Tag>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (record: BookingHallInterface) => (
+        record.StatusPaymentHallID === "ยังไม่ชำระเงิน" && (
+          <div>
+            <Button onClick={() => handleEditBooking(record)} style={{ marginRight: 8 }}>
+              แก้ไข
+            </Button>
+            <Button onClick={() => handleDeleteBooking(record.ID!)} danger>
+              ยกเลิก
+            </Button>
+          </div>
+        )
       ),
     },
   ];
@@ -105,10 +137,11 @@ const Listbooking: React.FC = () => {
               columns={columns}
               dataSource={bookings.map((booking) => ({
                 ...booking,
-                key: booking.ID, // ใช้ ID เป็น key
+                key: booking.ID, 
               }))}
               bordered
               pagination={{ pageSize: 10 }}
+              loading={loading}
             />
           </Content>
         </Layout>

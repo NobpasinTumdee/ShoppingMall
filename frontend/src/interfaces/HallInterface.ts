@@ -18,7 +18,7 @@ export interface BookingHallInterface {
     Hall?: HallInterface;
     StartDateTime?: string;
     EndDateTime?: string;
-    Status?: string;
+    StatusPaymentHallID?: string;
     CustomerName?: string;
     CustomerEmail?: string;
     CustomerPhone?: string;
@@ -32,15 +32,34 @@ export interface FacilityInterface {
     FacilitiesName?: string;   // รหัสรายการสิ่งอำนวยความสะดวก
 }
 
-export interface PaymentHallInterface {
-    ID: number;                // รหัสการชำระเงิน
-    BookingHallID: number;     // รหัสการจองที่เกี่ยวข้อง
-    Amount: number;            // จำนวนเงินที่ชำระ
-    PaymentDate: Date;         // วันที่ชำระเงิน
-    PaymentMethod: string;     // วิธีการชำระเงิน
-    TransactionID: string;     // รหัสธุรกรรม
-    IssueDate: Date;           // วันที่ออกใบเสร็จ
-    TaxAmount: number;         // จำนวนภาษี
-    TotalAmount: number;       // ยอดรวม
-    IssuedBy: string;          // ผู้ออกใบเสร็จ
+export interface PaymentHallInterface { 
+    ID?: number;                 // รหัสการชำระเงิน
+    BookingHallID?: number;      // รหัสการจองที่เกี่ยวข้อง
+    BookingHall?: BookingHallInterface; // ข้อมูลการจองที่เกี่ยวข้อง
+    Amount?: number;             // จำนวนเงินที่ชำระ
+    PaymentDate?: Date;          // วันที่ชำระเงิน
+    PaymentMethod?: string;      // วิธีการชำระเงิน
+    IssueDate?: Date;            // วันที่ออกใบเสร็จ
+    TaxAmount?: number;          // จำนวนภาษี
+    TotalAmount?: number;        // ยอดรวม
+    IssuedBy?: string;           // ผู้ออกใบเสร็จ
+    StatusPaymentHallID?: number; // รหัสสถานะการชำระเงิน (ชำระเงินแล้ว / ยังไม่ชำระเงิน)
+    StatusPayment?: string;      // สถานะการชำระเงิน ("ชำระเงินแล้ว", "ยังไม่ชำระเงิน")
+    Taxinvoice?: TaxinvoiceInterface[]; // รายการใบกำกับภาษีที่เกี่ยวข้อง
+}
+
+
+export interface TaxinvoiceInterface {
+    ID?: number;                  // รหัสใบกำกับภาษี
+    UserTaxID?: number;           // รหัสผู้เสียภาษี
+    PaymentHallID?: number;       // รหัสการชำระเงินที่เกี่ยวข้อง
+    InvoiceNumber?: string;       // หมายเลขใบกำกับภาษี
+    IssueDate?: Date;             // วันที่ออกใบกำกับภาษี
+    TotalAmount?: number;         // ยอดรวม
+    TaxAmount?: number;           // จำนวนภาษี
+}
+
+export interface StatusPaymentHallInterface {
+    ID?: number;               // รหัสสถานะการชำระเงิน
+    StatusName?: string;       // ชื่อสถานะ (เช่น "ยังไม่ชำระเงิน", "ชำระเงินแล้ว")
 }

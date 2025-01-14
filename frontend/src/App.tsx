@@ -22,12 +22,13 @@ import ServicePage from './Page/MainWeb/ServiceRequest/ServicePage';
 import BookingHall from './Page/MainWeb/Hall/BookingHall/HallBookingPage';
 import Calendar from './Page/MainWeb/Hall/calendar/calendar';
 import Listbooking from './Page/MainWeb/Hall/ListBooking/ListBooking';
+// import PaymentHall from './Page/MainWeb/Hall/PaymentHall/PaymentHall';
 
 import { ProtectedRoute } from './ProtectedRoute';
 import { ProtectedRouteAdmin } from './ProtectedRoute';
 const App: React.FC = () => {
   const location = useLocation();
-  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/bookinghall","/celendar","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning","/service"].includes(location.pathname);
+  const Navbar = ["/Main","/Store","/SubStore","/BookStore","/Admin","/AdminStore","/Hall","/Inbox","/StorePayment","/BillStore","/Recruitment","/AdminJob","/Inventory","/BackUpStore","/AdminEvent","/Cleaning","/service"].includes(location.pathname);
   const isAuthenticated = !!localStorage.getItem('token'); // ตรวจสอบการเข้าสู่ระบบ
   return (
     <>
@@ -54,7 +55,7 @@ const App: React.FC = () => {
         <Route path="/booking/:id" element={<BookingHall />} />
         <Route path="/calendar/:id" element={<Calendar />} />
         <Route path="/listbooking/:id" element={<Listbooking />}/>
-
+        {/* <Route path="/paymenthall" element={<PaymentHall/>}/> */}
         <Route path="/Inventory" element={<Inventory />} />
         <Route path="/Cleaning" element={<Cleaning />} />
         

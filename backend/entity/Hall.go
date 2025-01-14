@@ -34,29 +34,58 @@ type BookingHall struct {
 	HallID          uint            `json:"HallID"`
 	Hall   			Hall 			`gorm:"foreignKey:HallID"`
 
+	StatusPaymentHallID uint 		`json:"StatusPaymentHallID"`
+	StatusPaymentHall   StatusPaymentHall `gorm:"foreignKey:StatusPaymentHallID"`
+	
+	FacilitiesID	uint			`json:"FacilitiesID"`
+	Facilities		Facilities		`gorm:"foreignKey:FacilitiesID"`
+
 	StartDateTime   time.Time       `json:"StartDateTime"`
 	EndDateTime     time.Time       `json:"EndDateTime"`
-	Status          string          `json:"Status"`          
+	    
 	CustomerName    string          `json:"CustomerName" valid:"required~CustomerName is required"`
 	CustomerEmail   string          `json:"CustomerEmail" valid:"required~CustomerEmail is required"`
 	CustomerPhone   string          `json:"CustomerPhone"`
 	CustomerAddress string          `json:"CustomerAddress"`
 	
-	FacilitiesID	uint			`json:"FacilitiesID"`
-	Facilities		Facilities		`gorm:"foreignKey:FacilitiesID"`
 	QuantityF		int				`json:"QuantityF"`
+	
 	PaymentHall     []PaymentHall   `gorm:"foreignKey:BookingHallID"`
 }
 
 type PaymentHall struct {
 	gorm.Model
-	BookingHallID  uint      `json:"booking_hall_id"`
+	BookingHallID  uint      	`json:"BookingHallID"`
+	BookingHall	   BookingHall	`gormm:"foreignKey:BookingHallID"`
+
 	Amount         int       `json:"amount"`
 	PaymentDate    time.Time `json:"payment_date"`
 	PaymentMethod  string    `json:"payment_method"`
-	TransactionID  string    `json:"transaction_id"`  // เพิ่มฟิลด์นี้
 	IssueDate      time.Time `json:"issue_date"`
 	TaxAmount      int       `json:"tax_amount"`
 	TotalAmount    int       `json:"total_amount"`
 	IssuedBy       string    `json:"issued_by"`
+
+	Taxinvoice     []Taxinvoice   `gorm:"foreignKey:PaymentHallID"`
+
+}
+type StatusPaymentHall struct{
+	gorm.Model
+	StatusName		string	`json:"StatusName"`
+
+	BookingHall		[]BookingHall	`gorm:"foreignkey:StatusPaymentHall"`
+}
+type Taxinvoice struct {
+	gorm.Model
+	
+	UserTaxID      uint        `json:"UserTaxID" valid:"required~UserTaxID is required"`
+	TaxUser        TaxUser     `gorm:"foreignKey:UserTaxID"`
+
+	PaymentHallID  uint        `json:"PaymentHallID"`
+	PaymentHall    PaymentHall `gorm:"foreignKey:PaymentHallID"`
+
+	InvoiceNumber  string      `json:"InvoiceNumber" valid:"required~InvoiceNumber is required"`
+	IssueDate      time.Time   `json:"IssueDate" valid:"required~IssueDate is required"`
+	TotalAmount    int         `json:"TotalAmount" valid:"required~TotalAmount is required"`
+	TaxAmount      int         `json:"TaxAmount" valid:"required~TaxAmount is required"`
 }

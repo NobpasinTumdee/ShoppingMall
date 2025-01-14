@@ -105,9 +105,14 @@ func main() {
 		router.DELETE("/booking/:id", Hall.DeleteBooking) //Delete Booking
 		router.GET("/calendar/:id", Hall.GetBookingByHallID)
 		router.GET("/facilities",Hall.Facilities)
-		router.GET("/total/:id",Hall.GetBookingWithTotalPrice)
-		//ระบบ hall payment
-
+		router.POST("/paymenthall", Hall.CreatePayment)
+		router.GET("/paymenthall/:id", Hall.GetPaymentByID)
+		router.GET("/paymenthall", Hall.ListPayments)
+		router.PUT("/paymenthall/:id", Hall.UpdatePayment)
+		router.DELETE("/paymenthall/:id", Hall.DeletePayment)
+		// Routes for managing StatusPaymentHall
+		router.GET("/statuspaymenthall", Hall.ListStatusPaymentHall) // List all status
+		router.GET("/statuspaymenthall/:id", Hall.GetStatusPaymentHallByID) // Get status by ID
 
 
 		//อุปกรณ์ทั้งหมด

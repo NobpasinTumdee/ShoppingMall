@@ -75,6 +75,7 @@ type TaxUser struct {
 	User   					User 		`gorm:"foreignKey:UserID"`
 
 	Receipt 				[]Receipt 	`gorm:"foreignKey:UserTaxID"`
+	Taxinvoice				[]Taxinvoice	`gorm:"foreignKey:UserTaxID"`
 }
 type Event struct {
 	gorm.Model

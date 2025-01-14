@@ -4,7 +4,7 @@ import "./HallBookingPage.css";
 import { CreateBookingHall, GetFacility } from "../../../../services/https";
 import { BookingHallInterface } from "../../../../interfaces/HallInterface";
 import { FacilityInterface } from "../../../../interfaces/HallInterface";
-import { useParams } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { NavBar } from "../../../Component/NavBar";
 import SideBar from "../../../Component/SideBar";
 import dayjs from "dayjs"; // import dayjs
@@ -17,7 +17,7 @@ function BookingHall() {
   const { id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const [facilitys, setFacility] = useState<FacilityInterface[]>([]);
-
+  const navigate = useNavigate();
   const getFacility = async () => {
     const res = await GetFacility();
     if (res.status) {
@@ -51,11 +51,13 @@ function BookingHall() {
           type: "error",
           content: "ช่วงเวลานี้มีการจองแล้ว กรุณาเลือกเวลาอื่น",
         });
-      } else if (res.status === 200) {
+      } else if (res.status) {
         messageApi.open({
           type: "success",
           content: "บันทึกข้อมูลสำเร็จ",
         });
+        console.log("booking ID: ",id);
+        navigate(`/listbooking/${id}`);
       } else {
         messageApi.open({
           type: "error",
@@ -188,6 +190,7 @@ function BookingHall() {
                 <Button
                   type="primary"
                   htmlType="submit"
+                  // onClick={() => handlePaymentHallClick(id || "")}
                   style={{ width: "100%", backgroundColor: "#E8D196", color: "#000" }}
                 >
                   จองห้องประชุม
