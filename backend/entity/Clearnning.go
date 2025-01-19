@@ -7,30 +7,30 @@ import (
 
 type Area struct {
 	gorm.Model
-	AreaName string    `json:"AreaName"` // ชื่อพื้นที่
-	Floor    int       `json:"Floor"`    // ชั้น
+	AreaName string    `json:"AreaName"` 
+	Floor    int       `json:"Floor"`    
 
-	Schedules []Schedule `gorm:"foreignKey:AreaID"` // One-to-Many กับ Schedule
+	Schedules []Schedule `gorm:"foreignKey:AreaID"` 
 }
 
 type Schedule struct {
 	gorm.Model
-	StartTime    time.Time `json:"StartTime"`    // เวลาที่เริ่มงาน
-	EndTime      time.Time `json:"EndTime"`      // เวลาที่จบงาน
+	StartTime    time.Time `json:"StartTime"` 
+	EndTime      time.Time `json:"EndTime"`     
 
-	AreaID       uint      `json:"AreaID"`       // FK ไปยัง Area
-	Area         Area      `gorm:"foreignKey:AreaID"` // ความสัมพันธ์ไปยัง Area
+	AreaID       uint      `json:"AreaID"`
+	Area         Area      `gorm:"foreignKey:AreaID"` 
 }
 
 type CleaningRecord struct {
 	gorm.Model
-	ActualStartTime time.Time `json:"ActualStartTime"` // เวลาเริ่มงานจริง
-	ActualEndTime   time.Time `json:"ActualEndTime"`   // เวลาจบงานจริง
-	Notes           *string    `json:"Notes"`            // บันทึก
+	ActualStartTime time.Time `json:"ActualStartTime" valid:"required~ActualStartTime is required"`
+	ActualEndTime   time.Time `json:"ActualEndTime" valid:"required~ActualEndTime is required"`   
+	Notes           *string    `json:"Notes"`
 
-	ScheduleID      uint      `json:"ScheduleID"`      // FK ไปยัง Schedule
-	Schedule        Schedule  `gorm:"foreignKey:ScheduleID"` // ความสัมพันธ์ไปยัง Schedule one-to-one
+	ScheduleID      uint      `json:"ScheduleID" valid:"required~Schedule ID is required"`      
+	Schedule        Schedule  `gorm:"foreignKey:ScheduleID" valid:"-"` 
 
-	UserID          uint      `json:"UserID"`          // FK ไปยัง User
-	User            User      `gorm:"foreignKey:UserID"` // ความสัมพันธ์ไปยัง User
+	UserID          uint      `json:"UserID" valid:"required~User ID is required"`          
+	User            User      `gorm:"foreignKey:UserID" valid:"-"` 
 }

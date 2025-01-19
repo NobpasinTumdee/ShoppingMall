@@ -10,7 +10,9 @@ type Inventory struct {
 	QuantityInventory    int       `json:"QuantityInventory"`    
 
 	CategoryID       uint      `json:"CategoryID"`    
-	CategoryInventory         CategoryInventory      `gorm:"foreignKey:CategoryID"` 
+	CategoryInventory         CategoryInventory      `gorm:"foreignKey:CategoryID"`
+
+	RequestDetails []RequestDetail `gorm:"foreignKey:InventoryID"`
 
 	EquipmentRequest []EquipmentRequest		`gorm:"foreignKey:InventoryID"`
 }

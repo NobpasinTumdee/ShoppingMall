@@ -65,6 +65,7 @@ func SetupDatabase() {
 
 		//ระบบเบิกอุปกรณ์การทำความสะอาด
 		&entity.InventoryRequest{},
+		&entity.RequestDetail{},
 	)
 	
 	//User
