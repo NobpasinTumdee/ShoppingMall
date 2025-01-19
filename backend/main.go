@@ -10,6 +10,7 @@ import (
 	"example.com/ProjectSeG13/controller/user"
 	"example.com/ProjectSeG13/controller/Store"
 	"example.com/ProjectSeG13/controller/Inventory"
+	"example.com/ProjectSeG13/controller/CleaningRequest"
 	"example.com/ProjectSeG13/controller/Cleaning"
 	"example.com/ProjectSeG13/controller/Hall"
 	"example.com/ProjectSeG13/controller/ServiceRequest"
@@ -132,8 +133,14 @@ func main() {
 		router.GET("/CleaningRecordsByArea/:id", Cleaning.GetCleaningRecordsByArea)
 		router.GET("/SchedulesByArea/:id", Cleaning.GetSchedulesByArea)
 		router.DELETE("/DeleteCleaningRecord", Cleaning.DeleteCleaningRecord)
-		//ระบบ อุปการณ์แม่บ้าน
+		router.PUT("/UpdateCleaningRecord/:id", Cleaning.UpdateCleaningRecord)
+		//UpdateCleaningRecord
 
+		//ระบบ อุปการณ์แม่บ้าน
+		router.POST("/InventoryRequest", CleaningRequest.CreateInventoryRequest)
+		router.GET("/ListInventoryRequest", CleaningRequest.ListInventoryCleaningRequest)
+		router.PUT("/UpdateQuantityInventory", CleaningRequest.UpdateQuantityInventory)
+		router.GET("/ListCreateInventoryRequest", CleaningRequest.ListCreateInventoryRequest)
 	}
 
 	r.GET("/", func(c *gin.Context) {
