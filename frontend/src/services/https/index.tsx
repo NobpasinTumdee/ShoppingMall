@@ -3,6 +3,7 @@ import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,Ta
 import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
 import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
+import { InventoryRequestInterface } from "../../interfaces/InventoryRequestInterface";
 
 import axios from 'axios';
 import { EquipmentInterface, ServiceInterface } from "../../interfaces/ServiceInterface";
@@ -665,12 +666,24 @@ async function DeleteCleaningRecord(payload: { AreaID: string; Day: string }) {
           AreaID: payload.AreaID,
           Day: payload.Day,
         },
-        ...requestOptions, // รวม options เช่น headers
+        ...requestOptions, 
       }
     );
 
-    return response.data; // ส่งผลลัพธ์กลับมา
+    return response.data;
     
+}
+
+async function UpdateCleaningRecord(id: string, data: CleaningRecordInterface) {
+
+  return await axios
+
+    .put(`${apiUrl}/UpdateCleaningRecord/${id}`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
 }
 
 //=======================================Service============================================
@@ -775,6 +788,55 @@ async function UpdateService(id: string, data: ServiceInterface) {
 
 }
 
+//====================เบิกอุปกรณ์ทำความสะอาดแม่บ้าน===========
+async function CreateInventoryRequest(data: InventoryRequestInterface) {
+
+  return await axios
+
+    .post(`${apiUrl}/InventoryRequest`, data, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+async function ListInventoryRequest() {
+
+  return await axios
+
+    .get(`${apiUrl}/ListInventoryRequest`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
+async function UpdateQuantityInventory(payload: { NameItem: string; Quantity: number }) {
+  const response = await axios.put(
+      `${apiUrl}/UpdateQuantityInventory`,
+      {
+        NameItem: payload.NameItem,
+        Quantity: payload.Quantity,
+      }, 
+      requestOptions
+  );
+
+  return response.data;
+}
+
+async function ListCreateInventoryRequest() {
+
+  return await axios
+
+    .get(`${apiUrl}/ListCreateInventoryRequest`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
+
+}
+
 export {
     SignIn,//user
     GetUserById,
@@ -841,9 +903,15 @@ export {
     DeleteEquipment,
     UpdateService,
 
-    ListAreas,
+    ListAreas,//แม่บ้าน
     CreateCleaningRecord,
     GetCleaningRecordsByArea,
     GetSchedulesByArea,
-    DeleteCleaningRecord
+    DeleteCleaningRecord,
+    UpdateCleaningRecord,
+
+    CreateInventoryRequest,//เบิกอุปกรณ์ทำความสะอาด
+    ListInventoryRequest,
+    UpdateQuantityInventory,
+    ListCreateInventoryRequest
 }
