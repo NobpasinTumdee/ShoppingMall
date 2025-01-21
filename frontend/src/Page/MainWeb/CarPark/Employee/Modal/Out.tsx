@@ -14,25 +14,36 @@ import {
   Input,
   Upload,
   UploadProps,
+  InputNumber,
+  InputNumberProps,
 } from "antd";
-import { CheckCircleOutlined, UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import {
   ParkingCardInterface,
   ParkingPaymentInterface,
-  ParkingTransactionInterface,
+  ParkingUsageCardInterface,
+  ParkingZoneDailyInterface,
+  ParkingZoneInterface,
   StatusCardInterface,
 } from "../../../../../interfaces/Carpark";
 import dayjs from "dayjs";
 import {
   CreateParkingPayment,
   GetParkingCardByID,
-  GetParkingPaymentByTransactionID,
+  GetParkingPaymentByUsageCardID,
   UpdateParkingCard,
-  UpdateParkingTransaction,
+  UpdateParkingUsageCard,
+  GetParkingUsageCardByID,
+  UpdateZoneDailyByID,
 } from "../../../../../services/https";
 import LOGO from "./../../../../../assets/icon/LOGOS.png";
 import "./../../../Store/StoreAndPay.css";
 import ReceiptCard from "./Receipt";
+import { TaxUserInterface } from "../../../../../interfaces/StoreInterface";
+
+const today = dayjs();
+const dateOnly = today?.format("YYYY-MM-DD"); // เอาแค่วันที่
+const dateWithTime = `${dateOnly}T00:00:00+07:00`;
 
 interface OutProps {
   setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
@@ -57,6 +68,8 @@ interface OutProps {
   carColor: string | undefined;
   setCarMake: React.Dispatch<React.SetStateAction<string | undefined>>;
   carMake: string | undefined;
+  setLoadAfterOutModal: React.Dispatch<React.SetStateAction<boolean>>;
+  loadAfterOutModal: boolean;
 }
 
 const OUT: React.FC<OutProps> = ({
@@ -79,25 +92,29 @@ const OUT: React.FC<OutProps> = ({
   setCarColor,
   carColor,
   setCarMake,
-  carMake,
+  setLoadAfterOutModal,
+  loadAfterOutModal,
 }) => {
-  const [existingTransaction, setExistingTransaction] =
-    useState<ParkingTransactionInterface>();
+  const [existingUsageCard, setExistingUsageCard] =
+    useState<ParkingUsageCardInterface>();
+  const [reservedUsageCard, setReservedUsageCard] =
+    useState<ParkingUsageCardInterface>();
   const [payment, setPayment] = useState<ParkingPaymentInterface>();
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [paymentCompleted, setPaymentCompleted] = useState<boolean>(false);
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [change, setChange] = useState<number>(0);
+  const [netAmount, setNetAmount] = useState<number>(0);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
-  const [haveTax, sethaveTax] = useState(0);
+  const [reload, setReload] = useState(false);
+  const [zoneDaily, setZoneDaily] = useState<ParkingZoneDailyInterface>();
+  const [zone, setZone] = useState<ParkingZoneInterface>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!selectedCard) return;
-
         const rescard = await GetParkingCardByID(selectedCard.ID || "");
         if (rescard.status !== 200) throw new Error("Card not found");
 
@@ -106,20 +123,32 @@ const OUT: React.FC<OutProps> = ({
 
         setSelectedCard(cardData);
 
-        const today = dayjs().startOf("day");
-        const existingTrans = cardData.ParkingTransaction?.find(
-          (transaction: ParkingTransactionInterface) =>
-            (dayjs(transaction.EntryTime).isSame(today, "day") &&
-              !transaction.ExitTime) ||
-            (dayjs(transaction.EntryTime).isBefore(today, "day") &&
-              transaction.ExitTime === null)
+        const Today = dayjs().startOf("day");
+        const existingTrans = cardData.ParkingUsageCard?.find(
+          (usageCard: ParkingUsageCardInterface) => {
+            return (
+              (dayjs(usageCard.EntryTime).isSame(Today, "day") &&
+                !usageCard.ExitTime) || // ถ้าเป็นวันนี้และยังไม่มี ExitTime
+              (dayjs(usageCard.EntryTime).isBefore(Today, "day") &&
+                !usageCard.ExitTime) // ถ้าเป็นวันที่ก่อนหน้านี้และยังไม่มี ExitTime
+            );
+          }
         );
-
-        setExistingTransaction(existingTrans);
-
+        const reservedTrans = rescard.data.ParkingUsageCard?.find(
+          (usageCard: any) =>
+            !usageCard?.IsReservedPass &&
+            usageCard?.ReservationDate === dateWithTime &&
+            rescard.data.ParkingUsageCard?.length > 0 &&
+            rescard.data.IsPermanent
+        );
+        console.log("existingTrans: ", existingTrans);
+        console.log("reservedTrans: ", reservedTrans);
         if (existingTrans) {
           const entryTime = existingTrans.EntryTime || "";
           const exitTime = existingTrans.ExitTime || dayjs().toISOString();
+
+          setExistingUsageCard(existingTrans);
+          setReservedUsageCard(reservedTrans);
 
           try {
             await calculateAmount(entryTime, exitTime);
@@ -127,11 +156,22 @@ const OUT: React.FC<OutProps> = ({
             console.error("Error in calculateAmount:", calcError);
           }
           try {
-            const respayment = await GetParkingPaymentByTransactionID(
+            const respayment = await GetParkingPaymentByUsageCardID(
               existingTrans.ID || 0
             );
             if (respayment.status == 200) {
               setPayment(respayment.data);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+          try {
+            const restran = await GetParkingUsageCardByID(
+              existingTrans.ID || 0
+            );
+            if (restran.status == 200) {
+              setZoneDaily(restran.data.ParkingZoneDaily);
+              setZone(restran.data.ParkingZoneDaily.ParkingZone);
             }
           } catch (error) {
             console.error(error);
@@ -159,8 +199,9 @@ const OUT: React.FC<OutProps> = ({
     setIsModalOutVisible(false);
     setReload(!reload);
     setPaymentCompleted(false);
-    setExistingTransaction(undefined);
+    setExistingUsageCard(undefined);
     setPayment(undefined);
+    setLoadAfterOutModal(!loadAfterOutModal);
   };
 
   const calculateAmount = (entryTime: string, exitTime: string) => {
@@ -178,7 +219,7 @@ const OUT: React.FC<OutProps> = ({
     setPayment((prev) => ({
       ...prev,
       Amount: amount,
-      DiscountAmount: discount,
+      DiscountAmount: (amount * discount) / 100,
       NetAmount: netAmount,
     }));
   };
@@ -191,22 +232,25 @@ const OUT: React.FC<OutProps> = ({
 
     if (paymentMethod === "Cash" || paymentMethod === "QR Payment") {
       if (paymentMethod === "Cash") {
-        if (!cashReceived || cashReceived <= (payment?.NetAmount || 0)) {
+        console.log("cashReceived: ", cashReceived);
+        console.log("payment?.NetAmount: ", payment?.NetAmount);
+        if (!cashReceived || cashReceived < (payment?.NetAmount || 0)) {
           message.error("Insufficient amount received from the customer.");
           return;
         }
       }
-      const imageUrl =
-        fileList.length > 0 ? fileList[0]?.thumbUrl || null : null;
-      if (paymentMethod === "QR Payment") {
-        if (!imageUrl && imageUrl === null && fileList.length === 0) {
-          message.error("Please Upload Slip.");
-          return;
-        }
-      }
-      setChange(cashReceived - (payment?.NetAmount || 0));
 
+      setChange(cashReceived - (payment?.NetAmount || 0));
       setIsLoading(true);
+
+      console.log("payment?.Amount: ", payment?.Amount);
+      console.log("payment?.DiscountAmount: ", payment?.DiscountAmount);
+      console.log("cashReceived: ", cashReceived);
+      console.log("change: ", change);
+      console.log(
+        "cashReceived - (payment?.NetAmount || 0): ",
+        cashReceived - (payment?.NetAmount || 0)
+      );
       try {
         const respay = await CreateParkingPayment({
           PaymentDate: dayjs().toISOString(),
@@ -216,19 +260,22 @@ const OUT: React.FC<OutProps> = ({
           IsCash: paymentMethod === "Cash" ? true : false,
           IsPaid: true,
           CashReceived: cashReceived,
-          Change: change,
-          ParkingTransactionID: existingTransaction?.ID,
-          ParkingCardID: selectedCard?.ID,
+          Change:
+            paymentMethod === "Cash"
+              ? cashReceived - (payment?.NetAmount || 0)
+              : 0,
+          ParkingUsageCardID: existingUsageCard?.ID,
           UserID: Number(localStorage.getItem("id")),
         });
 
         const totalTime = Number(
           dayjs()
-            .diff(dayjs(existingTransaction?.EntryTime), "hour", true)
+            .diff(dayjs(existingUsageCard?.EntryTime), "hour", true)
             .toFixed(2)
         );
 
-        const updateTransactionData = {
+        const updateUsageCardData = {
+          IsReservedPass: true,
           ExitTime: dayjs().toISOString(),
           TotalHourly: totalTime,
           UserID: Number(localStorage.getItem("id")),
@@ -246,19 +293,85 @@ const OUT: React.FC<OutProps> = ({
           TotalHourly: totalTime,
         }));
 
-        const resTrans = await UpdateParkingTransaction(
-          existingTransaction?.ID || 0,
-          updateTransactionData
+        const resTrans = await UpdateParkingUsageCard(
+          existingUsageCard?.ID || 0,
+          updateUsageCardData
         );
 
         const resCard = await UpdateParkingCard(
           selectedCard?.ID || "",
           updateCardData
         );
+
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: ");
+        console.log(
+          "(zoneDaily?.ReservedAvailable: ",
+          zoneDaily?.ReservedAvailable
+        );
+
+        console.log(
+          "existingUsageCard !== undefined: ",
+          existingUsageCard !== undefined
+        );
+        console.log("zoneDaily !== undefined: ", zoneDaily !== undefined);
+        console.log(
+          "existingUsageCard !== undefined && zoneDaily !== undefined: ",
+          existingUsageCard !== undefined && zoneDaily !== undefined
+        );
+        console.log(
+          "max",
+          Math.max(
+            0 /*  ค่าไม่ต่ำกว่า 0  */,
+            ((zoneDaily?.ReservedAvailable || 0) + 1 ||
+              0) /*  ตรวจว่า ReservedAvailable มีค่าหรือไม่ ถ้ามีจะใช้ค่า ReservedAvailable ถ้าไม่มีก็จะใช้ค่า 0 */ ??
+              (zone?.MaxReservedCapacity ||
+                0 -
+                  1) /* ถ้าค่า ReservedAvailable = 0 null undefined จะใช้ค่า MaxReservedCapacity  - 1 */
+          )
+        );
+        console.log(
+          "min",
+          Math.min(
+            zone?.MaxReservedCapacity ||
+              0 /*  ค่าไม่เกิน MaxReservedCapacity  */,
+            (zoneDaily?.ReservedAvailable ||
+              0) /* ตรวจว่า MaxReservedCapacity มีค่าหรือไม่ ถ้าไม่มีก็ใช้ 0 */ ??
+              zone?.MaxReservedCapacity /* ถ้า ReservedAvailable = 0 null undefined ก็จะใช้ MaxReservedCapacity */
+          )
+        );
+
+        const updateZoneDailyData = {
+          ID: zoneDaily?.ID,
+          Date: dateWithTime,
+          AvailableZone:
+            zoneDaily !== undefined
+              ? (zoneDaily?.AvailableZone || 0) + 1
+              : (zone?.MaxCapacity || 0) - 1,
+          ReservedAvailable:
+            reservedUsageCard !== undefined &&
+            (existingUsageCard !== undefined || zoneDaily !== undefined)
+              ? Math.max(
+                  0, // ค่าไม่ต่ำกว่า 0
+                  (zoneDaily?.ReservedAvailable || 0) + 1 // ถ้ามีค่า ReservedAvailable ให้เพิ่ม 1
+                )
+              : existingUsageCard !== undefined || zoneDaily !== undefined
+              ? zoneDaily?.ReservedAvailable || 0 // ถ้ามี existingUsageCard หรือ zoneDaily ใช้ค่า ReservedAvailable เดิม
+              : Math.min(
+                  zone?.MaxReservedCapacity || 0, // ค่าไม่เกิน MaxReservedCapacity
+                  zone?.MaxReservedCapacity || 0 // ถ้าไม่มีค่า ใช้ MaxReservedCapacity
+                ),
+
+          ParkingZoneID: zone?.ID,
+        };
+        const resZoneDaily = await UpdateZoneDailyByID(
+          zoneDaily?.ID || 0,
+          updateZoneDailyData
+        );
         if (
           respay.status === 201 &&
           resTrans.status === 200 &&
-          resCard.status === 200
+          resCard.status === 200 &&
+          resZoneDaily.status === 200
         ) {
           setPaymentCompleted(true);
           message.success(`Payment successful with ${paymentMethod}`);
@@ -275,25 +388,10 @@ const OUT: React.FC<OutProps> = ({
     }
   };
 
-  /***************************    Upload รูปภาพ    ******************************** */
-  const onChangeUpload: UploadProps["onChange"] = ({
-    fileList: newFileList,
-  }) => {
-    setFileList(newFileList);
-  };
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src && file.originFileObj) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as File);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+  /***************************    ใส่จำนวนเงินที่รับจากลูกค้า    ******************************** */
+  const onChangeCashReceived: InputNumberProps["onChange"] = (value) => {
+    setCashReceived(Number(value));
+    console.log("changed", value);
   };
 
   /* 
@@ -321,6 +419,7 @@ const downloadPDF = async () => {
   }
 };
  */
+
   return (
     <>
       <Modal
@@ -342,20 +441,25 @@ const downloadPDF = async () => {
           </div>
         ) : payment && (payment.IsPaid || paymentCompleted === true) ? (
           <ReceiptCard
-            payment={payment}
-            existingTransaction={existingTransaction}
+            existingUsageCard={existingUsageCard}
             selectedCard={selectedCard}
+            setExistingUsageCard={setExistingUsageCard}
           />
         ) : (
           <div /* style={{ padding: "20px" }} */>
             <img
               src={LOGO}
               alt="Parking Service Logo"
-              style={{ width: "120px", marginBottom: "10px", display: "flex", justifyContent: "end" }}
+              style={{
+                width: "120px",
+                marginBottom: "10px",
+                display: "flex",
+                justifyContent: "end",
+              }}
             />
             <Typography.Paragraph>
               <img
-                src={existingTransaction?.Image}
+                src={existingUsageCard?.Image}
                 alt="Car"
                 style={{
                   width: "100px",
@@ -368,13 +472,13 @@ const downloadPDF = async () => {
             </Typography.Paragraph>
             <Typography.Paragraph>
               <strong>License Plate:</strong>{" "}
-              {existingTransaction?.LicensePlate || "N/A"}<br/>
-              <strong>Color:</strong>{" "}
-              {existingTransaction?.Color || "N/A"}<br/>
-              <strong>Make:</strong>{" "}
-              {existingTransaction?.Make || "N/A"}<br/>
+              {existingUsageCard?.LicensePlate || "N/A"}
+              <br />
+              <strong>Color:</strong> {existingUsageCard?.Color || "N/A"}
+              <br />
+              <strong>Make:</strong> {existingUsageCard?.Make || "N/A"}
+              <br />
             </Typography.Paragraph>
-            
 
             <Typography.Title level={4} style={{ marginTop: "20px" }}>
               Select Payment Method
@@ -435,51 +539,35 @@ const downloadPDF = async () => {
                   alt="QR Code for Payment"
                 />
                 <Typography.Paragraph>
-                  Amount: {(payment?.Amount || 0).toFixed(2)} THB
+                  Amount: {(payment?.NetAmount || 0).toFixed(2)} THB
                 </Typography.Paragraph>
                 <Typography.Text
                   style={{ display: "block", marginTop: "10px" }}
                 >
                   Scan this QR Code to complete payment
                 </Typography.Text>
-                <div style={{ marginTop: "16px" }}>
-                  <Upload
-                    fileList={fileList}
-                    onChange={onChangeUpload}
-                    onPreview={onPreview}
-                    beforeUpload={(file) => {
-                      setFileList([...fileList, file]);
-                      return false;
-                    }}
-                  >
-                    <Button icon={<UploadOutlined />}>
-                      Upload Payment Slip
-                    </Button>
-                  </Upload>
-                </div>
               </div>
             )}
             {paymentMethod === "Cash" && (
               <div style={{ marginTop: "16px", textAlign: "center" }}>
-                <input
-                  type="number"
+                <InputNumber
+                  min={payment?.NetAmount}
                   value={cashReceived}
-                  onChange={(e) => setCashReceived(Number(e.target.value))}
+                  onChange={onChangeCashReceived}
                   style={{
                     width: "100%",
-                    padding: "10px",
+                    padding: "3px",
                     marginBottom: "10px",
-                    border: "1px solid #d9d9d9",
                     borderRadius: "4px",
                   }}
                   placeholder="Enter amount"
                 />
                 <Typography.Paragraph>
-                  Amount: {(payment?.Amount || 0).toFixed(2)} THB
+                  Amount: {(payment?.NetAmount || 0).toFixed(2)} THB
                 </Typography.Paragraph>
                 <Typography.Paragraph>
-                  Change: {(cashReceived - (payment?.Amount || 0)).toFixed(2)}{" "}
-                  THB
+                  Change:{" "}
+                  {(cashReceived - (payment?.NetAmount || 0)).toFixed(2)} THB
                 </Typography.Paragraph>
               </div>
             )}

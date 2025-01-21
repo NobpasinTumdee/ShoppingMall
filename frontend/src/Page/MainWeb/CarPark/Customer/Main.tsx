@@ -23,18 +23,13 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { NavBar } from "../../../Component/NavBar";
 import {
   CreateParkingCard,
-  CreateParkingTransaction,
+  CreateParkingUsageCard,
+  CreateParkingZoneDailyAndUsageCard,
   CreateVehicle,
-  CreateZoneDaily,
   GetListCardAndCheckExpiredCardtoUpdate,
   GetListStatusCard,
-  GetListZone,
   GetListZoneDaily,
-  GetParkingCardByUserID,
-  GetUserById,
   GetUserDetails,
-  UpdateParkingCard,
-  UpdateParkingZone,
   UpdateVehicle,
   UpdateZoneDailyByID,
 } from "../../../../services/https";
@@ -56,10 +51,7 @@ const userid = localStorage.getItem("id");
 const today = dayjs();
 
 const CustomerParkingBooking: React.FC = () => {
-  const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(true);
-  const [messageApi, contextHolder] = message.useMessage();
-  const [zones, setZones] = useState<ParkingZoneInterface[]>([]);
   const [listcards, setListCards] = useState<ParkingCardInterface[]>([]);
   const [cards, setCards] = useState<ParkingCardInterface>();
   const [user, setUser] = useState<UsersInterface>();
@@ -70,16 +62,12 @@ const CustomerParkingBooking: React.FC = () => {
   const [selectedZoneDaily, setSelectedZoneDaily] =
     useState<ParkingZoneDailyInterface>();
   const [status, setStatus] = useState<StatusCardInterface[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>();
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs);
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [carLicensePlate, setCarLicensePlate] = useState<string>();
   const [carColor, setCarColor] = useState<string>();
   const [carMake, setCarMake] = useState<string>();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
-    null
-  );
   const imageUrl = fileList[0]?.thumbUrl || null;
   const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
   const [isModalCreateCardVisible, setIsModalCreateCardVisible] =
@@ -89,9 +77,7 @@ const CustomerParkingBooking: React.FC = () => {
   const dateWithTime = `${dateOnly}T00:00:00+07:00`;
 
   useEffect(() => {
-    //fetchAllData();
     fetchUserDetails();
-    console.log("selectedDate: ", selectedDate);
   }, [reload, selectedDate]);
 
   const renderReservedForm = () => (
@@ -185,16 +171,12 @@ const CustomerParkingBooking: React.FC = () => {
 
       if (userdetailRes.status === 200) {
         const { user, vehicle, parkingCard } = userdetailRes.data;
-
         setUser(user);
         setCards(parkingCard);
         setVehicles(vehicle);
         setCarLicensePlate(vehicle.LicensePlate);
         setCarColor(vehicle.Color);
         setCarMake(vehicle.Make);
-        console.log("carLicensePlate: ", vehicle.LicensePlate);
-        console.log("carColor: ", vehicle.Color);
-        console.log("carMake: ", vehicle.Make);
 
         setFileList([
           {
@@ -213,37 +195,17 @@ const CustomerParkingBooking: React.FC = () => {
         // ตรวจสอบสถานะการตอบกลับของ ZoneDaily
         if (listZoneDailyRes.status === 200) {
           setZoneDailyData(listZoneDailyRes.data);
-          const dateofZoneDaily = listZoneDailyRes.data.find(
-            (zoneDaily: any) => {
-              const zoneDate = new Date(zoneDaily.Date)
-                .toISOString()
-                .split("T")[0]; // แปลงเป็นวันที่ในรูปแบบ YYYY-MM-DD
-              const selectedDateStr = selectedDate?.toISOString().split("T")[0]; // แปลง selectedDate เป็นวันที่ในรูปแบบ YYYY-MM-DD
-              return zoneDate === selectedDateStr;
-            }
-          );
+          const zonedaily = listZoneDailyRes.data.find((zoneDaily: any) => {
+            const zoneDate = new Date(zoneDaily.Date)
+              .toISOString()
+              .split("T")[0]; // แปลงเป็นวันที่ในรูปแบบ YYYY-MM-DD
+            const selectedDateStr = selectedDate?.toISOString().split("T")[0]; // แปลง selectedDate เป็นวันที่ในรูปแบบ YYYY-MM-DD
+            return zoneDate === selectedDateStr;
+          });
 
-          // หา zoneDaily ที่ตรงกับ zone ID และ selectedDate
-          const dateZones = parkingCard.ParkingZone.map((zone: any) => {
-            return listZoneDailyRes.data.filter((zoneDaily: any) => {
-              const zoneDate = new Date(zoneDaily.Date)
-                .toISOString()
-                .split("T")[0];
-              const selectedDateStr = selectedDate?.toISOString().split("T")[0];
-              return (
-                zone.ID === zoneDaily.ParkingZoneID &&
-                zoneDate === selectedDateStr
-              );
-            });
-          }).flat();
-
-          console.log("matchingZones:", dateZones);
-
-          if (dateZones.length > 0) {
-            setZoneDailyData(dateZones);
-            setSelectedZoneDaily(dateZones ?? null);
-          } else {
-            setSelectedZoneDaily(dateofZoneDaily ?? null);
+          if (!zonedaily) {
+            setZoneDailyData(zonedaily);
+            setSelectedZoneDaily(zonedaily ?? null);
           }
         } else {
           message.error("Failed to fetch ZoneDaily data.");
@@ -260,46 +222,39 @@ const CustomerParkingBooking: React.FC = () => {
   };
 
   /***************************    สร้างบัตรจอดรถใหม่    ******************************** */
-
+  const [formCreateVehicle] = Form.useForm();
   const handleCreateCardOk = async () => {
-    if (imageUrl === null && fileList.length === 0) {
-      message.error("Please input image!");
-      return;
-    }
-    // ข้อมูลสำหรับสร้าง ParkingCard
-    const newCardData = {
-      ID: (Number(listcards[listcards.length - 1].ID) + 1)
-        .toString()
-        .padStart(4, "0"),
-      IsPermanent: true,
-      UserID: Number(userid),
-      ExpiryDate: new Date(
-        new Date().setFullYear(new Date().getFullYear() + 1)
-      ).toISOString(),
-      StatusCardID: Number(
-        status?.find((state: any) => state.Status === "IN")?.ID || null
-      ),
-    };
-
     try {
-      // สร้าง ParkingCard
+      await formCreateVehicle.validateFields();
+
+      // สร้างข้อมูลสำหรับการสร้างบัตรจอดรถ
+      const newCardData = {
+        ID: (Number(listcards[listcards.length - 1].ID) + 1)
+          .toString()
+          .padStart(4, "0"),
+        IsPermanent: true,
+        UserID: Number(userid),
+        StatusCardID: Number(
+          status?.find((state: any) => state.Status === "IN")?.ID || null
+        ),
+      };
+
       const resCreateCard = await CreateParkingCard(newCardData);
       if (resCreateCard.status === 201) {
         const vehicleData = {
           LicensePlate: carLicensePlate,
-          Image: imageUrl || "",
+          Image: imageUrl === null ? fileList[0].url : imageUrl,
           Color: carColor,
           Make: carMake,
           UserID: Number(userid),
         };
 
         if (cards?.StatusCard?.Status !== "Expired") {
-          // สร้าง Vehicle
           const resCreateVehicle = await CreateVehicle(vehicleData);
           if (resCreateVehicle.status === 201) {
             console.log("Parking card and vehicle created successfully.");
             setIsModalCreateCardVisible(false);
-            setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
+            setReload(!reload);
             message.success("Parking card and vehicle created successfully.");
           } else {
             message.error("Failed to create vehicle.");
@@ -307,26 +262,19 @@ const CustomerParkingBooking: React.FC = () => {
         } else {
           await handleEditCarOk();
           setIsModalCreateCardVisible(false);
-          setReload(!reload); // เปลี่ยนค่า reload เพื่อกระตุ้น useEffect
+          setReload(!reload);
         }
       } else {
         message.error("Failed to create parking card.");
       }
-    } catch (error) {
-      message.error(
-        "An error occurred while creating the parking card and vehicle."
-      );
-      console.error(error);
+    } catch (errorInfo) {
+      // หาก validateFields ล้มเหลวหรือมีข้อผิดพลาดในการสร้าง
+      console.log("Failed to submit form Create Vehicle:", errorInfo);
+      message.error("Please fill in all the required fields.");
     }
   };
 
-  const handleCancel = () => {
-    setSelectedZone(null);
-    setSelectedCardIndex(null);
-    setIsModalEditVisible(false);
-    setIsModalVisible(false);
-    setIsModalCreateCardVisible(false);
-    setUser(user);
+  const handleCreateCardCancle = () => {
     setCarLicensePlate("");
     setCarColor("");
     setCarMake("");
@@ -340,146 +288,142 @@ const CustomerParkingBooking: React.FC = () => {
     ]);
   };
 
+  const handleCancel = () => {
+    setSelectedZone(null);
+    setIsModalEditVisible(false);
+    setIsModalVisible(false);
+    setIsModalCreateCardVisible(false);
+    setUser(user);
+    setReload(!reload);
+  };
+
   const handleZoneClick = (index: any) => {
     setSelectedZone(index === selectedZone ? null : index);
   };
 
-  /***************************    สร้าง Transaction    ******************************** */
+  /***************************    สร้าง UsageCard    ******************************** */
+  const [formReservedParkingLot] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const handlePreOk = async () => {
-    /* if (await checkUserBooking()) {
-      return; // ถ้าผู้ใช้จองแล้วไม่สามารถจองใหม่ได้
-    } */
-    console.log("selectedDate: ", selectedDate);
-    console.log("selectedZone: ", selectedZone);
-    console.log("carLicensePlate: ", carLicensePlate);
-    console.log("carColor: ", carColor);
-    console.log("carMake: ", carMake);
-    console.log("imageUrl: ", imageUrl);
-    console.log("fileList: ", fileList);
-    console.log("fileList.length: ", fileList.length);
+    formReservedParkingLot
+      .validateFields()
+      .then((values) => {
+        console.log("Form Reserved Parking Lot values: ", values);
+        // ดำเนินการยืนยันฟอร์มแรก
+      })
+      .catch((errorInfo) => {
+        console.log("Failed to submit Form Reserved Parking Lot:", errorInfo);
+      });
 
-    if (
-      !selectedDate ||
-      selectedZone == null ||
-      !carLicensePlate ||
-      !carColor ||
-      !carMake ||
-      (imageUrl === null && fileList.length === 0)
-    ) {
-      messageApi.error("Please choose a date or zone.");
+    if (selectedZone === null) {
+      message.error("Please select zone!");
       return;
     }
-
     setIsModalVisible(true);
   };
 
   const handleOk = async () => {
-    // แสดงค่า selectedZone และ selectedDate ใน console เพื่อดีบัก
-    console.log("selectedZone: ", selectedZone);
-    console.log("selectedDate: ", selectedDate);
-
-    // ตรวจสอบว่า selectedZone ถูกเลือกหรือไม่
-    if (selectedZone === undefined || selectedZone === null) {
+    if (selectedZone === void 0 || selectedZone === null) {
       message.error("Selected zone is not valid.");
-      return; // ถ้าไม่ได้เลือก zone ให้หยุดการทำงาน
+      return;
     }
-
-    // ตรวจสอบว่า selectedDate ถูกต้องหรือไม่ (เช็คว่าเป็นวันที่ที่ใช้งานได้)
     if (!selectedDate || isNaN(selectedDate.toDate().getTime())) {
       message.error("Selected date is not valid.");
-      return; // ถ้า selectedDate ไม่ถูกต้องให้หยุดการทำงาน
+      return;
     }
 
     try {
-      // เรียก API เพื่อดึงข้อมูล ZoneDaily ทั้งหมด
-      const listZoneDailyRes = await GetListZoneDaily();
+      console.log("zoneDailyData:", zoneDailyData);
 
-      // ถ้าได้รับข้อมูลจาก API สำเร็จ (status 200)
-      if (listZoneDailyRes.status === 200) {
-        console.log("ListZoneDaily:", listZoneDailyRes.data);
-        setZoneDailyData(listZoneDailyRes.data); // ตั้งค่า zoneDailyData
+      // ตรวจสอบว่า zoneDailyData มีข้อมูลหรือไม่ก่อนที่จะใช้ find()
+      let selectZoneDaily = zoneDailyData?.find((zoneDaily) => {
+        /*         console.log("zoneDaily: ", zoneDaily);
+        console.log("zoneDaily.ParkingZoneID: ", zoneDaily.ParkingZoneID);
+        console.log(
+          "cards?.ParkingZone?.[selectedZone]?.ID: ",
+          cards?.ParkingZone?.[selectedZone]?.ID
+        );
+        console.log(
+          "zoneDaily.ParkingZoneID === cards?.ParkingZone?.[selectedZone]?.ID: ",
+          zoneDaily.ParkingZoneID === cards?.ParkingZone?.[selectedZone]?.ID
+        ); */
+        const zoneDate = zoneDaily.Date
+          ? new Date(zoneDaily.Date).toISOString().split("T")[0]
+          : "";
+        const selectedDateStr = selectedDate?.toISOString().split("T")[0];
+        return (
+          zoneDate === selectedDateStr &&
+          zoneDaily.ParkingZoneID === cards?.ParkingZone?.[selectedZone]?.ID
+        );
+      });
 
-        // หาค่า ParkingZoneDailyID จากข้อมูล ZoneDaily ที่มีอยู่
-        const selectZoneDaily = listZoneDailyRes.data.find((zoneDaily: any) => {
-          const zoneDate = new Date(zoneDaily.Date); // แปลง Date เป็นรูปแบบ Date Object
-
-          // แปลง selectedDate เป็น Date object พร้อมเวลา 00:00:00
-          const selectedDateStart = selectedDate.toDate();
-          selectedDateStart.setHours(0, 0, 0, 0); // ตั้งเวลาเป็น 00:00:00 ของวันเลือก
-
-          // ตั้งเวลา zoneDate ให้เป็นเวลา 00:00:00 เพื่อให้การเปรียบเทียบตรงกัน
-          const zoneDateStart = new Date(zoneDate);
-          zoneDateStart.setHours(0, 0, 0, 0); // ตั้งเวลาเป็น 00:00:00 ของ zoneDate
-
-          // เปรียบเทียบว่า ParkingZoneID กับ selectedZone ตรงกันไหม และ วันที่ตรงกับ selectedDate หรือไม่
-          return (
-            zoneDaily.ParkingZoneID ===
-              cards?.ParkingZone?.[selectedZone]?.ID &&
-            zoneDateStart.getTime() === selectedDateStart.getTime()
-          );
-        });
-
-        // ถ้าไม่พบข้อมูล ZoneDaily ที่ตรงกับ selectedZone และ selectedDate
-        if (!selectZoneDaily) {
-          // สร้างข้อมูล ZoneDaily ใหม่
-          const newZoneDaily = {
-            Date: dateWithTime, // ตั้งวันที่เป็นวันที่ปัจจุบัน
-            AvailableZone: cards?.ParkingZone?.[selectedZone]?.MaxCapacity, // จำนวนที่จอดรถทั้งหมดจาก zone
+      // ถ้าไม่พบ selectZoneDaily จะสร้างใหม่
+      if (!selectZoneDaily) {
+        const combinedData = {
+          ParkingZoneDaily: {
+            Date: dateWithTime,
+            AvailableZone: cards?.ParkingZone?.[selectedZone]?.MaxCapacity,
             ReservedAvailable:
               (cards?.ParkingZone?.[selectedZone]?.MaxReservedCapacity || 0) -
-              1, // จำนวนที่จอดรถที่จองไว้
-            ParkingZoneID: cards?.ParkingZone?.[selectedZone]?.ID, // รหัส Zone ที่เลือก
-          };
+              1,
+            ParkingZoneID: cards?.ParkingZone?.[selectedZone]?.ID,
+          },
+          ParkingUsageCard: {
+            ReservationDate: dateWithTime,
+            IsReservedPass: false,
+            LicensePlate: carLicensePlate,
+            Image: imageUrl === null ? fileList[0].url : imageUrl,
+            Color: carColor,
+            Make: carMake,
+            UserID: Number(userid),
+            ParkingCardID: cards?.ID,
+          },
+        };
 
-          // เรียก API เพื่อสร้าง ZoneDaily ใหม่
-          const response = await CreateZoneDaily(newZoneDaily);
-          if (response.status === 200) {
-            message.success("ZoneDaily created successfully.");
-            setZoneDailyData([...zoneDailyData, response.data]);
-
-            // หลังจากสร้าง ZoneDaily แล้ว จึงทำการสร้างการจองที่จอดรถ
-            createParkingTransaction();
-          }
-        } else {
-          // ถ้าเจอ ZoneDaily ที่ตรงกับ selectedZone และ selectedDate
-          const updatedZoneDaily = {
-            ...selectZoneDaily, // ใช้ข้อมูลเดิมของ ZoneDaily
-            ReservedAvailable: selectZoneDaily.ReservedAvailable - 1,
-          };
-
-          // เรียก API เพื่ออัปเดต ZoneDaily
-          const updateResponse = await UpdateZoneDailyByID(
-            selectZoneDaily.ID,
-            updatedZoneDaily
-          );
-          if (updateResponse.status === 200) {
-            message.success("ZoneDaily updated successfully.");
-            setZoneDailyData((prevData) =>
-              prevData.map((zone) =>
-                zone.ID === selectZoneDaily.ID ? updateResponse.data : zone
-              )
-            ); // อัปเดตข้อมูล ZoneDaily ใน state
-          } else {
-            message.error("Failed to update ZoneDaily.");
-          }
-          createParkingTransaction(); // เรียกฟังก์ชันการจองที่จอดรถ
+        const response = await CreateParkingZoneDailyAndUsageCard(
+          combinedData
+        );
+        if (response.status === 201) {
+          message.success("ZoneDaily and UsageCard created successfully.");
+          handleCancel();
         }
+      } else if (selectZoneDaily) {
+        // ถ้ามีข้อมูลใน selectZoneDaily ทำการอัปเดต
+        const updatedZoneDaily = {
+          ...selectZoneDaily,
+          ReservedAvailable: (selectZoneDaily?.ReservedAvailable || 0) - 1,
+        };
+        const updateResponse = await UpdateZoneDailyByID(
+          selectZoneDaily?.ID || 0,
+          updatedZoneDaily
+        );
+        if (updateResponse.status === 200) {
+          message.success("ZoneDaily updated successfully.");
+        } else {
+          message.error("Failed to update ZoneDaily.");
+        }
+        createParkingUsageCard(selectZoneDaily); // ใช้ selectZoneDaily ต่อไป
+        handleCancel();
       } else {
-        message.error("Failed to fetch ZoneDaily data.");
+        message.error("Zone daily data is not available.");
       }
     } catch (error) {
-      message.error("Error creating transaction.");
+      message.error("Error creating usageCard.");
       console.error("Error:", error);
     }
   };
 
   // ฟังก์ชันสำหรับสร้างการจองที่จอดรถ
-  const createParkingTransaction = async () => {
+  const createParkingUsageCard = async (
+    selectZoneDaily: ParkingZoneDailyInterface | undefined
+  ) => {
     if (!carLicensePlate || !carColor || !carMake) {
       message.error("Please fill in all required fields!");
       return;
     }
+
+    console.log("ฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟฟ:");
+    console.log("selectZoneDaily:", selectZoneDaily);
 
     const CardTransData = {
       ReservationDate: dateWithTime,
@@ -490,14 +434,14 @@ const CustomerParkingBooking: React.FC = () => {
       Make: carMake,
       UserID: Number(userid),
       ParkingCardID: cards?.ID,
-      ParkingZoneDailyID: selectedZoneDaily?.ID,
+      ParkingZoneDailyID: selectZoneDaily?.ID,
     };
 
     try {
-      const resTrans = await CreateParkingTransaction(CardTransData);
+      const resTrans = await CreateParkingUsageCard(CardTransData);
 
       if (resTrans.status === 201) {
-        messageApi.success("Parking booking successful!");
+        message.success("Parking booking successful!");
         setIsModalVisible(false);
         handleCancel();
         setReload(!reload);
@@ -528,12 +472,12 @@ const CustomerParkingBooking: React.FC = () => {
     const res = await UpdateVehicle(Number(userid), updatedVehicle);
     if (res.status == 200) {
       setIsModalEditVisible(false);
-      messageApi.open({
+      message.open({
         type: "success",
         content: res.data.message,
       });
     } else {
-      messageApi.open({
+      message.open({
         type: "error",
         content: res.data.error,
       });
@@ -561,7 +505,7 @@ const CustomerParkingBooking: React.FC = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  /***************************    Choode Date    ******************************** */
+  /***************************    Choose Date    ******************************** */
   const onChangeDatePicker: DatePickerProps["onChange"] = (
     date,
     dateString
@@ -574,7 +518,6 @@ const CustomerParkingBooking: React.FC = () => {
   return (
     <>
       <NavBar />
-      {contextHolder}
       <ConfigProvider
         theme={{
           token: {
@@ -622,9 +565,133 @@ const CustomerParkingBooking: React.FC = () => {
           </h1>
         </Row>
         <div>
-          {loading ? (
+          {loading && !isModalCreateCardVisible ? (
             <p>Loading...</p>
+          ) : isModalCreateCardVisible ? (
+            /**************************     สมัครบัตรจอดรถ     ***************************/
+            <div
+              style={{
+                marginTop: "20px",
+                width: "50%",
+                gap: "16px",
+                justifySelf: "center",
+              }}
+            >
+              <div>
+                The parking card is valid for one year from the date of
+                issuance. It provides access to the parking facility, allowing
+                users to reserve parking spaces easily through the online
+                system.
+              </div>
+              <div className="line-in-modal"></div>
+              <Form layout="horizontal" form={formCreateVehicle}>
+                <div>Please provide details of your car</div>
+                <Form.Item
+                  name="Image"
+                  label="Upload Image"
+                  valuePropName="fileList"
+                  getValueFromEvent={(e) => (e && e.fileList) || []}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please upload an image!",
+                    },
+                  ]}
+                >
+                  <Upload
+                    id="Image"
+                    fileList={fileList}
+                    onChange={onChangeUpload}
+                    onPreview={onPreview}
+                    beforeUpload={(file) => {
+                      setFileList([...fileList, file]);
+                      return false; // ห้ามอัพโหลดไฟล์ทันที
+                    }}
+                    maxCount={1}
+                    multiple={false}
+                    listType="picture-card"
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+                <Form.Item
+                  name="LicensePlate"
+                  label="License Plate"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the license plate!",
+                    },
+                  ]}
+                  className="custom-form-item"
+                >
+                  <Input
+                    value={carLicensePlate}
+                    onChange={(e) => setCarLicensePlate(e.target.value)}
+                    placeholder="Enter license plate"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="CarColor"
+                  label="Car Color"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the car color!",
+                    },
+                  ]}
+                  className="custom-form-item"
+                >
+                  <Input
+                    value={carColor}
+                    onChange={(e) => setCarColor(e.target.value)}
+                    placeholder="Enter car color"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="CarMake"
+                  label="Car Make"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the car make!",
+                    },
+                  ]}
+                  className="custom-form-item"
+                >
+                  <Input
+                    value={carMake}
+                    onChange={(e) => setCarMake(e.target.value)}
+                    placeholder="Enter car make"
+                  />
+                </Form.Item>
+              </Form>
+              <div
+                className="carpark-button-ok-cancle"
+                style={{ marginTop: "20px", textAlign: "center" }}
+              >
+                <div
+                  className="carpark-button-cancle"
+                  onClick={handleCreateCardCancle}
+                  style={{ marginRight: "10px" }}
+                >
+                  Cancel
+                </div>
+                <div
+                  className="carpark-button-ok"
+                  onClick={handleCreateCardOk} // เพิ่มฟังก์ชันการยืนยัน
+                >
+                  Confirm
+                </div>
+              </div>
+            </div>
           ) : (
+            /****************************   จองที่จอดรถ ***************************/
             <div
               style={{
                 justifyItems: "center",
@@ -632,175 +699,176 @@ const CustomerParkingBooking: React.FC = () => {
                 width: "100%",
               }}
             >
-              {/* ส่วน 1: ฟอร์มข้อมูลรถ */}
-              <div>
-                <div style={{ justifySelf: "center" }}>
-                  <DatePicker
-                    id="ReservationDate"
-                    onChange={onChangeDatePicker}
-                    value={selectedDate}
-                  />
-                </div>
-                {cards?.StatusCard?.Status === "IN" &&
-                cards.ParkingTransaction &&
-                cards.ParkingTransaction.some((transaction) => {
-                  const reservationDate = transaction.ReservationDate
-                    ? new Date(transaction.ReservationDate).toLocaleDateString()
-                    : null;
-
-                  const selected = selectedDate
-                    ? selectedDate.toDate().toLocaleDateString()
-                    : null;
-
-                  const isReservedPass = transaction.IsReservedPass === false;
-                  return reservationDate === selected && isReservedPass;
-                }) ? (
-                  renderReservedForm() // แสดงฟอร์มเมื่อเงื่อนไขทั้งหมดตรง
-                ) : (
-                  <div>
-                    <div style={{ width: "auto", justifySelf: "end" }}>
-                      <Button
-                        type="primary"
-                        onClick={() => handleOpenModalEdit()}
-                      >
-                        Edit Car Information
-                      </Button>
-                    </div>
-                    <div
-                      style={{
-                        width: "500px",
-                        justifyItems: "center",
-                        display: "flex",
-                        gap: "16px",
-                      }}
+              <Form
+                layout="horizontal"
+                form={formReservedParkingLot}
+                initialValues={{
+                  LicensePlate: carLicensePlate,
+                  Color: carColor,
+                  Make: carMake,
+                  Image:
+                    fileList.length > 0 && fileList[0]?.url
+                      ? fileList[0].url
+                      : imageUrl,
+                  ReservationDate: dayjs(),
+                }}
+              >
+                <div>
+                  <div style={{ justifySelf: "center" }}>
+                    <Form.Item
+                      label="Reservation Date"
+                      name="ReservationDate"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select a reservation date!",
+                        },
+                      ]}
                     >
-                      {Array.isArray(cards?.ParkingZone) &&
-                        cards?.ParkingZone.map((zone, index) => {
-                          // ก่อนการค้นหา zoneDaily
-                          console.log("Searching for zone:", zone.ID);
-                          console.log(
-                            "Selected Date:",
-                            selectedDate?.toISOString().split("T")[0]
-                          );
+                      <DatePicker
+                        id="ReservationDate"
+                        onChange={onChangeDatePicker}
+                        disabledDate={(current) =>
+                          current && current.isBefore(dayjs(), "day")
+                        } // ไม่ให้เลือกวันที่ในอดีต
+                      />
+                    </Form.Item>
+                  </div>
+                  {cards?.StatusCard?.Status === "IN" &&
+                  cards.ParkingUsageCard &&
+                  cards.ParkingUsageCard.some((usageCard) => {
+                    const reservationDate = usageCard.ReservationDate
+                      ? new Date(
+                          usageCard.ReservationDate
+                        ).toLocaleDateString()
+                      : null;
 
-                          // ค้นหา zoneDaily ที่ตรงกับวันที่
-                          const zoneDaily = zoneDailyData?.find(
-                            (data: ParkingZoneDailyInterface) => {
-                              const isMatchingID =
-                                data.ParkingZone?.ID === zone.ID;
-                              const isMatchingDate = data.Date === dateWithTime;
+                    const selected = selectedDate
+                      ? selectedDate.toDate().toLocaleDateString()
+                      : null;
 
-                              console.log(
-                                "data.ParkingZone?.ID:",
-                                data.ParkingZone?.ID
-                              );
-                              console.log("zone.ID:", zone.ID);
-                              console.log("data.Date:", data.Date);
-                              console.log("dateWithTime:", dateWithTime);
-                              console.log(
-                                "data.ParkingZone?.ID === zone.ID:",
-                                isMatchingID
-                              );
-                              console.log(
-                                "data.Date === selectedDate:",
-                                isMatchingDate
-                              );
-
-                              return isMatchingID && isMatchingDate;
-                            }
-                          );
-
-                          console.log("zoneDaily:", zoneDaily);
-
-                          return (
-                            <Card
-                              hoverable
-                              bordered={false}
-                              key={zone.ID}
-                              style={{
-                                fontSize: "24px", // fontSize ใน Card
-                                width: "70%",
-                                border: "1px solid #d9d9d9",
-                                textAlign: "center",
-                                cursor: "pointer",
-                                transition: "box-shadow 0.3s",
-                                boxShadow:
-                                  selectedZone === index
-                                    ? "0 0 10px rgba(201, 175, 98, 0.5)"
-                                    : "none",
-                              }}
-                              onClick={() => handleZoneClick(index)}
-                              cover={<img src={zone.Image} alt={zone.Name} />}
-                            >
-                              <Row justify={"space-around"}>
-                                <Col>
-                                  <div style={{ textAlign: "left" }}>
-                                    <div
-                                      style={{
-                                        fontSize: "30px", // fontSize สำหรับ zone.Name
-                                      }}
-                                    >
-                                      {zone.Name}
-                                    </div>
-                                    <div
-                                      style={{
-                                        fontFamily: "Dongle, sans-serif",
-                                        fontSize: "16px",
-                                        color: "#757575",
-                                        lineHeight: "1.5",
-                                      }}
-                                    >
-                                      <div>
-                                        Capacity: {zone?.MaxReservedCapacity}
+                    const isReservedPass = usageCard.IsReservedPass === false;
+                    return reservationDate === selected && isReservedPass;
+                  }) ? (
+                    renderReservedForm() // แสดงฟอร์มเมื่อวันที่นั้นถูกจองแล้ว
+                  ) : (
+                    <div>
+                      <div style={{ width: "auto", justifySelf: "end" }}>
+                        <Button
+                          type="primary"
+                          onClick={() => handleOpenModalEdit()}
+                        >
+                          Edit Car Information
+                        </Button>
+                      </div>
+                      <div
+                        style={{
+                          width: "500px",
+                          justifyItems: "center",
+                          display: "flex",
+                          gap: "16px",
+                        }}
+                      >
+                        {Array.isArray(cards?.ParkingZone) &&
+                          cards?.ParkingZone.map((zone, index) => {
+                            // ค้นหา zoneDaily ที่ตรงกับวันที่
+                            const zoneDaily = zoneDailyData?.find(
+                              (data: ParkingZoneDailyInterface) => {
+                                const isMatchingID =
+                                  data.ParkingZone?.ID === zone.ID;
+                                const isMatchingDate =
+                                  data.Date === dateWithTime;
+                                return isMatchingID && isMatchingDate;
+                              }
+                            );
+                            return (
+                              <Card
+                                hoverable
+                                bordered={false}
+                                key={zone.ID}
+                                style={{
+                                  fontSize: "24px", // fontSize ใน Card
+                                  width: "70%",
+                                  border: "1px solid #d9d9d9",
+                                  textAlign: "center",
+                                  cursor: "pointer",
+                                  transition: "box-shadow 0.3s",
+                                  boxShadow:
+                                    selectedZone === index
+                                      ? "0 0 10px rgba(201, 175, 98, 0.5)"
+                                      : "none",
+                                }}
+                                onClick={() => handleZoneClick(index)}
+                                cover={<img src={zone.Image} alt={zone.Name} />}
+                              >
+                                <Row justify={"space-around"}>
+                                  <Col>
+                                    <div style={{ textAlign: "left" }}>
+                                      <div
+                                        style={{
+                                          fontSize: "30px", // fontSize สำหรับ zone.Name
+                                        }}
+                                      >
+                                        {zone.Name}
                                       </div>
-                                      <div>
-                                        Available:{" "}
-                                        {zoneDaily?.ReservedAvailable ??
-                                          zone?.MaxReservedCapacity}
+                                      <div
+                                        style={{
+                                          fontFamily: "Dongle, sans-serif",
+                                          fontSize: "16px",
+                                          color: "#757575",
+                                          lineHeight: "1.5",
+                                        }}
+                                      >
+                                        <div>
+                                          Capacity: {zone?.MaxReservedCapacity}
+                                        </div>
+                                        <div>
+                                          Available:{" "}
+                                          {zoneDaily?.ReservedAvailable ??
+                                            zone?.MaxReservedCapacity}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </Col>
-                                <Col
-                                  style={{
-                                    fontFamily: "Dongle, sans-serif",
-                                    fontSize: "21.6px",
-                                  }}
-                                >
-                                  <Progress
-                                    type="circle"
-                                    strokeColor="#E8D196"
-                                    size={80}
-                                    percent={
-                                      zone.MaxReservedCapacity
-                                        ? ((zoneDaily?.ReservedAvailable ??
-                                            zone?.MaxReservedCapacity) /
-                                            zone.MaxReservedCapacity) *
-                                          100
-                                        : 0
-                                    }
-                                    format={(percent) =>
-                                      `${(percent ?? 0).toFixed(2)}%`
-                                    }
+                                  </Col>
+                                  <Col
                                     style={{
-                                      marginTop: "10px",
+                                      fontFamily: "Dongle, sans-serif",
+                                      fontSize: "21.6px",
                                     }}
-                                  />
-                                </Col>
-                              </Row>
-                            </Card>
-                          );
-                        })}
-                    </div>{" "}
-                    <Row
-                      justify="center"
-                      style={{ marginTop: "25px", width: "100%" }}
-                    >
-                      <Col
-                        span={24}
-                        style={{ maxWidth: "600px", width: "100%" }}
+                                  >
+                                    <Progress
+                                      type="circle"
+                                      strokeColor="#E8D196"
+                                      size={80}
+                                      percent={
+                                        zone.MaxReservedCapacity
+                                          ? ((zoneDaily?.ReservedAvailable ??
+                                              zone?.MaxReservedCapacity) /
+                                              zone.MaxReservedCapacity) *
+                                            100
+                                          : 0
+                                      }
+                                      format={(percent) =>
+                                        `${(percent ?? 0).toFixed(2)}%`
+                                      }
+                                      style={{
+                                        marginTop: "10px",
+                                      }}
+                                    />
+                                  </Col>
+                                </Row>
+                              </Card>
+                            );
+                          })}
+                      </div>{" "}
+                      <Row
+                        justify="center"
+                        style={{ marginTop: "25px", width: "100%" }}
                       >
-                        <Form layout="horizontal" form={form}>
+                        <Col
+                          span={24}
+                          style={{ maxWidth: "600px", width: "100%" }}
+                        >
                           <div>Car Picture</div>
                           <Upload
                             id="Image"
@@ -822,98 +890,69 @@ const CustomerParkingBooking: React.FC = () => {
                             </div>
                           </Upload>
                           <Form.Item
-                            name="LicensePlate"
                             label="License Plate"
+                            name="LicensePlate"
                             rules={[
                               {
                                 required: true,
                                 message: "Please input the license plate!",
                               },
                             ]}
-                            className="custom-form-item"
                           >
-                            <Input
-                              value={carLicensePlate}
-                              defaultValue={carLicensePlate}
-                              onChange={(e) =>
-                                setCarLicensePlate(e.target.value)
-                              }
-                              placeholder="Enter license plate"
-                              disabled
-                            />
+                            <Input id="LicensePlate" disabled />
                           </Form.Item>
+
                           <Form.Item
-                            name="CarColor"
                             label="Car Color"
+                            name="Color"
                             rules={[
                               {
                                 required: true,
                                 message: "Please input the car color!",
                               },
                             ]}
-                            className="custom-form-item"
                           >
-                            <Input
-                              value={carColor}
-                              defaultValue={carColor}
-                              onChange={(e) => setCarColor(e.target.value)}
-                              placeholder="Enter car color"
-                              disabled
-                            />
+                            <Input id="Color" disabled />
                           </Form.Item>
 
                           <Form.Item
-                            name="CarMake"
                             label="Car Make"
+                            name="Make"
                             rules={[
                               {
                                 required: true,
                                 message: "Please input the car make!",
                               },
                             ]}
-                            className="custom-form-item"
                           >
-                            <Input
-                              value={carMake}
-                              defaultValue={carMake}
-                              onChange={(e) => setCarMake(e.target.value)}
-                              placeholder="Enter car make"
-                              disabled
-                            />
+                            <Input id="Make" disabled />
                           </Form.Item>
-                          <Button
-                            type="primary"
+                          <div
+                            className="carpark-confirm-button"
                             onClick={() => handlePreOk()}
-                            block
-                            style={{ marginBottom: "24px" }}
                           >
                             Confirm Reservation
-                          </Button>
-                        </Form>
-                      </Col>
-                    </Row>
-                  </div>
-                )}
-              </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                  )}
+                </div>
+              </Form>
             </div>
           )}{" "}
         </div>
 
         {/**************************     ยืนยันการจอง     ***************************/}
-        <Modal
-          open={isModalVisible}
-          title="Confirm Reservation"
-          onOk={handleOk}
-          onCancel={() => setIsModalVisible(false)}
-        >
+        <Modal open={isModalVisible} title="Confirm Reservation" footer={null}>
           <p>
             <strong>Date:</strong> {dateOnly}
           </p>
-          <QRCode
+          {/* <QRCode
             errorLevel="H"
             value={cards?.ID || ""}
             icon="D:\university\2_2567\SE\ShoppingMall\frontend\src\assets\icon\LOGOS.png"
-          />
+          /> */}
           <p>
             {imageUrl ? (
               <img
@@ -959,96 +998,126 @@ const CustomerParkingBooking: React.FC = () => {
           <p>
             <strong>Car Make:</strong> {carMake}
           </p>
+          <div
+            className="carpark-button-ok-cancle"
+            style={{ marginTop: "20px", textAlign: "center" }}
+          >
+            <div
+              className="carpark-button-cancle"
+              onClick={handleCancel}
+              style={{ marginRight: "10px" }}
+            >
+              Cancel
+            </div>
+            <div
+              className="carpark-button-ok"
+              onClick={handleOk} // เพิ่มฟังก์ชันการยืนยัน
+            >
+              Confirm
+            </div>
+          </div>
         </Modal>
 
         {/**************************     สมัครบัตรจอดรถ     ***************************/}
-        <Modal
+        {/*        <Modal
           open={isModalCreateCardVisible}
           title="Card Registration"
           onOk={handleCreateCardOk}
           onCancel={() => setIsModalVisible(false)}
-        >
-          <div>
-            The parking card is valid for one year from the date of issuance. It
-            provides access to the parking facility, allowing users to reserve
-            parking spaces easily through the online system.
+        > */}
+        {/* {isModalCreateCardVisible && (
+          <div
+            style={{
+              border: "1px solid #d9d9d9",
+              padding: "20px",
+              borderRadius: "8px",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+              marginTop: "20px",
+            }}
+          >
+            <div>
+              The parking card is valid for one year from the date of issuance.
+              It provides access to the parking facility, allowing users to
+              reserve parking spaces easily through the online system.
+            </div>
+            <div className="line-in-modal"></div>
+            <Form layout="horizontal" form={form}>
+              <div>Please provide details of your car</div>
+              <Upload
+                id="Image"
+                fileList={fileList}
+                onChange={onChangeUpload}
+                onPreview={onPreview}
+                beforeUpload={(file) => {
+                  setFileList([...fileList, file]);
+                  return false;
+                }}
+                maxCount={1}
+                multiple={false}
+                listType="picture-card"
+              >
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              </Upload>
+              <Form.Item
+                name="LicensePlate"
+                label="License Plate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the license plate!",
+                  },
+                ]}
+                className="custom-form-item"
+              >
+                <Input
+                  value={carLicensePlate}
+                  onChange={(e) => setCarLicensePlate(e.target.value)}
+                  placeholder="Enter license plate"
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="CarColor"
+                label="Car Color"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the car color!",
+                  },
+                ]}
+                className="custom-form-item"
+              >
+                <Input
+                  value={carColor}
+                  onChange={(e) => setCarColor(e.target.value)}
+                  placeholder="Enter car color"
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="CarMake"
+                label="Car Make"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the car make!",
+                  },
+                ]}
+                className="custom-form-item"
+              >
+                <Input
+                  value={carMake}
+                  onChange={(e) => setCarMake(e.target.value)}
+                  placeholder="Enter car make"
+                />
+              </Form.Item>
+            </Form>
           </div>
-          <div className="line-in-modal"></div>
-          <Form layout="horizontal" form={form}>
-            <div>Please provide details of your car</div>
-            <Upload
-              id="Image"
-              fileList={fileList}
-              onChange={onChangeUpload}
-              onPreview={onPreview}
-              beforeUpload={(file) => {
-                setFileList([...fileList, file]);
-                return false;
-              }}
-              maxCount={1}
-              multiple={false}
-              listType="picture-card"
-            >
-              <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
-            <Form.Item
-              name="LicensePlate"
-              label="License Plate"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the license plate!",
-                },
-              ]}
-              className="custom-form-item"
-            >
-              <Input
-                value={carLicensePlate}
-                onChange={(e) => setCarLicensePlate(e.target.value)}
-                placeholder="Enter license plate"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="CarColor"
-              label="Car Color"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the car color!",
-                },
-              ]}
-              className="custom-form-item"
-            >
-              <Input
-                value={carColor}
-                onChange={(e) => setCarColor(e.target.value)}
-                placeholder="Enter car color"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="CarMake"
-              label="Car Make"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the car make!",
-                },
-              ]}
-              className="custom-form-item"
-            >
-              <Input
-                value={carMake}
-                onChange={(e) => setCarMake(e.target.value)}
-                placeholder="Enter car make"
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+        )} */}
+        {/* </Modal> */}
 
         {/****************************   แก้ไขข้อมูลรถ   ********************************/}
         <Modal
@@ -1056,8 +1125,7 @@ const CustomerParkingBooking: React.FC = () => {
           open={isModalEditVisible}
           onOk={handleEditCarOk}
           onCancel={handleCancel}
-          okText="Save"
-          cancelText="Cancel"
+          footer={null}
         >
           <Form form={formEditCar} layout="vertical">
             <div>Car Picture</div>
@@ -1133,6 +1201,24 @@ const CustomerParkingBooking: React.FC = () => {
                 placeholder="Enter car make"
               />
             </Form.Item>
+            <div
+              className="carpark-button-ok-cancle"
+              style={{ marginTop: "20px", textAlign: "center" }}
+            >
+              <div
+                className="carpark-button-cancle"
+                onClick={handleCancel}
+                style={{ marginRight: "10px" }}
+              >
+                Cancel
+              </div>
+              <div
+                className="carpark-button-ok"
+                onClick={handleEditCarOk} // เพิ่มฟังก์ชันการยืนยัน
+              >
+                Confirm
+              </div>
+            </div>
           </Form>
         </Modal>
       </ConfigProvider>
@@ -1182,10 +1268,10 @@ export default CustomerParkingBooking;
   }; */
 /*   const GetZone = async () => {
     try {
-      const typePark = cards?.TypePark?.Type ? cards.TypePark.Type : "No Type Found";
-      console.log("typePark:", typePark);      
-      const res = await GetZoneByTypePark(typePark || "");
-      //const res = await GetZoneByTypePark(getTypeParkByStatus());
+      const typeCard = cards?.TypeCard?.Type ? cards.TypeCard.Type : "No Type Found";
+      console.log("typeCard:", typeCard);      
+      const res = await GetZoneByTypeCard(typeCard || "");
+      //const res = await GetZoneByTypeCard(getTypeCardByStatus());
       if (res.status === 200) {
         localStorage.setItem("zoneid", res.data.ID);
         setZones(res.data);

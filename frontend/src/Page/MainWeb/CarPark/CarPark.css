@@ -8,7 +8,7 @@
   font-family: "Dongle", sans-serif;
   font-size: 80px;
   font-weight: 700;
-  color: #c9af62;
+  color: #b0946f;
   /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */ /* เงาของข้อความ */
   line-height: 70px;
 }
@@ -118,101 +118,310 @@
   justify-self: center;
 }
 
+.custom-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #fbe8af;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #e0d8b0;
+}
+
+.display-table {
+  width: max-content;
+  justify-self: center;
+}
+.carpark-button-status {
+  background-color: rgb(251, 232, 175);
+  border-radius: 8px;
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 78px;
+  height: 4vh;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.carpark-button-status.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.carpark-button-status img {
+  height: 24px;
+  width: 24px;
+  margin-right: 8px;
+}
+
+.carpark-button-status p {
+  font-family: "Dongle", sans-serif;
+  color: #000;
+  font-size: 22px;
+  line-height: 0px;
+}
+
+.carpark-button-history {
+  color: #e7c56f;
+  cursor: pointer;
+}
+
+.carpark-button-reset {
+  color: #e7c56f;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #e7c56f;
+  border-radius: 8px;
+  padding: 0px 10px;
+  cursor: pointer;
+  background-color: white;
+  margin-top: 5%;
+}
+
+.carpark-button-reset.active {
+  background-color: #e7c56f;
+  color: white;
+}
+
+.carpark-button-reset.disabled {
+  color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  background-color: #f9f9f9;
+}
+
+
+/***************************************  Customer  ***********************************************/
+.carpark-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.carpark-title {
+  font-family: "Dongle", sans-serif;
+  font-size: 80px;
+  font-weight: 400;
+  color: #62501a;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  line-height: 70px;
+}
+
+.carpark-route {
+  font-family: "Dongle", sans-serif;
+  font-size: 18px;
+  color: #000;
+  margin-top: 10px;
+}
+
+.carpark-card {
+  font-size: 24px;
+  width: 70%;
+  border: 1px solid #d9d9d9;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.carpark-card.selected {
+  box-shadow: 0 0 10px rgba(201, 175, 98, 0.5);
+}
+
+.carpark-button-ok-cancle {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+
+.carpark-button-ok {
+  font-family: "Dongle", sans-serif;
+  background-color: #c9af62;
+  color: #000;
+  border-radius: 8px;
+  padding: 0px 20px;
+  font-size: 22px;
+  justify-items: center;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.carpark-button-cancle {
+  font-family: "Dongle", sans-serif;
+  background-color: #ffffff;
+  color: #c9af62;
+  border-color: #c9af62;
+  border-radius: 8px;
+  padding: 0px 20px;
+  font-size: 22px;
+  justify-self: end;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.carpark-confirm-button {
+  font-family: "Dongle", sans-serif;
+  background-color: #c9af62;
+  color: #000;
+  line-height: 60%;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 28px;
+  text-align: center; /* ทำให้ข้อความอยู่ตรงกลาง */
+  width: auto; /* ให้ความกว้างของปุ่มเป็นอัตโนมัติ */
+  height: fit-content;
+  margin: 0 auto; /* กำหนดให้ปุ่มอยู่ตรงกลาง */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* ทำให้การเปลี่ยนแปลงนุ่มนวล */
+  cursor: pointer; /* ทำให้เมาส์กลายเป็นมือเมื่อเลื่อนมาเหนือปุ่ม */
+}
+.carpark-confirm-button:active {
+  /* เมื่อคลิกปุ่ม */
+  transform: scale(0.95); /* ลดขนาดของปุ่มเมื่อกด */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* เพิ่มเงาขณะกดปุ่ม */
+}
+
+.carpark-form-item {
+  font-family: "Dongle", sans-serif;
+  font-size: 16px;
+}
+
+.carpark-upload .ant-upload-list-item {
+  border: 1px solid #d9d9d9;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.carpark-upload .ant-upload-select {
+  font-family: "Dongle", sans-serif;
+  font-size: 18px;
+}
+
 /***************************************  Payment  ***********************************************/
-.RE {
+/* .RE {
   width: 100%;
   text-align: center;
   color: #c9af62;
-}
+} */
 
+/* ปรับแต่งส่วนที่อยู่ใน SlipCard */
 .SlipCard {
-  /*   position: relative;
-  top: 50%;
-  left: 50%; */
-  /* transform: translate(-50%, -50%);  Ensure it's centered */
-  width: 500px;
-  /* max-height: 90vh; */ /* Limit the height */
-  box-shadow: 0 0 5px #00000052;
-  border-radius: 5px;
+  width: 600px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   padding: 20px;
-  overflow-y: auto; /* Allow scrolling if content overflows */
-  animation: SlipCard 0.8s ease-in-out;
+  margin: 20px auto;
+  background-color: #fff;
+  animation: slipCardAnimation 0.8s ease-in-out;
 }
 
-@keyframes SlipCard {
+/* ใส่การเลื่อนของ SlipCard */
+@keyframes slipCardAnimation {
   0% {
-    top: 160%;
+    transform: translateY(100%);
     opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
+/* ปรับขนาดของโลโก้ */
 .SlipCard img {
   width: 150px;
-  /*   position: ;
-  top: 10px; */
-  right: 0;
+  margin-bottom: 15px;
 }
 
+/* ส่วนหัวของ SlipCard */
 .SlipCard h1 {
   font-size: 24px;
-  margin-bottom: 35px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.AdressCard {
-  transform: translateY(-20px);
-}
-
-.Adress2Card {
-  transform: translateY(-40px);
-}
-
-.P1Card {
-  font-weight: 900;
-  transform: translateY(20px);
-}
-
-.TransactionInfo {
-  font-size: 13px;
-  line-height: 2px;
-  transform: translateY(-40px);
-}
-
-.listpayment1Card {
-  line-height: 0px;
-  transform: translateY(-40px);
-}
-
-.SublistCard {
-  line-height: 0px;
-  text-align: left;
+/* จัดตำแหน่งของข้อความ */
+.SlipCard p {
   font-size: 14px;
+  color: #333;
+  margin: 5px 0;
+  line-height: 1.5;
 }
 
+/* ปรับให้ส่วนการแสดงข้อมูลใน AddressCard ยืดหยุ่น */
+.AdressCard {
+  margin-bottom: 20px;
+}
+
+/* เส้นแบ่งระหว่างข้อมูล */
+.carpark-divider {
+  margin: 15px 0;
+  border-top: 1px solid #ddd;
+}
+
+/* ให้ส่วนข้อความ IN และ OUT อยู่ในบรรทัดเดียวกัน */
+.carpark-same-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carpark-same-line p {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+}
+
+/* ส่วนของจำนวนเงิน */
 .TotalAllCard {
   display: flex;
   justify-content: space-between;
-  transform: translateY(-80px);
-  font-size: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.TotalAllCard p {
+  margin: 0;
 }
 
 .bottoninfoCard {
-  font-size: 10px;
-  position: relative;
-  bottom: 20px;
-}
-
-.backtopaymentCard {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  cursor: pointer;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 30px;
+  font-weight: bold;
+  color: #c9af62;
 }
 
 .PaymentMethodCard {
   display: flex;
   justify-content: space-between;
-  transform: translateY(-50px);
   font-size: 16px;
+  margin-top: 20px;
+}
+
+/* สำหรับข้อมูลการชำระเงิน */
+.carpark-payment-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.carpark-payment-info p {
+  margin: 0;
+  font-weight: 600;
 }
 
 /* .sub-title {

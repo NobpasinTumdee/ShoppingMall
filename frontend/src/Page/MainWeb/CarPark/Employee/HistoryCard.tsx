@@ -13,9 +13,13 @@ import {
 import {
   ParkingCardInterface,
   ParkingPaymentInterface,
-  ParkingTransactionInterface,
+  ParkingUsageCardInterface,
 } from "../../../../interfaces/Carpark";
-import { GetParkingCardByID, GetParkingPaymentByTransactionID } from "../../../../services/https"; // ฟังก์ชันที่ใช้ดึงข้อมูลการ์ดและประวัติ
+import { UsersInterface } from "./../../../../interfaces/UsersInterface";
+import {
+  GetParkingCardByID,
+  GetParkingPaymentByUsageCardID,
+} from "../../../../services/https"; // ฟังก์ชันที่ใช้ดึงข้อมูลการ์ดและประวัติ
 import { NavBar } from "../../../Component/NavBar";
 import "./../CarPark.css";
 import { Link } from "react-router-dom";
@@ -24,26 +28,42 @@ import { useNavigate } from "react-router-dom";
 const HistoryCard: React.FC = () => {
   const cardID = localStorage.getItem("CardParkID"); // ดึง cardID จาก localStorage
   const [card, setCard] = useState<ParkingCardInterface | null>(null);
-  const [transactions, setTransactions] = useState<
-    ParkingTransactionInterface[]
+  const [usageCards, setUsageCards] = useState<
+    ParkingUsageCardInterface[]
   >([]);
-  const [payment, setPayment] = useState<
-    ParkingPaymentInterface[]
-  >([]);
+  const [existingUsageCard, setExistingUsageCard] =
+    useState<ParkingUsageCardInterface>();
+  const [user, setUser] = useState<UsersInterface | null>(null); // New state for user
+  const [payment, setPayment] = useState<ParkingPaymentInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("cardID", cardID);
     const fetchCardData = async () => {
       try {
         const res = await GetParkingCardByID(cardID || ""); // ดึงข้อมูลการ์ดและประวัติการเข้าออก
         if (res.status === 200) {
           setCard(res.data);
-          setTransactions(res.data.ParkingTransaction);
-          setPayment(res.data.ParkingPayment);
+          setUsageCards(res.data.ParkingUsageCard);
+
+          // ดึงข้อมูลการชำระเงินสำหรับทุก UsageCardID
+          const paymentPromises = res.data.ParkingUsageCard.map(
+            (usageCard: ParkingUsageCardInterface) =>
+              GetParkingPaymentByUsageCardID(usageCard.ID || 0)
+          );
+
+          const paymentResponses = await Promise.all(paymentPromises);
+
+          // ตรวจสอบและตั้งค่า payment data
+          const payments = paymentResponses
+            .filter((resp) => resp.status === 200)
+            .map((resp) => resp.data);
+
+          setPayment(payments.flat()); // รวมข้อมูล payment ทั้งหมด
+
+          setUser(res.data.User);
         } else {
           message.error("Failed to fetch parking card data.");
         }
@@ -122,30 +142,15 @@ const HistoryCard: React.FC = () => {
       key: "ExitTime",
       render: (text: string) => (text ? formatDate(text) : " "),
     },
-    {
-      title: "Amount",
-      dataIndex: "Amount",
-      key: "Amount",
-      render: (_: any, record: ParkingTransactionInterface) => {
-        const paymentData = payment?.find((pay) => pay.ParkingTransactionID === record.ID);
-        return paymentData ? paymentData.Amount : "N/A";
-      },
-    },
-    {
-      title: "Discount",
-      dataIndex: "DiscountAmount",
-      key: "DiscountAmount",
-      render: (_: any, record: ParkingTransactionInterface) => {
-        const paymentData = payment?.find((pay) => pay.ParkingTransactionID === record.ID);
-        return paymentData ? paymentData.DiscountAmount : "N/A";
-      },
-    },
+
     {
       title: "Net Amount",
       dataIndex: "NetAmount",
       key: "NetAmount",
-      render: (_: any, record: ParkingTransactionInterface) => {
-        const paymentData = payment?.find((pay) => pay.ParkingTransactionID === record.ID);
+      render: (_: any, record: ParkingUsageCardInterface) => {
+        const paymentData = payment?.find(
+          (pay) => pay.ParkingUsageCardID === record.ID
+        );
         return paymentData ? paymentData.NetAmount : "N/A";
       },
     },
@@ -154,37 +159,42 @@ const HistoryCard: React.FC = () => {
       dataIndex: "Bill",
       key: "Bill",
       fixed: "right" as const,
-      render: (_: any, record: ParkingPaymentInterface) => (
-        <Button onClick={() => handleBillClick(record)}>Bill</Button>
-      ),
-    }
+      render: (_: any, record: ParkingUsageCardInterface) => {
+        const paymentData = payment?.find(
+          (pay) => pay.ParkingUsageCardID === record.ID
+        );
+        return (
+          <div
+            className={`carpark-button-reset ${
+              !paymentData?.IsPaid ? "disabled" : ""
+            }`}
+            onClick={() => {
+              if (paymentData?.IsPaid) {
+                handleBillClick(record);
+              }
+            }}
+          >
+            Bill
+          </div>
+        );
+      },
+    },
   ];
 
-  const handleBillClick = async (record: ParkingTransactionInterface) => {
+  const handleBillClick = async (record: ParkingUsageCardInterface) => {
     try {
-      // ดึงข้อมูลการชำระเงินจาก Transaction ID
-      const respayment = await GetParkingPaymentByTransactionID(record.ID || 0);
-      if (respayment.status === 200) {
-        const paymentData = respayment.data; // ข้อมูลการชำระเงินที่ดึงมา
-  
-        // นำข้อมูลไปยังหน้าถัดไป
-        navigate("/CarPark/HistoryCard/Receipt", {
-          state: {
-            payment: paymentData, 
-            selectedCard: record, 
-            existingTransaction: record, 
-          },
-        });
-      } else {
-        message.error("Failed to fetch payment details.");
-      }
+      // นำข้อมูลไปยังหน้าถัดไป
+      navigate("/CarPark/HistoryCard/Receipt", {
+        state: {
+          selectedCard: record,
+          existingUsageCard: record,
+        },
+      });
     } catch (error) {
       console.error("Error fetching payment details:", error);
       message.error("Error fetching payment details.");
     }
   };
-  
-
 
   return (
     <>
@@ -228,21 +238,26 @@ const HistoryCard: React.FC = () => {
                 style={{ marginBottom: 10 }}
               >
                 <Row>
-                  <Col span={12}>
-                    <p style={{ marginTop: 10, lineHeight: 0.7 }}>
-                      Card Type: {card?.TypePark?.Type || " "}
+                  <Col span={18} style={{ lineHeight: 0.7 }}>
+                    <p style={{ marginTop: 10 }}>
+                      Card Type: {card?.TypeCard?.Type || " "}
                     </p>
-                    <p style={{ lineHeight: 0.7 }}>
-                      Status: {card?.StatusCard?.Status}
+                    <p>Status: {card?.StatusCard?.Status}</p>
+                    <p>Expiry Date: {formatDate(card?.ExpiryDate || "")}</p>
+                  </Col>
+                  <Col span={6} style={{ lineHeight: 0.7 }}>
+                    <p>
+                      Name: {user?.FirstName}
+                      {""}
+                      {user?.LastName}
                     </p>
-                    <p style={{ lineHeight: 0.7 }}>
-                      Expiry Date: {formatDate(card?.ExpiryDate || "")}
-                    </p>
+                    <p>Email: {user?.Email}</p>
+                    <p>Phone: {user?.Tel}</p>
                   </Col>
                 </Row>
                 <Table
                   columns={columns}
-                  dataSource={transactions || payment}
+                  dataSource={usageCards || payment}
                   rowKey="ID"
                   pagination={false}
                   loading={loading}

@@ -18,23 +18,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   UserOutlined,
-  CloseCircleOutlined,
-  CloseOutlined,
-  CloseSquareOutlined,
   DeleteOutlined,
-  DatabaseOutlined,
-  CreditCardOutlined,
 } from "@ant-design/icons";
 import {
   DeleteParkingCard,
   GetListCardAndCheckExpiredCardtoUpdate,
   GetListStatusCard,
-  GetParkingCardByID,
 } from "./../../../../services/https";
 import {
   ParkingCardInterface,
-  ParkingFeePolicyInterface,
-  ParkingTransactionInterface,
   StatusCardInterface,
 } from "./../../../../interfaces/Carpark";
 import "./../CarPark.css";
@@ -58,7 +50,6 @@ const dateWithTime = `${dateOnly}T00:00:00+07:00`;
 
 const CarPark: React.FC = () => {
   const [cards, setCards] = useState<ParkingCardInterface[]>([]);
-  const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedButtonInOutDefault, setSelectedButtonInOutDefault] =
@@ -75,12 +66,11 @@ const CarPark: React.FC = () => {
   const [isModalInVisible, setIsModalInVisible] = useState<boolean>(false);
   const [isModalOutVisible, setIsModalOutVisible] = useState<boolean>(false);
   const [isAddCardModalVisible, setIsAddCardModalVisible] = useState(false);
-  const [data, setData] = useState("No result");
-  const [isCameraActive, setIsCameraActive] = useState<boolean>(true);
   const [carLicensePlate, setCarLicensePlate] = useState("");
   const [carColor, setCarColor] = useState<string>();
   const [carMake, setCarMake] = useState<string>();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [reload, setReload] = useState(false);
+  const [loadAfterOutModal, setLoadAfterOutModal] = useState(false);
 
   const columns = [
     { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
@@ -88,7 +78,7 @@ const CarPark: React.FC = () => {
       title: "Card Type",
       key: "cardType",
       render: (_: any, record: any) => {
-        const cardType = record.TypePark?.Type || "";
+        const cardType = record.TypeCard?.Type || "";
         const cardStatus =
           record.IsPermanent === true ? "Permanent" : "Temporary";
         return `${cardType} , ${cardStatus}`;
@@ -99,7 +89,9 @@ const CarPark: React.FC = () => {
       dataIndex: "ExpiryDate",
       key: "ExpiryDate",
       render: (_: any, record: any) =>
-         (record.ExpiryDate !== null) ? formatDate(new Date(record.ExpiryDate)) : "-",
+        record.ExpiryDate !== null
+          ? formatDate(new Date(record.ExpiryDate))
+          : "-",
     },
     {
       title: "Manage Card",
@@ -109,10 +101,10 @@ const CarPark: React.FC = () => {
         const isExpired = !!(
           record.ExpiryDate && new Date(record.ExpiryDate) < new Date()
         );
-    
+
         let iconSrc;
         let statusText;
-    
+
         switch (record.StatusCard?.Status) {
           case "IN":
             iconSrc = carIn;
@@ -130,40 +122,32 @@ const CarPark: React.FC = () => {
             iconSrc = carIn;
             statusText = "IN";
         }
-    
+
         return (
-          <Button
-            type="primary"
-            onClick={() =>
-              handleStatusClick(record.StatusCard?.Status || "", record)
-            }
-            disabled={isExpired}
-            style={{
-              backgroundColor: isExpired ? '#ccc' : '#fbe8af', // สีพื้นหลัง
-              padding: '10px',
-            }}
-          >
-            <img
-              src={iconSrc}
-              alt={statusText}
+          <div className="display-table">
+            <div
+              className={`carpark-button-status ${isExpired ? "disabled" : ""}`}
+              onClick={() =>
+                handleStatusClick(record.StatusCard?.Status || "", record)
+              }
               style={{
-                width: '24px', // ขนาดไอคอน
-                height: '24px',
-                marginRight: '8px',
+                backgroundColor: isExpired ? "#ccc" : "#fbe8af", // สีพื้นหลัง
               }}
-            />
-            {statusText}
-          </Button>
+            >
+              <img src={iconSrc} alt={statusText} />
+              <p>{statusText}</p>
+            </div>
+          </div>
         );
       },
-    },   
+    },
     {
       title: "History",
       key: "history",
       fixed: "right" as const,
       render: (_: any, record: ParkingCardInterface) => (
-        <Link to="/CarPark/HistoryCard">
-          <Button onClick={() => handleHistoryClick(record)}>History</Button>
+        <Link to="/CarPark/HistoryCard" className="carpark-button-history">
+          <div onClick={() => handleHistoryClick(record)}>History</div>
         </Link>
       ),
     },
@@ -182,174 +166,11 @@ const CarPark: React.FC = () => {
     },
   ];
 
-  // Columns สำหรับ Car OUT
-  /*   const columnsCarOut = [
-    { title: "ID CARD", dataIndex: "ID", key: "ID", fixed: "left" as const },
-    {
-      title: "Image Car",
-      dataIndex: "Image",
-      key: "Image",
-      render: (_: any, record: any) => {
-        const latestTransaction = record.ParkingTransaction?.sort(
-          (a: any, b: any) =>
-            new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
-        )[0];
-
-        return latestTransaction?.Image ? (
-          <img
-            src={latestTransaction.Image}
-            alt="Car"
-            style={{ width: "100px", height: "60px", objectFit: "cover" }}
-          />
-        ) : (
-          ""
-        );
-      },
-    },
-    {
-      title: "Card Type",
-      key: "TypePark.Type",
-      render: (_: any, record: any) => record.TypePark?.Type || " ",
-    },
-    {
-      title: "ExpiryDate",
-      dataIndex: "ExpiryDate",
-      key: "ExpiryDate",
-      render: (_: any, record: any) =>
-        formatDate(new Date(record.ExpiryDate)) || "",
-    },
-    {
-      title: "License Plate",
-      dataIndex: "ParkingTransaction.LicensePlate",
-      key: "LicensePlate",
-      render: (_: any, record: any) => {
-        const latestTransaction = record.ParkingTransaction?.sort(
-          (a: any, b: any) =>
-            new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
-        )[0];
-        return latestTransaction?.LicensePlate || "";
-      },
-    },
-    {
-      title: "Car Color",
-      dataIndex: "ParkingTransaction.Color",
-      key: "Color",
-      render: (_: any, record: any) => {
-        const latestTransaction = record.ParkingTransaction?.sort(
-          (a: any, b: any) =>
-            new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
-        )[0];
-        return latestTransaction?.Color || "";
-      },
-    },
-    {
-      title: "Car Make",
-      dataIndex: "ParkingTransaction.Make",
-      key: "Make",
-      render: (_: any, record: any) => {
-        const latestTransaction = record.ParkingTransaction?.sort(
-          (a: any, b: any) =>
-            new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
-        )[0];
-        return latestTransaction?.Make || "";
-      },
-    },
-    {
-      title: "EntryTime",
-      dataIndex: "ParkingTransaction.EntryTime",
-      key: "EntryTime",
-      render: (_: any, record: any) => {
-        const parkingTransactions = record.ParkingTransaction || [];
-        const latestTransaction =
-          parkingTransactions.length > 0
-            ? parkingTransactions.sort(
-                (a: any, b: any) =>
-                  new Date(b.EntryTime).getTime() -
-                  new Date(a.EntryTime).getTime()
-              )[0]
-            : null;
-
-        const entryTime = latestTransaction?.EntryTime;
-        return entryTime ? formatDate(new Date(entryTime)) : "";
-      },
-    },
-    {
-      title: "Hourly Rate",
-      dataIndex: "ParkingTransaction.Hourly_Rate",
-      key: "Hourly_rate",
-      render: (_: any, record: any) => {
-        const latestTransaction = record.ParkingTransaction?.sort(
-          (a: any, b: any) =>
-            new Date(b.EntryTime).getTime() - new Date(a.EntryTime).getTime()
-        )[0];
-
-        if (latestTransaction?.EntryTime) {
-          const entryTime = new Date(latestTransaction.EntryTime);
-          const hours = calculateHourlyRate(entryTime);
-          return `${hours} Hour${hours > 1 ? "s" : ""}`;
-        }
-        return "";
-      },
-    },
-    {
-      title: "Status",
-      key: "StatusCard.Status",
-      fixed: "right" as const,
-      render: (_: any, record: ParkingCardInterface) => {
-        const isExpired =
-          record.ExpiryDate && new Date(record.ExpiryDate) < new Date()
-            ? true
-            : false;
-
-        return (
-          <Button
-            type="primary"
-            onClick={() =>
-              handleStatusClick(record.StatusCard?.Status || "", record)
-            }
-            disabled={isExpired}
-          >
-            {record.StatusCard?.Status === "IN"
-              ? "IN"
-              : record.StatusCard?.Status === "OUT"
-              ? "OUT"
-              : record.StatusCard?.Status === "Expired"
-              ? "Expired"
-              : "IN"}
-          </Button>
-        );
-      },
-    },
-    {
-      title: "History",
-      key: "history",
-      fixed: "right" as const,
-      render: (_: any, record: ParkingCardInterface) => (
-        <Link to="/CarPark/HistoryCard">
-          <Button onClick={() => handleHistoryClick(record)}>History</Button>
-        </Link>
-      ),
-    },
-    {
-      title: "",
-      key: "delete",
-      fixed: "right" as const,
-      render: (_: any, record: ParkingCardInterface) => (
-        <Popconfirm
-          title="Sure to delete?"
-          onConfirm={() => handleDeleteCard(record.ID || "")}
-        >
-          <DeleteOutlined />
-        </Popconfirm>
-      ),
-    },
-  ]; */
-
   useEffect(() => {
-    console.log("useEffect called");
     getParkingCards();
     getStatus();
-  }, []);
+    console.log("loadAfterOutModal: ",loadAfterOutModal);
+  }, [reload, loadAfterOutModal]);
 
   const getParkingCards = async () => {
     setLoading(true);
@@ -358,19 +179,19 @@ const CarPark: React.FC = () => {
       if (resCard.status === 200) {
         const data = resCard.data;
         setCards(data);
-        console.log("card: ", data);
 
         setSelectedButtonInOutDefault("IN");
         const filtered = data.filter(
           (card: any) => card.StatusCard?.Status === "IN"
         );
         setFilteredData(filtered);
+
       } else {
-        messageApi.error("Failed to fetch parking cards.");
+        message.error("Failed to fetch parking cards.");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      messageApi.error("An error occurred while fetching data.");
+      message.error("An error occurred while fetching data.");
     } finally {
       setLoading(false);
     }
@@ -384,19 +205,18 @@ const CarPark: React.FC = () => {
         const data = response.data;
         setStatus(data);
       } else {
-        messageApi.error("Failed to fetch status card.");
+        message.error("Failed to fetch status card.");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      messageApi.error("An error occurred while fetching data.");
+      message.error("An error occurred while fetching data.");
     } finally {
       setLoading(false);
     }
   };
 
   const [otp, setOtp] = useState<string>(""); // ใช้เก็บค่าของ OTP
-  const [isActive, setIsActive] = useState(false);
-
+ 
   const formatDate = (date: Date) => {
     return date.toLocaleString("en-EN", {
       day: "2-digit",
@@ -409,51 +229,19 @@ const CarPark: React.FC = () => {
     });
   };
 
-  const calculateHourlyRate = (entryTime: Date) => {
-    const currentTime = new Date();
-    const diffMs = currentTime.getTime() - entryTime.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60)); // ชั่วโมงเต็ม
-    const remainingMinutes = (diffMs % (1000 * 60 * 60)) / (1000 * 60); // นาทีที่เกิน
-
-    // ถ้านาทีเกิน 0 ให้เพิ่ม 1 ชั่วโมง
-    return remainingMinutes > 0 ? diffHours + 1 : diffHours;
-  };
-
-  const calculateParkingFee = (
-    entryTime: Date,
-    exitTime: Date,
-    policy: ParkingFeePolicyInterface
-  ): number => {
-    const parkedMs = exitTime.getTime() - entryTime.getTime();
-    const parkedHours = Math.ceil(parkedMs / (1000 * 60 * 60));
-
-    let totalFee = 0;
-
-    // ถ้าคุณไม่ใช้ FreeHours, สามารถคิดค่าจอดตามจำนวนชั่วโมงทั้งหมด
-    const chargeableHours = Math.max(0, parkedHours); // ไม่ใช้ FreeHours
-
-    const increment = parseFloat(policy.Time_Increment || "1");
-
-    const additionalFees =
-      Math.ceil(chargeableHours / increment) * (policy.AddBase_Fee || 0);
-
-    totalFee = additionalFees - (policy.Discount || 0);
-
-    return totalFee > 0 ? totalFee : 0;
-  };
-
   const handleDeleteCard = async (cardID: string) => {
     try {
       const response = await DeleteParkingCard(cardID);
       if (response.status === 200) {
-        messageApi.success("Card deleted successfully.");
+        message.success("Card deleted successfully.");
         setCards(cards.filter((card) => card.ID !== cardID));
+        setReload(!reload);
       } else {
-        messageApi.error("Failed to delete card.");
+        message.error("Failed to delete card.");
       }
     } catch (error) {
       console.error("Error deleting card:", error);
-      messageApi.error("An error occurred while deleting the card.");
+      message.error("An error occurred while deleting the card.");
     }
   };
 
@@ -525,33 +313,13 @@ const CarPark: React.FC = () => {
     setIsAddCardModalVisible(false);
   };
 
+  const [isActive, setIsActive] = useState(false);
   const handleCardMouseDown = () => {
     setIsActive(true);
     setTimeout(() => {
       setIsActive(false);
     }, 500);
   };
-
-  /*   const toggleCamera = () => {
-    setIsCameraActive((prev) => !prev); // Toggle camera on/off
-  };
-
-  const handleCamera = () => {
-    try {
-      const filtered = cards.filter((item) =>
-        item.ID?.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
-      console.log("Filtered Data: ", filtered); // ตรวจสอบผลลัพธ์ที่กรอง
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      message.error("An error occurred while fetching data.");
-    }
-  };
-  const handleReservation = (cardID: string) => {
-    // ค้นหา Card ที่ตรงกับ cardID
-    const selectedCardData = cards.find((card) => card.ID === cardID);
-  }; */
 
   const handleGeneralCardClick = async () => {
     try {
@@ -595,7 +363,6 @@ const CarPark: React.FC = () => {
   return (
     <>
       <NavBar />
-      {contextHolder}
       <ConfigProvider
         theme={{
           token: {
@@ -608,197 +375,160 @@ const CarPark: React.FC = () => {
             boxShadow: "0 2px 0 rgba(5, 145, 255, 0.1)",
           },
           components: {
-            Button: {
-              primaryShadow: "0 2px 0 rgba(5, 145, 255, 0.1)",
-              primaryColor: "#1e1e1e",
-            },
             Table: {
               headerBg: "#fbe8af", // พื้นหลังหัวตาราง
             },
           },
         }}
       >
-        <div style={{ height: "110px", zIndex: "0" }}></div>
-        <div className="route">
-          <a href="/Main">Home /</a> Car Parking{" "}
-        </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <div style={{ height: "110px", zIndex: "0" }}></div>
+            <div className="route">
+              <a href="/Main">Home /</a> Car Parking{" "}
+            </div>
 
-        <Row justify={"center"} style={{ marginTop: "30px" }}>
-          <div className="header-title">Car Parking</div>
-        </Row>
-        <Row justify={"center"}>
-          <div className="line-after-header"></div>
-        </Row>
-        <Card>
-          <div className="AddCardBtn" onClick={showAddCardModal}>
-            <p>Add Card</p>
-            <span>
-              <img src={PicFloor} />
-            </span>
-          </div>
-          <Row
-            justify={"center"}
-            align={"middle"}
-            style={{ gap: "16px", marginTop: "30px" }}
-          >
-            <Col></Col>
-            <Col>
-              <Card>
-                <Flex justify="space-between" gap={"16px"}>
-                  <div className="text-id-card">ID CARD</div>
-                  <div>
-                    <Input.OTP length={4} value={otp} {...sharedProps} />
-                  </div>
-                </Flex>
-              </Card>
-            </Col>
-            <Col>
-              <Card
-                onClick={handleGeneralCardClick} // เมื่อคลิกที่ Card ของ General
-                onMouseDown={handleCardMouseDown} // เมื่อกด
-                style={{
-                  cursor: "pointer",
-                  width: "auto",
-                  boxShadow: isActive
-                    ? "0 0px 10px rgba(201, 175, 98, 0.5)" // เงาสีทองอยู่กลางการ์ด
-                    : "none", // กำหนดเงาเมื่อคลิก
-                  transition: "box-shadow 0.3s ease", // การเปลี่ยนแปลงของเงา
-                }}
-              >
-                <Flex gap={"16px"}>
-                  <UserOutlined
-                    style={{ fontSize: "24px", marginRight: "8px" }}
-                  />
-                  <div className="text-id-card">GENERAL</div>
-                </Flex>
-              </Card>
-            </Col>
-          </Row>
-          <Col>
-            <Row justify="center" style={{ marginTop: "30px" }}>
-              <Space>
-                <Button
-                  type={
-                    selectedButtonInOutDefault === "IN" ? "primary" : "default"
-                  }
-                  onClick={() => {
-                    setSelectedButtonInOutDefault("IN");
-                    handleReset();
-                  }}
-                >
-                  Car IN
-                </Button>
-                <Button
-                  type={
-                    selectedButtonInOutDefault === "OUT" ? "primary" : "default"
-                  }
-                  onClick={() => {
-                    setSelectedButtonInOutDefault("OUT");
-                    handleReset();
-                  }}
-                >
-                  Car OUT
-                </Button>
-                <Button
-                  type={
-                    selectedButtonInOutDefault === "Expired"
-                      ? "primary"
-                      : "default"
-                  }
-                  onClick={() => {
-                    setSelectedButtonInOutDefault("Expired");
-                    handleReset();
-                  }}
-                >
-                  Expired
-                </Button>
-              </Space>
+            <Row justify={"center"} style={{ marginTop: "30px" }}>
+              <div className="header-title">Car Parking</div>
             </Row>
-            {/********************************** ส่วนที่จะแสดงตารางเมื่อเลือก Car IN หรือ Car OUT **************************/}
-
-            <Row justify="center" style={{ marginTop: "30px" }}>
-              <Table
-                columns={
-                  selectedButtonInOutDefault == "OUT" ||
-                  selectedButtonInOutDefault == "IN" ||
-                  selectedButtonInOutDefault == "Expired"
-                    ? columns
-                    : columns
-                }
-                dataSource={filteredData.filter((card) => {
-                  if (selectedButtonInOutDefault == "IN") {
-                    return card.StatusCard?.Status == "IN";
-                  }
-                  if (selectedButtonInOutDefault == "OUT") {
-                    return card.StatusCard?.Status == "OUT";
-                  }
-                  if (selectedButtonInOutDefault == "Expired") {
-                    return card.StatusCard?.Status == "Expired";
-                  }
-                  return false;
-                })}
-                loading={false}
-                style={{
-                  fontSize: "30px",
-                  textAlignLast: "center",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
-                  animation: "ease-in-out",
-                  width: "100%",
-                }}
-                className="table-card"
-                rowKey="ID"
-                scroll={{ x: "max-content" }}
-              />
-            </Row>
-            {/**************************************** ส่วนที่จะแสดงการ์ดเมื่อเลือก Reserved *******************************/}
-            {/* {selectedButtonInOutDefault === "Reserved" && (
-              <Row justify="center" style={{ marginTop: "30px" }}>
-                <Card>
-                  <Row justify="center" align="middle" style={{ gap: "16px" }}>
-                    {/* กรองข้อมูลใน cards โดยใช้ filter ก่อน */}
-            {/* {cards
-                      .filter(
-                        (card) =>
-                          card.ParkingTransaction &&
-                          card.ParkingTransaction.some(
-                            (transaction) =>
-                              transaction.IsReservedPass === false
-                          )
-                      )
-                      .map((card, index) => (
-                        <Col key={index}>
-                          <Card
-                            style={{
-                              cursor: "pointer",
-                              width: "auto",
-                              boxShadow: "0 0px 10px rgba(201, 175, 98, 0.5)",
-                              transition: "box-shadow 0.3s ease",
-                            }}
-                            onClick={() => handleReservation(card.ID || "")}
-                          >
-                            <CreditCardOutlined
-                              style={{ fontSize: "24px", marginRight: "8px" }}
-                            />
-                            <div className="text-id-card">{card.ID}</div>
-                          </Card>
-                        </Col>
-                      ))}
-                  </Row>
-                </Card>
-              </Row>
-            )}  */}
 
             <Row justify={"center"}>
-              <Button
-                onClick={handleReset}
-                type="default"
-                style={{ marginBottom: "16px" }}
-              >
-                Reset
-              </Button>
+              <div className="line-after-header"></div>
             </Row>
-          </Col>
-        </Card>
+            <Card>
+              <div className="AddCardBtn" onClick={showAddCardModal}>
+                <p>Add Card</p>
+                <span>
+                  <img src={PicFloor} />
+                </span>
+              </div>
+              <Row
+                justify={"center"}
+                align={"middle"}
+                style={{ gap: "16px", marginTop: "30px" }}
+              >
+                <Col></Col>
+                <Col>
+                  <Card>
+                    <Flex justify="space-between" gap={"16px"}>
+                      <div className="text-id-card">ID CARD</div>
+                      <div>
+                        <Input.OTP length={4} value={otp} {...sharedProps} />
+                      </div>
+                    </Flex>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card
+                    onClick={handleGeneralCardClick} // เมื่อคลิกที่ Card ของ General
+                    onMouseDown={handleCardMouseDown} // เมื่อกด
+                    style={{
+                      cursor: "pointer",
+                      width: "auto",
+                      boxShadow: isActive
+                        ? "0 0px 10px rgba(201, 175, 98, 0.5)" // เงาสีทองอยู่กลางการ์ด
+                        : "none", // กำหนดเงาเมื่อคลิก
+                      transition: "box-shadow 0.3s ease", // การเปลี่ยนแปลงของเงา
+                    }}
+                  >
+                    <Flex gap={"16px"}>
+                      <UserOutlined
+                        style={{ fontSize: "24px", marginRight: "8px" }}
+                      />
+                      <div className="text-id-card">GENERAL</div>
+                    </Flex>
+                  </Card>
+                </Col>
+              </Row>
+              <Col>
+                <Row justify="center" style={{ marginTop: "30px" }}>
+                  <Space>
+                    <div
+                      className={`carpark-button-reset ${
+                        selectedButtonInOutDefault === "IN" ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedButtonInOutDefault("IN");
+                        handleReset();
+                      }}
+                    >
+                      Car IN
+                    </div>
+                    <div
+                      className={`carpark-button-reset ${
+                        selectedButtonInOutDefault === "OUT" ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedButtonInOutDefault("OUT");
+                        handleReset();
+                      }}
+                    >
+                      Car OUT
+                    </div>
+                    <div
+                      className={`carpark-button-reset ${
+                        selectedButtonInOutDefault === "Expired" ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedButtonInOutDefault("Expired");
+                        handleReset();
+                      }}
+                    >
+                      Expired
+                    </div>
+                  </Space>
+                </Row>
+                {/********************************** ส่วนที่จะแสดงตารางเมื่อเลือก Car IN หรือ Car OUT **************************/}
+                <Row justify="center" style={{ marginTop: "30px" }}>
+                  <Table
+                    columns={
+                      selectedButtonInOutDefault == "OUT" ||
+                      selectedButtonInOutDefault == "IN" ||
+                      selectedButtonInOutDefault == "Expired"
+                        ? columns
+                        : columns
+                    }
+                    dataSource={filteredData.filter((card) => {
+                      if (selectedButtonInOutDefault == "IN") {
+                        return card.StatusCard?.Status == "IN";
+                      }
+                      if (selectedButtonInOutDefault == "OUT") {
+                        return card.StatusCard?.Status == "OUT";
+                      }
+                      if (selectedButtonInOutDefault == "Expired") {
+                        return card.StatusCard?.Status == "Expired";
+                      }
+                      return false;
+                    })}
+                    loading={false}
+                    style={{
+                      justifyContent: "center",
+                      fontSize: "30px",
+                      textAlignLast: "center",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+                      animation: "ease-in-out",
+                      width: "100%",
+                    }}
+                    className="table-card"
+                    rowKey="ID"
+                    scroll={{ x: "max-content" }}
+                  />
+                </Row>
+                <Row justify={"center"}>
+                  <div
+                    className="carpark-button-reset"
+                    onClick={handleReset}
+                    style={{ marginBottom: "16px" }}
+                  >
+                    Reset
+                  </div>
+                </Row>
+              </Col>
+            </Card>
+          </>
+        )}
         <IN
           selectedCard={selectedCard}
           setSelectedCard={setSelectedCard}
@@ -812,15 +542,6 @@ const CarPark: React.FC = () => {
           setCards={setCards}
           cards={cards}
           status={status}
-          //fetchDataForInOut={fetchDataForInOut}
-          setCarLicensePlate={setCarLicensePlate}
-          carLicensePlate={carLicensePlate}
-          setCarColor={setCarColor}
-          carColor={carColor}
-          setCarMake={setCarMake}
-          carMake={carMake}
-          setFileList={setFileList}
-          fileList={fileList}
         ></IN>
         <OUT
           setCards={setCards}
@@ -837,19 +558,21 @@ const CarPark: React.FC = () => {
           status={status}
           setIsModalOutVisible={setIsModalOutVisible}
           isModalOutVisible={isModalOutVisible}
-          //fetchDataForInOut={fetchDataForInOut}
           setCarLicensePlate={setCarLicensePlate}
           carLicensePlate={carLicensePlate}
           setCarColor={setCarColor}
           carColor={carColor}
           setCarMake={setCarMake}
           carMake={carMake}
+          setLoadAfterOutModal={setLoadAfterOutModal}
+          loadAfterOutModal={loadAfterOutModal}
         />
         <AddCardModal
           visible={isAddCardModalVisible}
           onCancel={handleCancel}
           onAddCard={handleAddCard}
           getParkingCards={getParkingCards}
+          cards={cards}
         />
       </ConfigProvider>
     </>
@@ -857,41 +580,3 @@ const CarPark: React.FC = () => {
 };
 
 export default CarPark;
-/*   const fetchDataForInOut = async () => {
-    try {
-      const rescard = await GetParkingCardByID(selectedCard?.ID || "");
-      setSelectedCard(rescard.data);
-
-      console.log("ParkingTransaction: ", rescard.data.ParkingTransaction);
-      console.log("IsPermanent: ", rescard.data.IsPermanent);
-      console.log("ParkingZone: ", rescard.data.ParkingZone);
-      const existingTrans = rescard.data.ParkingTransaction?.find(
-        (transaction: any) => {
-          console.log("Transaction: ", transaction);
-          return (
-            transaction?.IsReservedPass === false &&
-            transaction?.ReservationDate === String(today) &&
-            rescard.data.ParkingTransaction?.length > 0 &&
-            rescard.data.IsPermanent === true
-          );
-        }
-      );
-      console.log("existingTransaction: ", existingTrans);
-      setExistingTransaction(existingTrans)
-      if (existingTrans !== undefined && existingTrans === true) {
-        setCarLicensePlate(existingTrans.LicensePlate || "");
-        setCarColor(existingTrans.Color || "");
-        setCarMake(existingTrans.Make || "");
-        setFileList([
-          {
-            uid: "-1",
-            name: "image.png",
-            status: "done",
-            url: existingTrans.Image,
-          },
-        ]);
-      }
-    } catch (error) {
-      message.error("Failed to fetch parking card data.");
-    }
-  }; */

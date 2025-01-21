@@ -1,19 +1,36 @@
-import {SignInInterface} from "../../interfaces/SignIn";
-import {StoreInterface,BackupStoreInterface,PaymentInterface,ReceiptInterface,TaxUserInterface} from "../../interfaces/StoreInterface";
-import { InfoUserStoreInterface , RatingInterface } from "../../interfaces/StoreInterface";
-import { UsersInterface , MessageBoardInterface, EventInterface } from "../../interfaces/UsersInterface";
+import { SignInInterface } from "../../interfaces/SignIn";
+import {
+  StoreInterface,
+  BackupStoreInterface,
+  PaymentInterface,
+  ReceiptInterface,
+  TaxUserInterface,
+} from "../../interfaces/StoreInterface";
+import {
+  InfoUserStoreInterface,
+  RatingInterface,
+} from "../../interfaces/StoreInterface";
+import {
+  UsersInterface,
+  MessageBoardInterface,
+  EventInterface,
+} from "../../interfaces/UsersInterface";
 import { CleaningRecordInterface } from "../../interfaces/CleaningInterface";
 import {
   ParkingCardInterface,
   ParkingPaymentInterface,
-  ParkingTransactionInterface,
+  ParkingUsageCardInterface,
+  ParkingZoneDailyAndUsageCardData,
   ParkingZoneDailyInterface,
   ParkingZoneInterface,
   VehicleInterface,
 } from "../../interfaces/Carpark";
 
-import axios from 'axios';
-import { EquipmentInterface, ServiceInterface } from "../../interfaces/ServiceInterface";
+import axios from "axios";
+import {
+  EquipmentInterface,
+  ServiceInterface,
+} from "../../interfaces/ServiceInterface";
 import { InventoryInterface } from "../../interfaces/InventoryInterface";
 const apiUrl = "http://localhost:8000";
 const Authorization = localStorage.getItem("token");
@@ -58,7 +75,6 @@ async function GetUserById(id: string) {
 }
 // get user all
 async function GetUserAll() {
-
   return await axios
 
     .get(`${apiUrl}/user`, requestOptions)
@@ -66,11 +82,9 @@ async function GetUserAll() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // update User
 async function UpdateUserByid(id: string, data: UsersInterface) {
-
   return await axios
 
     .put(`${apiUrl}/user/${id}`, data, requestOptions)
@@ -78,11 +92,9 @@ async function UpdateUserByid(id: string, data: UsersInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //Add Store
 async function AddStore(data: InfoUserStoreInterface) {
-
   return await axios
 
     .post(`${apiUrl}/addStore`, data, requestOptions)
@@ -90,11 +102,9 @@ async function AddStore(data: InfoUserStoreInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get UserStore by id
 async function UserStoreByid(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/userstore/${id}`, requestOptions)
@@ -102,7 +112,6 @@ async function UserStoreByid(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //Delete userstore
 async function DeleteUserStoreByID(id: string) {
@@ -118,7 +127,6 @@ async function DeleteUserStoreByID(id: string) {
 }
 // get Message by id
 async function GetMessageById(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/Message/${id}`, requestOptions)
@@ -126,11 +134,9 @@ async function GetMessageById(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // Create message
 async function AddMessage(data: MessageBoardInterface) {
-
   return await axios
 
     .post(`${apiUrl}/Message`, data, requestOptions)
@@ -138,11 +144,9 @@ async function AddMessage(data: MessageBoardInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get Tax by id
 async function GetTaxById(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/Tax/${id}`, requestOptions)
@@ -150,11 +154,9 @@ async function GetTaxById(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // Create Tax
 async function AddTax(data: TaxUserInterface) {
-
   return await axios
 
     .post(`${apiUrl}/CreateTax`, data, requestOptions)
@@ -162,11 +164,9 @@ async function AddTax(data: TaxUserInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // update Tax
 async function UpdateTaxByid(id: string, data: TaxUserInterface) {
-
   return await axios
 
     .put(`${apiUrl}/Tax/${id}`, data, requestOptions)
@@ -174,11 +174,19 @@ async function UpdateTaxByid(id: string, data: TaxUserInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
+}
+// get Tax by 
+async function GetTaxUserICONIC() {
+  return await axios
 
+    .get(`${apiUrl}/Tax-ICONIC`, requestOptions)
+
+    .then((res) => res)
+
+    .catch((e) => e.response);
 }
 // get User by status
 async function GetUserByStatus(Status: string) {
-
   return await axios
 
     .get(`${apiUrl}/job/${Status}`, requestOptions)
@@ -186,11 +194,9 @@ async function GetUserByStatus(Status: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get Users
 async function ListUser() {
-
   return await axios
 
     .get(`${apiUrl}/users`, requestOptions)
@@ -198,7 +204,6 @@ async function ListUser() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //============================Store========================================
 // get Store by Floor
@@ -213,7 +218,6 @@ async function GetStoreByFloor(id: string) {
 }
 // get Store by Floor-preload
 async function GetStoreByFloorPreload(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/store-preload/${id}`, requestOptions)
@@ -221,11 +225,9 @@ async function GetStoreByFloorPreload(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get Membership
 async function GetMembership() {
-
   return await axios
 
     .get(`${apiUrl}/Membership`, requestOptions)
@@ -233,11 +235,9 @@ async function GetMembership() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get Store by id
 async function GetStoreById(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/storeid/${id}`, requestOptions)
@@ -245,7 +245,6 @@ async function GetStoreById(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // update Store
 async function UpdateStoreByid(id: string, data: StoreInterface) {
@@ -269,7 +268,6 @@ async function BackUpStore(data: BackupStoreInterface) {
 }
 // get backUp by id
 async function GetBackUpByid(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/backupstore/${id}`, requestOptions)
@@ -277,11 +275,9 @@ async function GetBackUpByid(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get Membership by id
 async function GetMembershipByid(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/Membership/${id}`, requestOptions)
@@ -289,12 +285,10 @@ async function GetMembershipByid(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //============================store rating ========================================
 // get comment by id store
 async function GetCommentByStore(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/commentbystore/${id}`, requestOptions)
@@ -302,11 +296,9 @@ async function GetCommentByStore(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get comment by id User
 async function GetCommentByUser(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/commentbyuser/${id}`, requestOptions)
@@ -314,11 +306,9 @@ async function GetCommentByUser(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // create comment
 async function CreateComment(data: RatingInterface) {
-
   return await axios
 
     .post(`${apiUrl}/comment`, data, requestOptions)
@@ -326,7 +316,6 @@ async function CreateComment(data: RatingInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //Delete comment
 async function DeleteCommentFromStore(id: string) {
@@ -342,7 +331,6 @@ async function DeleteCommentFromStore(id: string) {
 }
 // get Avg by id store
 async function GetAvgCommentByStore(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/average-rating/${id}`, requestOptions)
@@ -350,12 +338,10 @@ async function GetAvgCommentByStore(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //============================payment store========================================
 // get payment by userid Preload
 async function GetPaymentByuseridPreload(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/Payment/${id}`, requestOptions)
@@ -363,11 +349,9 @@ async function GetPaymentByuseridPreload(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get payment by userid ไม่ใช้เด้อจ้าา
 async function GetPaymentByuserid(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/PaymentStore/${id}`, requestOptions)
@@ -375,11 +359,9 @@ async function GetPaymentByuserid(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get payment by id payment
 async function GetPaymentid(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/PaymentInfo/${id}`, requestOptions)
@@ -387,11 +369,9 @@ async function GetPaymentid(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // Create AddPayment
 async function AddPayment(data: PaymentInterface) {
-
   return await axios
 
     .post(`${apiUrl}/CreatePayment`, data, requestOptions)
@@ -399,11 +379,9 @@ async function AddPayment(data: PaymentInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // update Payment Status ตอนนี้มันคือ put ที่ไม่ได้แก้แค่ status
 async function UpdatePaymentStatus(id: string, data: PaymentInterface) {
-
   return await axios
 
     .put(`${apiUrl}/PaymentStore/${id}`, data, requestOptions)
@@ -411,11 +389,9 @@ async function UpdatePaymentStatus(id: string, data: PaymentInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get PaymentMethod
 async function GetPaymentMethod() {
-
   return await axios
 
     .get(`${apiUrl}/PaymentMethod`, requestOptions)
@@ -423,12 +399,10 @@ async function GetPaymentMethod() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //============================bill========================================
 // get bill by paymentid Preload
 async function GetBillByPayidPreload(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/Receipt/${id}`, requestOptions)
@@ -436,11 +410,9 @@ async function GetBillByPayidPreload(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // Create bill
 async function CreateBill(data: ReceiptInterface) {
-
   return await axios
 
     .post(`${apiUrl}/Receipt`, data, requestOptions)
@@ -448,13 +420,11 @@ async function CreateBill(data: ReceiptInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 
 //============================Admin========================================
 // get Store WaitingForApproval
 async function GetStoreWaiting(status: string) {
-
   return await axios
 
     .get(`${apiUrl}/storeWaiting/${status}`, requestOptions)
@@ -462,11 +432,9 @@ async function GetStoreWaiting(status: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // get Event
 async function GetEvent() {
-
   return await axios
 
     .get(`${apiUrl}/event`, requestOptions)
@@ -474,11 +442,9 @@ async function GetEvent() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 // Create AddEvent
 async function AddEvent(data: EventInterface) {
-
   return await axios
 
     .post(`${apiUrl}/event`, data, requestOptions)
@@ -486,7 +452,6 @@ async function AddEvent(data: EventInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //Delete Event
 async function DeleteEvent(id: string) {
@@ -502,98 +467,88 @@ async function DeleteEvent(id: string) {
 async function ListInventory() {
   return await axios
 
-  .get(`${apiUrl}/inventory`, requestOptions)
+    .get(`${apiUrl}/inventory`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
-
+    .catch((e) => e.response);
 }
 // get CategoryInventory
 async function ListCategoryInventory() {
+  return await axios
 
-return await axios
+    .get(`${apiUrl}/CategoryInventory`, requestOptions)
 
-  .get(`${apiUrl}/CategoryInventory`, requestOptions)
+    .then((res) => res)
 
-  .then((res) => res)
-
-  .catch((e) => e.response);
-
+    .catch((e) => e.response);
 }
 // get Inventory by id
 async function GetInventoryById(id: string) {
+  return await axios
 
-return await axios
+    .get(`${apiUrl}/inventory/${id}`, requestOptions)
 
-  .get(`${apiUrl}/inventory/${id}`, requestOptions)
+    .then((res) => res)
 
-  .then((res) => res)
-
-  .catch((e) => e.response);
-
-
+    .catch((e) => e.response);
 }
-
 
 //===========================Hall==========================================
 //Get ListHall
 async function ListHall() {
-  
   return await axios
 
-  .get(`${apiUrl}/hall`, requestOptions)
+    .get(`${apiUrl}/hall`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
+    .catch((e) => e.response);
 }
 async function GetHallByID(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/${id}`, requestOptions)
+    .get(`${apiUrl}/hall/${id}`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
-  
+    .catch((e) => e.response);
 }
 async function CreateBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
+    .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
+    .catch((e) => e.response);
 }
 async function UpdateBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+    .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
-  
+    .catch((e) => e.response);
 }
 async function DeleteBookingHall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/hall/bookinghall/${id}`,requestOptions)
+    .get(`${apiUrl}/hall/bookinghall/${id}`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
+    .catch((e) => e.response);
 }
 async function GetBookinghall(id: string) {
   return await axios
 
-  .get(`${apiUrl}/bookinghall/${id}`,requestOptions)
+    .get(`${apiUrl}/bookinghall/${id}`, requestOptions)
 
-  .then((res) => res)
+    .then((res) => res)
 
-  .catch((e) => e.response);
+    .catch((e) => e.response);
 }
 
 async function ListBookingHall() {
@@ -602,13 +557,12 @@ async function ListBookingHall() {
     .get(`${apiUrl}/bookings`, requestOptions)
 
     .then((res) => res)
-    
+
     .catch((e) => e.response);
 }
 //=============================Cleaning=====================================
 // get Area
 async function ListAreas() {
-
   return await axios
 
     .get(`${apiUrl}/Area`, requestOptions)
@@ -617,11 +571,9 @@ async function ListAreas() {
     .then((res) => res.data) // ดึงเฉพาะข้อมูลที่เป็น Area
 
     .catch((e) => e.response);
-
 }
 
 async function CreateCleaningRecord(data: CleaningRecordInterface) {
-
   return await axios
 
     .post(`${apiUrl}/CleaningRecord`, data, requestOptions)
@@ -629,11 +581,9 @@ async function CreateCleaningRecord(data: CleaningRecordInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 
 async function GetCleaningRecordsByArea(id: number) {
-
   return await axios
 
     .get(`${apiUrl}/CleaningRecordsByArea/${id}`, requestOptions)
@@ -641,11 +591,9 @@ async function GetCleaningRecordsByArea(id: number) {
     .then((res) => res.data)
 
     .catch((e) => e.response);
-
 }
 
 async function GetSchedulesByArea(id: number) {
-
   return await axios
 
     .get(`${apiUrl}/SchedulesByArea/${id}`, requestOptions)
@@ -653,30 +601,23 @@ async function GetSchedulesByArea(id: number) {
     .then((res) => res.data)
 
     .catch((e) => e.response);
-
 }
 
 async function DeleteCleaningRecord(payload: { AreaID: string; Day: string }) {
+  const response = await axios.delete(`${apiUrl}/DeleteCleaningRecord`, {
+    params: {
+      AreaID: payload.AreaID,
+      Day: payload.Day,
+    },
+    ...requestOptions, // รวม options เช่น headers
+  });
 
-    const response = await axios.delete(
-      `${apiUrl}/DeleteCleaningRecord`,
-      {
-        params: {
-          AreaID: payload.AreaID,
-          Day: payload.Day,
-        },
-        ...requestOptions, // รวม options เช่น headers
-      }
-    );
-
-    return response.data; // ส่งผลลัพธ์กลับมา
-    
+  return response.data; // ส่งผลลัพธ์กลับมา
 }
 
 //=======================================Service============================================
 //listService by status
 async function ListService(Status: string) {
-
   return await axios
 
     .get(`${apiUrl}/Service/${Status}`, requestOptions)
@@ -684,10 +625,8 @@ async function ListService(Status: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 async function ListStoreService() {
-
   return await axios
 
     .get(`${apiUrl}/StoreService`, requestOptions)
@@ -695,10 +634,8 @@ async function ListStoreService() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 async function ListRepairman() {
-
   return await axios
 
     .get(`${apiUrl}/Repairman`, requestOptions)
@@ -706,10 +643,8 @@ async function ListRepairman() {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 async function CreateService(data: ServiceInterface) {
-
   return await axios
 
     .post(`${apiUrl}/Service`, data, requestOptions)
@@ -717,11 +652,9 @@ async function CreateService(data: ServiceInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //=======================================EquipmentRequest============================================
 async function EquipmentByServiceID(id: string) {
-
   return await axios
 
     .get(`${apiUrl}/Equipment/${id}`, requestOptions)
@@ -729,10 +662,8 @@ async function EquipmentByServiceID(id: string) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 async function CreateEquipment(data: EquipmentInterface) {
-
   return await axios
 
     .post(`${apiUrl}/Equipment`, data, requestOptions)
@@ -740,10 +671,8 @@ async function CreateEquipment(data: EquipmentInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 async function UpdateInventory(id: string, data: InventoryInterface) {
-
   return await axios
 
     .put(`${apiUrl}/Inventory/${id}`, data, requestOptions)
@@ -751,7 +680,6 @@ async function UpdateInventory(id: string, data: InventoryInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //Delete Equipment
 async function DeleteEquipment(id: string) {
@@ -759,12 +687,13 @@ async function DeleteEquipment(id: string) {
 
     .delete(`${apiUrl}/Equipment/${id}`, requestOptions)
 
-    .then((res) => { return res; })
-    
+    .then((res) => {
+      return res;
+    })
+
     .catch((e) => e.response);
 }
 async function UpdateService(id: string, data: ServiceInterface) {
-
   return await axios
 
     .put(`${apiUrl}/Service/${id}`, data, requestOptions)
@@ -772,7 +701,6 @@ async function UpdateService(id: string, data: ServiceInterface) {
     .then((res) => res)
 
     .catch((e) => e.response);
-
 }
 //============================ Car Park ========================================
 async function GetUserDetails(id: number) {
@@ -790,9 +718,9 @@ async function GetListCardAndCheckExpiredCardtoUpdate() {
       return e.response;
     });
 }
-async function GetListTransaction() {
+async function GetListUsageCard() {
   return await axios
-    .get(`${apiUrl}/get-list-parking-transaction`, requestOptions)
+    .get(`${apiUrl}/get-list-parking-usagecard`, requestOptions)
     .then((res) => res)
     .catch((e) => {
       console.error("Error fetching data:", e);
@@ -820,10 +748,28 @@ async function GetListCardAndUser() {
       return e.response;
     });
 }
-
-/* async function GetListLastTransaction() {
+async function GetListTypeCard() {
   return await axios
-    .get(`${apiUrl}/get-list-last-parkingtransaction`, requestOptions)
+    .get(`${apiUrl}/get-list-type-card`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
+async function GetParkingPaymentByUserID(id: number) {
+  return await axios
+    .get(`${apiUrl}/get-list-parking-payment-by-user-id/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => {
+      console.error("Error fetching data:", e);
+      return e.response;
+    });
+}
+
+/* async function GetListLastUsageCard() {
+  return await axios
+    .get(`${apiUrl}/get-list-last-parkingusagecard`, requestOptions)
     .then((res) => res)
     .catch((e) => {
       console.error("Error fetching data:", e);
@@ -836,9 +782,9 @@ async function CreateParkingCard(data: ParkingCardInterface) {
     .then((res) => res)
     .catch((e) => e.response);
 }
-async function CreateParkingTransaction(data: ParkingTransactionInterface) {
+async function CreateParkingUsageCard(data: ParkingUsageCardInterface) {
   return await axios
-    .post(`${apiUrl}/create-parkingtransaction`, data, requestOptions)
+    .post(`${apiUrl}/create-parkingusagecard`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -860,7 +806,19 @@ async function CreateParkingPayment(data: ParkingPaymentInterface) {
     .then((res) => res)
     .catch((e) => e.response);
 }
-/* async function CreateParkingCardAndVehical(data: ParkingTransactionInterface) {
+async function CreateParkingZoneDailyAndUsageCard(
+  data: ParkingZoneDailyAndUsageCardData
+) {
+  return await axios
+    .post(
+      `${apiUrl}/create-parkingzone-daily-and-usagecard`,
+      data,
+      requestOptions
+    )
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+/* async function CreateParkingCardAndVehical(data: ParkingUsageCardInterface) {
   return await axios
     .post(`${apiUrl}/create-parkingcard-and-vehical`, data, requestOptions)
     .then((res) => res)
@@ -871,7 +829,7 @@ async function UpdateParkingCard(id: string, data: ParkingCardInterface) {
     .patch(`${apiUrl}/patch-parkingcard/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
-}	
+}
 async function UpdateParkingZone(id: number, data: ParkingZoneInterface) {
   return await axios
     .put(`${apiUrl}/update-parkingzone/${id}`, data, requestOptions)
@@ -883,25 +841,35 @@ async function UpdateVehicle(id: number, data: ParkingCardInterface) {
     .patch(`${apiUrl}/patch-vehicle/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
-}	
-async function UpdateParkingTransaction(id: number, data: ParkingCardInterface) {
+}
+async function UpdateParkingUsageCard(id: number, data: ParkingCardInterface) {
   return await axios
-    .patch(`${apiUrl}/patch-parkingtransaction/${id}`, data, requestOptions)
+    .patch(`${apiUrl}/patch-parkingusagecard/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
-async function UpdateZoneDailyByID(id: number, data: ParkingZoneDailyInterface) {
+async function UpdateZoneDailyByID(
+  id: number,
+  data: ParkingZoneDailyInterface
+) {
   return await axios
     .patch(`${apiUrl}/patch-parkingzone-daily/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
-async function UpdateZoneDailyByZoneID(id: number, data: ParkingZoneDailyInterface) {
+async function UpdateZoneDailyByZoneID(
+  id: number,
+  data: ParkingZoneDailyInterface
+) {
   return await axios
-    .patch(`${apiUrl}/patch-parkingzone-daily-by-zone/${id}`, data, requestOptions)
+    .patch(
+      `${apiUrl}/patch-parkingzone-daily-by-zone/${id}`,
+      data,
+      requestOptions
+    )
     .then((res) => res)
     .catch((e) => e.response);
-}/* 
+} /* 
 async function UpdateParkingCardAndZone(
   cid: string,
   zid: number,
@@ -920,19 +888,19 @@ async function UpdateParkingCardAndZone(
     )
     .then((res) => res)
     .catch((e) => e.response);
-}	 */	
+}	 */
 async function GetParkingCardByID(id: string) {
   return await axios
     .get(`${apiUrl}/get-parking-card/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
-}		
+}
 async function GetParkingFeePolicyByID(id: number) {
   return await axios
     .get(`${apiUrl}/get-parking-fee-policy/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
-}	
+}
 async function GetParkingCardByUserID(id: string) {
   return await axios
     .get(`${apiUrl}/get-parking-card-by-user/${id}`, requestOptions)
@@ -951,9 +919,24 @@ async function GetZoneDailyByZoneID(id: number) {
     .then((res) => res)
     .catch((e) => e.response);
 }
-async function GetParkingPaymentByTransactionID(id: number) {
+async function GetParkingPaymentByUsageCardID(id: number) {
   return await axios
-    .get(`${apiUrl}/get-parkingpayment-by-transaction/${id}`, requestOptions)
+    .get(`${apiUrl}/get-parkingpayment-by-usagecard/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+async function GetParkingUsageCardByID(id: number) {
+  return await axios
+    .get(`${apiUrl}/get-parkingusagecard/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+async function GetParkingPaymentAndUsageCardByUsageCardID(id: number) {
+  return await axios
+    .get(
+      `${apiUrl}/get-parkingpayment-and-usagecard-by-usagecard/${id}`,
+      requestOptions
+    )
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -975,9 +958,9 @@ async function GetListStatusCard() {
       return e.response;
     });
 }
-/* async function GetZoneByTypePark(type: string) {
+/* async function GetZoneByTypeCard(type: string) {
   return await axios
-    .get(`${apiUrl}/get-parking-zone-by-type-park/${type}`, requestOptions)
+    .get(`${apiUrl}/get-parking-zone-by-type-card/${type}`, requestOptions)
     .then((res) => res)
     .catch((e) => {
       console.error("Error fetching data:", e);
@@ -992,115 +975,112 @@ async function GetIdCardZone(id: string) {
 }
 async function DeleteParkingCard(id: string) {
   return await axios
-    .delete(`${apiUrl}/delete-parkingcard/${id}`, requestOptions)
-    .then((res) => {
-      return res;
-    })
+    .patch(`${apiUrl}/delete-parkingcard/${id}`, requestOptions)
+    .then((res) => res)
     .catch((e) => e.response);
 }
 
 export {
-    SignIn,//user
-    CreateUser,//user
-    GetUserById,
-    GetUserAll,
-    UpdateUserByid,
-    AddStore,
-    UserStoreByid,
-    DeleteUserStoreByID,
-    GetMessageById,
-    AddMessage,
-    GetTaxById,
-    AddTax,
-    UpdateTaxByid,
-    GetUserByStatus,
-    
-    GetStoreWaiting,//admin
-    ListUser,
-    GetEvent,
-    AddEvent,
-    DeleteEvent,
+  SignIn, //user
+  CreateUser, //user
+  GetUserById,
+  GetUserAll,
+  UpdateUserByid,
+  AddStore,
+  UserStoreByid,
+  DeleteUserStoreByID,
+  GetMessageById,
+  AddMessage,
+  GetTaxById,
+  AddTax,
+  UpdateTaxByid,
+  GetTaxUserICONIC,
+  GetUserByStatus,
+  GetStoreWaiting, //admin
+  ListUser,
+  GetEvent,
+  AddEvent,
+  DeleteEvent,
+  GetStoreByFloor, //store
+  GetStoreByFloorPreload,
+  GetMembership,
+  UpdateStoreByid,
+  BackUpStore,
+  GetBackUpByid,
+  GetStoreById,
+  GetMembershipByid,
+  GetCommentByStore, //rating
+  GetCommentByUser,
+  CreateComment,
+  DeleteCommentFromStore,
+  GetAvgCommentByStore,
+  GetPaymentByuseridPreload, //payment store
+  GetPaymentByuserid,
+  GetPaymentid,
+  AddPayment,
+  UpdatePaymentStatus,
+  GetPaymentMethod,
+  GetBillByPayidPreload, //bill
+  CreateBill,
+  ListHall,
+  GetHallByID,
+  CreateBookingHall,
+  UpdateBookingHall,
+  DeleteBookingHall,
+  GetBookinghall,
+  ListBookingHall,
+  ListInventory, //อุปกรณ์ทั้งหมด
+  ListCategoryInventory,
+  GetInventoryById,
+  ListService, //ServiceRq
+  ListStoreService,
+  ListRepairman,
+  CreateService,
+  EquipmentByServiceID, //Equipment
+  CreateEquipment,
+  UpdateInventory,
+  DeleteEquipment,
+  UpdateService,
+  ListAreas,
+  CreateCleaningRecord,
+  GetCleaningRecordsByArea,
+  GetSchedulesByArea,
+  DeleteCleaningRecord,
 
-    GetStoreByFloor,//store
-    GetStoreByFloorPreload,
-    GetMembership,
-    UpdateStoreByid,
-    BackUpStore,
-    GetBackUpByid,
-    GetStoreById,
-    GetMembershipByid,
-    GetCommentByStore,//rating
-    GetCommentByUser,
-    CreateComment,
-    DeleteCommentFromStore,
-    GetAvgCommentByStore,
-
-    GetPaymentByuseridPreload,//payment store
-    GetPaymentByuserid,
-    GetPaymentid,
-    AddPayment,
-    UpdatePaymentStatus,
-    GetPaymentMethod,
-    GetBillByPayidPreload,//bill
-    CreateBill,
-
-    ListHall,
-    GetHallByID,
-    CreateBookingHall,
-    UpdateBookingHall,
-    DeleteBookingHall,
-    GetBookinghall,
-    ListBookingHall,
-
-    ListInventory,//อุปกรณ์ทั้งหมด
-    ListCategoryInventory,
-    GetInventoryById,
-
-    ListService,//ServiceRq
-    ListStoreService,
-    ListRepairman,
-    CreateService,
-    EquipmentByServiceID,//Equipment
-    CreateEquipment,
-    UpdateInventory,
-    DeleteEquipment,
-    UpdateService,
-
-    ListAreas,
-    CreateCleaningRecord,
-    GetCleaningRecordsByArea,
-    GetSchedulesByArea,
-    DeleteCleaningRecord,
-
-     // Car Parking
-     GetUserDetails,
-     GetListCardAndCheckExpiredCardtoUpdate,
-     GetListTransaction,
-     GetListZoneDaily,
-     /* CreateParkingCardAndVehical, */
-     GetListCardAndUser,
-     GetListZone,
-     GetListStatusCard,
-     //GetZoneByTypePark,
-     //GetListLastTransaction,
-     CreateParkingCard,
-     CreateParkingTransaction,
-     CreateParkingPayment,
-     CreateVehicle,
-     CreateZoneDaily,
-     UpdateParkingCard,
-     UpdateParkingZone,
-     UpdateVehicle,
-     UpdateParkingTransaction,
-     //UpdateParkingCardAndZone,
-     UpdateZoneDailyByID,
-     UpdateZoneDailyByZoneID,
-     GetParkingCardByID,
-     GetParkingFeePolicyByID,
-     GetParkingCardByUserID,
-     GetParkingPaymentByTransactionID,
-     //GetParkingCardWithZoneByID,
-     GetZoneDailyByZoneID,
-     GetIdCardZone,
-     DeleteParkingCard,
-}
+  // Car Parking
+  GetUserDetails,
+  GetListCardAndCheckExpiredCardtoUpdate,
+  GetListUsageCard,
+  GetListZoneDaily,
+  GetParkingPaymentByUserID,
+  /* CreateParkingCardAndVehical, */
+  GetListCardAndUser,
+  GetListZone,
+  GetListStatusCard,
+  GetListTypeCard,
+  //GetZoneByTypeCard,
+  //GetListLastUsageCard,
+  CreateParkingCard,
+  CreateParkingUsageCard,
+  CreateParkingPayment,
+  CreateParkingZoneDailyAndUsageCard,
+  CreateVehicle,
+  CreateZoneDaily,
+  UpdateParkingCard,
+  UpdateParkingZone,
+  UpdateVehicle,
+  UpdateParkingUsageCard,
+  //UpdateParkingCardAndZone,
+  UpdateZoneDailyByID,
+  UpdateZoneDailyByZoneID,
+  GetParkingCardByID,
+  GetParkingFeePolicyByID,
+  GetParkingCardByUserID,
+  GetParkingPaymentByUsageCardID,
+  GetParkingUsageCardByID,
+  GetParkingPaymentAndUsageCardByUsageCardID,
+  //GetParkingCardWithZoneByID,
+  GetZoneDailyByZoneID,
+  GetIdCardZone,
+  DeleteParkingCard,
+};

@@ -297,6 +297,24 @@ func UpdateTaxUserByid(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
 
+// GET /Tax-ICONIC
+func GetTaxUserICONIC(c *gin.Context) {
+	var TaxUser entity.TaxUser
+
+	db := config.DB()
+	
+	results := db.Preload("User").Where("company_name = ?", "ICONIC").First(&TaxUser)
+	if results.Error != nil {
+		if errors.Is(results.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Tax data for ICONIC not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, TaxUser)
+}
 
 //GET user by status
 func GetListUserByStatus(c *gin.Context) {

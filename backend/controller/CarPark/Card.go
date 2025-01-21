@@ -1,27 +1,21 @@
 package CarPark
 
 import (
-	//"errors" // เพิ่ม import สำหรับ package errors
-
-	//"fmt"
-
 	"fmt"
 	"time"
 
-	"github.com/asaskevich/govalidator"
 	"example.com/ProjectSeG13/config"
 	"example.com/ProjectSeG13/entity"
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 
-	//"gorm.io/gorm" // เพิ่ม import สำหรับ gorm
 	"net/http"
 )
 
-// POST ParkingTransaction
+// POST ParkingUsageCard
 func CreateParkingCard(c *gin.Context) {
 	var card entity.ParkingCard
 	var user entity.User
-	var store entity.Store
 
 	// Bind JSON
 	if err := c.ShouldBindJSON(&card); err != nil {
@@ -41,29 +35,40 @@ func CreateParkingCard(c *gin.Context) {
 	}
 
 	// Find store
-	resultStore := db.Where("user_id = ?", userID).Find(&store)
-	if resultStore.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": resultStore.Error.Error()})
+	/*	var store entity.Store
+		 	resultStore := db.Where("user_id = ?", userID).Find(&store)
+			if resultStore.Error != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": resultStore.Error.Error()})
+				return
+			} */
+
+	if user.Status == "Member" {
+		card.TypeCardID = 1
+		card.ParkingFeePolicyID = 1
+	} else if user.Status == "User" {
+		card.TypeCardID = 2
+		card.ParkingFeePolicyID = 2
+	} else {
+		card.TypeCardID = 1
+		card.ParkingFeePolicyID = 1
+	}
+
+	var typeCard entity.TypeCard
+	if err := db.Where("id = ?", card.TypeCardID).Find(&typeCard).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "TypeCard not found"})
 		return
 	}
 
-	if user.Status == "Member" {
-		card.TypeParkID = 1
-		card.ParkingFeePolicyID = 1
-	} else if user.Status == "User" {
-		card.TypeParkID = 2
-		card.ParkingFeePolicyID = 2
-	} else {
-		card.TypeParkID = 1
-		card.ParkingFeePolicyID = 1
-	}
+	// เพิ่มปีที่กำหนดจาก ExpiryYear ไปยังวันที่ปัจจุบัน
+	expiryDate := time.Now().AddDate(typeCard.ExpiryYear, 0, 0)
+	card.ExpiryDate = &expiryDate
 
-/* 	// ตรวจสอบ struc ข้อมูลด้วย govalidator
+	// ตรวจสอบ struc ข้อมูลด้วย govalidator
 	if _, err := govalidator.ValidateStruct(card); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
- */
+
 	// Create ParkingCard
 	if err := db.Create(&card).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -79,10 +84,10 @@ func CreateParkingCard(c *gin.Context) {
 		zoneMap[zone.Name] = zone
 	}
 
-	// Determine zones to assign based on TypeParkID
+	// Determine zones to assign based on TypeCardID
 	var zonesToAssign []entity.ParkingZone
-	switch card.TypeParkID {
-	case 1: // VIP
+	switch card.TypeCardID {
+	case 1: // MEMBER
 		zonesToAssign = append(zonesToAssign, zoneMap["VIP"], zoneMap["GENERAL"])
 	case 2: // GENERAL
 		zonesToAssign = append(zonesToAssign, zoneMap["GENERAL"])
@@ -144,10 +149,10 @@ func GetListCardAndCheckExpiredCardtoUpdate(c *gin.Context) {
 	db := config.DB()
 
 	if err := db.Preload("User").Preload("ParkingFeePolicy").
-		Preload("TypePark").Preload("StatusCard").
+		Preload("TypeCard").Preload("StatusCard").
 		Preload("ParkingZone").
-		Preload("ParkingTransaction").
-		Preload("ParkingPayment").
+		/* Preload("ParkingUsageCard"). */
+		Preload("ParkingUsageCard.ParkingPayment").
 		Find(&cards).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -198,7 +203,7 @@ func GetParkingCardByID(c *gin.Context) {
 
 	db := config.DB()
 
-	if err := db.Preload("ParkingFeePolicy").Preload("ParkingZone").Preload("User").Preload("StatusCard").Preload("TypePark").Preload("ParkingTransaction").Preload("ParkingPayment").First(&parkingCard, "id = ?", id).Error; err != nil {
+	if err := db.Preload("ParkingFeePolicy").Preload("ParkingZone").Preload("User").Preload("StatusCard").Preload("TypeCard").Preload("ParkingUsageCard.ParkingZoneDaily.ParkingZone").Preload("ParkingUsageCard").First(&parkingCard, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
 		return
 	}
@@ -213,10 +218,10 @@ func GetParkingCardByUserID(c *gin.Context) {
 
 	// ค้นหาบัตรจอดรถที่มี user_id ตรงกับที่รับมา
 	if err := db.Preload("StatusCard").
-		Preload("TypePark").
+		Preload("TypeCard").
 		Preload("ParkingFeePolicy").
-		Preload("ParkingTransaction").
-		Preload("ParkingPayment").
+		/* Preload("ParkingUsageCard"). */
+		Preload("ParkingUsageCard.ParkingPayment").
 		Preload("ParkingZone").
 		Preload("User").
 		Where("user_id = ?", userID). // ค้นหาตาม user_id
@@ -237,21 +242,15 @@ func GetParkingCardByUserID(c *gin.Context) {
 }
 
 func DeleteParkingCard(c *gin.Context) {
-
 	id := c.Param("id")
-
 	db := config.DB()
 
-	if err := db.Where("parking_cards_id = ?", id).Delete(&entity.ParkingCardZone{}).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Card not found"})
-		return
-	}
-	if tx := db.Exec("DELETE FROM parking_cards WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := db.Model(&entity.ParkingCard{}).Where("id = ?", id).Update("deleted_at", time.Now()); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
 
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
 }
 
 func GetListCardAndUser(c *gin.Context) {
@@ -262,10 +261,10 @@ func GetListCardAndUser(c *gin.Context) {
 
 	// ดึงข้อมูล ParkingCard พร้อม preload ความสัมพันธ์
 	if err := db.Preload("User").Preload("ParkingFeePolicy").
-		Preload("TypePark").Preload("StatusCard").
+		Preload("TypeCard").Preload("StatusCard").
 		Preload("ParkingZone").
-		Preload("ParkingTransaction").
-		Preload("ParkingPayment").
+		/* Preload("ParkingUsageCard"). */
+		Preload("ParkingUsageCard.ParkingPayment").
 		Find(&cards).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -284,14 +283,15 @@ func GetListCardAndUser(c *gin.Context) {
 	})
 }
 
-func GetListTransaction(c *gin.Context) {
-	var trans []entity.ParkingTransaction
+func GetListUsageCard(c *gin.Context) {
+	var trans []entity.ParkingUsageCard
 
 	db := config.DB()
 
 	if err := db.Preload("User").
 		Preload("ParkingZone").
 		Preload("ParkingPayment").
+		Preload("ParkingZoneDaily").
 		Find(&trans).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -313,9 +313,9 @@ func GetListStatusCard(c *gin.Context) {
 	c.JSON(http.StatusOK, status)
 }
 
-// POST ParkingTransaction
-func CreateParkingTransaction(c *gin.Context) {
-	var trans entity.ParkingTransaction
+// POST ParkingUsageCard
+func CreateParkingUsageCard(c *gin.Context) {
+	var trans entity.ParkingUsageCard
 
 	if err := c.ShouldBindJSON(&trans); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -324,31 +324,16 @@ func CreateParkingTransaction(c *gin.Context) {
 
 	db := config.DB()
 
-	newTransaction := entity.ParkingTransaction{
-		ReservationDate:    trans.ReservationDate,
-		IsReservedPass:     trans.IsReservedPass,
-		EntryTime:          trans.EntryTime,
-		ExitTime:           trans.ExitTime,
-		TotalHourly:        trans.TotalHourly,
-		Image:              trans.Image,
-		LicensePlate:       trans.LicensePlate,
-		Color:              trans.Color,
-		Make:               trans.Make,
-		UserID:             trans.UserID,
-		ParkingCardID:      trans.ParkingCardID, // Using ParkingCard ID
-		ParkingZoneDailyID: trans.ParkingZoneDailyID,
-	}
-
-	if err := db.Create(&newTransaction).Error; err != nil {
+	if err := db.Create(&trans).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "ParkingTransaction created successfully", "data": newTransaction})
+	c.JSON(http.StatusCreated, gin.H{"message": "ParkingUsageCard created successfully", "data": trans})
 }
 
-func UpdateParkingTransaction(c *gin.Context) {
-	var tran entity.ParkingTransaction
+func UpdateParkingUsageCard(c *gin.Context) {
+	var tran entity.ParkingUsageCard
 	TranID := c.Param("id")
 
 	db := config.DB()
@@ -369,6 +354,33 @@ func UpdateParkingTransaction(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "ParkingZone updated successfully"})
+}
+
+func GetParkingUsageCardByID(c *gin.Context) {
+	id := c.Param("id")
+	var usageCard entity.ParkingUsageCard
+
+	db := config.DB()
+
+	if err := db.Preload("ParkingZoneDaily").Preload("ParkingZoneDaily.ParkingZone").Preload("ParkingCard").First(&usageCard, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+		return
+	}
+	c.JSON(http.StatusOK, usageCard)
+}
+
+/********************************* TypeCard *************************************/
+func GetListTypeCard(c *gin.Context) {
+	var typeCards []entity.TypeCard
+
+	db := config.DB()
+
+	if err := db.Find(&typeCards).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, typeCards)
 }
 
 /********************************* User *************************************/
@@ -396,10 +408,9 @@ func GetUserDetails(c *gin.Context) {
 
 	// ดึงข้อมูล ParkingCard ที่เชื่อมกับ User
 	if err := db.Preload("StatusCard").
-		Preload("TypePark").
+		Preload("TypeCard").
 		Preload("ParkingFeePolicy").
-		Preload("ParkingTransaction").
-		Preload("ParkingPayment").
+		Preload("ParkingUsageCard").
 		Preload("ParkingZone").
 		Preload("User").
 		Where("user_id = ?", userID).
@@ -414,6 +425,50 @@ func GetUserDetails(c *gin.Context) {
 		"user":        user,
 		"vehicle":     vehicle,
 		"parkingCard": parkingCard,
+	})
+}
+
+/*************************************** Create ZoneDaily+ParkingUsageCard ***********************************************/
+
+func CreateParkingZoneDailyAndUsageCard(c *gin.Context) {
+	var input struct {
+		ZoneDaily   entity.ParkingZoneDaily   `json:"ParkingZoneDaily"`
+		UsageCard entity.ParkingUsageCard `json:"ParkingUsageCard"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := config.DB()
+
+	// Check if ZoneDaily exists for the given date and zone
+	var existingZoneDaily entity.ParkingZoneDaily
+	result := db.Where("date = ? AND parking_zone_id = ?", input.ZoneDaily.Date, input.ZoneDaily.ParkingZoneID).First(&existingZoneDaily)
+
+	if result.RowsAffected == 0 {
+		// Create new ZoneDaily if not exists
+		if err := db.Create(&input.ZoneDaily).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create ZoneDaily"})
+			return
+		}
+		existingZoneDaily = input.ZoneDaily
+	} else {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		return
+	}
+
+	// Create ParkingUsageCard
+	input.UsageCard.ParkingZoneDailyID = existingZoneDaily.ID
+	if err := db.Create(&input.UsageCard).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create ParkingUsageCard"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Successfully created ZoneDaily and ParkingUsageCard",
+		"data":    input,
 	})
 }
 
@@ -447,9 +502,6 @@ func UpdateParkingCardAndZone(c *gin.Context) {
 		return
 	}
 
-	/* fmt.Println("ParkingZone ID:", payload.ParkingZone.ID)
-	fmt.Println("ParkingZone AvailableZone:", payload.ParkingZone.AvailableZone) */
-
 	if err := db.First(&payload.ParkingZone, c.Param("zid")).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Parking zone not found"})
 		return
@@ -479,7 +531,7 @@ func GetIdCardZone(c *gin.Context) {
 	// var cardzone entity.ParkingCardZone
 
 	db := config.DB()
-	if err := db.Preload("ParkingZone.TypePark").Preload("ParkingZone.ParkingCard").First(&cards, ID).Error; err != nil {
+	if err := db.Preload("ParkingZone.TypeCard").Preload("ParkingZone.ParkingCard").First(&cards, ID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Card not found"})
 		return
 	}

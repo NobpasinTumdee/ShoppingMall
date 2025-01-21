@@ -18,7 +18,7 @@ func GetListZone(c *gin.Context) {
 
 	db := config.DB()
 
-	if err := db.Preload("ParkingCard").Preload("TypePark").Find(&zones).Error; err != nil {
+	if err := db.Preload("ParkingCard").Preload("TypeCard").Find(&zones).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -55,23 +55,23 @@ func UpdateParkingZone(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "ParkingZone updated successfully"})
 }
 
-func GetZoneByTypePark(c *gin.Context) {
+func GetZoneByTypeCard(c *gin.Context) {
 	var zones []entity.ParkingZone
-	typePark := c.Param("type") // รับค่า type จาก URL params
+	typeCard := c.Param("type") // รับค่า type จาก URL params
 
 	db := config.DB()
 
-	// ค้นหาบันทึก TypePark ที่ตรงกับค่า type ที่ส่งมา
-	var typeParkRecords []entity.TypePark
-	if err := db.Where("Type = ?", typePark).Find(&typeParkRecords).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "TypePark not found"})
+	// ค้นหาบันทึก TypeCard ที่ตรงกับค่า type ที่ส่งมา
+	var typeCardRecords []entity.TypeCard
+	if err := db.Where("Type = ?", typeCard).Find(&typeCardRecords).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "TypeCard not found"})
 		return
 	}
 
-	// ค้นหาทุกๆ ParkingZones ที่เชื่อมโยงกับ TypePark ที่พบ
-	for _, typeParkRecord := range typeParkRecords {
+	// ค้นหาทุกๆ ParkingZones ที่เชื่อมโยงกับ TypeCard ที่พบ
+	for _, typeCardRecord := range typeCardRecords {
 		var zone []entity.ParkingZone
-		if err := db.Where("type_park_id = ?", typeParkRecord.ID).Find(&zone).Error; err != nil {
+		if err := db.Where("type_park_id = ?", typeCardRecord.ID).Find(&zone).Error; err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Parking zones not found"})
 			return
 		}
@@ -220,7 +220,6 @@ func UpdateZoneDailyByZoneID(c *gin.Context) {
 	ZoneID := c.Param("id")
 	db := config.DB()
 
-	
 	// ตรวจสอบ struc ข้อมูลด้วย govalidator
 	if _, err := govalidator.ValidateStruct(daily); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

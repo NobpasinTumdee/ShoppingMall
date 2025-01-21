@@ -1,156 +1,219 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
-  Col,
-  Modal,
-  Row,
-  message,
-} from "antd";
-import { ParkingCardInterface } from "../../../../../interfaces/Carpark";
+  ParkingCardInterface,
+  ParkingPaymentInterface,
+  ParkingUsageCardInterface,
+} from "../../../../../interfaces/Carpark";
+import LOGO from "./../../../../../assets/icon/LOGOS.png";
+import "./../../CarPark.css";
+import { TaxUserInterface } from "../../../../../interfaces/StoreInterface";
+import {
+  GetParkingPaymentByUsageCardID,
+  GetTaxUserICONIC,
+} from "../../../../../services/https";
 
-interface OutProps {
-  setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
-  cards: ParkingCardInterface[];
-  getParkingCards: () => void;
+interface ReceiptProps {
+  existingUsageCard?: ParkingUsageCardInterface;
   selectedCard: ParkingCardInterface | null;
-  selectedButtonInOutDefault: string;
-  carLicensePlate: string;
-  setCarLicensePlate: React.Dispatch<React.SetStateAction<string>>;
-  selectedCardIndex: number | null;
-  setSelectedCardIndex: React.Dispatch<React.SetStateAction<number | null>>;
-  setSelectedCard: React.Dispatch<React.SetStateAction<ParkingCardInterface | null>>;
-  setFilteredData: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
-  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-  searchValue: string;
-  setIsModalOutVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  isModalOutVisible: boolean;
-  handleCancel: () => void;
 }
 
-const OUT: React.FC<OutProps> = ({
-  setCards,
-  cards,
-  getParkingCards,
+const ReceiptCard: React.FC<ReceiptProps> = ({
+  existingUsageCard,
   selectedCard,
-  selectedButtonInOutDefault,
-  carLicensePlate,
-  setCarLicensePlate,
-  selectedCardIndex,
-  setSelectedCardIndex,
-  setSelectedCard,
-  setFilteredData,
-  setSearchValue,
-  searchValue,
-  setIsModalOutVisible,
-  isModalOutVisible,
-  handleCancel,
 }) => {
-  const [amount, setAmount] = useState<number>(0);
-  const [totalTime, setTotalTime] = useState<string>("Calculating...");
-  const [discount, setDiscount] = useState<number>(0);
-  const [latestEntryTime, setLatestEntryTime] = useState<string>("");
+  const [payment, setPayment] = useState<ParkingPaymentInterface>();
+  const [taxUser, setTaxUser] = useState<TaxUserInterface>();
+  const totalTimeInDecimal = existingUsageCard?.TotalHourly || 0;
+  const totalMinutes = totalTimeInDecimal * 60;
+  const totalSeconds = totalTimeInDecimal * 3600; // 60 * 60
+  const hours = Math.floor(totalTimeInDecimal);
+  const minutes = Math.floor(totalMinutes % 60);
+  const seconds = Math.floor(totalSeconds % 60);
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleString("en-EN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-  };
-
-  const calculateTimeDifference = (entryTime: string) => {
-    const entry = new Date(entryTime);
-    const now = new Date();
-    const timeDiff = (now.getTime() - entry.getTime()) / (1000 * 3600); // ชั่วโมง
-    const totalTime = `${Math.floor(timeDiff)} hr ${Math.round(
-      (timeDiff % 1) * 60
-    )} min`;
-    return totalTime;
-  };
+  const formattedTime = `${hours} hr ${minutes} min ${seconds} sec`;
 
   useEffect(() => {
-    if (selectedCard?.ParkingTransaction?.length) {
-      const latestEntry = selectedCard.ParkingTransaction.reduce(
-        (latest, current) => {
-          return new Date(current.EntryTime || "").getTime() >
-            new Date(latest.EntryTime || "").getTime()
-            ? current
-            : latest;
-        },
-        selectedCard.ParkingTransaction[0]
-      );
-
-      if (latestEntry.EntryTime) {
-        setLatestEntryTime(formatDate(new Date(latestEntry.EntryTime)));
-        setTotalTime(calculateTimeDifference(latestEntry.EntryTime));
-        // คำนวณค่าจอดรถ (ตัวอย่างการคำนวณ)
-        const calculatedAmount = 50 + (Math.random() * 100); // คำนวณตามเวลาจอด
-        setAmount(calculatedAmount);
+    const fetchData = async () => {
+      try {
+        const restax = await GetTaxUserICONIC();
+        const respayment = await GetParkingPaymentByUsageCardID(
+          existingUsageCard?.ID || 0
+        );
+        if (respayment.status == 200 && restax.status === 200) {
+          setPayment(respayment.data);
+          setTaxUser(restax.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
       }
-    }
-  }, [selectedCard]);
-
-  const handlePayment = () => {
-    message.success("Payment Successful");
-    setIsModalOutVisible(false);
-  };
+    };
+    fetchData();
+    console.log("taxUser: ", taxUser);
+    console.log("existingUsageCard: ", existingUsageCard);
+    console.log("payment: ", payment);
+    console.log("selectedCard: ", selectedCard);
+  }, []);
 
   return (
-    <Modal
-      title="ICONIC REALTY SERVICES CO.,LTD."
-      open={isModalOutVisible}
-      onOk={handlePayment}
-      onCancel={handleCancel}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "16px",
-        padding: "16px",
-        fontSize: "16px",
-        fontFamily: "Dongle, sans-serif",
-      }}
-    >
-      <div style={{ fontFamily: "Dongle, sans-serif", fontSize: "30px" }}>
-        {amount.toFixed(2)} ฿
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "auto",
+        }}
+      >
+        {payment ? (
+          <div className="SlipCard">
+            <div
+              style={{ textAlign: "left", width: "100%", maxWidth: "600px" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  textAlign: "left",
+                  width: "100%",
+                  maxWidth: "600px",
+                }}
+              >
+                <h1>Receipt / Tax Invoice (ABB)</h1>
+                <img src={LOGO} alt="Logo" />
+              </div>
+              <div className="AdressCard">
+                <p className="P1Card">FROM</p>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <p style={{ fontSize: "13px" }}>
+                    <p>{taxUser?.CompanyName} REALTY SERVICES CO.,LTD</p>
+                    <p>
+                      Address: 111, University Road, Suranaree <br />
+                      Subdistrict, Mueang Nakhon Ratchasima <br />
+                      District, Nakhon Ratchasima 30000 <br />
+                    </p>
+                    <p>Address: {taxUser?.Residencee}</p>
+                  </p>
+                </div>
+              </div>
+
+              <div className="Adress2Card">
+                <p className="P1Card">BILL TO</p>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <p style={{ fontSize: "13px", width: "250px" }}>
+                    Card ID:{" "}
+                    {selectedCard?.ID
+                      ? selectedCard.ID.toString().padStart(4, "0")
+                      : "0000"}
+                  </p>
+                  <p style={{ marginRight: "20px", fontSize: "13px" }}>
+                    User Name: {payment.User?.UserName} <br />
+                    Full Name: {payment.User?.FirstName}{" "}
+                    {payment.User?.LastName} <br />
+                    Tel: {payment.User?.Tel}
+                  </p>
+                </div>
+              </div>
+
+              <div className="UsageCardInfo">
+                <p>
+                  License Plate: {existingUsageCard?.LicensePlate || "N/A"}
+                </p>
+                <p>
+                  Entry Time:{" "}
+                  {existingUsageCard?.EntryTime
+                    ? new Date(existingUsageCard.EntryTime).toLocaleString()
+                    : "N/A"}
+                </p>
+                <p>
+                  Exit Time:{" "}
+                  {existingUsageCard?.ExitTime
+                    ? new Date(existingUsageCard.ExitTime).toLocaleString()
+                    : "N/A"}
+                </p>
+                <p>Duration: {formattedTime}</p>
+              </div>
+
+              <div className="listpayment1Card">
+                <hr />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    textAlign: "left",
+                  }}
+                >
+                  <p>DESCRIPTION</p>
+                  <p>AMOUNT</p>
+                </div>
+                <hr />
+                <div className="SublistCard">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      textAlign: "left",
+                    }}
+                  >
+                    <p style={{ width: "auto" }}>
+                      Amount (Discount : {payment.DiscountAmount} %)
+                    </p>
+                    <p>{payment.Amount} ฿</p>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      textAlign: "left",
+                    }}
+                  >
+                    <p style={{ width: "auto" }}>Cash Received</p>
+                    <p>{payment.CashReceived} ฿</p>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      textAlign: "left",
+                    }}
+                  >
+                    <p style={{ width: "auto" }}>Change</p>
+                    <p>{payment.Change} ฿</p>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    textAlign: "left",
+                  }}
+                >
+                  <p style={{ width: "auto" }}>Net Amount</p>
+                  <p>{payment.NetAmount} ฿</p>
+                </div>
+                <hr />
+              </div>
+
+              <div className="PaymentMethodCard">
+                <p>Payment Method: {payment.IsCash ? "Cash" : "QR Payment"}</p>
+              </div>
+
+              <div className="bottoninfoCard">
+                ICONIC <br />
+                THANK YOU.
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="SlipCard">กำลังโหลดข้อมูล...</div>
+        )}
       </div>
-      <div style={{ fontSize: "20px", marginTop: "10px" }}>
-        <Row gutter={50}>
-          <Col span={10}>{"License Plate"}</Col>
-          <Col>{selectedCard?.ParkingTransaction?.[0]?.LicensePlate || "No Data"}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"IN"}</Col>
-          <Col>{latestEntryTime || "No Data"}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"OUT"}</Col>
-          <Col>{formatDate(new Date())}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Total Time"}</Col>
-          <Col>{totalTime || "Calculating..."}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Amount"}</Col>
-          <Col>{amount.toFixed(2)}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Discount (%)"}</Col>
-          <Col>{discount.toFixed(2)}</Col>
-        </Row>
-        <Row gutter={50}>
-          <Col span={10}>{"Total Amount"}</Col>
-          <Col>{(amount - discount).toFixed(2)}</Col>
-        </Row>
-        <Button onClick={handlePayment}>Pay Now</Button>
-      </div>
-    </Modal>
+    </>
   );
 };
 
-export default OUT;
+export default ReceiptCard;

@@ -11,13 +11,13 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestParkingTransaction(t *testing.T) {
+func TestParkingUsageCard(t *testing.T) {
     g := NewGomegaWithT(t)
 
-    t.Run("Valid ParkingTransaction", func(t *testing.T) {
+    t.Run("Valid ParkingUsageCard", func(t *testing.T) {
         now := time.Now()
         totalHourly := 20.022 // ประกาศตัวแปร float64 ก่อน
-        transaction := entity.ParkingTransaction{
+        transaction := entity.ParkingUsageCard{
             LicensePlate:       "12AB 1234",
             ParkingCardID:      "PC123456",
             ParkingZoneDailyID: 1,
@@ -38,7 +38,7 @@ func TestParkingTransaction(t *testing.T) {
     })
     
     t.Run("LicensePlate is required", func(t *testing.T) {
-        transaction := entity.ParkingTransaction{
+        transaction := entity.ParkingUsageCard{
             LicensePlate:       "",
             ParkingCardID:      "PC123456",
             ParkingZoneDailyID: 1,
@@ -52,7 +52,7 @@ func TestParkingTransaction(t *testing.T) {
     })
 
     t.Run("ParkingZoneDailyID is required", func(t *testing.T) {
-        transaction := entity.ParkingTransaction{
+        transaction := entity.ParkingUsageCard{
             LicensePlate:       "12AB 1234",
             ParkingCardID:      "PC123456",
             ParkingZoneDailyID: 0,

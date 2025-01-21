@@ -40,7 +40,7 @@ type User struct {
 
 	InventoryRequests []InventoryRequest   `gorm:"foreignKey:UserID"` //เบิกอุปกรณ์ทำความสะอาด
 
-	ParkingTransaction 	[]ParkingTransaction 	`gorm:"foreignKey:UserID"`
+	ParkingUsageCard 	[]ParkingUsageCard 	`gorm:"foreignKey:UserID"`
 	ParkingCard 		[]ParkingCard 			`gorm:"foreignKey:UserID"`
 	Vehicle 			*Vehicle 				`gorm:"foreignKey:UserID"`
 	ParkingPayment     	[]ParkingPayment     	`gorm:"foreignKey:UserID"`

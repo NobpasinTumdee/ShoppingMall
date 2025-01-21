@@ -1,7 +1,6 @@
 // Updated IN Component for Parking Management System
 import React, { useState, useEffect } from "react";
 import {
-  Button,
   Card,
   Col,
   ConfigProvider,
@@ -18,28 +17,21 @@ import {
 } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import {
-  //GetParkingCardWithZoneByID,
-  CreateParkingTransaction,
+  CreateParkingUsageCard,
   UpdateParkingCard,
-  UpdateParkingZone,
   GetParkingCardByID,
-  UpdateParkingTransaction,
-  GetZoneDailyByZoneID,
-  UpdateZoneDailyByZoneID,
-  CreateZoneDaily,
+  UpdateParkingUsageCard,
   GetListZoneDaily,
   UpdateZoneDailyByID,
+  CreateParkingZoneDailyAndUsageCard,
 } from "../../../../../services/https";
-//import "./../Carpark.css";
 import {
   ParkingCardInterface,
-  ParkingTransactionInterface,
+  ParkingUsageCardInterface,
   ParkingZoneDailyInterface,
   StatusCardInterface,
 } from "../../../../../interfaces/Carpark";
 
-import Tesseract from "tesseract.js";
-import ImgCrop from "antd-img-crop";
 import dayjs from "dayjs";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
@@ -62,15 +54,6 @@ interface InProps {
   setCards: React.Dispatch<React.SetStateAction<ParkingCardInterface[]>>;
   cards: ParkingCardInterface[];
   status: StatusCardInterface[];
-  //fetchDataForInOut: () => Promise<void>;
-  setCarLicensePlate: React.Dispatch<React.SetStateAction<string>>;
-  carLicensePlate: string;
-  setCarColor: React.Dispatch<React.SetStateAction<string | undefined>>;
-  carColor: string | undefined;
-  setCarMake: React.Dispatch<React.SetStateAction<string | undefined>>;
-  carMake: string | undefined;
-  setFileList: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
-  fileList: UploadFile<any>[];
 }
 
 const IN: React.FC<InProps> = ({
@@ -81,24 +64,10 @@ const IN: React.FC<InProps> = ({
   setSelectedCard,
   isModalInVisible,
   setIsModalInVisible,
-  setSelectedButtonInOutDefault,
-  setFilteredData,
-  setCards,
-  cards,
   status,
-  //fetchDataForInOut,
-/*   setCarLicensePlate,
-  carLicensePlate,
-  setCarColor,
-  carColor,
-  setCarMake,
-  carMake,
-  setFileList,
-  fileList, */
 }) => {
-  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
-  const [selectedCardIndex, setSelectedCardIndex] = useState(null);
+  const [selectedZoneIndex, setSelectedZoneIndex] = useState(null);
   const [carLicensePlate, setCarLicensePlate] = useState<string>();
   const [carColor, setCarColor] = useState<string>();
   const [carMake, setCarMake] = useState<string>();
@@ -110,61 +79,98 @@ const IN: React.FC<InProps> = ({
   >([]);
   const [selectedZoneDaily, setSelectedZoneDaily] =
     useState<ParkingZoneDailyInterface>();
+  const [existingUsageCard, setExistingUsageCard] =
+    useState<ParkingUsageCardInterface>();
   const [reload, setReload] = useState(false); // สถานะใหม่สำหรับกระตุ้น useEffect
-  
+  const imageUrl = fileList[0]?.thumbUrl || null;
+
   useEffect(() => {
     console.log("Requesting with ID:", selectedCard?.ID);
     const fetchData = async () => {
       try {
-        const rescard = await GetParkingCardByID(selectedCard?.ID || "");
+        const [rescard, listZoneDailyRes] = await Promise.all([
+          GetParkingCardByID(selectedCard?.ID || ""),
+          GetListZoneDaily(),
+        ]);
+
         setSelectedCard(rescard.data);
 
-        console.log("ParkingTransaction: ", rescard.data.ParkingTransaction);
+        if (listZoneDailyRes.status === 200) {
+          setZoneDailyData(listZoneDailyRes.data);
+          const today = dayjs();
+          const selectedDateStr = today.format("YYYY-MM-DD");
+          console.log("selectedDateStr: ", selectedDateStr);
+          const zonedaily = listZoneDailyRes.data.find((zoneDaily: any) => {
+            const zoneDate = new Date(zoneDaily.Date).toLocaleDateString(
+              "en-CA"
+            );
+            console.log("selectedDateStr: ", selectedDateStr);
+            console.log("zoneDate: ", zoneDate);
+            console.log(
+              "zoneDate === selectedDateStr: ",
+              zoneDate === selectedDateStr
+            );
+            return zoneDate === selectedDateStr;
+          });
+
+          console.log("zonedaily: ", zonedaily);
+
+          if (!zonedaily) {
+            setZoneDailyData(zonedaily);
+            setSelectedZoneDaily(zonedaily ?? null);
+          }
+        }
+
+        console.log("ParkingUsageCard: ", rescard.data.ParkingUsageCard);
         console.log("IsPermanent: ", rescard.data.IsPermanent);
         console.log("ParkingZone: ", rescard.data.ParkingZone);
-        const existingTransaction = rescard.data.ParkingTransaction?.find(
-          (transaction: any) => {
-            console.log("Transaction: ", transaction);
-            return (
-              transaction?.IsReservedPass === false &&
-              transaction?.ReservationDate === String(today) &&
-              rescard.data.ParkingTransaction?.length > 0 &&
-              rescard.data.IsPermanent === true
-            );
-          }
-        );
-        console.log("existingTransaction: ", existingTransaction);
 
-        if (existingTransaction !== undefined && existingTransaction === true) {
-          setCarLicensePlate(existingTransaction.LicensePlate || "");
-          setCarColor(existingTransaction.Color || "");
-          setCarMake(existingTransaction.Make || "");
+        const existingTrans = rescard.data.ParkingUsageCard?.find(
+          (usageCard: any) =>
+            !usageCard?.IsReservedPass &&
+            usageCard?.ReservationDate === dateWithTime &&
+            rescard.data.ParkingUsageCard?.length > 0 &&
+            rescard.data.IsPermanent
+        );
+
+        setExistingUsageCard(existingTrans);
+        console.log("existingTrans: ", existingTrans);
+
+        if (existingTrans) {
+          setCarLicensePlate(existingTrans.LicensePlate || "");
+          setCarColor(existingTrans.Color || "");
+          setCarMake(existingTrans.Make || "");
           setFileList([
             {
               uid: "-1",
               name: "image.png",
               status: "done",
-              url: existingTransaction.Image,
+              url: existingTrans.Image,
             },
           ]);
         }
       } catch (error) {
         message.error("Failed to fetch parking card data.");
       }
-    }; 
+    };
+
     if (isModalInVisible) fetchData();
+
+    // Additional Logs
     console.log("carLicensePlate: ", carLicensePlate);
     console.log("carColor: ", carColor);
     console.log("carMake: ", carMake);
     console.log("fileList: ", fileList);
     console.log("fileList.length: ", fileList.length);
+    console.log("existingUsageCard: ", existingUsageCard);
+
     if (selectedZoneDaily) {
       console.log("Updated selectedZoneDaily: ", selectedZoneDaily);
     }
   }, [isModalInVisible, reload, selectedZoneDaily]);
 
   const handleCardClick = (index: any) => {
-    setSelectedCardIndex(index === selectedCardIndex ? null : index);
+    setSelectedZoneIndex(index === selectedZoneIndex ? null : index);
   };
 
   const handleCancel = () => {
@@ -173,52 +179,43 @@ const IN: React.FC<InProps> = ({
     setCarMake("");
     setSelectedZoneDaily(undefined);
     setSelectedCard(null);
-    setSelectedCardIndex(null);
+    setSelectedZoneIndex(null);
     setIsModalInVisible(false);
     setFileList([]);
     form.resetFields();
+    setReload(!reload);
   };
 
   const handleOk = async () => {
-    if (selectedCardIndex === null) {
-      message.error("Please select a parking zone and input all!");
+    if (selectedZoneIndex === null) {
+      message.error("Please select a parking zone!");
       return;
     }
 
-    const zone = selectedCard?.ParkingZone?.[selectedCardIndex];
+    const zone = selectedCard?.ParkingZone?.[selectedZoneIndex];
 
     if (!zone) {
       message.error("This parking zone is not found.");
       return;
     }
 
-    const imageUrl = fileList[0]?.thumbUrl || null;
-
-    if (
-      !carLicensePlate ||
-      !carColor ||
-      !carMake ||
-      (imageUrl === null && fileList.length === 0)
-    ) {
-      message.error("Please select a parking zone and input all!");
-      return;
-    }
-
-    const existingTransaction = selectedCard?.ParkingTransaction?.find(
-      (transaction) =>
-        transaction.IsReservedPass === false &&
-        transaction.ReservationDate === dateWithTime
-    );
-
     const updateCardData = {
-      StatusCardID: Number(status?.find((state: any) => state.Status === "OUT")?.ID || null),
+      StatusCardID: Number(
+        status?.find((state: any) => state.Status === "OUT")?.ID || null
+      ),
     };
 
-        // Convert today to the start of the day (00:00:00)
+    // Convert today to the start of the day (00:00:00)
     const DayToday = new Date(today.toDate());
     DayToday.setHours(0, 0, 0, 0);
 
-    const isSameDate = (date1: Date, date2: Date): boolean => {
+    const isSameDate = (
+      date1: Date | null | undefined,
+      date2: Date | null | undefined
+    ): boolean => {
+      if (!date1 || !date2) {
+        return false;
+      }
       return (
         date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&
@@ -227,192 +224,197 @@ const IN: React.FC<InProps> = ({
     };
 
     try {
+      await form.validateFields();
+      console.log("Form values: ", form.getFieldsValue());
+    } catch (error) {
+      console.error("Error details:", error);
+      return;
+    }
+
+    try {
       // **ส่วนที่ 1: ดึงข้อมูล ZoneDaily**
-      const resZoneDaily = await GetListZoneDaily();
-      if (resZoneDaily.status === 200) {
-        const ZoneDaily = resZoneDaily.data.find((zoneDaily: any) => {
-          const DatezoneDaily = new Date(zoneDaily.Date).toISOString();
-          const dateToday = DayToday.toISOString();
-          return (
-            zone.ID === zoneDaily.ParkingZoneID && DatezoneDaily === dateToday
-          );
-        });
-        console.log("ZoneDaily: ", ZoneDaily);
+      const ZoneDaily =
+        zoneDailyData && zoneDailyData.length > 0
+          ? zoneDailyData.find((zoneDaily: ParkingZoneDailyInterface) => {
+              if (!zoneDaily.Date) return false;
+              const DatezoneDaily = new Date(zoneDaily.Date).toISOString();
+              const dateToday = DayToday.toISOString();
+              return (
+                zone.ID === zoneDaily.ParkingZoneID &&
+                DatezoneDaily === dateToday
+              );
+            })
+          : {}; // Fallback to an empty object if `zoneDailyData` is empty or undefined
 
-        // **ส่วนที่ 2: เตรียมข้อมูลสำหรับการอัปเดตหรือสร้าง ZoneDaily**
-        const updateZoneDailyData = {
-          ID: ZoneDaily?.ID,
-          Date: dateWithTime,
-          TotalVisitors: (ZoneDaily?.TotalVisitors || 0) + 1,
-          AvailableZone:
-            existingTransaction !== undefined 
-              ? (ZoneDaily?.AvailableZone || 0) - 1
-              : (zone?.MaxCapacity || 0) - 1,
-          ReservedAvailable:
-            existingTransaction !== undefined
-              ? Math.max(
-                  0,
-                  ((ZoneDaily?.ReservedAvailable || 0) ??
-                    zone?.MaxReservedCapacity) - 1
-                )
-              : Math.min(
-                  zone?.MaxReservedCapacity || 0,
-                  (ZoneDaily?.ReservedAvailable || 0) ??
-                    zone?.MaxReservedCapacity
-                ),
-          ParkingZoneID: zone.ID,
-        };
+      const zoneDailyDate = ZoneDaily?.Date ? new Date(ZoneDaily.Date) : null;
 
+      // **ส่วนที่ 2: เตรียมข้อมูลสำหรับการอัปเดตหรือสร้าง ZoneDaily**
+      const updateZoneDailyData = {
+        ID: ZoneDaily?.ID,
+        Date: dateWithTime,
+        TotalVisitors: (ZoneDaily?.TotalVisitors || 0) + 1,
+        AvailableZone:
+          ZoneDaily !== undefined && Object.keys(ZoneDaily).length > 0
+            ? (ZoneDaily?.AvailableZone || 0) - 1
+            : (zone?.MaxCapacity || 0) - 1,
+        ReservedAvailable:
+          ZoneDaily === undefined || Object.keys(ZoneDaily).length === 0
+            ? zone?.MaxReservedCapacity || 0 // ถ้าไม่มี ZoneDaily หรือ ZoneDaily ว่าง ให้ใช้ MaxReservedCapacity
+            : existingUsageCard !== undefined &&
+              ZoneDaily !== undefined &&
+              Object.keys(ZoneDaily).length > 0
+            ? Math.max(
+                0, // ค่าไม่ต่ำกว่า 0
+                (ZoneDaily?.ReservedAvailable || 0) ??
+                  (zone?.MaxReservedCapacity || 0) // ถ้าไม่มี ReservedAvailable จะใช้ MaxReservedCapacity
+              )
+            : Math.min(
+                zone?.MaxReservedCapacity || 0, // ค่าไม่เกิน MaxReservedCapacity
+                (ZoneDaily?.ReservedAvailable || 0) ?? zone?.MaxReservedCapacity // ถ้าไม่มี ReservedAvailable จะใช้ MaxReservedCapacity
+              ),
+        ParkingZoneID: zone.ID,
+      };
 
-        /* const ZoneDailyDate = ZoneDaily ? new Date(ZoneDaily?.Date) : null;
-        if (ZoneDailyDate && !isNaN(ZoneDailyDate.getTime())) {
-          ZoneDailyDate.setHours(0, 0, 0, 0);
-        } else {
-          console.error("Invalid ZoneDailyDate:", ZoneDailyDate);
-        } */
-        const ZoneDailyDate = new Date(ZoneDaily?.Date);
-        ZoneDailyDate.setHours(0, 0, 0, 0);
+      const UsageCardData = {
+        EntryTime: new Date().toISOString(),
+        LicensePlate: carLicensePlate,
+        Image: imageUrl || "",
+        Color: carColor,
+        Make: carMake,
+        ParkingCardID: selectedCard?.ID,
+        ParkingZoneID: zone.ID,
+        UserID: Number(localStorage.getItem("id")),
+        ParkingZoneDailyID: ZoneDaily?.ID,
+      };
 
-        console.log("ZoneDaily:", ZoneDaily);
-        /*  if (isNaN(selectedZoneDate.getTime())) {
-          console.log("selectedZoneDate:", selectedZoneDate);
-          console.error("Invalid selectedZoneDate:", selectedZoneDate);
+      const combinedData = {
+        ParkingZoneDaily: updateZoneDailyData,
+        ParkingUsageCard: UsageCardData,
+      };
+
+      // **ส่วนที่ 3: ถ้ามี UsageCard ที่ตรงเงื่อนไข**
+      if (existingUsageCard) {
+        const usageCardID = Number(existingUsageCard.ID);
+        if (isNaN(usageCardID)) {
+          message.error("Invalid usageCard ID.");
           return;
         }
-        if (isNaN(DayToday.getTime())) {
-          console.error("Invalid DayToday:", DayToday);
-          return;
-        } */
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: ");
+        console.log("zoneDailyDate: ", zoneDailyDate);
+        console.log(
+          "isSameDate(zoneDailyDate, DayToday): ",
+          isSameDate(zoneDailyDate!, DayToday)
+        );
+        console.log("(ZoneDaily?.ID || 0) > 0: ", (ZoneDaily?.ID || 0) > 0);
+        console.log(
+          "zoneDailyDaten isSameDate(zoneDailyDate, DayToday)(ZoneDaily?.ID || 0) > 0 ",
+          zoneDailyDate &&
+            isSameDate(zoneDailyDate, DayToday) &&
+            (ZoneDaily?.ID || 0) > 0
+        );
 
-        // **ส่วนที่ 3: ถ้ามี Transaction ที่ตรงเงื่อนไข**
-        if (existingTransaction) {
-          const transactionID = Number(existingTransaction.ID);
-          if (isNaN(transactionID)) {
-            message.error("Invalid transaction ID.");
-            return;
+        try {
+          const resTrans = await UpdateParkingUsageCard(
+            usageCardID,
+            UsageCardData
+          );
+          const resCard = await UpdateParkingCard(
+            selectedCard?.ID || "",
+            updateCardData
+          );
+          const resZoneDaily =
+            zoneDailyDate &&
+            isSameDate(zoneDailyDate, DayToday) &&
+            (ZoneDaily?.ID || 0) > 0
+              ? await UpdateZoneDailyByID(
+                  ZoneDaily?.ID || 0,
+                  updateZoneDailyData
+                )
+              : await CreateParkingZoneDailyAndUsageCard(combinedData);
+
+          if (
+            resCard.status === 200 &&
+            resTrans.status === 200 &&
+            resZoneDaily.status === 200
+          ) {
+            message.success("Parking usageCard updated successfully!");
+            getParkingCards();
+            handleCancel();
+            onChange("");
+            setOtp("");
+            setReload(!reload);
+          } else {
+            throw new Error("Update failed");
           }
+        } catch (error) {
+          message.error("Error updating parking usageCard.");
+          console.error("Error details:", error);
+        }
+      } else {
+        // **ส่วนที่ 4: ถ้าไม่มี UsageCard ที่ตรงกับเงื่อนไข (กรณีใหม่ทั้งหมด)**
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb: ");
+        console.log("zoneDailyDate: ", zoneDailyDate);
+        console.log(
+          "isSameDate(zoneDailyDate, DayToday): ",
+          isSameDate(zoneDailyDate!, DayToday)
+        );
+        console.log("(ZoneDaily?.ID || 0) > 0: ", (ZoneDaily?.ID || 0) > 0);
+        console.log(
+          "zoneDailyDaten isSameDate(zoneDailyDate, DayToday)(ZoneDaily?.ID || 0) > 0 ",
+          zoneDailyDate &&
+            isSameDate(zoneDailyDate, DayToday) &&
+            (ZoneDaily?.ID || 0) > 0
+        );
 
-          const updateTransactionData = {
-            LicensePlate: carLicensePlate,
-            Image: imageUrl || "",
-            Color: carColor,
-            Make: carMake,
-            ParkingCardID: selectedCard?.ID,
-            ParkingZoneID: zone.ID,
-            UserID: Number(localStorage.getItem("id")),
-          };
+        try {
+          const resZoneDaily =
+            zoneDailyDate &&
+            isSameDate(zoneDailyDate, DayToday) &&
+            (ZoneDaily?.ID || 0) > 0
+              ? await UpdateZoneDailyByID(
+                  ZoneDaily?.ID || 0,
+                  updateZoneDailyData
+                )
+              : await CreateParkingZoneDailyAndUsageCard(combinedData);
 
-          try {
-            const resTrans = await UpdateParkingTransaction(
-              transactionID,
-              updateTransactionData
-            );
-            const resCard = await UpdateParkingCard(
-              selectedCard?.ID || "",
-              updateCardData
-            );
-            console.log("passsssssssssssssssssssssssssssssss");
-            console.log("selectedZoneDate.toISOString(): ", ZoneDailyDate);
-            console.log("DayToday.toISOString(): ", DayToday);
-            console.log("selectedZone?.ID || 0: ", ZoneDaily?.ID || 0);
-            console.log(
-              "isSameDate(ZoneDailyDate, DayToday): ",
-              isSameDate(ZoneDailyDate, DayToday)
-            );
-            console.log(
-              "(selectedZone?.ID || 0) > 0: ",
-              (ZoneDaily?.ID || 0) > 0
-            );
-            const resZoneDaily =
-              isSameDate(ZoneDailyDate, DayToday) && (ZoneDaily?.ID || 0) > 0
-                ? await UpdateZoneDailyByID(
-                    ZoneDaily?.ID || 0,
-                    updateZoneDailyData
-                  )
-                : await CreateZoneDaily(updateZoneDailyData);
+          const resCard = await UpdateParkingCard(
+            selectedCard?.ID || "",
+            updateCardData
+          );
 
-            if (
-              resCard.status === 200 &&
-              resTrans.status === 200 &&
-              resZoneDaily.status === 200
-            ) {
-              message.success("Parking transaction updated successfully!");
-              getParkingCards();
-              handleCancel();
-              onChange("");
-              setOtp("");
-              setReload(!reload);
-            } else {
-              throw new Error("Update failed");
-            }
-          } catch (error) {
-            message.error("Error updating parking transaction.");
-            console.error("Error details:", error);
+          let resTrans;
+          let checkResTransStatus = false;
+          if (resZoneDaily.status !== 201) {
+            // ถ้า resZoneDaily เป็นผลจากการ UpdateZoneDailyByID ให้สร้าง UsageCard
+            resTrans = await CreateParkingUsageCard(UsageCardData);
+            checkResTransStatus = true;
+          } else {
+            // ถ้า resZoneDaily มาจาก CreateParkingZoneDailyAndUsageCard จะไม่ต้องสร้าง UsageCard ใหม่
+            resTrans = { status: 200 }; // สามารถกำหนดสถานะให้สำเร็จได้หากไม่จำเป็นต้องสร้าง UsageCard ใหม่
           }
-        } else {
-          // **ส่วนที่ 4: ถ้าไม่มี Transaction ที่ตรงกับเงื่อนไข (กรณีใหม่ทั้งหมด)**
-          const CardTransData = {
-            EntryTime: new Date().toISOString(),
-            LicensePlate: carLicensePlate,
-            Image: imageUrl || "",
-            Color: carColor,
-            Make: carMake,
-            ParkingCardID: selectedCard?.ID,
-            ParkingZoneID: zone.ID,
-            UserID: Number(localStorage.getItem("id")),
-          };
-
-          try {
-            const resCard = await UpdateParkingCard(
-              selectedCard?.ID || "",
-              updateCardData
+          if (
+            resCard.status === 200 &&
+            ((checkResTransStatus && resTrans.status === 201) || // ถ้า checkResTransStatus เป็นจริง ให้ตรวจสอบว่า resTrans มีสถานะ 201 (สร้าง UsageCard สำเร็จ)
+              (!checkResTransStatus && resZoneDaily.status === 201)) // ถ้า checkResTransStatus เป็นเท็จ ให้ตรวจสอบว่า resZoneDaily มีสถานะ 200 (สร้างหรืออัปเดต ZoneDaily สำเร็จ)
+          ) {
+            getParkingCards();
+            handleCancel();
+            onChange("");
+            setOtp("");
+            setReload(!reload);
+            message.success(
+              "Parking card, zone, and usageCard updated successfully!"
             );
-            const resTrans = await CreateParkingTransaction(CardTransData);
-            console.log("not passssssssssssssssssssssssssss");
-            console.log("selectedZoneDate.toISOString(): ", ZoneDailyDate);
-            console.log("DayToday.toISOString(): ", DayToday);
-            console.log("selectedZone?.ID || 0: ", ZoneDaily?.ID || 0);
-            console.log(
-              "isSameDate(ZoneDailyDate, DayToday): ",
-              isSameDate(ZoneDailyDate, DayToday)
-            );
-            console.log(
-              "(selectedZone?.ID || 0) > 0: ",
-              (ZoneDaily?.ID || 0) > 0
-            );
-
-            const resZoneDaily =
-              isSameDate(ZoneDailyDate, DayToday) && (ZoneDaily?.ID || 0) > 0
-                ? await UpdateZoneDailyByID(
-                    ZoneDaily?.ID || 0,
-                    updateZoneDailyData
-                  )
-                : await CreateZoneDaily(updateZoneDailyData);
-
-            if (
-              resCard.status === 200 &&
-              resTrans.status === 201 &&
-              resZoneDaily.status === 200
-            ) {
-              message.success(
-                "Parking card, zone, and transaction updated successfully!"
-              );
-              getParkingCards();
-              handleCancel();
-              onChange("");
-              setOtp("");
-              setReload(!reload);
-            } else {
-              throw new Error("Update failed");
-            }
-          } catch (error) {
-            message.error("Error updating parking card or zone.");
-            console.error("Error details:", error);
+          } else {
+            throw new Error("Update failed");
           }
+        } catch (error) {
+          message.error("Error updating parking card or zone.");
+          console.error("Error details:", error);
         }
       }
     } catch (error) {
-      message.error("Error processing parking transaction.");
+      message.error("Error processing parking usageCard.");
       console.error("Error details:", error);
     }
   };
@@ -471,7 +473,6 @@ const IN: React.FC<InProps> = ({
           padding: "16px",
         }}
       >
-        {contextHolder}
         <div style={{ textAlign: "left", marginBottom: "16px" }}>
           <p style={{ fontSize: "26px", fontWeight: "normal", margin: 0 }}>
             {" "}
@@ -488,14 +489,32 @@ const IN: React.FC<InProps> = ({
         >
           {Array.isArray(selectedCard?.ParkingZone) &&
             selectedCard.ParkingZone.map((zone, index) => {
-              const zoneDaily =
-                zoneDailyData && Array.isArray(zoneDailyData)
-                  ? zoneDailyData.find(
-                      (data: ParkingZoneDailyInterface) =>
-                        data.ParkingZone?.ID === zone.ID &&
-                        data.Date === dateWithTime
-                    )
-                  : null;
+              let zoneDaily = null;
+              if (Array.isArray(zoneDailyData)) {
+                zoneDaily = zoneDailyData.find((data) => {
+                  const isMatch =
+                    data.ParkingZone?.ID === zone.ID &&
+                    data.Date === dateWithTime;
+
+                  // Logging the values for inspection
+                  console.log("data.ParkingZone?.ID: ", data.ParkingZone?.ID);
+                  console.log("zone.ID: ", zone.ID);
+                  console.log(
+                    "data.ParkingZone?.ID === zone.ID: ",
+                    data.ParkingZone?.ID === zone.ID
+                  );
+                  console.log("zoneDailyData: ", zoneDailyData);
+                  console.log("data.Date: ", data.Date);
+                  console.log("dateWithTime: ", dateWithTime);
+                  console.log(
+                    "data.Date === dateWithTime: ",
+                    data.Date === dateWithTime
+                  );
+                  return isMatch;
+                });
+              }
+
+              console.log("zoneDaily: ", zoneDaily);
               return (
                 <Card
                   id="Zone"
@@ -509,7 +528,7 @@ const IN: React.FC<InProps> = ({
                     cursor: "pointer",
                     transition: "box-shadow 0.3s",
                     boxShadow:
-                      selectedCardIndex === index
+                      selectedZoneIndex === index
                         ? "0 0 10px rgba(201, 175, 98, 0.5)"
                         : "none",
                   }}
@@ -531,8 +550,7 @@ const IN: React.FC<InProps> = ({
                           <div>Capacity: {zone.MaxCapacity}</div>
                           <div>
                             Available:{" "}
-                            {zoneDaily?.AvailableZone ??
-                              zone?.MaxCapacity}
+                            {zoneDaily?.AvailableZone ?? zone?.MaxCapacity}
                           </div>
                         </div>
                       </div>
@@ -548,10 +566,10 @@ const IN: React.FC<InProps> = ({
                         strokeColor="#E8D196"
                         size={80}
                         percent={
-                          zone.MaxReservedCapacity
-                            ? ((zoneDaily?.ReservedAvailable ??
-                                zone?.MaxReservedCapacity) /
-                                zone.MaxReservedCapacity) *
+                          zone.MaxCapacity
+                            ? ((zoneDaily?.AvailableZone ??
+                                zone?.MaxCapacity) /
+                                zone.MaxCapacity) *
                               100
                             : 0
                         }
@@ -569,65 +587,100 @@ const IN: React.FC<InProps> = ({
           form={form}
           name="parking-form"
           layout="horizontal"
+          initialValues={
+            {
+              /*             LicensePlate: carLicensePlate,
+            Color: carColor,
+            Make: carMake,
+            Image:
+              fileList.length > 0 && fileList[0]?.url
+                ? fileList[0].url
+                : imageUrl,
+            ReservationDate: dayjs(), */
+            }
+          }
           style={{ columnRuleWidth: "150px", marginTop: 16 }}
         >
-          <Upload
-            id="Image"
-            fileList={fileList}
-            onChange={onChangeUpload}
-            onPreview={onPreview}
-            beforeUpload={(file) => {
-              setFileList([...fileList, file]);
-              return false;
-            }}
-            maxCount={1}
-            multiple={false}
-            listType="picture-card"
-          >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-          </Upload>
           <Form.Item
-            id="LicensePlate"
-            name="LicensePlate"
-            label="License Plate"
+            name="Image"
+            label="Upload Image"
+            //valuePropName="fileList"
+            getValueFromEvent={(e) => (e && e.fileList) || []}
             rules={[
-              { required: true, message: "Please input the license plate!" },
+              {
+                required: true,
+                message: "Please upload an image!",
+              },
             ]}
-            className="custom-form-item"
+          >
+            <Upload
+              id="Image"
+              fileList={fileList}
+              onChange={onChangeUpload}
+              onPreview={onPreview}
+              beforeUpload={(file) => {
+                setFileList([...fileList, file]);
+                return false;
+              }}
+              maxCount={1}
+              multiple={false}
+              listType="picture-card"
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          </Form.Item>
+
+          <Form.Item
+            label="License Plate"
+            name="LicensePlate"
+            rules={[
+              {
+                required: true,
+                message: "Please input the license plate!",
+              },
+            ]}
           >
             <Input
-              value={carLicensePlate}
+              id="LicensePlate"
+              //value={carLicensePlate}
               onChange={(e) => setCarLicensePlate(e.target.value)}
-              placeholder="Enter license plate"
             />
           </Form.Item>
+
           <Form.Item
-            id="CarColor"
-            name="CarColor"
             label="Car Color"
-            rules={[{ required: true, message: "Please input the car color!" }]}
-            className="custom-form-item"
+            name="Color"
+            rules={[
+              {
+                required: true,
+                message: "Please input the car color!",
+              },
+            ]}
           >
             <Input
-              value={carColor}
+              id="Color"
+              //value={carColor}
               onChange={(e) => setCarColor(e.target.value)}
-              placeholder="Enter car color"
             />
           </Form.Item>
+
           <Form.Item
-            id="CarMake"
-            name="CarMake"
             label="Car Make"
-            rules={[{ required: true, message: "Please input the car make!" }]}
-            className="custom-form-item"
+            name="Make"
+            rules={[
+              {
+                required: true,
+                message: "Please input the car make!",
+              },
+            ]}
           >
             <Input
+              id="Make"
               value={carMake}
               onChange={(e) => setCarMake(e.target.value)}
-              placeholder="Enter car make"
             />
           </Form.Item>
         </Form>

@@ -44,14 +44,43 @@ func GetParkingFeePolicyByID(c *gin.Context) {
 	c.JSON(http.StatusOK, policy)
 }
 
-func GetParkingPaymentByTransactionID(c *gin.Context) {
-	transaction_id := c.Param("id")
+func GetParkingPaymentByUsageCardID(c *gin.Context) {
+	usageCard_id := c.Param("id")
 	var payment entity.ParkingPayment
 
 	db := config.DB()
 
-	if err := db.Preload("User").Preload("ParkingCard").Preload("ParkingCard.TypePark").Preload("ParkingTransaction").First(&payment, "parking_transaction_id = ?", transaction_id).Error; err != nil {
+	if err := db.Preload("User").Preload("ParkingUsageCard.ParkingCard.TypeCard").Preload("ParkingUsageCard.ParkingCard.ParkingFeePolicy")/* .Preload("ParkingUsageCard") */.Preload("ParkingUsageCard.ParkingZoneDaily").First(&payment, "parking_usage_card_id = ?", usageCard_id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
 	}
 	c.JSON(http.StatusOK, payment)
+}
+
+func GetParkingPaymentAndUsageCardByUsageCardID(c *gin.Context) {
+	usageCard_id := c.Param("id")
+	var payment entity.ParkingPayment
+	var usageCard entity.ParkingUsageCard
+
+	db := config.DB()
+
+	// ดึงข้อมูล ParkingPayment
+	if err := db.Preload("User").
+		Preload("ParkingUsageCard.ParkingCard.TypeCard").
+		/* Preload("ParkingUsageCard"). */
+		First(&payment, "parking_usage_card_id = ?", usageCard_id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Payment record not found"})
+		return
+	}
+
+	// ดึงข้อมูล ParkingUsageCard
+	if err := db.Preload("ParkingZoneDaily").
+		First(&usageCard, "id = ?", usageCard_id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "UsageCard record not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"payment":     payment,
+		"usageCard": usageCard,
+	})
 }

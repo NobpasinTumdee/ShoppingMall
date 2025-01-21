@@ -67,7 +67,7 @@ func SetupDatabase() {
 		&entity.InventoryRequest{},
 
 		//ระบบจองที่จอดรถและชำระเงิน
-		&entity.TypePark{},
+		&entity.TypeCard{},
 		&entity.StatusCard{},
 		/* &entity.StatusPayment{}, */
 		&entity.ParkingCard{},
@@ -77,22 +77,38 @@ func SetupDatabase() {
 		&entity.ParkingFeePolicy{},
 		&entity.ParkingPayment{},
 		&entity.Vehicle{},
-		&entity.ParkingTransaction{},
+		&entity.ParkingUsageCard{},
 	)
 
 	//User
 	hashedPassword, _ := HashPassword("1")
 	User := []entity.User{
-		{UserName: "NobpasinTumdee", Password: hashedPassword, Email: "B6506407@g.sut.ac.th", FirstName: "Nobpasin", LastName: "Tumdee", Age: 21, Profile: "https://i.pinimg.com/736x/db/c0/14/dbc014d8d2229eb5e5a3e76980c137ca.jpg", ProfileBackground: "", Status: "User"},
+		{UserName: "ICONIC", Password: hashedPassword, Email: "shoppingmallse13@gmail.com", FirstName: "ICON", LastName: "IC", Age: 21, Profile: "https://i.pinimg.com/736x/db/c0/14/dbc014d8d2229eb5e5a3e76980c137ca.jpg", ProfileBackground: "", Status: "Admin", Tel: "0619885247"},
 		{UserName: "PorGz", Password: hashedPassword, Email: "PorGz@g.sut.ac.th", FirstName: "Por", LastName: "Gz", Age: 21, Profile: "", ProfileBackground: "", Status: "User"},
 		{UserName: "Admin", Password: hashedPassword, Email: "Admin@g.sut.ac.th", FirstName: "Admin", LastName: "", Age: 100, Profile: "https://theinformalgamer.wordpress.com/wp-content/uploads/2022/02/character_yae_miko_thumb-min.png", ProfileBackground: "", Status: "Admin"},
 		{UserName: "Employee", Password: hashedPassword, Email: "Employee@g.sut.ac.th", FirstName: "employee", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/template_images/2022/15460683/genshin-characters-going-to-a-beach---pool-party-15460683/screenshot20221127-203037googlejpg.png", ProfileBackground: "", Status: "Employee"},
 		{UserName: "Member", Password: hashedPassword, Email: "Member@g.sut.ac.th", FirstName: "Member", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
 		{UserName: "Cleaning", Password: hashedPassword, Email: "Cleaning@g.sut.ac.th", FirstName: "Cleaning", LastName: "", Age: 100, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/kokomijpg.png", ProfileBackground: "", Status: "Cleaning"},
 		{UserName: "Repairman", Password: hashedPassword, Email: "Repairman@g.sut.ac.th", FirstName: "Repairman", LastName: "", Age: 100, Profile: "https://i.pinimg.com/236x/a6/61/b1/a661b180316fb4559c0685a65b289ee4.jpg", ProfileBackground: "", Status: "Repairman"},
+		{UserName: "User2", Password: hashedPassword, Email: "User2@g.sut.ac.th", FirstName: "User", LastName: "Two", Age: 22, Profile: "", ProfileBackground: "", Status: "User"},
+		{UserName: "User3", Password: hashedPassword, Email: "User3@g.sut.ac.th", FirstName: "User", LastName: "Three", Age: 23, Profile: "", ProfileBackground: "", Status: "User"},
+		{UserName: "User4", Password: hashedPassword, Email: "User4@g.sut.ac.th", FirstName: "User", LastName: "Four", Age: 20, Profile: "", ProfileBackground: "", Status: "User"},
+		{UserName: "User5", Password: hashedPassword, Email: "User5@g.sut.ac.th", FirstName: "User", LastName: "Five", Age: 24, Profile: "", ProfileBackground: "", Status: "User"},
+		{UserName: "Member2", Password: hashedPassword, Email: "Member2@g.sut.ac.th", FirstName: "Member", LastName: "Two", Age: 32, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
+		{UserName: "Member3", Password: hashedPassword, Email: "Member3@g.sut.ac.th", FirstName: "Member", LastName: "Three", Age: 35, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
+		{UserName: "Member4", Password: hashedPassword, Email: "Member4@g.sut.ac.th", FirstName: "Member", LastName: "Four", Age: 28, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
+		{UserName: "Member5", Password: hashedPassword, Email: "Member5@g.sut.ac.th", FirstName: "Member", LastName: "Five", Age: 27, Profile: "https://tiermaker.com/images/chart/chart/genshin-characters-as-mcdonalds-workers-girls-15172367/keqing-edit-by-me-jpg.png", ProfileBackground: "", Status: "Member"},
 	}
 	for _, pkg := range User {
 		db.FirstOrCreate(&pkg, entity.User{UserName: pkg.UserName})
+	}
+
+	//Tax
+	Tax := []entity.TaxUser{
+		{CompanyName: "ICONIC", Residencee: "111, University Road, Suranaree Subdistrict, Mueang Nakhon Ratchasima District, Nakhon Ratchasima 30000", IdentificationNumber: 426642, UserID: 1},
+	}
+	for _, pkg := range Tax {
+		db.FirstOrCreate(&pkg, entity.TaxUser{IdentificationNumber: pkg.IdentificationNumber})
 	}
 
 	//ProductType
@@ -364,38 +380,36 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.StatusCard{Status: pkg.Status})
 	}
 
-	// TypePark
-	TypeParks := []entity.TypePark{
-		{Type: "VIP"},
-		{Type: "STORE"},
-		{Type: "GENERAL"},
+	// TypeCard
+	TypeCards := []entity.TypeCard{
+		{Type: "MEMBER", ExpiryYear: 2},
+		{Type: "GENERAL", ExpiryYear: 1},
 	}
-	for _, pkg := range TypeParks {
-		db.FirstOrCreate(&pkg, entity.TypePark{Type: pkg.Type})
+	for _, pkg := range TypeCards {
+		db.FirstOrCreate(&pkg, entity.TypeCard{Type: pkg.Type})
 	}
 
 	// ParkingZone
-	/* var countZone int64
+	var countZone int64
 	db.Model(&entity.ParkingZone{}).Count(&countZone)
-	if countZone > 3 {
+	if countZone > 2 {
 		fmt.Println("Cannot create more than 3 parking zones.")
-	} else { */
-	// หากจำนวน ParkingZone ไม่เกิน 3 ก็สามารถสร้างได้
-	ParkingZones := []entity.ParkingZone{
-		{Name: "VIP", MaxCapacity: 150, MaxReservedCapacity: 50, Image: "https://scontent.fbkk29-5.fna.fbcdn.net/v/t1.6435-9/69634816_3284945448183041_5929657803344969728_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH7aZEh79aE3GrCMxEycVazK-Qi7lmfAMkr5CLuWZ8AyQdP4deNxQ9TxWEA_xaEXJJ1bkMeLxaK6l0IguiF1ScP&_nc_ohc=HHwdlMsqInMQ7kNvgHcBK4q&_nc_zt=23&_nc_ht=scontent.fbkk29-5.fna&_nc_gid=AysvpZXPyfWOMR0V7BbkNjS&oh=00_AYB86cIxoXTgtujJm4Oha2iNfyQ5ADMaB1vD-Rp38dbzaw&oe=676FFD02", TypeParkID: 1},
-		//{Name: "STORE", MaxCapacity: 150,MaxReservedCapacity: 50, Image: "https://scontent.fbkk29-1.fna.fbcdn.net/v/t1.15752-9/467472946_1244156386684689_3812533161216721348_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEf-7GCGOcBEkWwVtPsZDA7Mo9cV6lZQjgyj1xXqVlCOLp0Vo2D3380RKH459Xq0reVeWE0GjRPuNp0Aygtng54&_nc_ohc=L7HrMPnJMlQQ7kNvgGUUJe-&_nc_zt=23&_nc_ht=scontent.fbkk29-1.fna&oh=03_Q7cD1QEtF_SJWRQn9oIsRDoLWWJ-2xOq50VV9Ah_4oY5q3HPJw&oe=676FFEEF", TypeParkID: 2},
-		{Name: "GENERAL", MaxCapacity: 500, MaxReservedCapacity: 200, Image: "https://www.livinginsider.com/upload/topic1660/648a696420bb4_71335.jpeg", TypeParkID: 3},
+	} else {
+		// หากจำนวน ParkingZone ไม่เกิน 3 ก็สามารถสร้างได้
+		ParkingZones := []entity.ParkingZone{
+			{Name: "VIP", MaxCapacity: 150, MaxReservedCapacity: 50, Image: "https://scontent.fbkk29-5.fna.fbcdn.net/v/t1.6435-9/69634816_3284945448183041_5929657803344969728_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH7aZEh79aE3GrCMxEycVazK-Qi7lmfAMkr5CLuWZ8AyQdP4deNxQ9TxWEA_xaEXJJ1bkMeLxaK6l0IguiF1ScP&_nc_ohc=ZYUGA5wLne0Q7kNvgGHtIZF&_nc_zt=23&_nc_ht=scontent.fbkk29-5.fna&_nc_gid=A4Xlfum7gs2jCGZyyoFj2QM&oh=00_AYAhe_M_vSHOJwhOHBITf_7QB5MupJmHOY7g-4BrpdqJGQ&oe=67AC69C2", TypeCardID: 1},
+			{Name: "GENERAL", MaxCapacity: 500, MaxReservedCapacity: 200, Image: "https://www.livinginsider.com/upload/topic1660/648a696420bb4_71335.jpeg", TypeCardID: 3},
+		}
+		for _, zone := range ParkingZones {
+			db.FirstOrCreate(&zone, entity.ParkingZone{Name: zone.Name, MaxCapacity: zone.MaxCapacity, Image: zone.Image})
+		}
 	}
-	for _, zone := range ParkingZones {
-		db.FirstOrCreate(&zone, entity.ParkingZone{Name: zone.Name, MaxCapacity: zone.MaxCapacity, Image: zone.Image})
-	}
-	/* } */
 
 	// ParkingCard
 	expiryDate := time.Now().AddDate(0, 0, 0)
 	cards := []entity.ParkingCard{
-		{ID: "0001", ExpiryDate: &expiryDate, IsPermanent: false, UserID: 0, StatusCardID: 1, TypeParkID: 2, ParkingFeePolicyID: 2},
-		{ID: "0002", ExpiryDate: &expiryDate, IsPermanent: false, UserID: 0, StatusCardID: 1, TypeParkID: 2, ParkingFeePolicyID: 2},
+		{ID: "0001", ExpiryDate: &expiryDate, IsPermanent: false, UserID: 0, StatusCardID: 1, TypeCardID: 2, ParkingFeePolicyID: 2},
+		{ID: "0002", ExpiryDate: &expiryDate, IsPermanent: false, UserID: 0, StatusCardID: 1, TypeCardID: 2, ParkingFeePolicyID: 2},
 	}
 	for _, card := range cards {
 		db.FirstOrCreate(&card, entity.ParkingCard{ID: card.ID})
@@ -407,8 +421,8 @@ func SetupDatabase() {
 	db.First(&generalZone, "name = ?", "GENERAL")
 
 	db.Model(&entity.ParkingCard{}).
-		Joins("JOIN type_parks ON type_parks.id = parking_cards.type_park_id").
-		Where("type_parks.type = ?", "GENERAL").
+		Joins("JOIN type_cards ON type_cards.id = parking_cards.type_card_id").
+		Where("type_cards.type = ?", "GENERAL").
 		Count(&existingGeneralCards)
 
 	var countCard int64
@@ -441,11 +455,11 @@ func SetupDatabase() {
 				ID:                 newID,
 				IsPermanent:        false,
 				StatusCardID:       1,
-				TypeParkID:         2,
+				TypeCardID:         2,
 				ParkingFeePolicyID: 2,
 			}
 
-			db.FirstOrCreate(&parkingCard, entity.ParkingCard{ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeParkID: parkingCard.TypeParkID})
+			db.FirstOrCreate(&parkingCard, entity.ParkingCard{ExpiryDate: parkingCard.ExpiryDate, StatusCardID: parkingCard.StatusCardID, TypeCardID: parkingCard.TypeCardID})
 		}
 	}
 
@@ -463,9 +477,9 @@ func SetupDatabase() {
 	for _, card := range parkingCards {
 		var zonesToAssign []entity.ParkingZone
 
-		if card.TypeParkID == 1 { // 1 = VIP
+		if card.TypeCardID == 1 { // 1 = MEMBER
 			zonesToAssign = append(zonesToAssign, zoneMap["VIP"], zoneMap["GENERAL"])
-		} else if card.TypeParkID == 2 { // 1 = GENERAL
+		} else if card.TypeCardID == 2 { // 1 = GENERAL
 			zonesToAssign = append(zonesToAssign, zoneMap["GENERAL"])
 		} else {
 		}
@@ -486,12 +500,11 @@ func SetupDatabase() {
 
 	// ParkingFeePolicy
 	feePolicy := []entity.ParkingFeePolicy{
-		{InitialFee: 20.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, TypeParkID: 1},
-		//{InitialFee: 20.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 20, TypeParkID: 2},
-		{InitialFee: 20.0, AddBase_Fee: 20.0, Time_Increment: time.Now(), Discount: 0, TypeParkID: 3},
+		{InitialFee: 20.0, AddBase_Fee: 20.0, Time_Increment: 1, Discount: 20, TypeCardID: 1},
+		{InitialFee: 20.0, AddBase_Fee: 20.0, Time_Increment: 1, Discount: 0, TypeCardID: 3},
 	}
 	for _, pkg := range feePolicy {
-		db.FirstOrCreate(&pkg, entity.ParkingFeePolicy{TypeParkID: pkg.TypeParkID})
+		db.FirstOrCreate(&pkg, entity.ParkingFeePolicy{TypeCardID: pkg.TypeCardID})
 	}
 
 }

@@ -23,8 +23,8 @@ type ParkingCard struct {
 	ExpiryDate  *time.Time `json:"ExpiryDate"`
 	IsPermanent bool       `json:"IsPermanent"`
 
-	TypeParkID uint     `json:"TypeParkID"`
-	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
+	TypeCardID uint     `json:"TypeCardID"`
+	TypeCard   TypeCard `gorm:"foreignKey:TypeCardID"`
 
 	UserID uint `json:"UserID" valid:"-"`
 	User   User `gorm:"foreignKey:UserID" valid:"-"`
@@ -36,16 +36,12 @@ type ParkingCard struct {
 	ParkingFeePolicy   ParkingFeePolicy `gorm:"foreignKey:ParkingFeePolicyID"`
 
 	ParkingZone        []ParkingZone        `gorm:"many2many:ParkingCardZone;"`
-	ParkingTransaction []ParkingTransaction `gorm:"foreignKey:ParkingCardID"`
-	ParkingPayment     []ParkingPayment     `gorm:"foreignKey:ParkingCardID"`
+	ParkingUsageCard []ParkingUsageCard `gorm:"foreignKey:ParkingCardID"`
 }
 
 type ParkingCardZone struct {
 	ParkingCardID string `json:"ParkingCardID"`
 	ParkingZoneID uint   `json:"ParkingZoneID"`
-
-	CreatedAt time.Time      `json:"created_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 
 	ParkingCard ParkingCard `gorm:"foreignKey:ParkingCardID;references:ID"`
 	ParkingZone ParkingZone `gorm:"foreignKey:ParkingZoneID;references:ID"`
@@ -53,16 +49,14 @@ type ParkingCardZone struct {
 
 type ParkingZone struct {
 	gorm.Model
-	ID          uint   `json:"ID"`
-	Name        string `json:"Name"`
-	MaxCapacity int    `json:"MaxCapacity"`
-	//AvailableZone       int    `json:"AvailableZone"`
-	MaxReservedCapacity int `json:"MaxReservedCapacity"`
-	//ReservedAvailable   int    `json:"ReservedAvailable"`
-	Image string `gorm:"type:longtext" json:"Image"`
+	ID                  uint   `json:"ID"`
+	Name                string `json:"Name"`
+	Image               string `gorm:"type:longtext" json:"Image"`
+	MaxCapacity         int    `json:"MaxCapacity"`
+	MaxReservedCapacity int    `json:"MaxReservedCapacity"`
 
-	TypeParkID uint     `json:"TypeParkID"`
-	TypePark   TypePark `gorm:"foreignKey:TypeParkID"`
+	TypeCardID uint     `json:"TypeCardID"`
+	TypeCard   TypeCard `gorm:"foreignKey:TypeCardID"`
 
 	ParkingCard      []ParkingCard      `gorm:"many2many:ParkingCardZone;"`
 	ParkingZoneDaily []ParkingZoneDaily `gorm:"foreignKey:ParkingZoneID"`
@@ -78,40 +72,40 @@ type ParkingZoneDaily struct {
 	ParkingZoneID uint        `json:"ParkingZoneID"`
 	ParkingZone   ParkingZone `gorm:"foreignKey:ParkingZoneID"`
 
-	ParkingTransactions []ParkingTransaction `gorm:"foreignKey:ParkingZoneDailyID"`
-}
-type ParkingTransaction struct {
-    gorm.Model
-    ReservationDate    *time.Time  `json:"ReservationDate" valid:"-"` // ใช้ optional แทน valid:"-"
-    EntryTime          *time.Time  `json:"EntryTime" valid:"-"`     
-    ExitTime           *time.Time  `json:"ExitTime" valid:"-"`       
-    TotalHourly        *float64    `json:"TotalHourly" valid:"-"`     
-    IsReservedPass     *bool       `json:"IsReservedPass" valid:"-"`  
-    LicensePlate       string      `json:"LicensePlate" valid:"required~License Plate is required"`
-    Image              string      `gorm:"type:longtext" json:"Image" valid:"required~Image is required"`
-    Color              string      `json:"Color" valid:"required~Color is required"`
-    Make               string      `json:"Make" valid:"required~Make is required"`
-
-    ParkingCardID      string       `json:"ParkingCardID" valid:"-"` // ไม่มีการตรวจสอบ
-    ParkingCard        ParkingCard  `gorm:"foreignKey:ParkingCardID" valid:"-"`
-
-    ParkingZoneDailyID uint          `json:"ParkingZoneDailyID" valid:"required~ParkingZoneDaily is required"`
-    ParkingZoneDaily   ParkingZoneDaily `gorm:"foreignKey:ParkingZoneDailyID" valid:"-"`
-
-    UserID             uint         `json:"UserID" valid:"-"`  // ไม่มีการตรวจสอบ
-    User               User         `gorm:"foreignKey:UserID" valid:"-"` 
-
-    ParkingPayment     *ParkingPayment `gorm:"foreignKey:ParkingTransactionID valid:"-""`
+	ParkingUsageCard []ParkingUsageCard `gorm:"foreignKey:ParkingZoneDailyID"`
 }
 
-
-type TypePark struct {
+type ParkingUsageCard struct {
 	gorm.Model
-	Type string `json:"Type"`
+	ReservationDate *time.Time `json:"ReservationDate" valid:"-"` // ใช้ optional แทน valid:"-"
+	EntryTime       *time.Time `json:"EntryTime" valid:"-"`
+	ExitTime        *time.Time `json:"ExitTime" valid:"-"`
+	TotalHourly     *float64   `json:"TotalHourly" valid:"-"`
+	IsReservedPass  *bool      `json:"IsReservedPass" valid:"-"`
+	LicensePlate    string     `json:"LicensePlate" valid:"required~License Plate is required"`
+	Image           string     `gorm:"type:longtext" json:"Image" valid:"required~Image is required"`
+	Color           string     `json:"Color" valid:"required~Color is required"`
+	Make            string     `json:"Make" valid:"required~Make is required"`
 
-	ParkingCard      []ParkingCard      `gorm:"foreignKey:TypeParkID"`
-	ParkingZone      []ParkingZone      `gorm:"foreignKey:TypeParkID"`
-	ParkingFeePolicy []ParkingFeePolicy `gorm:"foreignKey:TypeParkID"`
+	ParkingCardID string      `json:"ParkingCardID" valid:"-"` // ไม่มีการตรวจสอบ
+	ParkingCard   ParkingCard `gorm:"foreignKey:ParkingCardID" valid:"-"`
+
+	ParkingZoneDailyID uint             `json:"ParkingZoneDailyID" valid:"required~ParkingZoneDaily is required"`
+	ParkingZoneDaily   ParkingZoneDaily `gorm:"foreignKey:ParkingZoneDailyID" valid:"-"`
+
+	UserID uint `json:"UserID" valid:"-"` // ไม่มีการตรวจสอบ
+	User   User `gorm:"foreignKey:UserID" valid:"-"`
+
+	ParkingPayment *ParkingPayment `gorm:"foreignKey:ParkingUsageCardID" valid:"-"`
+}
+
+type TypeCard struct {
+	gorm.Model
+	Type             string             `json:"Type"`
+	ExpiryYear       int                `json:"ExpiryYear"`
+	ParkingCard      []ParkingCard      `gorm:"foreignKey:TypeCardID"`
+	ParkingZone      []ParkingZone      `gorm:"foreignKey:TypeCardID"`
+	ParkingFeePolicy []ParkingFeePolicy `gorm:"foreignKey:TypeCardID"`
 }
 
 type StatusCard struct {
@@ -120,12 +114,3 @@ type StatusCard struct {
 
 	ParkingCard []ParkingCard `gorm:"foreignKey:StatusCardID"`
 }
-
-/*
-	 type StatusPayment struct {
-		gorm.Model
-		Status string `json:"Status"`
-
-		ParkingPayment []ParkingPayment `gorm:"foreignKey:StatusPaymentID"`
-	}
-*/
