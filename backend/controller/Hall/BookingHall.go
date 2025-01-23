@@ -58,7 +58,7 @@ func CreateBooking(c *gin.Context) {
 		CustomerAddress:    booking.CustomerAddress,
 		HallID:             booking.HallID,
 		FacilitiesID:       booking.FacilitiesID,
-		StatusPaymentHallID: statusPayment.ID, // ตั้งค่าเป็น "ยังไม่ชำระเงิน"
+		// StatusPaymentHallID: statusPayment.ID, // ตั้งค่าเป็น "ยังไม่ชำระเงิน"
 		QuantityF:          booking.QuantityF,
 	}
 

@@ -33,9 +33,6 @@ type BookingHall struct {
 
 	HallID          uint            `json:"HallID"`
 	Hall   			Hall 			`gorm:"foreignKey:HallID"`
-
-	StatusPaymentHallID uint 		`json:"StatusPaymentHallID"`
-	StatusPaymentHall   StatusPaymentHall `gorm:"foreignKey:StatusPaymentHallID"`
 	
 	FacilitiesID	uint			`json:"FacilitiesID"`
 	Facilities		Facilities		`gorm:"foreignKey:FacilitiesID"`
@@ -58,22 +55,25 @@ type PaymentHall struct {
 	BookingHallID  uint      	`json:"BookingHallID"`
 	BookingHall	   BookingHall	`gormm:"foreignKey:BookingHallID"`
 
-	Amount         int       `json:"amount"`
-	PaymentDate    time.Time `json:"payment_date"`
-	PaymentMethod  string    `json:"payment_method"`
-	IssueDate      time.Time `json:"issue_date"`
-	TaxAmount      int       `json:"tax_amount"`
+	StatusPaymentHallID uint 		`json:"StatusPaymentHallID"`
+	StatusPaymentHall   StatusPaymentHall `gorm:"foreignKey:StatusPaymentHallID"`
+
+	PayMethodStoreID 				uint 				`json:"PayMethodStoreID"`
+	PaymentMethodStore   			PaymentMethodStore 	`gorm:"foreignKey:PayMethodStoreID"`
+
+	Amount         int       `json:"Amount"`
+	PaymentDate    time.Time `json:"PaymentDate"`
+	PaymentMethod  string    `json:"PaymentMethod"`
 	TotalAmount    int       `json:"total_amount"`
-	IssuedBy       string    `json:"issued_by"`
 
 	Taxinvoice     []Taxinvoice   `gorm:"foreignKey:PaymentHallID"`
 
 }
 type StatusPaymentHall struct{
 	gorm.Model
-	StatusName		string	`json:"StatusName"`
+	StatusName		string		`json:"StatusName"`
 
-	BookingHall		[]BookingHall	`gorm:"foreignkey:StatusPaymentHall"`
+	PaymentHall		[]PaymentHall	`gorm:"foreignkey:StatusPaymentHall"`
 }
 type Taxinvoice struct {
 	gorm.Model
@@ -84,8 +84,6 @@ type Taxinvoice struct {
 	PaymentHallID  uint        `json:"PaymentHallID"`
 	PaymentHall    PaymentHall `gorm:"foreignKey:PaymentHallID"`
 
-	InvoiceNumber  string      `json:"InvoiceNumber" valid:"required~InvoiceNumber is required"`
 	IssueDate      time.Time   `json:"IssueDate" valid:"required~IssueDate is required"`
-	TotalAmount    int         `json:"TotalAmount" valid:"required~TotalAmount is required"`
 	TaxAmount      int         `json:"TaxAmount" valid:"required~TaxAmount is required"`
 }

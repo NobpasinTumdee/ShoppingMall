@@ -34,6 +34,7 @@ type PaymentMethodStore struct {
 	MethodPic 			string 		`json:"MethodPic"`
 
 	PaymentStore 		[]PaymentStore 	`gorm:"foreignKey:PayMethodStoreID"`
+	PaymentHall			[]PaymentHall	`gorm:"foreignKey:PayMethodStoreID"`
 }
 
 type Receipt struct {

@@ -252,14 +252,14 @@ func SetupDatabase() {
 		db.FirstOrCreate(&pkg, entity.Facilities{FacilitiesName: pkg.FacilitiesName})
 	}
 	
-	// StatusPaymentHall := []entity.StatusPaymentHall{
-	// 	{StatusName: "ชำระเงินแล้ว"},
-	// 	{StatusName: "ยังไม่ชำระเงิน"},
-	// }
+	statuspaymenthall := []entity.StatusPaymentHall{
+		{StatusName: "ชำระเงินแล้ว"},
+		{StatusName: "ยังไม่ชำระเงิน"},
+	}
 
-	// for _, pkg := range StatusPaymentHall {
-	// 	db.FirstOrCreate(&pkg, entity.StatusPaymentHall{StatusName: pkg.StatusName})
-	// }
+	for _, pkg := range statuspaymenthall {
+		db.FirstOrCreate(&pkg, entity.StatusPaymentHall{StatusName: pkg.StatusName})
+	}
 
 
 	//Store
