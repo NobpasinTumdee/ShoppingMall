@@ -1,0 +1,319 @@
+
+.headerInventory h1{
+    font-family: "Trirong", serif;
+    text-align: center;
+    color: #B0946F;
+    font-size: 40px;
+
+    animation: headerH2 1s ease-in-out ;
+}
+@keyframes headerH2 {
+    0%{
+        opacity: 0;
+        transform: translateY(-50%);
+    }
+}
+
+.tableInventory{
+    background-color: #ffffff;
+    width: 80%;
+    height: 500px;
+    margin: 0 10%;
+    border: 0px solid #C9AF62;
+    box-shadow: 0 0px 10px #acacac2d;
+
+    animation: tableInventory 1s ease-in-out ;
+}
+@keyframes tableInventory {
+    0%{
+        opacity: 0;
+        transform: translateY(130%);
+    }
+}
+
+.Mode{
+    display: flex;
+    justify-content: center;
+}
+.Mode p{
+    margin: 10px 10px;
+    padding: 5px;
+    cursor: pointer;
+    font-family: "Trirong", serif;
+    font-weight: 700;
+    border-radius: 20px;
+    color: #B0946F;
+    border: 2px solid #B0946F;
+}
+
+.columntable {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: 50px;
+    border-bottom: 0px solid #B0946F;
+    box-shadow: 0 5px 5px #c9af622d;
+    background-color: #B0946F;
+}
+
+.columntable p{
+    width: 25%;
+    text-align: start;
+    padding-left: 15px;
+    font-family: "Parkinsans", sans-serif;
+    color: #fff;
+    font-weight: 500;
+}
+
+.contanerRow {
+    overflow-y: scroll;
+    height: 450px;
+}
+
+.columntableSub {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: 50px;
+    border-bottom: 0.1px solid #e5e5e5;
+    border-top: 0.1px solid #e5e5e5;
+    transition: 0.5s;
+}
+
+.columntableSub:hover {
+    background-color: #FAFAFA;
+}
+
+.columntableSub p{
+    width: 25%;
+    text-align: start;
+    padding-left: 15px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 100;
+}
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+.popupButton {
+    background-color: transparent;
+    border: 2px solid #c0a27a; /* สีเดียวกับปุ่มอื่น */
+    border-radius: 15px; /* ความโค้ง */
+    color: #c0a27a; /* สีตัวอักษร */
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.popupButton:hover {
+    background-color: #c0a27a; 
+    color: white; 
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; 
+    margin-bottom: 10px; 
+    padding-right: 160px; 
+}
+
+.popupSummary {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupSummaryContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 50%;
+    max-height: 70%;
+    overflow-y: auto;
+}
+
+.popupSummaryContent h2 {
+    color: #B0946F;
+    font-size: 24px;
+}
+
+.popupSummaryClose {
+    background-color: #B0946F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.popupSummaryClose:hover {
+    background-color: #8B6F3A;
+}
+
+.summaryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.summaryTable th, .summaryTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.summaryTable th {
+    background-color: #B0946F;
+    color: white;
+}
+
+.summaryTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* สำหรับ popup-container */
+.popup-containerwithdraw {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* สำหรับ popup */
+.popupwithdraw {
+    background-color: #ffe8b2;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 800px;
+    font-family: Arial, sans-serif;
+    color: #5c3a00;
+    overflow-x: auto;
+    max-height: 80vh; /* กำหนดความสูงสูงสุดให้กับ Popup เป็น 80% ของความสูงหน้าจอ */
+    overflow-y: auto; /* เพิ่มการเลื่อนในแนวตั้ง */
+}
+
+/* สำหรับหัวข้อ */
+.popupwithdraw h2 {
+    margin: 0 0 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #5c3a00;
+}
+
+/* ตาราง */
+.summaryTablewithdraw {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+/* หัวตาราง */
+.summaryTablewithdraw th {
+    background-color: #b59060;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap; /* ป้องกันการตัดคำ */
+    border: 1px solid #d6c1a0;
+}
+
+/* เนื้อหาในตาราง */
+.summaryTablewithdraw td {
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap; /* ป้องกันการตัดคำ */
+    border: 1px solid #d6c1a0;
+}
+
+/* ปุ่มปิด */
+.btn-closewithdraw {
+    margin-top: 15px;
+    background-color: #ff6666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.btn-closewithdraw:hover {
+    background-color: #e55b5b;
+}
+
+.popupButtonwithdraw {
+    background-color: transparent;
+    border: 2px solid #c0a27a; /* สีเดียวกับปุ่มอื่น */
+    border-radius: 15px; /* ความโค้ง */
+    color: #c0a27a; /* สีตัวอักษร */
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-left: 62%;
+}
+
+.popupButtonwithdraw:hover {
+    background-color: #c0a27a; 
+    color: white; 
+}
+
+.summaryTablewithdraw th, .summaryTablewithdraw td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+}
+
+.error {
+    display: block; /* ทำให้ข้อความ Error เป็นบรรทัดใหม่ */
+    color: red; /* สีแดงสำหรับข้อความ Error */
+    font-size: 0.9rem; /* ขนาดตัวอักษร */
+    margin-top: 5px; /* เว้นระยะห่างระหว่าง Error กับ Input */
+}
+
+.low-stock-alert {
+    color: red;
+    font-weight: bold;
+    margin-left: 8px;
+}

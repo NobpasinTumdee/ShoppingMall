@@ -1,0 +1,1080 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+*{
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+*::selection{
+    background-color: #eed699;
+}
+:root {
+    --b1: #B0946F;
+    --b2: #C9AF62;
+}
+.AdvertisingMain  {
+    width: 100%;
+    height: 355px;
+    background-color: #B0946F;
+    font-family: 'Dongle', sans-serif;
+    color: #ffffff;
+
+    display: flex;
+    justify-content:center;
+}
+
+.AdvertisingMain img{
+    width: 319px;
+    height: 347px;
+    margin-left: 40px;
+
+    animation-duration: 10s;
+    animation-name: motionAd;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+
+}
+
+@keyframes motionAd{
+    0%{
+        transform: translateY(0%);
+    }25%{
+        transform: translateY(2%);
+    }75%{
+        transform: translateY(-2%);
+    }100%{
+        transform: translateY(0%);
+    }
+}
+
+
+.advertisingtext {
+    font-size: 20px;
+    width: 800px;
+    line-height: 0.7;
+    padding-right: 300px;
+    font-family: "Trirong", serif;
+}
+.advertisingtext h1{
+    font-size: 70px;
+    margin: 100px 0 30px ;
+}
+
+.fade {
+    width: 319px;
+    height: 347px;
+    margin-left: 40px;
+
+    /* การเปลี่ยนแปลงสมูท */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.fade.visible {
+    opacity: 1;
+}
+
+.fade.hidden {
+    opacity: 0;
+}
+
+
+
+
+
+
+
+
+.Floor {
+    width: 1150px;
+    height: 200px;
+    margin: 60px auto 60px;
+    font-family: "Trirong", serif;
+    font-size: 22px ;
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+
+    animation-duration: 1s;
+    animation-name: introAd;
+    animation-timing-function: ease-in-out;
+}
+@keyframes introAd{
+    0%{
+        transform: translateY(-70px);
+    }100%{
+        transform: translateY(0px);
+    }
+}
+.subFloor {
+    width: 250px;
+    margin: 0 10px;
+    transition: 0.3s ease-in-out;
+}
+.subFloor:hover {
+    background-color: #f4f4f471;
+    border-radius: 10px;
+    color: #B0946F;
+}
+.Floor img{
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+
+    animation-duration: 5s;
+    animation-name: LoopSize;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+@keyframes LoopSize{
+    0%{
+        scale: 1;
+    }50%{
+        scale: 1.2;
+        filter: drop-shadow(0 0 20px #B0946F);
+    }100%{
+        scale: 1;
+    }
+}
+.Floor h4{
+    margin: 0px 0px 0px;
+    font-size: 26px ;
+
+}
+.Floor p{
+    margin: 0;
+    line-height: 0.7;
+    color: #8A8A8A;
+    font-size: 15px;
+    line-height: 14px;
+}
+/* ====================================text slide======================== */
+.marquee-section {
+    position: relative;
+    min-height: 82px;
+    font-size: 50px;
+    font-family: "Trirong", serif;
+    font-weight: 900;
+    height: 100px;
+    color: #fff;
+    background-color: #B0946F;
+    display: flex;
+    align-items: center;
+}
+
+.marquee-section, .marquee-section * {
+    overflow: hidden;
+}
+
+.marquee {
+    white-space: nowrap;
+}
+
+.marquee-div {
+    position: absolute;
+    animation: move-right-to-left linear 42.5s infinite;
+}
+
+@keyframes move-right-to-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+.PreviewProduct{
+    display: flex;
+    overflow-x: scroll;
+}
+.PreviewProduct img{
+    margin-right: 10px;
+    margin-bottom: 60px;
+    transition: 0.2s ease-in-out;
+}
+.PreviewProduct:hover > :not(:hover) {
+    filter: blur(1px);
+    filter: grayscale(100%);
+    scale: 0.95;
+}
+
+.NEWS {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.NEWS span{
+    width: 500px;
+    height: 3px;
+    background-color: #B0946F;
+    margin-left: 150px;
+    margin-right: 150px;
+
+}
+
+
+.NewInfo {
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 100px;
+    font-family: 'Dongle', sans-serif;
+}
+.SubInfo {
+    margin-top: 50px;
+    width: 100%;
+    height: 245px;
+    transition: 0.3s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    animation-duration: 3s;
+    animation-name: NewSub;
+    animation-timing-function: ease-in-out;
+    animation-timeline: view();
+    animation-range: entry 0% cover 20%;
+}
+
+@keyframes NewSub{
+    0%{
+        opacity: 0;
+        transform: translateY(100%);
+    }100%{
+        opacity: 1;
+        
+    }
+}
+.SubInfo img{
+    box-shadow: 0 8px 10px #00000070;
+}
+.SubInfo span{
+    margin-left: 40px;
+    margin-right: 100px;
+}
+.SubInfo h4{
+    font-family: "Trirong", serif;
+    margin: 0;
+    font-size: 30px;
+    line-height: 0.7;
+}
+.SubInfo p{
+    font-family: "Trirong", serif;
+    font-size: 20px;
+    color: #8A8A8A;
+    overflow-y: scroll;
+    height: 120px;
+}
+.SubInfo:hover {
+    color: #B0946F;
+}
+
+
+
+
+
+
+footer{
+    background-color: #B0946F;
+    width: 100%;
+    height: 300px;
+    margin-top: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.Store1 {
+    max-width: 1536px;
+    width: 90%;
+    height: 120px;
+    padding: 50px 0;
+    margin-inline: auto;
+    position: relative;
+    overflow: hidden;
+
+    /* ใช้ mask เพื่อให้ลูกจางตามแม่ */
+    mask-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0), 
+        rgba(0, 0, 0, 1) 10%, 
+        rgba(0, 0, 0, 1) 90%, 
+        rgba(0, 0, 0, 0)
+    );
+}
+
+@keyframes Slide {
+    to {
+        left: -200px;
+    }
+}
+
+.Store1 div {
+    background-color: #48484800;
+    width: 180px;
+    height: 120px;
+    box-shadow: 0 0 10px #0000002c;
+    border-radius: 5px;
+    position: absolute;
+    left: 100%;
+    animation: Slide 20s linear infinite;
+}
+.Store1 img {
+    width: 180px;
+    height: 120px;
+    left: 100%;
+    border-radius: 5px;
+}
+
+
+/* เพิ่ม delay ให้ลูกแต่ละตัว */
+.Store1 :nth-child(2) {
+    animation-delay: calc(20s / 8 * (8 - 1) * -1);
+}
+.Store1 :nth-child(3) {
+    animation-delay: calc(20s / 8 * (8 - 2) * -1);
+}
+.Store1 :nth-child(4) {
+    animation-delay: calc(20s / 8 * (8 - 3) * -1);
+}
+.Store1 :nth-child(5) {
+    animation-delay: calc(20s / 8 * (8 - 4) * -1);
+}
+.Store1 :nth-child(6) {
+    animation-delay: calc(20s / 8 * (8 - 5) * -1);
+}
+.Store1 :nth-child(7) {
+    animation-delay: calc(20s / 8 * (8 - 6) * -1);
+}
+.Store1 :nth-child(8) {
+    animation-delay: calc(20s / 8 * (8 - 7) * -1);
+}
+
+/*==================================================Admin=============================================*/
+.H1Management {
+    margin: 10px;
+    text-align: center;
+    font-size: 74px;
+    font-weight: 200;
+    font-family: 'Dongle', sans-serif;
+    text-shadow: 0 4px 4px #00000047;
+    color: #62501A;
+}
+.SubH1{
+    text-align: center;
+    margin: 0;
+    transform: translateY(-50%);
+    font-size: 34px;
+    font-family: 'Dongle', sans-serif;
+    text-shadow: 0 4px 4px #00000017;
+    color: #C9AF62;
+
+    animation: SubH1 5s ease-in-out infinite;
+}
+@keyframes SubH1{
+    0%{
+        scale: 1;
+    }50%{
+        scale: 1.1;
+    }100%{
+        scale: 1;
+    }
+}
+.PManagement {
+    text-align: center;
+    margin: 0px;
+    font-size: 26px;
+    font-family: 'Dongle', sans-serif;
+    color: #62501A;
+    text-shadow: 0 4px 4px #00000047;
+    transform: translateY(-30px);
+}
+.ManageMainPage {
+    background-color: var(--b1);
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    border: 3px solid var(--b1);
+    color: #fff;
+    transition: 0.2s ease-in-out;
+}
+.ManageMainPage:hover {
+    box-shadow: 0 0 5px var(--b1);
+    scale: 1.1;
+}
+.Mainpage:hover > :not(:hover) {
+    background-color: transparent;
+    color: var(--b1);
+    scale: 0.95;
+}
+.Mainpage {
+    display: flex;
+    justify-content: center;
+    width: auto;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.Management {
+    font-size: 64px;
+    font-family: 'Dongle', sans-serif;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-top: 30px;
+    margin-left: 200px;
+    margin-right: 200px;
+
+    animation-duration: 0.8s;
+    animation-name: Management;
+    animation-timing-function: ease-in-out;
+}
+@keyframes Management{
+    0%{
+        opacity: 0;
+    }100%{
+    }
+}
+.ManagementSpan {
+    width: 330px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFCF2;
+    border: 2px solid #62501A;
+    border-radius: 10px;
+    text-align: center;
+    color: #C9AF62;
+    box-shadow: 0 4px 4px #00000047;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: 0.3s ease-in;
+
+    animation: ManagementSpan 1s ease-in-out; /* เพิ่มระยะเวลาและใช้ easing ที่สมูทขึ้น */
+}
+.ManagementSpan:hover {
+    transform: translateY(-10px);
+    background-color: #fdf2ce;
+}
+
+@keyframes ManagementSpan {
+    0% {
+        border-radius: 50%;
+        scale: 0.8;
+    }
+    100% {
+        
+    }
+}
+
+.ManagementSpan img {
+    max-width: 100%; 
+    height: auto;
+    margin-bottom: 10px; 
+
+    animation-duration: 5s;
+    animation-name: ManagementSpanImg;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes ManagementSpanImg{
+    0%{
+        transform: translateY(0px);
+    }50%{
+        transform: translateY(10px);
+    }100%{
+        transform: translateY(0px);
+    }
+}
+
+
+
+.Storewaitingforapproval {
+    display: flex;
+    flex-direction: column; /* จัดเรียงการ์ดในแนวตั้ง */
+    align-items: center; /* จัดการ์ดให้อยู่กึ่งกลางแนวนอน */
+    height: auto;
+    width: 100%; /* ใช้ 100% เพื่อให้การ์ดอยู่กึ่งกลาง */
+    margin: 0px auto; /* กำหนดให้อยู่ตรงกลาง */
+}
+.Storewaiting{
+    background-color: #ffffff;
+    border-right: 10px solid #C9AF62;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #0000002c;
+    width: 1000px;
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+
+    animation: Storewaiting 1s ease-in-out ;
+}
+@keyframes Storewaiting{
+    0%{
+        transform: translateY(550px);
+        opacity: 0;
+    }100%{
+        transform: translateY(0px);
+    }
+}
+.Storewaiting.Waiting{
+    border-right: 10px solid #6265C9;
+}
+.Storewaiting.WaitOwn{
+    border-right: 10px solid #484848;
+}
+.Storewaiting.Payment{
+    border-right: 10px solid #09a401;
+}
+
+.Storewaiting span{
+    display: flex;
+    align-items: center;
+}
+.Storewaiting img{
+    margin-left: 3px;
+    margin-right: 10px;
+    border-radius: 8px;
+}
+
+.textinfo{
+    width: 550px;
+    transform: translateY(10%);
+}
+.textinfo p:nth-child(1){
+    transform: translateY(-30%);
+}
+.textinfo p:nth-child(2){
+    overflow-y: scroll;
+    transform: translateY(-100%);
+    line-height: 15px;
+    height: 50px;
+}
+.textinfo p:nth-child(3){
+    transform: translateY(-200%);
+}
+.Storewaitinginfo img{
+    width: 250px;
+    height: 145px;
+}
+.Storewaitinginfo p{
+    font-size: 20px;
+    font-family: 'Dongle', sans-serif;
+    font-weight: 100;
+    color: #62501A;
+}
+.StorewaitingBtn{
+    margin-right: 25px;
+}
+
+.route {
+    width: 100%;
+    height: 25px;
+    background-color: #F2F2F2;
+    display: flex;
+    align-items: center;
+
+    font-size: 20px;
+    font-family: 'Dongle', sans-serif;
+    color: #C9AF62;
+}
+.selection{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.AllSeletion{
+    position: fixed;
+    left: 20px;
+    cursor: pointer;
+
+    animation: AllSeletion 0.5s ease-in-out ;
+}
+@keyframes AllSeletion{
+    0%{
+        transform: translateX(-100px);
+        opacity: 0;
+    }100%{
+        transform: translateX(0px);
+    }
+}
+.AllSeletion P:nth-child(1){
+    animation: AllSeletion1 2s ease-in-out infinite;
+}
+@keyframes AllSeletion1{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #6265C9;
+        scale: 0.9;
+        rotate: 180deg;
+    }100%{
+        rotate: 360deg;
+    }
+}
+.AllSeletion P:nth-child(2){
+    animation: AllSeletion2 2.2s ease-in-out infinite;
+}
+@keyframes AllSeletion2{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #484848;
+        scale: 0.9;
+    }100%{
+        
+    }
+}
+.AllSeletion P:nth-child(3){
+    animation: AllSeletion3 2.4s ease-in-out infinite;
+}
+@keyframes AllSeletion3{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #C9AF62;
+        scale: 0.9;
+    }100%{
+        
+    }
+}
+.AllSeletion P:nth-child(4){
+    animation: AllSeletion4 2.6s ease-in-out infinite;
+}
+@keyframes AllSeletion4{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 10px #0bd700;
+        scale: 0.9;
+        rotate: 10deg;
+    }100%{
+        
+    }
+}
+
+.popupStore{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 70%;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px #00000057;
+    border-radius: 10px;
+    z-index: 1020;
+    transition: 0.2s ease-in;
+    animation: popupStore 0.6s ease-in-out ;
+}
+@keyframes popupStore {
+    0%{transform: translate(-50%, 100%)scale(0.5);}
+}
+.popupheader{
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    color: #c2a14f;
+    margin-bottom: 10px;
+}
+.BtnFloor{
+    background-color: #C9AF62;
+    margin: 0 10px;
+    color: #fff;
+    padding: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.AllStore{
+    margin: 0 10%;
+    overflow-y: scroll;
+    height: 450px;
+}
+.CardStore {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 250px);
+    gap: 10px;
+}
+.CardSubStore{
+    width: 250px;
+    height: 200px;
+    border: 2px solid #eed699;
+    color: #000;
+    cursor: pointer;
+}
+.NoStorecard{
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 500;
+}
+.FloorNumber{
+    transform: translate(10px, -215px);
+    font-family: "Parkinsans", sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #664b05;
+    text-shadow: 0 0 5px #e9cc83;
+}
+
+
+.BackUpC{
+    margin: 10px 10%;
+}
+.BackUpCard{
+    width: 100%;
+    height: 150px;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px #000;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.BackUpCard img{
+    border-radius: 10px 0 0 10px;
+}
+.BackUpCard p{
+    line-height: 0px;
+}
+.UserPicBackup{
+    transform: translate(-240px,50px);
+    border: 2px solid #ffffff;
+}
+/* ====================================================Admin job========================================================= */
+.headJob{
+    text-align: center;
+    font-family: "PT Serif", serif;
+    font-size:35px;
+}
+.JobRQ{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 225px);
+    gap: 20px;
+    justify-content: center;
+}
+.selcetStatus{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 100px);
+    gap: 20px;
+    justify-content: center;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 800;
+    color: #fff;
+}
+.selcetStatus p{
+    background-color: #C9AF62;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow:  0 0 10px #00000023;
+    animation: selectP 0.8s linear;
+}
+@keyframes selectP {
+    0%{
+        transform: scale(0.6);
+        opacity: 0;
+    }
+}
+.cardUser{
+    background-color: #ffffff;
+    height: 300px;
+    box-shadow: 0 0 5px #00000056;
+    border-radius: 5px;
+    animation: cardUser 0.5s ease-in-out;
+}
+@keyframes cardUser {
+    0%{
+        transform: translateY(300px);
+        opacity: 0;
+    }
+}
+.backgroundUserJob{
+    width: 225px;
+    height: 130px;
+    border-radius: 5px 5px 0 0;
+}
+.ProfileUserJob{
+    position: relative;
+    left: 25%;
+    top: -20%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 0 2px #00000081;
+    animation: Profile 5s ease-in-out 0.5s infinite ;
+}
+@keyframes Profile {
+    0%{
+        transform: translateY(-5px);
+    }50%{
+        transform: translateY(0px);
+    }100%{
+        transform: translateY(-5px);
+    }
+}
+.infoUser{
+    position: relative;
+    top: -70px;
+    text-align: center;
+    font-family: "Parkinsans", sans-serif;
+    line-height: 5px;
+    font-size: 10px;
+    height: 80px;
+    overflow-y: scroll;
+}
+.setButton{
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-210%);
+    margin: 0px 10px;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    
+}
+.setButton p{
+    cursor: pointer;
+    color: #C9AF62;
+    padding: 0px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #00000037;
+    border: 1px solid #C9AF62;
+}
+.StatusUser{
+    transform: translateY(-320px);
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    background-color: #c7ac5a;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    box-shadow: 0 5px 5px #00000033;
+}
+/* ================================================Admin Event==================================================== */
+.cardEvent{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 160px;
+    background-color: transparent;
+    box-shadow: 0 0 10px #7a7a7a;
+    border-radius: 10px;
+    transition: 0.3s ease-in-out;
+    margin: 10px 0;
+    overflow-y: auto;
+}
+.cardEvent:hover{
+    height: 250px;
+}
+.popupevent {
+    width: 500px;
+    height: 500px;
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 10px;
+    z-index: 1020;
+    animation: popupevent 0.3s ease-in-out forwards;
+    padding: 50px 30px;
+}
+@keyframes popupevent {
+    0%{transform: translate(-50%, 50%); opacity: 0;}
+}
+.backgroundevent{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 1010;
+    background-color: #0000001f;
+    animation: backgroundevent 0.5s ease-in-out;
+}
+@keyframes backgroundevent {
+    0%{opacity: 0;}
+}
+.forminputevent{
+    font-family: "Parkinsans", sans-serif;
+}
+.SubmitEvent{
+    background-color: #fff;
+    border: 2px solid #C9AF62;
+    color: #C9AF62;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: 0.3s ease-in-out;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+.SubmitEvent:hover{
+    background-color: #C9AF62;
+    border: 2px solid #C9AF62;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.AddEvent{
+    cursor: pointer;
+    font-family: "Parkinsans", sans-serif;
+    font-weight: 400;
+}
+/* =============================================== Adio player ===================================================== */
+.ButtonMusic{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1021;
+    cursor: pointer;
+}
+
+.showMusic.show{
+    visibility: visible;
+}
+
+.showMusic.notshow{
+    visibility: hidden;
+
+}
+
+.Audio{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1020;
+    background-color: #0000009e;
+    backdrop-filter: blur(10px);
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #000000c3;
+}
+.AudioTop{
+    display: flex;
+    justify-content: start;
+    margin: 5px;
+    align-items: center;
+    color: #fff;
+}
+.AudioTopP p{
+    font-family: "Parkinsans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+    margin-left: 10px;
+}
+.Player {
+    display: flex;
+    justify-content:center;
+    color: #fff;
+}
+.Player button{
+    background-color: #00000000;
+    border: 0px solid #00000000;
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 40px;
+}
+.vol{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vol input[type="range"] {
+    appearance: none;
+    width: 200px; 
+    height: 4px; 
+    background: #919191;
+}
+.vol input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 5px; 
+    height: 5px; 
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.spin{
+    position: fixed;
+    bottom: 10px;
+    left: 220px;
+    background-color: #1d1d1d;
+    padding: 20px;
+    border-radius: 50%;
+    z-index: 1010;
+    box-shadow: 0 0 40px #E8D196;
+
+}
+.spin.active {
+    animation: spinimg 5s linear infinite ;
+
+}
+@keyframes spinimg {
+    0%{
+        rotate: 360deg;
+    }
+}
+.spin.stop {
+    animation: spinimgstop 1s linear reverse forwards ;
+
+}
+@keyframes spinimgstop {
+    0%{
+        opacity: 0;
+        transform: translateX(-300px);
+    }
+}
+
+
+
+
+
+.Ad2{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.Ad2sub{
+    margin: 70px 25%;
+    text-align: center;
+    font-weight: 100;
+}
+.Ad2 img{
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    object-position: -20% 0;
+}
+
+.RTTOP{
+    background-color: var(--b1);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+.RTTOP:hover{
+    box-shadow: 0 0 10px var(--b1);
+}
+

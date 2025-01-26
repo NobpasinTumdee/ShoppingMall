@@ -1,0 +1,423 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+.MandP h1{
+    font-size: 60px;
+    font-family: 'Dongle', sans-serif;
+    text-align: center;
+    color: #6D6D6D;
+    animation: MandP 1s ease-in-out;
+}
+@keyframes MandP{
+    0%{
+        opacity: 0;
+    }
+}
+.twoicon{
+    margin: 0 33%;
+    display: flex;
+    justify-content: space-between;
+    animation: twoicon 0.8s ease-in-out;
+}
+@keyframes twoicon{
+    0%{
+        transform: translateY(100%);
+        opacity: 0;
+        scale: 0.5;
+    }
+}
+.twoicon h1{ 
+    text-align: center;
+    font-size: 40px;
+    font-family: 'Dongle', sans-serif;
+    transform: translateY(-50%);
+    color: #6D6D6D;
+}
+.boxMandP{
+    transition: 0.8s;
+    padding: 10px 30px;
+}
+.boxMandP:hover{
+    background-color: #eeeeee;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #a8a8a8;
+}
+
+.Inbox{
+    width: 450px;
+    height: 750px;
+    position: fixed;
+    left: 0;
+    top: 115px;
+    background-color: #ffffff;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 10px #a8a8a8;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 1s ease;
+}
+.Inbox.fade-in{
+    animation: Inboxin 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+.Inbox.fade-out{
+    animation: Inboxout 0.5s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes Inboxin{
+    0%{
+        left: -500px;
+        top: 115px;
+    }80%{
+        left: 0px;
+        top: 115px;
+    }100%{
+        left: 0px;
+        top: 115px;
+    }
+}
+@keyframes Inboxout{
+    0%{
+        left: -500px;
+        top: 115px;
+    }80%{
+        left: 0px;
+        top: 115px;
+    }100%{
+        left: 0px;
+        top: 115px;
+    }
+}
+
+.Messages{
+    font-size: 30px;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-left: 20px;
+    
+}
+.AllMessagesbox {
+    overflow-y: scroll;
+    height: 600px;
+}
+.Messagesbox{
+    border-top:1px solid #c3c3c3 ;
+    border-bottom:1px solid #c3c3c3 ;
+    margin-left: 20px;
+    width: 400px;
+    height: 80px;
+    display: flex;
+    justify-content:flex-start;
+}
+.Messagesbox img{
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+}
+
+.Messagesboxtext p:nth-child(1){
+    font-size: 20px;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    transform: translateY(-50%);
+}
+.MessagesboxtextINFO {
+    width: 90%;
+    height: 40px;
+    overflow-y: scroll;
+    transform: translateY(-80%);
+}
+.MessagesboxtextINFO p:nth-child(1){
+    font-size: 12px;
+    font-weight: 400;
+    font-family: 'Courier New', Courier, monospace;
+    transform: translateY(-5%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Paymentbar{
+    width: 450px;
+    height: 750px;
+    position: fixed;
+    right: 0px;
+    top: 115px;
+    background-color: #ffffff;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 0 10px #a8a8a8;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 1s ease;
+}
+.Paymentbar.fade-in{
+    animation: Paymentbarin 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+.Paymentbar.fade-out{
+    animation: Paymentbarout 0.5s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes Paymentbarin{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
+@keyframes Paymentbarout{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
+
+.Paymentbox{
+    margin: 20px 5%;
+    width: 90%;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #6D6D6D;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.Paymentbox img{
+    height: 90px;
+    margin-right: 20px;
+    animation: Paymentbox 5s ease-in-out infinite reverse;
+}
+@keyframes Paymentbox{
+    0%{
+        transform: translateY(-5%);
+    }50%{
+        transform: translateY(5%);
+    }100%{
+        transform: translateY(-5%);
+    }
+}
+
+.PaymentStorebar{
+    width: 450px;
+    height: 750px;
+    
+    position: fixed;
+    right: 0px;
+    top: 115px;
+    background-color: #ffffff;
+    border-radius: 10px 0 0 10px;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 1s ease;
+}
+.PaymentStorebar.fade-in{
+    animation: PaymentStorebarin 0.5s ease-in-out forwards;
+    visibility: visible;
+}
+.PaymentStorebar.fade-out{
+    animation: PaymentStorebarout 0.5s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes PaymentStorebarin{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
+@keyframes PaymentStorebarout{
+    0%{
+        right: -500px;
+        top: 115px;
+    }80%{
+        right: 0px;
+        top: 115px;
+    }100%{
+        right: 0px;
+        top: 115px;
+    }
+}
+.PG{
+    overflow-y: scroll;
+    height: 600px;
+}
+.paymentgroup{
+    margin: 20px 5%;
+    width: 90%;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #6D6D6D;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.paymentgroup.notPaid{
+    border-right: 10px solid #0b3b94;
+}
+.paymentgroup.paid{
+    border-right: 10px solid #0d9e00;
+    /* pointer-events: none; */
+    opacity: 1;
+}
+.paymentgroup:hover{
+    background-color: #fdf0cf;
+    color: #4e3a03;
+}
+.paymentgroup img{
+    width: 50px;
+    height: 50px;
+    margin-left: 20px;
+}
+.paymentgroup p{
+    margin-left: 30px;
+}
+.Paymentinfo{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.Paymentinfo p:nth-child(2){
+    font-size: 14px;
+    font-weight: 100;
+    font-family: 'Courier New', Courier, monospace;
+    transform: translateY(-40%);
+    line-height: 17px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:root {
+    --c1: #E9E9EB;
+    --c2: #78787A;
+    --c3: #016ADF;
+    --c4: #000000;
+    --c5: #ffffff;
+    --c6: #22222234;
+}
+
+
+.Massagesbox{
+    /* position: fixed;
+    left: 5px;
+    top: 10%; */
+    width: 350px;
+    height: 700px;
+    background-color: var(--c5);
+    z-index: 1030;
+    border-radius: 30px;
+    border: 5px solid var(--c4);
+    box-shadow: 0 0 15px var(--c6);
+    color: var(--c2);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.HeadPhone{
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+.HeadPhone2{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px;
+}
+.MassageContan{
+    background-color: var(--c5);
+    width: 90%;
+    height: 500px;
+    overflow-y: scroll;
+    margin: 0 5%;
+}
+.Msub{
+    display: flex;
+    height: 60px;
+    border-bottom: 1px solid var(--c2);
+    margin: 10px 0;
+    padding: 10px 0;
+}
+.Msub img{
+    width: 60px;
+}
+.Mtext{
+    height: 60px;
+    margin: 0 0 0 10px;
+    transform: translateY(-15px);
+    color: var(--c4);
+}
+.Mdes{
+    height: 40px;
+    color: var(--c2);
+    margin: 0;
+    transform: translateY(-15px);
+    overflow-y: scroll;
+}
+.Mdes p{
+    margin: 0;
+    font-weight: 100;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}

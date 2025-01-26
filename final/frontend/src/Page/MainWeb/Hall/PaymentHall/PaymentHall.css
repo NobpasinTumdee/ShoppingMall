@@ -1,0 +1,89 @@
+/* PaymentHall.css */
+
+/* พื้นที่หลัก */
+.payment-hall-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    max-width: 800px;
+    margin: 20px auto;
+    padding:5% 20%;
+    text-align: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 200px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* หัวข้อ */
+  .payment-hall-title {
+    text-align: center;
+    color: #B0946F;
+    margin-bottom: 20px;
+    font-size: 40px;
+  }
+  
+  .payment-hall-content h3,
+  .payment-hall-content h4 {
+    color: #333;
+  }
+  
+  /* วิธีการชำระเงิน */
+  .payment-hall-methods {
+    margin: 20px 0;
+  }
+  
+  .payment-hall-method {
+    background-color: #fff;
+    color: #B0946F;
+    border: 2px solid #B0946F;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: 0.3s;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  
+  .payment-hall-method:hover {
+    color: #fff;
+    border: 2px solid #B0946F;
+    background-color: #B0946F;
+  }
+  
+  .payment-hall-method.selected {
+    color: #fff;
+    border: 2px solid #B0946F;
+    background-color: #B0946F;
+    box-shadow: 0 0 10px #B0946F;
+  }
+  
+  /* อัปโหลดไฟล์ */
+  .payment-hall-upload {
+    margin: 20px 0;
+  }
+  
+  .payment-hall-file-input {
+    display: block;
+    margin: 10px 40%;
+  }
+  
+  /* ปุ่มยืนยัน */
+  .payment-hall-confirm-button {
+    background-color: #B0946F;
+    color: #fff;
+    border: 2px solid #B0946F;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 700;
+  }
+  
+  .payment-hall-confirm-button:hover {
+    color: #fff;
+    border: 2px solid #B0946F;
+    background-color: #B0946F;
+    box-shadow: 0 0 10px #B0946F;
+  }
+  

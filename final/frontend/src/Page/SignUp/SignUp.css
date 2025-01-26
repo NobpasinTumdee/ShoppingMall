@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+.singup{
+    position: fixed;  
+    top: 50%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);
+
+    width: 60%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow:  0 0 15px #1d1d1d2d;
+    border-radius: 10px;
+}
+
+.singupL {
+    height: 100%;
+    width: 50%;
+    background-color: #B0946F;
+    border-radius: 10px;
+    margin-right: 10%;
+}
+.singupL img{
+    height: 100%;
+    border-radius: 0 0 10px 10px;
+    animation: singupL 5s ease-in-out infinite;
+}
+@keyframes singupL {
+    50%{rotate: 1deg;}
+    60%{transform: translateY(-2%);}
+}
+.singupR {
+    height: 100%;
+    width: 40%;
+}
+.formsingup{
+    height: 400px;
+    overflow-y: scroll;
+}
+
+@media screen and (max-width: 1000px) {
+    div.singupL {
+        display: none;
+    }
+    div.singupR {
+        width: 100%;
+    }
+}
+.resetR{
+    height: 100%;
+    width: 60%;
+}
+.resetR input{
+    margin: 10px 0;
+    width: 80%;
+    border-radius: 20px;
+    height: 30px;
+    border: 2px solid #B0946F;
+    padding: 5px 10px;
+}

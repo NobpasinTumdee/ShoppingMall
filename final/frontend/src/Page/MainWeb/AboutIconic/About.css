@@ -1,0 +1,118 @@
+.Navabout {
+    display: flex;
+    justify-content: space-between;
+    width: 98%;
+    margin: 1% 1%;
+}
+
+.Menuabout {
+    display: flex;
+}
+
+.Menuabout p {
+    font-weight: 700;
+    font-family: Sans-serif;
+    margin: auto 20px;
+    color: #7e7e7e;
+    cursor: pointer;
+}
+
+.Menuabout img {
+    border-radius: 50%;
+    box-shadow: 0 0 5px #22222234;
+    cursor: pointer;
+}
+
+.maincontan {
+    height: 100%;
+    width: 100%;
+    font-family: Serif;
+}
+
+.maincontan h1 {
+    font-family: Serif;
+    font-size: 80px;
+    font-weight: 100;
+    text-align: center;
+    color: #232323;
+    margin-top: 5%;
+    opacity: 0;
+}
+
+.aboutus {
+    text-align: center;
+    margin: 0 15%;
+}
+
+.aboutus p {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.aboutus h3 {
+    font-size: 28px;
+}
+
+.aboutus2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.aboutus2 p {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: Sans-serif;
+    margin: 0;
+    opacity: 0.7;
+}
+
+.aboutus2 h2 {
+    font-size: 48px;
+    margin: 0;
+    font-family: Sans-serif;
+}
+
+.Brand {
+    text-align: center;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    scale: 0.2;
+}
+
+.aboutus2 img {
+    width: 50%;
+}
+
+.aboutus3 {
+    text-align: center;
+    margin: 0 15%;
+    scale: 0.5;
+}
+
+.aboutus3 p {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.aboutus3 h3 {
+    font-size: 28px;
+}
+
+
+
+.aboutus4 {
+    text-align: center;
+    margin: 0 15%;
+    scale: 0.5;
+}
+
+.aboutus4 p {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.aboutus4 h3 {
+    font-size: 28px;
+}

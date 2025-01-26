@@ -1,0 +1,369 @@
+{
+  "id": "15c4570f-7506-4fd1-a5b0-94cdbf2bbfb0",
+  "version": "2.0",
+  "name": "StorePaymentWeb",
+  "url": "https://www.iconicth.shop/Inbox",
+  "tests": [{
+    "id": "f6ebdb4c-12c4-4b7c-ab6a-8ec960f8fff8",
+    "name": "PaymentPromptpay",
+    "commands": [{
+      "id": "18e0eed7-20ba-49b1-84b3-83b32b4cb154",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Inbox",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7ccc5497-c429-4098-aa04-d1c9ea330cb5",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1552x880",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b73ce176-9971-43fa-ac16-b30eecbedc90",
+      "comment": "",
+      "command": "click",
+      "target": "css=.boxMandP:nth-child(2) > img",
+      "targets": [
+        ["css=.boxMandP:nth-child(2) > img", "css:finder"],
+        ["xpath=//img[@alt='OnlinePayment']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/img", "xpath:idRelative"],
+        ["xpath=//div[11]/div[2]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "916f8abf-a9e0-43f9-80e7-1d4765d0b873",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Paymentbox:nth-child(2)",
+      "targets": [
+        ["css=.Paymentbox:nth-child(2)", "css:finder"],
+        ["xpath=//div[@id='root']/div[13]/div", "xpath:idRelative"],
+        ["xpath=//div[13]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5456398d-bd03-474c-8baa-825696df431e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Paymentinfo > p:nth-child(2)",
+      "targets": [
+        ["css=.Paymentinfo > p:nth-child(2)", "css:finder"],
+        ["xpath=//div[@id='root']/div[14]/div/div/div/p[2]", "xpath:idRelative"],
+        ["xpath=//div[14]/div/div/div/p[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f7e09186-9eb2-4f2a-a3bb-c202007c8dcd",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-select-selection-search",
+      "targets": [
+        ["css=.ant-select-selection-search", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/div/div[3]/p/form/div/div/span/span", "xpath:idRelative"],
+        ["xpath=//div/span/span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ef75f4ab-7d85-493b-a178-24bea3065360",
+      "comment": "",
+      "command": "click",
+      "target": "css=.PaymentPaymentMethod:nth-child(4)",
+      "targets": [
+        ["css=.PaymentPaymentMethod:nth-child(4)", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[2]", "xpath:idRelative"],
+        ["xpath=//div[11]/div[2]/div/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c53f6d63-ee18-48e3-9ffe-d32d24ac897c",
+      "comment": "",
+      "command": "click",
+      "target": "css=label > input",
+      "targets": [
+        ["css=label > input", "css:finder"],
+        ["xpath=//input[@type='checkbox']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[3]/label/input", "xpath:idRelative"],
+        ["xpath=//label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe41aab7-8ae3-495b-9030-ae248ac678fc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.AttachSlip",
+      "targets": [
+        ["css=.AttachSlip", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div[2]/div", "xpath:idRelative"],
+        ["xpath=//div[11]/div[2]/div[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3014102c-dc24-4e77-b858-bc7d17e75715",
+      "comment": "",
+      "command": "type",
+      "target": "id=Slip",
+      "targets": [
+        ["id=Slip", "id"],
+        ["css=#Slip", "css:finder"],
+        ["xpath=//input[@id='Slip']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[9]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div/input", "xpath:position"]
+      ],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\slip.jpg"
+    }, {
+      "id": "44df1347-4d2e-4e85-9f1c-35f324b120f3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ButtonSlip",
+      "targets": [
+        ["css=.ButtonSlip", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/div/button", "xpath:idRelative"],
+        ["xpath=//div[9]/div/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Upload and review')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fdbff837-ed9b-4a70-9026-f54cf33cb080",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(4) > div:nth-child(3)",
+      "targets": [
+        ["css=div:nth-child(4) > div:nth-child(3)", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/div/div[2]/div[2]", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div[2]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "ce107e0f-ae24-4bf1-92ce-67f8d88a3f8e",
+    "name": "PaymentMastercard",
+    "commands": [{
+      "id": "46784d8d-f8ae-4add-b7f5-6e969168b6ee",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Inbox",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bedc365c-75ff-42ab-92f7-43ec8af501bf",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1552x880",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0249a71d-cbc0-4523-8de8-99d2b30333cb",
+      "comment": "",
+      "command": "click",
+      "target": "css=.boxMandP:nth-child(2) > img",
+      "targets": [
+        ["css=.boxMandP:nth-child(2) > img", "css:finder"],
+        ["xpath=//img[@alt='OnlinePayment']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/img", "xpath:idRelative"],
+        ["xpath=//div[11]/div[2]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1b77ef15-3403-4a23-ab91-bbe2dd2cc4e2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Paymentbox:nth-child(2)",
+      "targets": [
+        ["css=.Paymentbox:nth-child(2)", "css:finder"],
+        ["xpath=//div[@id='root']/div[13]/div", "xpath:idRelative"],
+        ["xpath=//div[13]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "550b1bd5-6976-4fb3-8f0d-1c60698c4286",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Paymentinfo > p:nth-child(2)",
+      "targets": [
+        ["css=.Paymentinfo > p:nth-child(2)", "css:finder"],
+        ["xpath=//div[@id='root']/div[14]/div/div/div/p[2]", "xpath:idRelative"],
+        ["xpath=//div[14]/div/div/div/p[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c6feebff-65c0-413d-bb87-dd9d6a8637ea",
+      "comment": "",
+      "command": "click",
+      "target": "css=.PaymentPaymentMethod:nth-child(3)",
+      "targets": [
+        ["css=.PaymentPaymentMethod:nth-child(3)", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div", "xpath:idRelative"],
+        ["xpath=//div[11]/div[2]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9bc2890a-8bae-41cf-9370-e9bfd8964b01",
+      "comment": "",
+      "command": "click",
+      "target": "css=label > input",
+      "targets": [
+        ["css=label > input", "css:finder"],
+        ["xpath=//input[@type='checkbox']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[3]/label/input", "xpath:idRelative"],
+        ["xpath=//label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "718cc397-880e-4bf2-9642-7aff0b487d33",
+      "comment": "",
+      "command": "click",
+      "target": "id=Card_number",
+      "targets": [
+        ["id=Card_number", "id"],
+        ["name=Card_number", "name"],
+        ["css=#Card_number", "css:finder"],
+        ["xpath=//input[@id='Card_number']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a1875a58-6cd1-4bef-8264-223f3e8e5ef4",
+      "comment": "",
+      "command": "type",
+      "target": "id=Card_number",
+      "targets": [
+        ["id=Card_number", "id"],
+        ["name=Card_number", "name"],
+        ["css=#Card_number", "css:finder"],
+        ["xpath=//input[@id='Card_number']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div/div/input", "xpath:position"]
+      ],
+      "value": "1234567890123456"
+    }, {
+      "id": "278847e1-15d4-4fd0-a857-db7c4bed538c",
+      "comment": "",
+      "command": "click",
+      "target": "id=Card_name",
+      "targets": [
+        ["id=Card_name", "id"],
+        ["name=Card_name", "name"],
+        ["css=#Card_name", "css:finder"],
+        ["xpath=//input[@id='Card_name']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div/div[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7926d00c-c041-46a3-b9db-94549f381ada",
+      "comment": "",
+      "command": "type",
+      "target": "id=Card_name",
+      "targets": [
+        ["id=Card_name", "id"],
+        ["name=Card_name", "name"],
+        ["css=#Card_name", "css:finder"],
+        ["xpath=//input[@id='Card_name']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div/div[2]/input", "xpath:position"]
+      ],
+      "value": "Nobpasin Tumdee"
+    }, {
+      "id": "4133abf0-cd0e-4824-83eb-8e21aef97321",
+      "comment": "",
+      "command": "click",
+      "target": "id=Expiry_date",
+      "targets": [
+        ["id=Expiry_date", "id"],
+        ["name=Expiry_date", "name"],
+        ["css=#Expiry_date", "css:finder"],
+        ["xpath=//input[@id='Expiry_date']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "099a2fce-a474-463f-b5ff-6a17880fccf7",
+      "comment": "",
+      "command": "type",
+      "target": "id=Expiry_date",
+      "targets": [
+        ["id=Expiry_date", "id"],
+        ["name=Expiry_date", "name"],
+        ["css=#Expiry_date", "css:finder"],
+        ["xpath=//input[@id='Expiry_date']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div[2]/div/input", "xpath:position"]
+      ],
+      "value": "12/25"
+    }, {
+      "id": "820f326f-8016-49ad-b2ae-5d7d3571d7cb",
+      "comment": "",
+      "command": "click",
+      "target": "id=Card_security_code",
+      "targets": [
+        ["id=Card_security_code", "id"],
+        ["name=Card_security_code", "name"],
+        ["css=#Card_security_code", "css:finder"],
+        ["xpath=//input[@id='Card_security_code']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div[2]/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div[2]/div[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d19bb8af-5498-432a-b860-19a4536eb62b",
+      "comment": "",
+      "command": "type",
+      "target": "id=Card_security_code",
+      "targets": [
+        ["id=Card_security_code", "id"],
+        ["name=Card_security_code", "name"],
+        ["css=#Card_security_code", "css:finder"],
+        ["xpath=//input[@id='Card_security_code']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/div[2]/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div[2]/div[2]/input", "xpath:position"]
+      ],
+      "value": "3576"
+    }, {
+      "id": "2dada6e1-8a6d-47d3-9caa-1f2db699a53a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.SubmitCard",
+      "targets": [
+        ["css=.SubmitCard", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/div[2]/div/div[4]/form/button", "xpath:idRelative"],
+        ["xpath=//div[4]/form/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Submit')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "21f38131-ca0a-464e-b2ec-2f61eadd2007",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-notification-notice-message",
+      "targets": [
+        ["css=.ant-notification-notice-message", "css:finder"],
+        ["xpath=//div[2]/div/div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c156bf66-6b9f-4ec0-bd36-b3efd28be3b1",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-notification-notice-message",
+      "targets": [
+        ["css=.ant-notification-notice-message", "css:finder"],
+        ["xpath=//div[4]/div/div/div/div/div", "xpath:position"]
+      ],
+      "value": "Your Mastercard."
+    }]
+  }],
+  "suites": [{
+    "id": "19c82c02-c0a0-47f4-83c1-27b853cd78dd",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["f6ebdb4c-12c4-4b7c-ab6a-8ec960f8fff8"]
+  }],
+  "urls": ["https://www.iconicth.shop/", "https://www.iconicth.shop/Inbox"],
+  "plugins": []
+}

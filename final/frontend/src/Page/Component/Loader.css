@@ -1,0 +1,190 @@
+.loader {
+    width: 250px;
+    height: 320px;
+    border: 3px solid #B0946F;
+    animation: loader 0.8s linear;
+}
+@keyframes loader {
+    0%{opacity: 0;scale: 0.8;}
+}
+
+.loader path {
+stroke: #B0946F;
+stroke-width: 0.6px;
+animation: dashArray 4s ease-in-out infinite,
+    dashOffset 4s linear infinite;
+}
+
+@keyframes dashArray {
+    0% {
+        stroke-dasharray: 0 1 359 0;
+    }
+
+    50% {
+        stroke-dasharray: 0 359 1 0;
+    }
+
+    100% {
+        stroke-dasharray: 359 1 0 0;
+    }
+    }
+
+    @keyframes dashOffset {
+    0% {
+        stroke-dashoffset: 365;
+    }
+
+    100% {
+        stroke-dashoffset: 5;
+    }
+}
+
+
+
+
+
+
+
+/* From Uiverse.io by Pradeepsaranbishnoi */ 
+/* The loader container */
+.Loadergroup2{
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    scale: 1.6;
+    z-index:1040;
+    animation: Loaderanima 0.5s ease-in-out;
+}
+@keyframes Loaderanima {
+    0%{opacity: 0;}
+}
+.loader2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 100px;
+    margin-top: -100px;
+    margin-left: -100px;
+    perspective: 1000px;
+    transform-style: preserv3d;
+  }
+  
+  .loader--reflect {
+    margin-top: 0;
+  }
+  
+  .loader--reflect:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -25%;
+    width: 150%;
+    height: 110%;
+    border-radius: 5px;
+    background: linear-gradient(0deg, #eeeeee93, #eeeeee5a 20%, #eeeeee2d);
+    backdrop-filter: blur(2px);
+  }
+  
+  
+  /* The bar */
+  .bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 20px;
+    height: 100px;
+    background-color: #b0946f;
+    border-radius: 5px;
+    transform: scaleY(0);
+    transform-style: preserve3d;
+    animation: bar 3s cubic-bezier(.81,.04,.4,.7) infinite;
+  }
+  
+  .bar:nth-child(2) {
+    left: 20px;
+    background-color: #b79d7b;
+    animation-delay: 50ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(3) {
+    left: 40px;
+    background-color: #c0a98c;
+    animation-delay: 100ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(4) {
+    left: 60px;
+    background-color: #c9b59c;
+    animation-delay: 150ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(5) {
+    left: 80px;
+    background-color: #d2c2ad;
+    animation-delay: 200ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(6) {
+    left: 100px;
+    background-color: #dbcebd;
+    animation-delay: 250ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(7) {
+    left: 120px;
+    background-color: #e4dace;
+    animation-delay: 300ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(8) {
+    left: 140px;
+    background-color: #ede6de;
+    animation-delay: 350ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(9) {
+    left: 160px;
+    background-color: #f6f3ef;
+    animation-delay: 400ms;
+    border-radius: 5px;
+  }
+  
+  .bar:nth-child(10) {
+    left: 180px;
+    background-color: #ffffff;
+    animation-delay: 450ms;
+    border-radius: 5px;
+  }
+  
+  .loader--reflect .bar {
+    animation-name: bar-reflect;
+  }
+  
+  @keyframes bar {
+    0% {
+      transform: rotateZ(-180deg) rotateX(-360deg);
+    }
+  
+    75%,100% {
+      transform: rotateZ(0) rotateX(0);
+    }
+  }
+  
+  @keyframes bar-reflect {
+    0% {
+      transform: rotateZ(180deg) rotateX(360deg);
+    }
+  
+    75%,100% {
+      transform: rotateZ(0) rotateX(0);
+    }
+  }

@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+body { 
+    margin: 0px;
+    padding: 0px;
+    background-color: rgb(255, 255, 255);
+
+}
+.backgroud{
+    position: fixed;
+    width: 600px;
+    height: 100%;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+}
+
+.Logoforlogin img{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 1030;
+    animation: LogoLogin 4s ease-in-out infinite;
+}
+@keyframes LogoLogin {
+    50%{transform: translateY(-4%);}
+}
+/* @media screen and (max-width: 550px) {
+    span.LoginLeft {
+        display: none;
+    }
+    div.Logincontanner {
+        height: 80%;
+        width: 80%;
+        position: fixed;  
+        top: 50%;  
+        left: 50%;  
+        transform: translate(-70%, -50%);
+        box-shadow: none;
+    }
+    span.Loginrigth {
+        width: 100%;
+        margin: 10% 20%;
+        border-radius: 20px;
+    }
+}
+.Logincontanner {
+    position: fixed;  
+    top: 50%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);
+
+    background-color: rgba(34, 34, 34, 0);
+    height: 600px;
+    width: 1000px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #0000005c;
+    font-size: 40px;
+    font-family: 'Dongle', sans-serif;
+    z-index: 1;
+}
+.Loginsub{
+    display: flex;
+    justify-content: space-between;
+}
+.LoginLeft{
+    background-color: #111111;
+    backdrop-filter: blur(10px);
+    width: 40%;
+    height: 600px;
+    border-radius: 10px 0 0 10px;
+    color: #E8D196;
+    text-align: right;
+    padding-right: 30px;
+}
+.LoginLeft img{
+    position: fixed;
+    transform: translate(-90px, -45px);
+
+    animation-duration: 3s;
+    animation-name: LoginLeft;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes LoginLeft{
+    0%{
+        transform: translate(-90px, -45px);
+    }50%{
+        transform: translate(-90px, -50px);
+    }100%{
+        transform: translate(-90px, -45px);
+    }
+}
+.LoginLeft p:first-child{
+    font-weight: 800;
+    font-size: 90px;
+    line-height: 0px;
+}
+.LoginLeft p:nth-child(2){
+    font-size: 24px;
+    line-height: 0px;
+    transform: translateY(-50px);
+}
+.gotocarpark{
+    width: 200px;
+    height: 50px;
+    background-color: #E8D196;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 0 0 15px #E8D196; 
+    transform: translateY(300px);
+    text-align: center;
+    font-size: 35px;
+    color: #000;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+
+    animation-duration: 3s;
+    animation-name: gotocarpark;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+.gotocarpark:hover{
+    color: #ffffff;
+}
+@keyframes gotocarpark{
+    0%{
+        box-shadow: 0 0 15px #E8D196; 
+    }50%{
+        box-shadow: 0 0 0px #E8D196; 
+    }100%{
+        box-shadow: 0 0 15px #E8D196; 
+    }
+}
+
+
+
+
+
+
+.Loginrigth{
+    background-color: #ffffff00;
+    backdrop-filter: blur(10px);
+    width: 60%;
+    height: 600px;
+    border-radius: 0 10px 10px 0;
+}
+.formLogin{
+    margin: 160px 100px;
+}
+.formLogin:first-child{
+    font-weight: 800;
+    font-size: 80px;
+    transform: translateY(-20%);
+}
+.formLogin p{
+    font-size: 25px;
+    font-family: 'Dongle', sans-serif;
+    margin: 0;
+} */
+
+.LoginButton1 {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+}
+.LoginButton1 a{
+    position: absolute;
+    transform: translateY(-10px);
+    cursor: pointer;
+    color: #d4b790;
+    font-weight: 700;
+}
+.LoginButton1 button{
+    width: 200px;
+    height: 50px;
+    border-radius: 20px 0 20px 0;
+    background-color: #B0946F;
+    border: 0px;
+    font-size: 28px;
+    color: #ffffff;
+    box-shadow: 0 10px 15px #22222234;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+}
+.LoginButton1:hover button{
+    background-color: #E8D196;
+    box-shadow: 0 0 15px #E8D196;
+}
+.LoginButton1 img{
+    position: relative;
+    right: -10px;
+    top: 0px;
+    align-items: center;
+
+    animation-duration: 1.5s;
+    animation-name: LoginButton1;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes LoginButton1{
+    0%{
+        transform: translateX(0px);
+    }50%{
+        transform: translateX(5px);
+    }100%{
+        transform: translateX(0px);
+    }
+}
+
+
+
+
+
+
+.LoginButton {
+    text-align: right;
+}
+.LoginButton button{
+    width: 150px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #292929;
+    border: 0px;
+    color: #ffffff;
+    transition: 0.2s ease-in-out;
+}
+.LoginButton:hover button{
+    background-color: #E8D196;
+    box-shadow: 0 0 15px #E8D196;
+}
+.LoginButton img{
+    position: relative;
+    right: -10px;
+    top: 2px;
+    align-items: center;
+
+    animation-duration: 1.5s;
+    animation-name: LoginButton;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes LoginButton{
+    0%{
+        transform: translateX(0px);
+    }50%{
+        transform: translateX(5px);
+    }100%{
+        transform: translateX(0px);
+    }
+}
+
+.iconuser{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    transform: translateX(-40px);
+}
+
+video{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    object-fit: cover;
+}
+@media(min-aspect-ratio: 16/9){
+    video{
+        width: 100%;
+        height: auto;
+    }
+}
+
+
+.customInput {
+    backdrop-filter: blur(10px);
+    background-color: transparent;
+    border: 3px solid #B0946F;
+    border-radius: 20px;
+}
+/* .customInput::placeholder {
+    color: #2b2b2b;
+} */
+
+.customInput:hover {
+    border-color: #B0946F; /* เปลี่ยนสีเส้นขอบเมื่อ Hover */
+    background-color: rgba(255, 255, 255, 0.3); /* เพิ่มพื้นหลังเบาๆ */
+    box-shadow: 0 0 15px #22222234; /* เพิ่มเงาเมื่อโฟกัส */
+}
+
+.customInput:focus {
+    border-color: #705e30; /* เปลี่ยนสีเส้นขอบเมื่อ Focus */
+    background-color: rgba(255, 255, 255, 0.3);
+}

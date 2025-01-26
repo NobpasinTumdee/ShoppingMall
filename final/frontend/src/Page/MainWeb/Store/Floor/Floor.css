@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap');
+
+.FloorMap {
+    position: fixed;
+    top: 20%;
+    right: 0px;
+    background-color: #B0946F;
+    width: 200px;
+    height: 60px;
+    border-radius: 10px 0 0 10px;
+    transform: translateX(65%);
+    cursor: pointer;
+
+    animation-duration: 3s;
+    animation-name: FloorB;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    
+    transition: 0.2s ease-in-out;
+}
+@keyframes FloorB{
+    0%{
+
+    }50%{
+        box-shadow: 0 0 40px #B0946F;
+    }100%{
+        
+    }
+}
+
+.FloorMap:hover {
+    transform: translateX(-1%);
+}
+
+.FloorMap img{
+    margin: 15px;
+    width: 30px;
+    height: 30px;
+}
+.FloorMap span{
+    margin-left: 20px;
+    position: absolute;
+    top: -10px;
+    font-size: 60px;
+    color: rgb(255, 255, 255);
+    font-family: 'Dongle', sans-serif;
+}
+
+.FloorContaner {
+    position: fixed;
+    transform: translateY(70%);
+    right: 10px;
+
+    
+}
+
+.SubFloor {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #B0946F;
+    margin-top: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px #0000004f;
+    cursor: pointer;
+
+    animation-duration: 0.5s;
+    animation-name: Floor;
+    animation-timing-function: ease-in-out;
+}
+
+
+.SubFloor img{
+    margin: 15px;
+    width: 30px;
+    height: 30px;
+
+    animation-duration: 3s;
+    animation-name: FloorSub;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    
+}
+
+
+@keyframes Floor{
+    0%{
+        transform: translateX(200px);
+    }50%{
+
+    }100%{
+        transform: translateX(0);
+    }
+}
+@keyframes FloorSub{
+    0%{
+        transform: rotate(10deg);
+    }50%{
+        transform: rotate(-10deg);
+    }100%{
+        transform: rotate(10deg);
+    }
+}
+
+
+
+.Map {
+    position: fixed;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    width: 900px;
+    height: 700px;
+    background-color: #ffffff;
+    box-shadow: 0 0 40px #00000032;
+    border-radius: 10px;
+
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.Map.fade-in {
+    animation: Mapin 0.4s ease-in-out forwards;
+    visibility: visible;
+}
+@keyframes Mapin{
+    0%{
+        transform: translate(100%, -50%) scale(0.1);
+    }50%{
+        
+    }100%{
+        scale: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+.Map.fade-out {
+    animation: Mapout 0.4s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes Mapout{
+    0%{
+        
+        transform: translate(100%, -50%) scale(0.1);
+    }50%{
+        
+    }100%{
+        scale: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+.Map img{
+    width: 900px;
+    height: 600px;
+    margin-bottom: 10px;
+}
+.Map p{
+    font-family: "Trirong", serif;
+    color: #B0946F;
+    font-size: 60px;
+    margin: 0;
+    padding: 0;
+}
+
+.BGMap {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.315);
+    backdrop-filter: blur(0.5px);
+    z-index: 1001;
+
+    transition: opacity 1s ease, visibility 0.4s ease;
+}
+.BGMap.fade-in {
+    animation: BGMap 1s ease-in-out forwards;
+    visibility: visible;
+}
+@keyframes BGMap{
+    0%{
+        opacity: 0;
+    }50%{
+        
+    }100%{
+        opacity: 1;
+    }
+}
+.BGMap.fade-out {
+    animation: BGMapout 0.4s ease-in-out reverse forwards;
+    visibility: hidden;
+}
+@keyframes BGMapout{
+    0%{
+        opacity: 0;
+    }50%{
+        
+    }100%{
+        opacity: 1;
+    }
+}
+
+.ExitMap {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    background-color: #B0946F;
+    text-align: center;
+    border-radius: 100%;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 0 4px #B0946F;
+    font-family: 'Dongle', sans-serif;
+    font-size: 14px;
+}

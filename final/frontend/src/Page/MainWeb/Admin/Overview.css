@@ -1,0 +1,44 @@
+:root {
+    --b1: #B0946F;
+    --b2: #C9AF62;
+    --b3: #C8C8C8;
+}
+.promotion{
+    font-size: 50px;
+    text-align: center;
+    margin-top: 20%;
+}
+.Cpayment{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10%;
+}
+.PackagePayment{
+    border: 2px solid var(--b1);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0 10px;
+    padding: 30px 50px;
+    width: 200px;
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(176,148,111,1) 0%, rgba(255,255,255,1) 100%);
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+}
+.PackagePayment:hover{
+    transform: translateY(-5px);
+}
+.Hpro{
+    font-size: 30px;
+    margin: 0;
+}
+ 
+.packageselect{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.packageselect input{
+    border: 1px solid var(--b1);
+    margin-bottom: 20px;
+    border-radius: 5px;
+    height: 30px;
+}

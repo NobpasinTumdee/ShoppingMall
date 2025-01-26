@@ -1,0 +1,81 @@
+/* โครงสร้างหลัก */
+.hall-list {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto; /* จัดกึ่งกลางคอนเทนต์ */
+    background-color: #ffffff; /* สีพื้นหลังขาว */
+    border: 1px solid #e5e5e5; /* ขอบเบา */
+    border-radius: 10px;
+  }
+  
+  /* ข้อความส่วนหัว */
+ 
+.hall-list h1 {
+    font-size: 36px; /* ปรับขนาดข้อความให้ใหญ่ขึ้น */
+    font-weight: bold;
+    color: #b8860b; /* สีทอง */
+    margin-bottom: 20px;
+    text-transform: uppercase; /* ตัวอักษรเป็นตัวพิมพ์ใหญ่ทั้งหมด */
+    letter-spacing: 2px; /* เพิ่มระยะห่างระหว่างตัวอักษร */
+  }
+  
+  
+  /* การ์ด */
+  .ant-card {
+    border-radius: 10px; /* มุมโค้ง */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เงาอ่อน */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    text-align: center;
+    border: 1px solid #e5e5e5; /* ขอบสีอ่อน */
+    background-color: #ffffff; /* พื้นหลังขาว */
+  }
+  
+  .ant-card:hover {
+    transform: translateY(-5px); /* ยกการ์ดขึ้นเมื่อ hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* เพิ่มเงาเมื่อ hover */
+  }
+  
+  /* รูปภาพในการ์ด */
+  .ant-card-cover img {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0; /* โค้งเฉพาะมุมบน */
+  }
+  
+  /* ปรับสีปุ่มของ Ant Design */
+.hall-list .ant-btn-primary {
+    background-color: #b8860b !important; /* ใช้ !important เพื่อ override ค่าเริ่มต้น */
+    border-color: #b8860b !important; /* ใช้ !important เพื่อปรับสีขอบ */
+    color: #ffffff !important; /* สีข้อความ */
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  .hall-list .ant-btn-primary:hover {
+    background-color: #d4af37 !important; /* สีทองอ่อนเมื่อ hover */
+    border-color: #d4af37 !important;
+    color: #ffffff !important; /* สีข้อความยังคงเป็นสีขาว */
+    transform: scale(1.05); /* ขยายเล็กน้อยเมื่อ hover */
+  }
+  
+  /* ระยะห่างใน Row */
+  .ant-row {
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+  
+  .ant-col {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  /* ข้อความไม่มีข้อมูล */
+  .hall-list p {
+    font-size: 18px;
+    color: #b8860b; /* สีทอง */
+  }
+  
+  /* Spinner (โหลดข้อมูล) */
+  .ant-spin-dot {
+    color: #b8860b; /* Spinner สีทอง */
+  }
+  

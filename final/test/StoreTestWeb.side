@@ -1,0 +1,736 @@
+{
+  "id": "b86d5089-6fbd-44d2-a16c-23197fc78beb",
+  "version": "2.0",
+  "name": "StoreTestWeb",
+  "url": "https://www.iconicth.shop/Store",
+  "tests": [{
+    "id": "9d253bff-d4ca-48ef-9d47-c3f91f53894b",
+    "name": "BookingNoname",
+    "commands": [{
+      "id": "249cea36-d274-435b-8f20-93a059f6145e",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bf4d345a-24c3-4f00-9892-96e194cff5a8",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1552x880",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "634ce911-fd59-4377-bff9-92e848cb35ca",
+      "comment": "",
+      "command": "click",
+      "target": "css=.cardStore:nth-child(20) > div:nth-child(1)",
+      "targets": [
+        ["css=.cardStore:nth-child(20) > div:nth-child(1)", "css:finder"],
+        ["xpath=//div[@id='root']/div[20]/div[3]/span[2]/span[20]/div", "xpath:idRelative"],
+        ["xpath=//span[20]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8df4d1d1-85a5-4b2e-ba03-d9ae9d1fdd42",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,0)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "47b23bb4-1041-43cc-9764-71b249b5ab6c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingBtn img",
+      "targets": [
+        ["css=.BookingBtn img", "css:finder"],
+        ["xpath=//img[@alt='PicFloor']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[10]/span/img", "xpath:idRelative"],
+        ["xpath=//div[10]/span/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cfdd28a7-86df-4c1c-bfc7-36e8bd43bd14",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,0)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ba4e4087-d57b-4eb4-ae56-01002cc49135",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Packagespan:nth-child(3) > .PromotionBtn",
+      "targets": [
+        ["css=.Packagespan:nth-child(3) > .PromotionBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/span[3]/div[2]", "xpath:idRelative"],
+        ["xpath=//span[3]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cdf9a662-c662-4d93-aa5a-3a3692d1d575",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Accept",
+      "targets": [
+        ["css=.Accept", "css:finder"],
+        ["xpath=//div[@id='root']/div[10]/div", "xpath:idRelative"],
+        ["xpath=//div[10]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b4969a46-0900-484c-8a86-4f7cd205b356",
+      "comment": "",
+      "command": "click",
+      "target": "css=.NoStore",
+      "targets": [
+        ["css=.NoStore", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/div/div", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5973b0bc-b6bc-4f89-a74a-54589584267f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9164d416-76db-4f38-8748-dc99bd1d3df1",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": "test"
+    }, {
+      "id": "d9eb7d2b-d527-443c-b3b9-a73d8b03a79f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.submitbtn:nth-child(3) > button",
+      "targets": [
+        ["css=.submitbtn:nth-child(3) > button", "css:finder"],
+        ["xpath=(//button[@type='submit'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8c4e1f8c-7ddf-46ad-b9fe-0e7e74544ba0",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [],
+      "value": "Please enter the store name."
+    }]
+  }, {
+    "id": "0f2effa1-48c5-411e-af49-2eac4e760e22",
+    "name": "BookingNoDescription",
+    "commands": [{
+      "id": "ffb0beb4-9fd6-421e-aaf7-e05a64f519d0",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "86c13347-48eb-47d0-bbe8-34de02627d8e",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1552x880",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ec710b9e-f273-4679-a737-6def248ed6c3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.cardStore:nth-child(19) img",
+      "targets": [
+        ["css=.cardStore:nth-child(19) img", "css:finder"],
+        ["xpath=(//img[@alt='PicNoStore'])[19]", "xpath:img"],
+        ["xpath=//div[@id='root']/div[20]/div[3]/span[2]/span[19]/div/div/img", "xpath:idRelative"],
+        ["xpath=//span[19]/div/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "17f21809-5404-4c10-b00a-fbb924cbd32a",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,0)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a4446a1a-99ab-421b-94e8-db60dfc60558",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingBtn img",
+      "targets": [
+        ["css=.BookingBtn img", "css:finder"],
+        ["xpath=//img[@alt='PicFloor']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[10]/span/img", "xpath:idRelative"],
+        ["xpath=//div[10]/span/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c50db0cd-4840-4f8e-8a00-f485de09af73",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Packagespan:nth-child(3) > .PromotionBtn",
+      "targets": [
+        ["css=.Packagespan:nth-child(3) > .PromotionBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/span[3]/div[2]", "xpath:idRelative"],
+        ["xpath=//span[3]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3989227d-d5c8-439f-8c55-31d40d185325",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Accept",
+      "targets": [
+        ["css=.Accept", "css:finder"],
+        ["xpath=//div[@id='root']/div[10]/div", "xpath:idRelative"],
+        ["xpath=//div[10]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c626462f-9965-430c-90c3-d997eb80e4b7",
+      "comment": "",
+      "command": "click",
+      "target": "css=.NoStore",
+      "targets": [
+        ["css=.NoStore", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/div/div", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f0c68c7c-6443-4020-a108-f3929d60524c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "dd7548bf-cac4-40ff-925b-c5e1e3235cff",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": "Apple Store"
+    }, {
+      "id": "e97b2257-50d8-4752-b96d-07b889fccdfd",
+      "comment": "",
+      "command": "click",
+      "target": "css=.submitbtn:nth-child(3) > button",
+      "targets": [
+        ["css=.submitbtn:nth-child(3) > button", "css:finder"],
+        ["xpath=(//button[@type='submit'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "662baf7f-c388-4604-a9d1-1a14796ce66e",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [],
+      "value": "Please enter a description of the store."
+    }]
+  }, {
+    "id": "02283d26-9b64-4d3f-9b1c-e274a3931674",
+    "name": "BookingSucces",
+    "commands": [{
+      "id": "3a753242-c3c9-4b5a-b076-63f521137645",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ff5c1a0f-008e-4888-8770-5f9514598dfa",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1552x880",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bfbdd43f-3dce-4f28-b7a2-877a2c47413b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.cardStore:nth-child(18) img",
+      "targets": [
+        ["css=.cardStore:nth-child(18) img", "css:finder"],
+        ["xpath=(//img[@alt='PicNoStore'])[18]", "xpath:img"],
+        ["xpath=//div[@id='root']/div[20]/div[3]/span[2]/span[18]/div/div/img", "xpath:idRelative"],
+        ["xpath=//span[18]/div/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a9922376-6d78-4496-91fe-fea571e93617",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,0)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c5cd55b4-cd0a-45c5-a9c5-18e4985c19c4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingBtn img",
+      "targets": [
+        ["css=.BookingBtn img", "css:finder"],
+        ["xpath=//img[@alt='PicFloor']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[10]/span/img", "xpath:idRelative"],
+        ["xpath=//div[10]/span/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "40c2ee84-1ada-49b5-a898-e46e421a5f10",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Packagespan:nth-child(3) > .PromotionBtn",
+      "targets": [
+        ["css=.Packagespan:nth-child(3) > .PromotionBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[11]/span[3]/div[2]", "xpath:idRelative"],
+        ["xpath=//span[3]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "44be4a0d-f6dd-4ef1-bd2e-922883c046de",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Accept",
+      "targets": [
+        ["css=.Accept", "css:finder"],
+        ["xpath=//div[@id='root']/div[10]/div", "xpath:idRelative"],
+        ["xpath=//div[10]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cbeb5652-709e-4cdb-9597-df4ea2d5f479",
+      "comment": "",
+      "command": "click",
+      "target": "css=.NoStore",
+      "targets": [
+        ["css=.NoStore", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/div/div", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0793b73f-6568-43d3-8e52-d3e834568b10",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "14f475bc-136c-4b55-ac45-40cbc0d07341",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": "Apple Store"
+    }, {
+      "id": "7593bc72-16b0-415e-ad22-a1b76f8b4ca2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c5670b2a-85d3-42d2-b2a5-b508b1c95be4",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": "Test"
+    }, {
+      "id": "fabb1a01-4474-49b7-a773-5b1f903f7a6d",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "98a28cdb-7c37-4f4f-b8d2-c65efff4f91e",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\mac3.png"
+    }, {
+      "id": "588ad76c-340d-445a-9d17-be29b911aeeb",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\mac.png"
+    }, {
+      "id": "f86bfee4-23e0-448d-80ba-df298b9e5c49",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\landing_hero_large.png"
+    }, {
+      "id": "3814de89-40c9-4c18-87ab-4ac955856c16",
+      "comment": "",
+      "command": "click",
+      "target": "css=.submitbtn:nth-child(3) > button",
+      "targets": [
+        ["css=.submitbtn:nth-child(3) > button", "css:finder"],
+        ["xpath=(//button[@type='submit'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "29c6871f-2c8d-47eb-8c1c-720430a0882a",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.success > h1",
+      "targets": [
+        ["css=.success > h1", "css:finder"],
+        ["xpath=//div[@id='root']/div[10]/h1", "xpath:idRelative"],
+        ["xpath=//div[10]/h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'🎉SUCCESS🎉')]", "xpath:innerText"]
+      ],
+      "value": "🎉SUCCESS🎉"
+    }]
+  }, {
+    "id": "6e8f7f7e-586c-4514-9dbf-3f08198651d4",
+    "name": "AdminBookingError",
+    "commands": [{
+      "id": "cd2a34ef-dfca-4431-8fbe-ecb397dedd7d",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5ee9a7a0-4c3c-471a-a063-68799dccfc2a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1536x864",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b31d655c-5656-4c05-952b-2a73d3fc6143",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingStoreAdminicon",
+      "targets": [
+        ["css=.BookingStoreAdminicon", "css:finder"],
+        ["xpath=//img[contains(@src,'data:image/png;base64,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')]", "xpath:img"],
+        ["xpath=//div[@id='root']/img", "xpath:idRelative"],
+        ["xpath=//body/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "254b798f-08e2-451e-8ce4-694517c92cb4",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=2",
+      "targets": [
+        ["linkText=2", "linkText"],
+        ["css=.ant-pagination-item-2 > a", "css:finder"],
+        ["xpath=//a[contains(text(),'2')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/div/div/ul/li[3]/a", "xpath:idRelative"],
+        ["xpath=//li[3]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'2')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b1b97ba8-b672-4256-afec-a1aafd05ec78",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-table-cell-row-hover p",
+      "targets": [
+        ["css=.ant-table-cell-row-hover p", "css:finder"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/div/div/div/div/div/table/tbody/tr[7]/td[8]/a/p", "xpath:idRelative"],
+        ["xpath=//tr[7]/td[8]/a/p", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ccadb3df-f840-4f02-8f24-bfc0f07d227a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.SubmitEdit:nth-child(1)",
+      "targets": [
+        ["css=.SubmitEdit:nth-child(1)", "css:finder"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cb42ba3f-6e2a-4bd3-91c0-0dd729014916",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [],
+      "value": "Please enter the store name."
+    }]
+  }, {
+    "id": "c9397936-3d96-4190-8c80-43fd48468cb1",
+    "name": "AdminBookingSucces",
+    "commands": [{
+      "id": "c34291c7-716e-4a4e-a122-8cedf8e09891",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.iconicth.shop/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2e3df77b-543c-473f-b27a-c367fc161e41",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1536x864",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "cd3ed695-bb74-4df7-87cc-1725295b7a12",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingStoreAdminicon",
+      "targets": [
+        ["css=.BookingStoreAdminicon", "css:finder"],
+        ["xpath=//img[contains(@src,'data:image/png;base64,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')]", "xpath:img"],
+        ["xpath=//div[@id='root']/img", "xpath:idRelative"],
+        ["xpath=//body/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e5d509ed-dba9-479a-83e3-228064ddc936",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=2",
+      "targets": [
+        ["linkText=2", "linkText"],
+        ["css=.ant-pagination-item-2 > a", "css:finder"],
+        ["xpath=//a[contains(text(),'2')]", "xpath:link"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/div/div/ul/li[3]/a", "xpath:idRelative"],
+        ["xpath=//li[3]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'2')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8e33fa03-d294-4686-a191-4de71fb13e9a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-table-cell-row-hover p",
+      "targets": [
+        ["css=.ant-table-cell-row-hover p", "css:finder"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/div/div/div/div/div/table/tbody/tr[6]/td[8]/a/p", "xpath:idRelative"],
+        ["xpath=//tr[6]/td[8]/a/p", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f6f889f8-6b55-4680-be96-88b5b75d2d67",
+      "comment": "",
+      "command": "click",
+      "target": "id=store_name",
+      "targets": [
+        ["id=store_name", "id"],
+        ["name=store_name", "name"],
+        ["css=#store_name", "css:finder"],
+        ["xpath=//input[@id='store_name']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "527399eb-7b93-4e2c-965f-dce024f3527c",
+      "comment": "",
+      "command": "type",
+      "target": "id=store_name",
+      "targets": [
+        ["id=store_name", "id"],
+        ["name=store_name", "name"],
+        ["css=#store_name", "css:finder"],
+        ["xpath=//input[@id='store_name']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[4]/form/div/div/input", "xpath:position"]
+      ],
+      "value": "test"
+    }, {
+      "id": "1a1b8356-8200-410f-bad5-a29087213b7d",
+      "comment": "",
+      "command": "click",
+      "target": "id=store_description",
+      "targets": [
+        ["id=store_description", "id"],
+        ["name=store_description", "name"],
+        ["css=#store_description", "css:finder"],
+        ["xpath=//textarea[@id='store_description']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div/textarea", "xpath:idRelative"],
+        ["xpath=//form/div/div/textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "582bd842-b2f7-44ba-b877-706e3ca201bc",
+      "comment": "",
+      "command": "type",
+      "target": "id=store_description",
+      "targets": [
+        ["id=store_description", "id"],
+        ["name=store_description", "name"],
+        ["css=#store_description", "css:finder"],
+        ["xpath=//textarea[@id='store_description']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div/textarea", "xpath:idRelative"],
+        ["xpath=//form/div/div/textarea", "xpath:position"]
+      ],
+      "value": "test"
+    }, {
+      "id": "7f2019f3-ee77-4af1-bfad-fccd08295bd0",
+      "comment": "",
+      "command": "click",
+      "target": "id=rc_select_0",
+      "targets": [
+        ["id=rc_select_0", "id"],
+        ["css=#rc_select_0", "css:finder"],
+        ["xpath=//input[@id='rc_select_0']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div[2]/div/div/span/span/input", "xpath:idRelative"],
+        ["xpath=//span/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4cae31f1-e1cf-4fdb-ada1-293ac3001f16",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-select-item-option-active > .ant-select-item-option-content",
+      "targets": [
+        ["css=.ant-select-item-option-active > .ant-select-item-option-content", "css:finder"],
+        ["xpath=//div/div[2]/div/div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fcb3ed88-ab29-42b6-be52-1f2bedfed886",
+      "comment": "",
+      "command": "click",
+      "target": "id=rc_select_1",
+      "targets": [
+        ["id=rc_select_1", "id"],
+        ["css=#rc_select_1", "css:finder"],
+        ["xpath=//input[@id='rc_select_1']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div[2]/div[2]/div/span/span/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/span/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6d409ead-46a1-4284-9333-186c9f0f8119",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-select-item-option-active:nth-child(3) > .ant-select-item-option-content",
+      "targets": [
+        ["css=.ant-select-item-option-active:nth-child(3) > .ant-select-item-option-content", "css:finder"],
+        ["xpath=//div[3]/div/div/div[2]/div/div/div/div[3]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "243a73a1-d779-4bc7-9052-536c79665b79",
+      "comment": "",
+      "command": "click",
+      "target": "id=rc_select_2",
+      "targets": [
+        ["id=rc_select_2", "id"],
+        ["css=#rc_select_2", "css:finder"],
+        ["xpath=//input[@id='rc_select_2']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div[18]/div[4]/form/div/div[2]/div[3]/div/span/span/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/span/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "247943ef-7740-440f-9451-18b6bd341e87",
+      "comment": "",
+      "command": "click",
+      "target": "css=.ant-select-item-option-active:nth-child(4) > .ant-select-item-option-content",
+      "targets": [
+        ["css=.ant-select-item-option-active:nth-child(4) > .ant-select-item-option-content", "css:finder"],
+        ["xpath=//div[4]/div/div/div[2]/div/div/div/div[4]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "48cf3ba3-64b6-42c2-83eb-e6fe02fa00bb",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "7048ed38-1f66-4e97-b0e0-52f8b62264b6",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\mac3.png"
+    }, {
+      "id": "e3fb9789-4ca8-4ae3-8f07-4205c96041a0",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\mac.png"
+    }, {
+      "id": "9d1d8493-98ae-4dae-8537-2fbb08556e96",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\landing_hero_large.png"
+    }]
+  }],
+  "suites": [{
+    "id": "a0940f40-e64f-4a6e-9d4c-5d54d57b4e6d",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["9d253bff-d4ca-48ef-9d47-c3f91f53894b"]
+  }],
+  "urls": ["https://www.iconicth.shop/Store"],
+  "plugins": []
+}

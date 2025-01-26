@@ -1,0 +1,497 @@
+{
+  "id": "ef49ee10-19ed-47e7-a8e6-0497c6b7c4bb",
+  "version": "2.0",
+  "name": "Unit test Store",
+  "url": "http://localhost:5173/Store",
+  "tests": [{
+    "id": "32a2764e-a69e-4e16-87d0-112f0fb37ece",
+    "name": "Uint test Store Successful",
+    "commands": [{
+      "id": "9db09125-dbf1-4375-a625-cf5517dc0899",
+      "comment": "",
+      "command": "open",
+      "target": "/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "76f72b06-9880-4701-8f62-d0f38589f1cd",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "947x871",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e3695d18-cdf7-4938-ab9b-ca03d4b4bc58",
+      "comment": "",
+      "command": "click",
+      "target": "css=.cardStore:nth-child(2) img",
+      "targets": [
+        ["css=.cardStore:nth-child(2) img", "css:finder"],
+        ["xpath=(//img[@alt='PicNoStore'])[2]", "xpath:img"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/span[2]/span[2]/div/div/img", "xpath:idRelative"],
+        ["xpath=//span[2]/div/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b8bcd9fc-fd70-42fa-88d5-cf1f43f72dcc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingBtn img",
+      "targets": [
+        ["css=.BookingBtn img", "css:finder"],
+        ["xpath=//img[@alt='PicFloor']", "xpath:img"],
+        ["xpath=//div[@id='root']/div[9]/span/img", "xpath:idRelative"],
+        ["xpath=//div[9]/span/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "eb18029b-f8d5-4004-8855-d00da45650de",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Packagespan:nth-child(3) > .PromotionBtn",
+      "targets": [
+        ["css=.Packagespan:nth-child(3) > .PromotionBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/span[3]/div[2]", "xpath:idRelative"],
+        ["xpath=//span[3]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fa176771-cb56-4a8f-be2b-6a1b98c0d491",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Accept",
+      "targets": [
+        ["css=.Accept", "css:finder"],
+        ["xpath=//div[@id='root']/div[8]/div", "xpath:idRelative"],
+        ["xpath=//div[8]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0a5b74b4-be92-4a1f-9f59-8ea50c460efb",
+      "comment": "",
+      "command": "click",
+      "target": "css=.NoStore",
+      "targets": [
+        ["css=.NoStore", "css:finder"],
+        ["xpath=//div[@id='root']/div[7]/div/div", "xpath:idRelative"],
+        ["xpath=//div[7]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "28e62dd1-91ef-402b-ae93-4dc146d3f816",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c6a2dbe0-7d1a-4254-985d-569819301a17",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": "Apple Store"
+    }, {
+      "id": "5f7e0bc6-3e75-44aa-90d5-66afc00ae5ad",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "c2a677bf-926a-43a8-a48c-6c39584ba0db",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\mac3.png"
+    }, {
+      "id": "f766fa45-8953-4b2d-add3-0c0be8ef88ca",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\mac.png"
+    }, {
+      "id": "8b898f5c-a52a-4e81-b3c6-cafc3a73021c",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\landing_hero_large.png"
+    }, {
+      "id": "4c43a01f-2d19-47eb-bf38-ef06e24cfb56",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//div[3]/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": "1. Purpose of Rental\\n- The retail space rental is intended solely for the purpose of selling goods or services.\\n- The tenant agrees to use the rented space accordingly and shall not engage in any illegal activities or activities that may disrupt public order.\\n2. Rental Payment and Security Deposit\\n- The tenant must pay the rental fee as specified in the contract and by the agreed-upon schedule.\\n- A security deposit will be held as collateral for any potential damages to the mall's property. The deposit will be returned at the end of the lease term if no damages are incurred."
+    }, {
+      "id": "646f995e-86f5-4c60-8b29-82212dd0cb6a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.submitbtn:nth-child(3) > button",
+      "targets": [
+        ["css=.submitbtn:nth-child(3) > button", "css:finder"],
+        ["xpath=(//button[@type='submit'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "85056e78-bb2d-4621-8d92-e16fac623af4",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.success > h1",
+      "targets": [
+        ["css=.success > h1", "css:finder"],
+        ["xpath=//div[@id='root']/div[8]/h1", "xpath:idRelative"],
+        ["xpath=//div[8]/h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'🎉SUCCESS🎉')]", "xpath:innerText"]
+      ],
+      "value": "🎉SUCCESS🎉"
+    }]
+  }, {
+    "id": "95edfd7b-1702-466f-9b5c-25c12d1a7b0f",
+    "name": "Uint test No Storename",
+    "commands": [{
+      "id": "735cc864-e10f-4d48-8c63-f066e463f250",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "89382315-82e5-4072-9ef4-0600ad2fc091",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1096",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8d05e2da-68a4-4d01-895e-171019fb0b21",
+      "comment": "",
+      "command": "click",
+      "target": "css=.cardStore:nth-child(20) img",
+      "targets": [
+        ["css=.cardStore:nth-child(20) img", "css:finder"],
+        ["xpath=(//img[@alt='PicNoStore'])[20]", "xpath:img"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/span[2]/span[20]/div/div/img", "xpath:idRelative"],
+        ["xpath=//span[20]/div/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "785e8f8e-a2d3-42e8-8161-ee2adc99a1af",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingBtn",
+      "targets": [
+        ["css=.BookingBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]", "xpath:idRelative"],
+        ["xpath=//body/div/div[9]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "aa2aaaa5-ac7e-45c1-b908-ede9e3527b70",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Packagespan:nth-child(3) > .PromotionBtn",
+      "targets": [
+        ["css=.Packagespan:nth-child(3) > .PromotionBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/span[3]/div[2]", "xpath:idRelative"],
+        ["xpath=//span[3]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2eb06a0d-608f-4735-b349-ed98a9dfe829",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Accept",
+      "targets": [
+        ["css=.Accept", "css:finder"],
+        ["xpath=//div[@id='root']/div[8]/div", "xpath:idRelative"],
+        ["xpath=//div[8]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "44a12460-6808-4002-8b2f-5302f3897ce1",
+      "comment": "",
+      "command": "click",
+      "target": "css=.NoStore",
+      "targets": [
+        ["css=.NoStore", "css:finder"],
+        ["xpath=//div[@id='root']/div[7]/div/div", "xpath:idRelative"],
+        ["xpath=//div[7]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "886ba4b0-95d0-4858-98e7-1adcf700930d",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "b5dadb20-8abc-4918-8802-f4f7cc2d571a",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "5e01039c-f2c1-4a62-9c1f-1bcfc668780e",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "6e600b2c-8466-439f-8626-3e146abab2b2",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "2c28ea3d-5d21-428c-a995-b1ccc78f0bbe",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2a6503cf-89c4-4813-9483-469fe3a97bcc",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": "test"
+    }, {
+      "id": "e0eb2ba8-3e8f-4af7-95d8-6e4eae0223cc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.submitbtn:nth-child(3) > button",
+      "targets": [
+        ["css=.submitbtn:nth-child(3) > button", "css:finder"],
+        ["xpath=(//button[@type='submit'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "349d0123-67a7-447b-9eca-d3537affc366",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Must fill out information completely.')]", "xpath:innerText"]
+      ],
+      "value": "Must fill out information completely."
+    }]
+  }, {
+    "id": "71bb95e8-dd04-4c2d-9377-0ef411726d01",
+    "name": "Uint test No Description",
+    "commands": [{
+      "id": "f947144f-98d8-413b-bda4-114a282394eb",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/Store",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "06d6d66a-93aa-4187-8801-2abda0fdf0da",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1096",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "88b891df-e562-43ab-98c3-91025a8df111",
+      "comment": "",
+      "command": "click",
+      "target": "css=.cardStore:nth-child(20) img",
+      "targets": [
+        ["css=.cardStore:nth-child(20) img", "css:finder"],
+        ["xpath=(//img[@alt='PicNoStore'])[20]", "xpath:img"],
+        ["xpath=//div[@id='root']/div[18]/div[3]/span[2]/span[20]/div/div/img", "xpath:idRelative"],
+        ["xpath=//span[20]/div/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "193bae17-a4e2-4edd-93b8-834a8487a78b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BookingBtn",
+      "targets": [
+        ["css=.BookingBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]", "xpath:idRelative"],
+        ["xpath=//body/div/div[9]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "08a96b6c-053d-4d61-959c-63f9724b2688",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Packagespan:nth-child(3) > .PromotionBtn",
+      "targets": [
+        ["css=.Packagespan:nth-child(3) > .PromotionBtn", "css:finder"],
+        ["xpath=//div[@id='root']/div[9]/span[3]/div[2]", "xpath:idRelative"],
+        ["xpath=//span[3]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8cd5d900-d6d6-47c5-862c-e36209aa8615",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Accept",
+      "targets": [
+        ["css=.Accept", "css:finder"],
+        ["xpath=//div[@id='root']/div[8]/div", "xpath:idRelative"],
+        ["xpath=//div[8]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ef977a22-403e-4628-9050-a46e273e157e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.NoStore",
+      "targets": [
+        ["css=.NoStore", "css:finder"],
+        ["xpath=//div[@id='root']/div[7]/div/div", "xpath:idRelative"],
+        ["xpath=//div[7]/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "15ecd7a5-d6ea-4527-a4aa-ab5e21fe932d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #nameStore", "css:finder"],
+        ["xpath=(//input[@id='nameStore'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[3]/form/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e6dc1e0d-3007-49f5-b6da-45091e98dea1",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #nameStore",
+      "targets": [],
+      "value": "Name Store"
+    }, {
+      "id": "9f691306-8ab7-453c-a8b6-68bcb405f5bf",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "8691518b-2589-4d46-9873-fec95898c663",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "58e63bb3-f852-46b3-b374-d4b0a1431ac6",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "7d0a648e-bf38-4141-97e0-cc7bcddf7982",
+      "comment": "",
+      "command": "type",
+      "target": "id=Pic",
+      "targets": [],
+      "value": "C:\\Users\\ACER\\Downloads\\pic for se\\brand\\IMG_7369.JPG"
+    }, {
+      "id": "d9c7fff1-f9ee-4dce-90b9-318959f3de71",
+      "comment": "",
+      "command": "click",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8fe6d843-f251-4946-8890-921cf0653020",
+      "comment": "",
+      "command": "type",
+      "target": "css=.insideinfopopup:nth-child(2) #description",
+      "targets": [
+        ["css=.insideinfopopup:nth-child(2) #description", "css:finder"],
+        ["xpath=(//textarea[@id='description'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div/div[2]/textarea", "xpath:idRelative"],
+        ["xpath=//body/div/form/div/div/div[2]/textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e3c42bc0-d16f-46a5-afbf-758c14512140",
+      "comment": "",
+      "command": "click",
+      "target": "css=.submitbtn:nth-child(3) > button",
+      "targets": [
+        ["css=.submitbtn:nth-child(3) > button", "css:finder"],
+        ["xpath=(//button[@type='submit'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/form/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b4bc3362-4d1c-4253-a963-7a6d4092a237",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.ant-message-custom-content > span:nth-child(2)",
+      "targets": [
+        ["css=.ant-message-custom-content > span:nth-child(2)", "css:finder"],
+        ["xpath=//div/div/div/span[2]", "xpath:position"],
+        ["xpath=//span[contains(.,'Must fill out information completely.')]", "xpath:innerText"]
+      ],
+      "value": "Must fill out information completely."
+    }]
+  }],
+  "suites": [{
+    "id": "874dffe4-130b-4cce-ac81-1c7ed12194f7",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["32a2764e-a69e-4e16-87d0-112f0fb37ece"]
+  }],
+  "urls": ["http://localhost:5173/", "http://localhost:5173/Store"],
+  "plugins": []
+}
